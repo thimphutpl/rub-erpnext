@@ -33,7 +33,7 @@ from erpnext.controllers.item_variant import (
 	validate_item_variant_attributes,
 )
 from erpnext.stock.doctype.item_default.item_default import ItemDefault
-from erpnext.stock.utils import get_valuation_method
+from frappe.model.naming import make_autoname
 
 
 class DuplicateReorderRows(frappe.ValidationError):
@@ -59,8 +59,6 @@ class Item(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from frappe.types import DF
-
 		from erpnext.stock.doctype.item_barcode.item_barcode import ItemBarcode
 		from erpnext.stock.doctype.item_customer_detail.item_customer_detail import ItemCustomerDetail
 		from erpnext.stock.doctype.item_default.item_default import ItemDefault
@@ -69,11 +67,13 @@ class Item(Document):
 		from erpnext.stock.doctype.item_tax.item_tax import ItemTax
 		from erpnext.stock.doctype.item_variant_attribute.item_variant_attribute import ItemVariantAttribute
 		from erpnext.stock.doctype.uom_conversion_detail.uom_conversion_detail import UOMConversionDetail
+		from frappe.types import DF
 
 		allow_alternative_item: DF.Check
 		allow_negative_stock: DF.Check
 		asset_category: DF.Link | None
 		asset_naming_series: DF.Literal[None]
+		asset_sub_category: DF.Link | None
 		attributes: DF.Table[ItemVariantAttribute]
 		auto_create_assets: DF.Check
 		barcodes: DF.Table[ItemBarcode]
@@ -88,9 +88,7 @@ class Item(Document):
 		default_bom: DF.Link | None
 		default_item_manufacturer: DF.Link | None
 		default_manufacturer_part_no: DF.Data | None
-		default_material_request_type: DF.Literal[
-			"Purchase", "Material Transfer", "Material Issue", "Manufacture", "Customer Provided"
-		]
+		default_material_request_type: DF.Literal["Purchase", "Material Transfer", "Material Issue", "Manufacture", "Customer Provided"]
 		delivered_by_supplier: DF.Check
 		description: DF.TextEditor | None
 		disabled: DF.Check
@@ -109,14 +107,17 @@ class Item(Document):
 		is_customer_provided_item: DF.Check
 		is_fixed_asset: DF.Check
 		is_grouped_asset: DF.Check
+		is_pol_item: DF.Check
 		is_purchase_item: DF.Check
 		is_sales_item: DF.Check
+		is_service_item: DF.Check
 		is_stock_item: DF.Check
 		is_sub_contracted_item: DF.Check
-		item_code: DF.Data
+		item_code: DF.Data | None
 		item_defaults: DF.Table[ItemDefault]
 		item_group: DF.Link
-		item_name: DF.Data | None
+		item_name: DF.Data
+		item_sub_group: DF.Link
 		last_purchase_rate: DF.Float
 		lead_time_days: DF.Int
 		max_discount: DF.Float
@@ -154,22 +155,40 @@ class Item(Document):
 	def onload(self):
 		self.set_onload("stock_exists", self.stock_ledger_created())
 		self.set_onload("asset_naming_series", get_asset_naming_series())
-		self.set_onload("current_valuation_method", get_valuation_method(self.name))
+
 
 	def autoname(self):
-		if frappe.db.get_default("item_naming_by") == "Naming Series":
-			if self.variant_of:
-				if not self.item_code:
-					template_item_name = frappe.db.get_value("Item", self.variant_of, "item_name")
-					make_variant_item_code(self.variant_of, template_item_name, self)
-			else:
-				from frappe.model.naming import set_name_by_naming_series
-
-				set_name_by_naming_series(self)
-				self.item_code = self.name
-
+		base = frappe.db.get_value("Item Group", self.item_group, "item_code_base")
+		if not base:
+			frappe.throw(
+				_("Setup Item Code Base in Item Group '{}'").format(
+					frappe.get_desk_link("Item Group", self.item_group)
+				),
+				title=_("Missing Item Code Base")
+			)
+		self.item_code = make_autoname(f"{base}.#######")
+		
+		if not self.item_code:
+			frappe.throw(
+				_("Item Code is mandatory because Item is not automatically numbered."),
+				title=_("Missing Item Code")
+			)
 		self.item_code = strip(self.item_code)
 		self.name = self.item_code
+
+		# if frappe.db.get_default("item_naming_by") == "Naming Series":
+		# 	if self.variant_of:
+		# 		if not self.item_code:
+		# 			template_item_name = frappe.db.get_value("Item", self.variant_of, "item_name")
+		# 			make_variant_item_code(self.variant_of, template_item_name, self)
+		# 	else:
+		# 		from frappe.model.naming import set_name_by_naming_series
+
+		# 		set_name_by_naming_series(self)
+		# 		self.item_code = self.name
+
+		# self.item_code = strip(self.item_code)
+		# self.name = self.item_code
 
 	def after_insert(self):
 		"""set opening stock and item price"""
@@ -297,8 +316,8 @@ class Item(Document):
 
 	def validate_fixed_asset(self):
 		if self.is_fixed_asset:
-			if self.is_stock_item:
-				frappe.throw(_("Fixed Asset Item must be a non-stock item."))
+			# if self.is_stock_item:
+			# 	frappe.throw(_("Fixed Asset Item must be a non-stock item."))
 
 			if not self.asset_category:
 				frappe.throw(_("Asset Category is mandatory for Fixed Asset item"))
@@ -972,11 +991,6 @@ class Item(Document):
 		changed_fields = [
 			field for field in restricted_fields if cstr(self.get(field)) != cstr(values.get(field))
 		]
-
-		# Allow to change valuation method from FIFO to Moving Average not vice versa
-		if self.valuation_method == "Moving Average" and "valuation_method" in changed_fields:
-			changed_fields.remove("valuation_method")
-
 		if not changed_fields:
 			return
 
@@ -1180,6 +1194,7 @@ def get_last_purchase_details(item_code, doc_name=None, conversion_rate=1.0):
 			return frappe._dict()
 
 	conversion_factor = flt(last_purchase.conversion_factor)
+	
 	out = frappe._dict(
 		{
 			"base_price_list_rate": flt(last_purchase.base_price_list_rate) / conversion_factor,
@@ -1191,6 +1206,7 @@ def get_last_purchase_details(item_code, doc_name=None, conversion_rate=1.0):
 	)
 
 	conversion_rate = flt(conversion_rate) or 1.0
+
 	out.update(
 		{
 			"price_list_rate": out.base_price_list_rate / conversion_rate,
@@ -1203,7 +1219,7 @@ def get_last_purchase_details(item_code, doc_name=None, conversion_rate=1.0):
 	return out
 
 
-def get_purchase_voucher_details(doctype, item_code, document_name=None):
+def get_purchase_voucher_details(doctype, item_code, document_name):
 	parent_doc = frappe.qb.DocType(doctype)
 	child_doc = frappe.qb.DocType(doctype + " Item")
 
@@ -1222,10 +1238,8 @@ def get_purchase_voucher_details(doctype, item_code, document_name=None):
 		)
 		.where(parent_doc.docstatus == 1)
 		.where(child_doc.item_code == item_code)
+		.where(parent_doc.name != document_name)
 	)
-
-	if document_name:
-		query = query.where(parent_doc.name != document_name)
 
 	if doctype in ("Purchase Receipt", "Purchase Invoice"):
 		query = query.select(parent_doc.posting_date, parent_doc.posting_time)
@@ -1406,6 +1420,10 @@ def validate_item_default_company_links(item_defaults: list[ItemDefault]) -> Non
 						title=_("Invalid Item Defaults"),
 					)
 
+@frappe.whitelist()
+def get_is_fixed_asset(item_group):
+	fixed_asset = frappe.db.get_value("Item Group", item_group, "is_fixed_asset")
+	return fixed_asset
 
 @frappe.whitelist()
 def get_asset_naming_series():

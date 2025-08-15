@@ -20,3 +20,6 @@ Bulk Transaction
 Subcontracting
 EDI
 Library Demo
+Hostel Management
+Faculty Management
+ePayment

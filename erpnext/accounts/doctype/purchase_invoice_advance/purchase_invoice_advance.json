@@ -14,8 +14,7 @@
   "advance_amount",
   "allocated_amount",
   "exchange_gain_loss",
-  "ref_exchange_rate",
-  "difference_posting_date"
+  "ref_exchange_rate"
  ],
  "fields": [
   {
@@ -31,7 +30,7 @@
    "width": "180px"
   },
   {
-   "columns": 2,
+   "columns": 3,
    "fieldname": "reference_name",
    "fieldtype": "Dynamic Link",
    "in_list_view": 1,
@@ -41,7 +40,7 @@
    "read_only": 1
   },
   {
-   "columns": 2,
+   "columns": 3,
    "fieldname": "remarks",
    "fieldtype": "Text",
    "in_list_view": 1,
@@ -112,20 +111,13 @@
    "label": "Reference Exchange Rate",
    "non_negative": 1,
    "read_only": 1
-  },
-  {
-   "columns": 2,
-   "fieldname": "difference_posting_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Difference Posting Date"
   }
  ],
  "idx": 1,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-12-20 12:04:46.729972",
+ "modified": "2023-06-23 21:13:18.013816",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Purchase Invoice Advance",

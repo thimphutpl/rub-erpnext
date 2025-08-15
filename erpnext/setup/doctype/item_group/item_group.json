@@ -15,6 +15,7 @@
   "is_group",
   "image",
   "column_break_5",
+  "item_code_base",
   "defaults",
   "item_group_defaults",
   "sec_break_taxes",
@@ -79,6 +80,7 @@
   {
    "fieldname": "item_group_defaults",
    "fieldtype": "Table",
+   "hidden": 1,
    "label": "Item Group Defaults",
    "options": "Item Default"
   },
@@ -90,6 +92,7 @@
   {
    "fieldname": "taxes",
    "fieldtype": "Table",
+   "hidden": 1,
    "label": "Taxes",
    "options": "Item Tax"
   },
@@ -127,6 +130,11 @@
    "options": "Item Group",
    "print_hide": 1,
    "report_hide": 1
+  },
+  {
+   "fieldname": "item_code_base",
+   "fieldtype": "Data",
+   "label": "item code base"
   }
  ],
  "icon": "fa fa-sitemap",
@@ -135,8 +143,8 @@
  "is_tree": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2024-01-30 14:08:38.485616",
- "modified_by": "Administrator",
+ "modified": "2025-08-15 14:12:29.932283",
+ "modified_by": "pralad.rai@thimphutechpark.bt",
  "module": "Setup",
  "name": "Item Group",
  "naming_rule": "By fieldname",
@@ -202,6 +210,7 @@
    "share": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "parent_item_group",
  "show_name_in_global_search": 1,
  "sort_field": "modified",

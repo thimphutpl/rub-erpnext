@@ -6,6 +6,8 @@ import frappe
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import flt, getdate, nowdate
+from frappe.model.naming import make_autoname
+from erpnext.custom_autoname import get_auto_name
 
 from erpnext.buying.utils import validate_for_items
 from erpnext.controllers.buying_controller import BuyingController
@@ -20,15 +22,10 @@ class SupplierQuotation(BuyingController):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from frappe.types import DF
-
 		from erpnext.accounts.doctype.pricing_rule_detail.pricing_rule_detail import PricingRuleDetail
-		from erpnext.accounts.doctype.purchase_taxes_and_charges.purchase_taxes_and_charges import (
-			PurchaseTaxesandCharges,
-		)
-		from erpnext.buying.doctype.supplier_quotation_item.supplier_quotation_item import (
-			SupplierQuotationItem,
-		)
+		from erpnext.accounts.doctype.purchase_taxes_and_charges.purchase_taxes_and_charges import PurchaseTaxesandCharges
+		from erpnext.buying.doctype.supplier_quotation_item.supplier_quotation_item import SupplierQuotationItem
+		from frappe.types import DF
 
 		additional_discount_percentage: DF.Float
 		address_display: DF.SmallText | None
@@ -60,7 +57,6 @@ class SupplierQuotation(BuyingController):
 		discount_amount: DF.Currency
 		grand_total: DF.Currency
 		group_same_items: DF.Check
-		has_unit_price_items: DF.Check
 		ignore_pricing_rule: DF.Check
 		in_words: DF.Data | None
 		incoterm: DF.Link | None
@@ -69,7 +65,7 @@ class SupplierQuotation(BuyingController):
 		language: DF.Data | None
 		letter_head: DF.Link | None
 		named_place: DF.Data | None
-		naming_series: DF.Literal["PUR-SQTN-.YYYY.-"]
+		naming_series: DF.Literal["", "Consumables", "Fixed Asset", "Sales Product", "Spareparts", "Services Miscellaneous", "Services Works", "Labour Contract", "PUR-SQTN-.YYYY.-"]
 		net_total: DF.Currency
 		opportunity: DF.Link | None
 		other_charges_calculation: DF.TextEditor | None
@@ -104,9 +100,8 @@ class SupplierQuotation(BuyingController):
 		valid_till: DF.Date | None
 	# end: auto-generated types
 
-	def before_validate(self):
-		self.set_has_unit_price_items()
-		self.flags.allow_zero_qty = self.has_unit_price_items
+	def autoname(self):
+		self.name = make_autoname(get_auto_name(self, self.naming_series) + ".####")
 
 	def validate(self):
 		super().validate()
@@ -133,17 +128,6 @@ class SupplierQuotation(BuyingController):
 
 	def on_trash(self):
 		pass
-
-	def set_has_unit_price_items(self):
-		"""
-		If permitted in settings and any item has 0 qty, the SQ has unit price items.
-		"""
-		if not frappe.db.get_single_value("Buying Settings", "allow_zero_qty_in_supplier_quotation"):
-			return
-
-		self.has_unit_price_items = any(
-			not row.qty for row in self.get("items") if (row.item_code and not row.qty)
-		)
 
 	def validate_with_previous_doc(self):
 		super().validate_with_previous_doc(
@@ -250,7 +234,6 @@ def make_purchase_order(source_name, target_doc=None):
 		{
 			"Supplier Quotation": {
 				"doctype": "Purchase Order",
-				"field_no_map": ["transaction_date"],
 				"validation": {
 					"docstatus": ["=", 1],
 				},

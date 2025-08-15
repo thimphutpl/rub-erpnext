@@ -3,8 +3,12 @@
 
 frappe.provide("erpnext.accounts.dimensions");
 
+cur_frm.add_fetch("asset","credit_account", "credit_account");
+cur_frm.add_fetch("asset","asset_account", "fixed_asset_account");
+
 frappe.ui.form.on("Asset Value Adjustment", {
 	setup: function (frm) {
+		frm.add_fetch("company", "cost_center", "cost_center");
 		frm.set_query("cost_center", function () {
 			return {
 				filters: {
@@ -18,14 +22,6 @@ frappe.ui.form.on("Asset Value Adjustment", {
 				filters: {
 					calculate_depreciation: 1,
 					docstatus: 1,
-				},
-			};
-		});
-		frm.set_query("difference_account", function () {
-			return {
-				filters: {
-					company: frm.doc.company,
-					is_group: 0,
 				},
 			};
 		});
@@ -44,7 +40,11 @@ frappe.ui.form.on("Asset Value Adjustment", {
 	},
 
 	asset: function (frm) {
-		frm.trigger("set_acc_dimension");
+		frm.trigger("set_current_asset_value");
+	},
+
+	difference_amount: function(frm){
+		frm.trigger("set_new_asset_value");
 	},
 
 	finance_book: function (frm) {
@@ -68,14 +68,27 @@ frappe.ui.form.on("Asset Value Adjustment", {
 		}
 	},
 
-	set_acc_dimension: function (frm) {
-		if (frm.doc.asset) {
-			frm.call({
-				method: "erpnext.assets.doctype.asset_value_adjustment.asset_value_adjustment.get_value_of_accounting_dimensions",
-				args: {
-					asset_name: frm.doc.asset,
-				},
-			});
+	set_new_asset_value: function(frm){
+		if (frm.doc.current_asset_value && frm.doc.difference_amount) {
+			frm.set_value('new_asset_value', frm.doc.current_asset_value+frm.doc.difference_amount);
 		}
 	},
+
+	"re_valued": function(frm) {
+		update_def_account(frm)
+	},
 });
+
+function update_def_account(frm) {
+	frappe.call({
+		method: "update_def_account",
+		doc:frm.doc,
+		callback: function(r) {
+			if(r.message) {
+				console.log(r.message)
+				frm.set_value("credit_account", (r.message))
+				frm.refresh_fields()
+			}
+		}
+	})
+}

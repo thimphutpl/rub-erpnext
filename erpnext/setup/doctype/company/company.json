@@ -106,6 +106,16 @@
   "default_warehouse_for_sales_return",
   "credit_limit",
   "transactions_annual_history",
+  "hr_payroll_tab",
+  "hr_payroll_settings_section",
+  "default_expense_claim_payable_account",
+  "default_salary_tax_account",
+  "column_break_ijdl",
+  "default_payroll_payable_account",
+  "employer_contribution_pf_account",
+  "salary_structure_section",
+  "deduct_sal_tax_on_percent",
+  "salary_tax_percent",
   "stock_tab",
   "auto_accounting_for_stock_settings",
   "enable_perpetual_inventory",
@@ -850,6 +860,62 @@
    "fieldtype": "Select",
    "label": "Reconciliation Takes Effect On",
    "options": "Advance Payment Date\nOldest Of Invoice Or Advance\nReconciliation Date"
+  },
+  {
+   "fieldname": "hr_payroll_tab",
+   "fieldtype": "Tab Break",
+   "label": "HR & Payroll"
+  },
+  {
+   "fieldname": "salary_structure_section",
+   "fieldtype": "Section Break",
+   "label": "Salary Structure"
+  },
+  {
+   "default": "0",
+   "fieldname": "deduct_sal_tax_on_percent",
+   "fieldtype": "Check",
+   "label": "Deduct Salary Tax Based on Percent"
+  },
+  {
+   "depends_on": "eval: doc.deduct_sal_tax_on_percent==1",
+   "fieldname": "salary_tax_percent",
+   "fieldtype": "Percent",
+   "label": "Salary Tax Percent",
+   "mandatory_depends_on": "eval: doc.deduct_sal_tax_on_percent==1"
+  },
+  {
+   "fieldname": "hr_payroll_settings_section",
+   "fieldtype": "Section Break",
+   "label": "HR & Payroll Settings"
+  },
+  {
+   "fieldname": "employer_contribution_pf_account",
+   "fieldtype": "Link",
+   "label": "Employer Contribution PF Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "default_expense_claim_payable_account",
+   "fieldtype": "Link",
+   "label": "Default Expense Claim Payable Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "column_break_ijdl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_payroll_payable_account",
+   "fieldtype": "Link",
+   "label": "Default Payroll Payable Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "default_salary_tax_account",
+   "fieldtype": "Link",
+   "label": "Default Salary Tax Account",
+   "options": "Account"
   }
  ],
  "icon": "fa fa-building",
@@ -857,7 +923,7 @@
  "image_field": "company_logo",
  "is_tree": 1,
  "links": [],
- "modified": "2025-01-09 20:12:25.471544",
+ "modified": "2025-08-12 17:39:20.735400",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",
@@ -919,6 +985,7 @@
    "select": 1
   }
  ],
+ "row_format": "Dynamic",
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "ASC",

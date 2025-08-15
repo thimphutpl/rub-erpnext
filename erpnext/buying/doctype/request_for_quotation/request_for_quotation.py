@@ -12,6 +12,8 @@ from frappe.model.mapper import get_mapped_doc
 from frappe.utils import get_url
 from frappe.utils.print_format import download_pdf
 from frappe.utils.user import get_user_fullname
+from frappe.model.naming import make_autoname
+from erpnext.custom_autoname import get_auto_name
 
 from erpnext.accounts.party import get_party_account_currency, get_party_details
 from erpnext.buying.utils import validate_for_items
@@ -28,27 +30,23 @@ class RequestforQuotation(BuyingController):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
+		from erpnext.buying.doctype.request_for_quotation_item.request_for_quotation_item import RequestforQuotationItem
+		from erpnext.buying.doctype.request_for_quotation_supplier.request_for_quotation_supplier import RequestforQuotationSupplier
 		from frappe.types import DF
-
-		from erpnext.buying.doctype.request_for_quotation_item.request_for_quotation_item import (
-			RequestforQuotationItem,
-		)
-		from erpnext.buying.doctype.request_for_quotation_supplier.request_for_quotation_supplier import (
-			RequestforQuotationSupplier,
-		)
 
 		amended_from: DF.Link | None
 		billing_address: DF.Link | None
 		billing_address_display: DF.SmallText | None
 		company: DF.Link
 		email_template: DF.Link | None
-		has_unit_price_items: DF.Check
+		footer_text: DF.TextEditor | None
+		header_text: DF.TextEditor | None
 		incoterm: DF.Link | None
 		items: DF.Table[RequestforQuotationItem]
 		letter_head: DF.Link | None
 		message_for_supplier: DF.TextEditor
 		named_place: DF.Data | None
-		naming_series: DF.Literal["PUR-RFQ-.YYYY.-"]
+		naming_series: DF.Literal["", "Consumables", "Fixed Asset", "Sales Product", "Spareparts", "Services Miscellaneous", "Services Works", "Labour Contract", "PUR-RFQ-.YYYY.-"]
 		opportunity: DF.Link | None
 		schedule_date: DF.Date | None
 		select_print_heading: DF.Link | None
@@ -62,14 +60,12 @@ class RequestforQuotation(BuyingController):
 		vendor: DF.Link | None
 	# end: auto-generated types
 
-	def before_validate(self):
-		self.set_has_unit_price_items()
-		self.flags.allow_zero_qty = self.has_unit_price_items
-
+	def autoname(self):
+		self.name = make_autoname(get_auto_name(self, self.naming_series) + ".####")
+		
 	def validate(self):
 		self.validate_duplicate_supplier()
 		self.validate_supplier_list()
-		super().validate_qty_is_not_zero()
 		validate_for_items(self)
 		super().set_qty_as_per_stock_uom()
 		self.update_email_id()
@@ -77,17 +73,6 @@ class RequestforQuotation(BuyingController):
 		if self.docstatus < 1:
 			# after amend and save, status still shows as cancelled, until submit
 			self.db_set("status", "Draft")
-
-	def set_has_unit_price_items(self):
-		"""
-		If permitted in settings and any item has 0 qty, the RFQ has unit price items.
-		"""
-		if not frappe.db.get_single_value("Buying Settings", "allow_zero_qty_in_request_for_quotation"):
-			return
-
-		self.has_unit_price_items = any(
-			not row.qty for row in self.get("items") if (row.item_code and not row.qty)
-		)
 
 	def validate_duplicate_supplier(self):
 		supplier_list = [d.supplier for d in self.suppliers]
@@ -137,6 +122,14 @@ class RequestforQuotation(BuyingController):
 
 	def before_print(self, settings=None):
 		"""Use the first suppliers data to render the print preview."""
+		# if self.approver_id:
+		# 	approver_details = frappe.get_doc("User", self.approver_id)
+			
+		# 	# Add the approver's details to the document before printing
+		# 	self.approver_name = approver_details.full_name
+		# 	self.approver_designation = approver_details.designation
+		# 	self.approver_signature = approver_details.e_signature  # assuming e-signature is stored as an image in the user doctype
+			
 		if self.vendor or not self.suppliers:
 			# If a specific supplier is already set, via Tools > Download PDF,
 			# we don't want to override it.
@@ -407,15 +400,10 @@ def make_supplier_quotation_from_rfq(source_name, target_doc=None, for_supplier=
 			"Request for Quotation": {
 				"doctype": "Supplier Quotation",
 				"validation": {"docstatus": ["=", 1]},
-				"field_map": {"opportunity": "opportunity"},
 			},
 			"Request for Quotation Item": {
 				"doctype": "Supplier Quotation Item",
-				"field_map": {
-					"name": "request_for_quotation_item",
-					"parent": "request_for_quotation",
-					"project_name": "project",
-				},
+				"field_map": {"name": "request_for_quotation_item", "parent": "request_for_quotation"},
 			},
 		},
 		target_doc,
@@ -456,10 +444,11 @@ def create_supplier_quotation(doc):
 
 def add_items(sq_doc, supplier, items):
 	for data in items:
-		if isinstance(data, dict):
-			data = frappe._dict(data)
+		if data.get("qty") > 0:
+			if isinstance(data, dict):
+				data = frappe._dict(data)
 
-		create_rfq_items(sq_doc, supplier, data)
+			create_rfq_items(sq_doc, supplier, data)
 
 
 def create_rfq_items(sq_doc, supplier, data):
@@ -476,7 +465,6 @@ def create_rfq_items(sq_doc, supplier, data):
 		"material_request",
 		"material_request_item",
 		"stock_qty",
-		"uom",
 	]:
 		args[field] = data.get(field)
 

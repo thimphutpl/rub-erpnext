@@ -1,0 +1,112 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:hostel_type",
+ "creation": "2025-07-29 14:14:41.656542",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "hostel_type",
+  "room_number",
+  "capacity",
+  "column_break_sbzz",
+  "company",
+  "hostel_asset_items_section",
+  "table_jpww",
+  "student_list_section",
+  "student_list",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "capacity",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Capacity"
+  },
+  {
+   "fieldname": "column_break_sbzz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "room_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Room Number"
+  },
+  {
+   "fieldname": "hostel_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Hostel Type ",
+   "options": "Hostel Type",
+   "unique": 1
+  },
+  {
+   "fieldname": "hostel_asset_items_section",
+   "fieldtype": "Section Break",
+   "label": "Hostel Asset Items "
+  },
+  {
+   "fieldname": "table_jpww",
+   "fieldtype": "Table",
+   "options": "Hostel Asset Item"
+  },
+  {
+   "fieldname": "student_list_section",
+   "fieldtype": "Section Break",
+   "label": "Student List"
+  },
+  {
+   "fieldname": "student_list",
+   "fieldtype": "Table",
+   "options": "Student List Item"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Hostel Room",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-08-13 15:27:30.475283",
+ "modified_by": "Administrator",
+ "module": "Hostel Management",
+ "name": "Hostel Room",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

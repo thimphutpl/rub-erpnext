@@ -11,7 +11,6 @@ erpnext.assets.AssetCapitalization = class AssetCapitalization extends erpnext.s
 
 	onload() {
 		this.setup_queries();
-		erpnext.accounts.dimensions.setup_dimension_filters(this.frm, this.frm.doctype);
 	}
 
 	refresh() {
@@ -36,7 +35,11 @@ erpnext.assets.AssetCapitalization = class AssetCapitalization extends erpnext.s
 		me.setup_warehouse_query();
 
 		me.frm.set_query("target_item_code", function () {
-			return erpnext.queries.item({ is_stock_item: 0, is_fixed_asset: 1 });
+			if (me.frm.doc.entry_type == "Capitalization") {
+				return erpnext.queries.item({ is_stock_item: 0, is_fixed_asset: 1 });
+			} else {
+				return erpnext.queries.item({ is_stock_item: 1, is_fixed_asset: 0 });
+			}
 		});
 
 		me.frm.set_query("target_asset", function () {
@@ -47,7 +50,7 @@ erpnext.assets.AssetCapitalization = class AssetCapitalization extends erpnext.s
 
 		me.frm.set_query("asset", "asset_items", function () {
 			var filters = {
-				status: ["not in", ["Draft", "Scrapped", "Sold", "Capitalized"]],
+				status: ["not in", ["Draft", "Scrapped", "Sold", "Capitalized", "Decapitalized"]],
 				docstatus: 1,
 			};
 
@@ -143,19 +146,14 @@ erpnext.assets.AssetCapitalization = class AssetCapitalization extends erpnext.s
 		}
 	}
 
-	set_consumed_stock_items_tagged_to_wip_composite_asset(target_asset) {
+	set_consumed_stock_items_tagged_to_wip_composite_asset(asset) {
 		var me = this;
 
-		if (target_asset) {
+		if (asset) {
 			return me.frm.call({
 				method: "erpnext.assets.doctype.asset_capitalization.asset_capitalization.get_items_tagged_to_wip_composite_asset",
 				args: {
-					params: {
-						target_asset: target_asset,
-						finance_book: me.frm.doc.finance_book,
-						posting_date: me.frm.doc.posting_date,
-						posting_time: me.frm.doc.posting_time,
-					},
+					asset: asset,
 				},
 				callback: function (r) {
 					if (!r.exc && r.message) {
@@ -281,6 +279,7 @@ erpnext.assets.AssetCapitalization = class AssetCapitalization extends erpnext.s
 		if (me.frm.doc.target_item_code) {
 			return me.frm.call({
 				method: "erpnext.assets.doctype.asset_capitalization.asset_capitalization.get_target_item_details",
+				child: me.frm.doc,
 				args: {
 					item_code: me.frm.doc.target_item_code,
 					company: me.frm.doc.company,
@@ -300,6 +299,7 @@ erpnext.assets.AssetCapitalization = class AssetCapitalization extends erpnext.s
 		if (me.frm.doc.target_asset) {
 			return me.frm.call({
 				method: "erpnext.assets.doctype.asset_capitalization.asset_capitalization.get_target_asset_details",
+				child: me.frm.doc,
 				args: {
 					asset: me.frm.doc.target_asset,
 					company: me.frm.doc.company,
@@ -402,7 +402,7 @@ erpnext.assets.AssetCapitalization = class AssetCapitalization extends erpnext.s
 					args: {
 						item_code: item.item_code,
 						warehouse: cstr(item.warehouse),
-						qty: -1 * flt(item.stock_qty),
+						qty: flt(item.stock_qty),
 						serial_no: item.serial_no,
 						posting_date: me.frm.doc.posting_date,
 						posting_time: me.frm.doc.posting_time,

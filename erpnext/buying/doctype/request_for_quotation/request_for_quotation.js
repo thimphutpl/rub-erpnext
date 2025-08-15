@@ -9,6 +9,7 @@ frappe.ui.form.on("Request for Quotation", {
 	setup: function (frm) {
 		frm.custom_make_buttons = {
 			"Supplier Quotation": "Create",
+			"Purchase Order": "Create",		
 		};
 
 		frm.fields_dict["suppliers"].grid.get_field("contact").get_query = function (doc, cdt, cdn) {
@@ -28,10 +29,6 @@ frappe.ui.form.on("Request for Quotation", {
 				is_group: 0,
 			},
 		}));
-
-		frm.set_indicator_formatter("item_code", function (doc) {
-			return !doc.qty && frm.doc.has_unit_price_items ? "yellow" : "";
-		});
 	},
 
 	onload: function (frm) {
@@ -44,6 +41,14 @@ frappe.ui.form.on("Request for Quotation", {
 	},
 
 	refresh: function (frm, cdt, cdn) {
+		// Add the custom button for Purchase Order
+        // frm.add_custom_button(__('Create Purchase Order'), function() {
+        //     frappe.model.open_mapped_doc({
+        //         method: "path.to.your.server_side_function",
+        //         frm: frm
+        //     });
+        // }, __("Actions"));
+
 		if (frm.doc.docstatus === 1) {
 			frm.add_custom_button(
 				__("Supplier Quotation"),
@@ -52,6 +57,12 @@ frappe.ui.form.on("Request for Quotation", {
 				},
 				__("Create")
 			);
+			frm.add_custom_button(__('Create Purchase Order'), function() {
+				frappe.model.open_mapped_doc({
+					method: "erpnext.buying.doctype.purchase_order.purchase_order.create_purchase_order", // Update with your server-side mapping function
+					frm: frm
+				});
+			}, __("Create"));
 
 			frm.add_custom_button(
 				__("Send Emails to Suppliers"),
@@ -150,41 +161,16 @@ frappe.ui.form.on("Request for Quotation", {
 								return;
 							}
 						},
-						__("Download PDF for Supplier"),
-						__("Download")
+						"Download PDF for Supplier",
+						"Download"
 					);
 				},
 				__("Tools")
 			);
 
 			frm.page.set_inner_btn_group_as_primary(__("Create"));
-
-			frm.add_custom_button(
-				__("Supplier Quotation Comparison"),
-				function () {
-					frm.trigger("show_supplier_quotation_comparison");
-				},
-				__("View")
-			);
 		}
-
-		if (frm.doc.docstatus === 0) {
-			erpnext.set_unit_price_items_note(frm);
-		}
-	},
-
-	show_supplier_quotation_comparison(frm) {
-		const today = new Date();
-		const oneMonthAgo = new Date(today);
-		oneMonthAgo.setMonth(today.getMonth() - 1);
-
-		frappe.route_options = {
-			company: frm.doc.company,
-			from_date: moment(oneMonthAgo).format("YYYY-MM-DD"),
-			to_date: moment(today).format("YYYY-MM-DD"),
-			request_for_quotation: frm.doc.name,
-		};
-		frappe.set_route("query-report", "Supplier Quotation Comparison");
+		
 	},
 
 	make_supplier_quotation: function (frm) {
@@ -302,10 +288,9 @@ frappe.ui.form.on("Request for Quotation", {
 			});
 		};
 
-		const msg = __(
-			"This is a preview of the email to be sent. A PDF of the document will automatically be attached with the email."
-		);
-		dialog.fields_dict.note.$wrapper.append(`<p class="small text-muted">${msg}</p>`);
+		dialog.fields_dict.note.$wrapper
+			.append(`<p class="small text-muted">This is a preview of the email to be sent. A PDF of the document will
+			automatically be attached with the email.</p>`);
 
 		dialog.show();
 	},

@@ -98,11 +98,9 @@ class AssetRepair(AccountsController):
 
 			self.increase_asset_value()
 
-			total_repair_cost = self.get_total_value_of_stock_consumed()
 			if self.capitalize_repair_cost:
-				total_repair_cost += self.repair_cost
-			self.asset_doc.total_asset_cost += total_repair_cost
-			self.asset_doc.additional_asset_cost += total_repair_cost
+				self.asset_doc.total_asset_cost += self.repair_cost
+				self.asset_doc.additional_asset_cost += self.repair_cost
 
 			if self.get("stock_consumption"):
 				self.check_for_stock_items_and_warehouse()
@@ -119,9 +117,7 @@ class AssetRepair(AccountsController):
 					get_link_to_form(self.doctype, self.name),
 				)
 				self.asset_doc.flags.ignore_validate_update_after_submit = True
-				make_new_active_asset_depr_schedules_and_cancel_current_ones(
-					self.asset_doc, notes, ignore_booked_entry=True
-				)
+				make_new_active_asset_depr_schedules_and_cancel_current_ones(self.asset_doc, notes)
 				self.asset_doc.save()
 
 				add_asset_activity(
@@ -141,11 +137,9 @@ class AssetRepair(AccountsController):
 
 			self.decrease_asset_value()
 
-			total_repair_cost = self.get_total_value_of_stock_consumed()
 			if self.capitalize_repair_cost:
-				total_repair_cost += self.repair_cost
-			self.asset_doc.total_asset_cost -= total_repair_cost
-			self.asset_doc.additional_asset_cost -= total_repair_cost
+				self.asset_doc.total_asset_cost -= self.repair_cost
+				self.asset_doc.additional_asset_cost -= self.repair_cost
 
 			if self.get("capitalize_repair_cost"):
 				self.ignore_linked_doctypes = ("GL Entry", "Stock Ledger Entry")
@@ -160,9 +154,7 @@ class AssetRepair(AccountsController):
 					get_link_to_form(self.doctype, self.name),
 				)
 				self.asset_doc.flags.ignore_validate_update_after_submit = True
-				make_new_active_asset_depr_schedules_and_cancel_current_ones(
-					self.asset_doc, notes, ignore_booked_entry=True
-				)
+				make_new_active_asset_depr_schedules_and_cancel_current_ones(self.asset_doc, notes)
 				self.asset_doc.save()
 
 				add_asset_activity(

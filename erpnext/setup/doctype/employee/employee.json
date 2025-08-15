@@ -30,12 +30,17 @@
   "user_id",
   "create_user",
   "create_user_permission",
+  "employment_details_section",
+  "employee_number",
+  "employee_group",
+  "column_break_bpau",
+  "designation",
+  "column_break_bipo",
+  "grade",
   "company_details_section",
   "company",
   "department",
-  "employee_number",
   "column_break_25",
-  "designation",
   "reports_to",
   "column_break_18",
   "branch",
@@ -826,6 +831,31 @@
   {
    "fieldname": "column_break_judt",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employment_details_section",
+   "fieldtype": "Section Break",
+   "label": "Employment Details"
+  },
+  {
+   "fieldname": "column_break_bpau",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_bipo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Link",
+   "label": "Grade",
+   "options": "Employee Grade"
+  },
+  {
+   "fieldname": "employee_group",
+   "fieldtype": "Link",
+   "label": "Employee Group",
+   "options": "Employee Group"
   }
  ],
  "icon": "fa fa-user",
@@ -833,7 +863,7 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2025-06-27 11:07:26.666760",
+ "modified": "2025-08-12 15:50:34.538046",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Employee",

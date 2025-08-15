@@ -31,8 +31,6 @@ from erpnext.stock.doctype.purchase_receipt.purchase_receipt import (
 class TestPurchaseOrder(FrappeTestCase):
 	def test_purchase_order_qty(self):
 		po = create_purchase_order(qty=1, do_not_save=True)
-
-		# NonNegativeError with qty=-1
 		po.append(
 			"items",
 			{
@@ -43,21 +41,8 @@ class TestPurchaseOrder(FrappeTestCase):
 		)
 		self.assertRaises(frappe.NonNegativeError, po.save)
 
-		# InvalidQtyError with qty=0
 		po.items[1].qty = 0
 		self.assertRaises(InvalidQtyError, po.save)
-
-		# No error with qty=1
-		po.items[1].qty = 1
-		po.save()
-		self.assertEqual(po.items[1].qty, 1)
-
-	def test_purchase_order_zero_qty(self):
-		po = create_purchase_order(qty=0, do_not_save=True)
-
-		with change_settings("Buying Settings", {"allow_zero_qty_in_purchase_order": 1}):
-			po.save()
-			self.assertEqual(po.items[0].qty, 0)
 
 	def test_make_purchase_receipt(self):
 		po = create_purchase_order(do_not_submit=True)
@@ -808,6 +793,8 @@ class TestPurchaseOrder(FrappeTestCase):
 		po_doc.reload()
 		self.assertEqual(po_doc.advance_paid, 5000)
 
+		from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_invoice
+
 		company_doc.book_advance_payments_in_separate_party_account = False
 		company_doc.save()
 
@@ -933,7 +920,6 @@ class TestPurchaseOrder(FrappeTestCase):
 		automatically_fetch_payment_terms(enable=0)
 
 	def test_internal_transfer_flow(self):
-		from erpnext.accounts.doctype.cost_center.test_cost_center import create_cost_center
 		from erpnext.accounts.doctype.sales_invoice.sales_invoice import (
 			make_inter_company_purchase_invoice,
 		)
@@ -949,16 +935,8 @@ class TestPurchaseOrder(FrappeTestCase):
 		prepare_data_for_internal_transfer()
 		supplier = "_Test Internal Supplier 2"
 
-		create_cost_center(
-			cost_center_name="_Test Cost Center for perpetual inventory Account",
-			company="_Test Company with perpetual inventory",
-		)
-
 		mr = make_material_request(
-			qty=2,
-			company="_Test Company with perpetual inventory",
-			warehouse="Stores - TCP1",
-			cost_center="_Test Cost Center for perpetual inventory Account - TCP1",
+			qty=2, company="_Test Company with perpetual inventory", warehouse="Stores - TCP1"
 		)
 
 		po = create_purchase_order(
@@ -1026,7 +1004,7 @@ class TestPurchaseOrder(FrappeTestCase):
 		)
 
 		def update_items(po, qty):
-			trans_items = [po.items[0].as_dict().update({"docname": po.items[0].name})]
+			trans_items = [po.items[0].as_dict()]
 			trans_items[0]["qty"] = qty
 			trans_items[0]["fg_item_qty"] = qty
 			trans_items = json.dumps(trans_items, default=str)
@@ -1080,73 +1058,6 @@ class TestPurchaseOrder(FrappeTestCase):
 		# Test - 3: Items should be updated as the Subcontracting Order is cancelled
 		self.assertEqual(po.items[0].qty, 30)
 		self.assertEqual(po.items[0].fg_item_qty, 30)
-
-	def test_new_sc_flow(self):
-		from erpnext.buying.doctype.purchase_order.purchase_order import make_subcontracting_order
-
-		po = create_po_for_sc_testing()
-		sco = make_subcontracting_order(po.name)
-
-		sco.items[0].qty = 5
-		sco.items.pop(1)
-		sco.items[1].qty = 25
-		sco.save()
-		sco.submit()
-
-		# Test - 1: Quantity of Service Items should change based on change in Quantity of its corresponding Finished Goods Item
-		self.assertEqual(sco.service_items[0].qty, 5)
-
-		# Test - 2: Subcontracted Quantity for the PO Items of each line item should be updated accordingly
-		po.reload()
-		self.assertEqual(po.items[0].subcontracted_quantity, 5)
-		self.assertEqual(po.items[1].subcontracted_quantity, 0)
-		self.assertEqual(po.items[2].subcontracted_quantity, 12.5)
-
-		# Test - 3: Amount for both FG Item and its Service Item should be updated correctly based on change in Quantity
-		self.assertEqual(sco.items[0].amount, 2000)
-		self.assertEqual(sco.service_items[0].amount, 500)
-
-		# Test - 4: Service Items should be removed if its corresponding Finished Good line item is deleted
-		self.assertEqual(len(sco.service_items), 2)
-
-		# Test - 5: Service Item quantity calculation should be based upon conversion factor calculated from its corresponding PO Item
-		self.assertEqual(sco.service_items[1].qty, 12.5)
-
-		sco = make_subcontracting_order(po.name)
-
-		sco.items[0].qty = 6
-
-		# Test - 6: Saving document should not be allowed if Quantity exceeds available Subcontracting Quantity of any Purchase Order Item
-		self.assertRaises(frappe.ValidationError, sco.save)
-
-		sco.items[0].qty = 5
-		sco.items.pop()
-		sco.items.pop()
-		sco.save()
-		sco.submit()
-
-		sco = make_subcontracting_order(po.name)
-
-		# Test - 7: Since line item 1 is now fully subcontracted, new SCO should by default only have the remaining 2 line items
-		self.assertEqual(len(sco.items), 2)
-
-		sco.items.pop(0)
-		sco.save()
-		sco.submit()
-
-		# Test - 8: Subcontracted Quantity for each PO Item should be subtracted if SCO gets cancelled
-		po.reload()
-		self.assertEqual(po.items[2].subcontracted_quantity, 25)
-		sco.cancel()
-		po.reload()
-		self.assertEqual(po.items[2].subcontracted_quantity, 12.5)
-
-		sco = make_subcontracting_order(po.name)
-		sco.save()
-		sco.submit()
-
-		# Test - 8: Since this PO is now fully subcontracted, creating a new SCO from it should throw error
-		self.assertRaises(frappe.ValidationError, make_subcontracting_order, po.name)
 
 	@change_settings("Buying Settings", {"auto_create_subcontracting_order": 1})
 	def test_auto_create_subcontracting_order(self):
@@ -1211,127 +1122,6 @@ class TestPurchaseOrder(FrappeTestCase):
 		# Check if the billed amount stayed the same
 		po.reload()
 		self.assertEqual(po.per_billed, 100)
-
-	@change_settings("Buying Settings", {"allow_zero_qty_in_purchase_order": 1})
-	def test_receive_zero_qty_purchase_order(self):
-		"""
-		Test the flow of a Unit Price PO and PR creation against it until completion.
-		Flow:
-		PO Qty 0 -> Receive +5 -> Receive +5 -> Update PO Qty +10 -> PO is 100% received
-		"""
-		po = create_purchase_order(qty=0)
-		pr = make_purchase_receipt(po.name)
-
-		self.assertEqual(pr.items[0].qty, 0)
-		pr.items[0].qty = 5
-		pr.submit()
-
-		po.reload()
-		self.assertEqual(po.items[0].received_qty, 5)
-		self.assertFalse(po.per_received)
-		self.assertEqual(po.status, "To Receive and Bill")
-
-		# Update PO Item Qty to 10 after receipt of items
-		first_item_of_po = po.items[0]
-		trans_item = json.dumps(
-			[
-				{
-					"item_code": first_item_of_po.item_code,
-					"rate": first_item_of_po.rate,
-					"qty": 10,
-					"docname": first_item_of_po.name,
-				}
-			]
-		)
-		update_child_qty_rate("Purchase Order", trans_item, po.name)
-
-		# Test: PR can be made against PO as long PO qty is 0 OR PO qty > received qty
-		pr2 = make_purchase_receipt(po.name)
-
-		po.reload()
-		self.assertEqual(po.items[0].qty, 10)
-		self.assertEqual(pr2.items[0].qty, 5)
-
-		pr2.submit()
-
-		# PO should be updated to 100% received
-		po.reload()
-		self.assertEqual(po.items[0].qty, 10)
-		self.assertEqual(po.items[0].received_qty, 10)
-		self.assertEqual(po.per_received, 100.0)
-		self.assertEqual(po.status, "To Bill")
-
-	@change_settings("Buying Settings", {"allow_zero_qty_in_purchase_order": 1})
-	def test_bill_zero_qty_purchase_order(self):
-		po = create_purchase_order(qty=0)
-
-		self.assertEqual(po.grand_total, 0)
-		self.assertFalse(po.per_billed)
-		self.assertEqual(po.items[0].qty, 0)
-		self.assertEqual(po.items[0].rate, 500)
-
-		pi = make_pi_from_po(po.name)
-		self.assertEqual(pi.items[0].qty, 0)
-		self.assertEqual(pi.items[0].rate, 500)
-
-		pi.items[0].qty = 5
-		pi.submit()
-
-		self.assertEqual(pi.grand_total, 2500)
-
-		po.reload()
-		self.assertEqual(po.items[0].amount, 0)
-		self.assertEqual(po.items[0].billed_amt, 2500)
-		# PO still has qty 0, so billed % should be unset
-		self.assertFalse(po.per_billed)
-		self.assertEqual(po.status, "To Receive and Bill")
-
-
-def create_po_for_sc_testing():
-	from erpnext.controllers.tests.test_subcontracting_controller import (
-		make_bom_for_subcontracted_items,
-		make_raw_materials,
-		make_service_items,
-		make_subcontracted_items,
-	)
-
-	make_subcontracted_items()
-	make_raw_materials()
-	make_service_items()
-	make_bom_for_subcontracted_items()
-
-	service_items = [
-		{
-			"warehouse": "_Test Warehouse - _TC",
-			"item_code": "Subcontracted Service Item 1",
-			"qty": 10,
-			"rate": 100,
-			"fg_item": "Subcontracted Item SA1",
-			"fg_item_qty": 10,
-		},
-		{
-			"warehouse": "_Test Warehouse - _TC",
-			"item_code": "Subcontracted Service Item 2",
-			"qty": 20,
-			"rate": 25,
-			"fg_item": "Subcontracted Item SA2",
-			"fg_item_qty": 15,
-		},
-		{
-			"warehouse": "_Test Warehouse - _TC",
-			"item_code": "Subcontracted Service Item 3",
-			"qty": 25,
-			"rate": 10,
-			"fg_item": "Subcontracted Item SA3",
-			"fg_item_qty": 50,
-		},
-	]
-
-	return create_purchase_order(
-		rm_items=service_items,
-		is_subcontracted=1,
-		supplier_warehouse="_Test Warehouse 1 - _TC",
-	)
 
 
 def prepare_data_for_internal_transfer():
@@ -1428,7 +1218,7 @@ def create_purchase_order(**args):
 				"item_code": args.item or args.item_code or "_Test Item",
 				"warehouse": args.warehouse or "_Test Warehouse - _TC",
 				"from_warehouse": args.from_warehouse,
-				"qty": args.qty if args.qty is not None else 10,
+				"qty": args.qty or 10,
 				"rate": args.rate or 500,
 				"schedule_date": add_days(nowdate(), 1),
 				"include_exploded_items": args.get("include_exploded_items", 1),

@@ -16,7 +16,6 @@
   "transaction_date",
   "schedule_date",
   "status",
-  "has_unit_price_items",
   "amended_from",
   "suppliers_section",
   "suppliers",
@@ -39,6 +38,10 @@
   "printing_settings",
   "select_print_heading",
   "letter_head",
+  "column_break_jfqx",
+  "quotation_header_and_footer_section",
+  "header_text",
+  "footer_text",
   "more_info",
   "opportunity"
  ],
@@ -51,7 +54,7 @@
    "no_copy": 1,
    "oldfieldname": "naming_series",
    "oldfieldtype": "Select",
-   "options": "PUR-RFQ-.YYYY.-",
+   "options": "\nConsumables\nFixed Asset\nSales Product\nSpareparts\nServices Miscellaneous\nServices Works\nLabour Contract\nPUR-RFQ-.YYYY.-",
    "print_hide": 1,
    "reqd": 1,
    "set_only_once": 1
@@ -107,8 +110,7 @@
    "fieldtype": "Table",
    "label": "Suppliers",
    "options": "Request for Quotation Supplier",
-   "print_hide": 1,
-   "reqd": 1
+   "print_hide": 1
   },
   {
    "fieldname": "items_section",
@@ -264,6 +266,7 @@
   {
    "fieldname": "incoterm",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Incoterm",
    "options": "Incoterm"
   },
@@ -271,6 +274,7 @@
    "depends_on": "incoterm",
    "fieldname": "named_place",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Named Place"
   },
   {
@@ -309,20 +313,30 @@
    "read_only": 1
   },
   {
-   "default": "0",
-   "fieldname": "has_unit_price_items",
-   "fieldtype": "Check",
-   "hidden": 1,
-   "label": "Has Unit Price Items",
-   "no_copy": 1
+   "fieldname": "quotation_header_and_footer_section",
+   "fieldtype": "Section Break",
+   "label": "Quotation Header and Footer"
+  },
+  {
+   "fieldname": "column_break_jfqx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "header_text",
+   "fieldtype": "Text Editor",
+   "label": "Header"
+  },
+  {
+   "fieldname": "footer_text",
+   "fieldtype": "Text Editor",
+   "label": "Footer"
   }
  ],
- "grid_page_length": 50,
  "icon": "fa fa-shopping-cart",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-03 16:48:39.856779",
+ "modified": "2025-04-02 15:08:15.418934",
  "modified_by": "Administrator",
  "module": "Buying",
  "name": "Request for Quotation",
@@ -387,7 +401,6 @@
    "role": "All"
   }
  ],
- "row_format": "Dynamic",
  "search_fields": "status, transaction_date",
  "show_name_in_global_search": 1,
  "sort_field": "modified",

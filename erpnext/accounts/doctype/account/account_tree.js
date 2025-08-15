@@ -81,7 +81,7 @@ frappe.treeview_settings["Account"] = {
 
 						// show Dr if positive since balance is calculated as debit - credit else show Cr
 						const balance = account.balance_in_account_currency || account.balance;
-						const dr_or_cr = balance > 0 ? "Dr" : "Cr";
+						const dr_or_cr = balance > 0 ? __("Dr") : __("Cr");
 						const format = (value, currency) => format_currency(Math.abs(value), currency);
 
 						if (account.balance !== undefined) {
@@ -237,22 +237,19 @@ frappe.treeview_settings["Account"] = {
 	},
 	post_render: function (treeview) {
 		frappe.treeview_settings["Account"].treeview["tree"] = treeview.tree;
-		if (treeview.can_create) {
-			treeview.page.set_primary_action(
-				__("New"),
-				function () {
-					let root_company = treeview.page.fields_dict.root_company.get_value();
-					if (root_company) {
-						frappe.throw(__("Please add the account to root level Company - {0}"), [
-							root_company,
-						]);
-					} else {
-						treeview.new_node();
-					}
-				},
-				"add"
-			);
-		}
+		treeview.page.set_primary_action(
+			__("New"),
+			function () {
+				let root_company = treeview.page.fields_dict.root_company.get_value();
+
+				if (root_company) {
+					frappe.throw(__("Please add the account to root level Company - {0}"), [root_company]);
+				} else {
+					treeview.new_node();
+				}
+			},
+			"add"
+		);
 	},
 	toolbar: [
 		{

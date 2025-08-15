@@ -50,7 +50,6 @@ frappe.query_reports["Supplier Quotation Comparison"] = {
 			fieldname: "supplier",
 			label: __("Supplier"),
 			fieldtype: "MultiSelectList",
-			options: "Supplier",
 			get_data: function (txt) {
 				return frappe.db.get_link_options("Supplier", txt);
 			},
@@ -59,7 +58,6 @@ frappe.query_reports["Supplier Quotation Comparison"] = {
 			fieldtype: "MultiSelectList",
 			label: __("Supplier Quotation"),
 			fieldname: "supplier_quotation",
-			options: "Supplier Quotation",
 			default: "",
 			get_data: function (txt) {
 				return frappe.db.get_link_options("Supplier Quotation", txt, { docstatus: ["<", 2] });
@@ -76,14 +74,14 @@ frappe.query_reports["Supplier Quotation Comparison"] = {
 			},
 		},
 		{
-			fieldname: "categorize_by",
-			label: __("Categorize by"),
+			fieldname: "group_by",
+			label: __("Group by"),
 			fieldtype: "Select",
 			options: [
-				{ label: __("Categorize by Supplier"), value: "Categorize by Supplier" },
-				{ label: __("Categorize by Item"), value: "Categorize by Item" },
+				{ label: __("Group by Supplier"), value: "Group by Supplier" },
+				{ label: __("Group by Item"), value: "Group by Item" },
 			],
-			default: __("Categorize by Supplier"),
+			default: __("Group by Supplier"),
 		},
 		{
 			fieldtype: "Check",
@@ -199,4 +197,18 @@ frappe.query_reports["Supplier Quotation Comparison"] = {
 		});
 		dialog.show();
 	},
+	// formatter(value, row, column, data) {
+    //     if (data && data.highlight_color === 'green') {
+    //         return `<span style="background-color: lightgreen">${value}</span>`;
+    //     }
+    //     return value;
+    // }
+	
+	formatter(value, row, column, data) {
+		if (column.fieldname === "price_per_unit" && data && data.highlight_price === "green") {
+			return `<span style="background-color: lightgreen">${value}</span>`;
+		}
+		return value;
+	}
+	
 };

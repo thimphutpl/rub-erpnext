@@ -37,7 +37,6 @@ class DeliveryNoteItem(Document):
 		description: DF.TextEditor | None
 		discount_amount: DF.Currency
 		discount_percentage: DF.Float
-		distributed_discount_amount: DF.Currency
 		dn_detail: DF.Data | None
 		expense_account: DF.Link | None
 		grant_commission: DF.Check

@@ -14,7 +14,7 @@
  "hide_custom": 0,
  "icon": "crm",
  "idx": 0,
- "is_hidden": 0,
+ "is_hidden": 1,
  "label": "CRM",
  "links": [
   {
@@ -419,8 +419,8 @@
    "type": "Link"
   }
  ],
- "modified": "2023-09-14 12:11:03.968048",
- "modified_by": "Administrator",
+ "modified": "2025-08-14 09:44:33.893127",
+ "modified_by": "lhendup.dorji@thimphutechpark.bt",
  "module": "CRM",
  "name": "CRM",
  "number_cards": [],
@@ -456,6 +456,7 @@
   {
    "label": "Sales Analytics",
    "link_to": "Sales Analytics",
+   "report_ref_doctype": "Sales Order",
    "type": "Report"
   },
   {

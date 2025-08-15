@@ -234,7 +234,7 @@ class TestAsset(AssetSetup):
 		pro_rata_amount, _, _ = _get_pro_rata_amt(
 			asset.finance_books[0],
 			9000,
-			add_days(get_last_day(add_months(purchase_date, 1)), 1),
+			get_last_day(add_months(purchase_date, 1)),
 			date,
 			original_schedule_date=get_last_day(nowdate()),
 		)
@@ -320,7 +320,7 @@ class TestAsset(AssetSetup):
 		pro_rata_amount, _, _ = _get_pro_rata_amt(
 			asset.finance_books[0],
 			9000,
-			add_days(get_last_day(add_months(purchase_date, 1)), 1),
+			get_last_day(add_months(purchase_date, 1)),
 			date,
 			original_schedule_date=get_last_day(nowdate()),
 		)
@@ -740,7 +740,7 @@ class TestDepreciationMethods(AssetSetup):
 			available_for_use_date="2030-06-06",
 			is_existing_asset=1,
 			opening_number_of_booked_depreciations=2,
-			opening_accumulated_depreciation=47178.08,
+			opening_accumulated_depreciation=47095.89,
 			expected_value_after_useful_life=10000,
 			depreciation_start_date="2032-12-31",
 			total_number_of_depreciations=3,
@@ -748,7 +748,7 @@ class TestDepreciationMethods(AssetSetup):
 		)
 
 		self.assertEqual(asset.status, "Draft")
-		expected_schedules = [["2032-12-31", 30000.0, 77178.08], ["2033-06-06", 12821.92, 90000.0]]
+		expected_schedules = [["2032-12-31", 42904.11, 90000.0]]
 		schedules = [
 			[cstr(d.schedule_date), flt(d.depreciation_amount, 2), d.accumulated_depreciation_amount]
 			for d in get_depr_schedule(asset.name, "Draft")
@@ -889,7 +889,7 @@ class TestDepreciationMethods(AssetSetup):
 			["2030-12-31", 28630.14, 28630.14],
 			["2031-12-31", 35684.93, 64315.07],
 			["2032-12-31", 17842.46, 82157.53],
-			["2033-06-06", 5342.47, 87500.00],
+			["2033-06-06", 5342.46, 87499.99],
 		]
 
 		schedules = [
@@ -1724,10 +1724,6 @@ def create_asset(**args):
 				"rate_of_depreciation": args.rate_of_depreciation or 0,
 			},
 		)
-
-	if asset.is_composite_asset:
-		asset.gross_purchase_amount = 0
-		asset.purchase_amount = 0
 
 	if not args.do_not_save:
 		try:
