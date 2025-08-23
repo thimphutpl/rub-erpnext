@@ -33,7 +33,7 @@ jobs:
           # First deploy to production server
           ssh -o StrictHostKeyChecking=no \
             ${{ secrets.PRODUCTION_SERVER_USER }}@${{ secrets.PRODUCTION_SERVER_IP }} \
-            "docker exec erpnext-docker-frappe-1 bash -c 'cd /apps/erpnext && git pull upstream main'"
+            "docker exec erpnext-docker-frappe-1 bash -c 'cd /home/frappe/frappe-bench/apps/erpnext && git pull upstream main'"
 
       #     # Then deploy to internal server using the key stored on production server
       #     ssh -o StrictHostKeyChecking=no \
