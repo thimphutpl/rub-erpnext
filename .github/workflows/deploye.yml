@@ -27,7 +27,7 @@ jobs:
             ${{ secrets.PRODUCTION_SERVER_USER }}@${{ secrets.PRODUCTION_SERVER_IP }} \
             "echo '✅ Production server access confirmed'"
 
-      # # 4. Deployment commands
+      # 4. Deployment commands
       - name: Deploy application
         run: |
           # First deploy to production server
@@ -35,8 +35,8 @@ jobs:
             ${{ secrets.PRODUCTION_SERVER_USER }}@${{ secrets.PRODUCTION_SERVER_IP }} \
             "docker exec erpnext-docker-frappe-1 bash -c 'cd /home/frappe/frappe-bench/apps/erpnext && git pull upstream main'"
 
-      #     # Then deploy to internal server using the key stored on production server
-      #     ssh -o StrictHostKeyChecking=no \
-      #       ${{ secrets.PRODUCTION_SERVER_USER }}@${{ secrets.PRODUCTION_SERVER_IP }} \
-      #       "ssh -i /home/rubovc/key -o StrictHostKeyChecking=no rubovc@172.20.40.11 \
-      #         'cd /home/rubovc/web && git pull origin main'"
+          # Then deploy to internal server using the key stored on production server
+          ssh -o StrictHostKeyChecking=no \
+            ${{ secrets.PRODUCTION_SERVER_USER }}@${{ secrets.PRODUCTION_SERVER_IP }} \
+            "ssh -i /home/rubovc/key -o StrictHostKeyChecking=no rubovc@172.20.40.11 \
+            'docker exec erpnext-docker-frappe-1 bash -c \"cd /home/frappe/frappe-bench/apps/erpnext && git pull upstream main && bench migrate && bench clear-cache\"'"
