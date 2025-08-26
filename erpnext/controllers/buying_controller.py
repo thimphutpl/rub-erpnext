@@ -171,7 +171,7 @@ class BuyingController(SubcontractingController):
 					company=self.company,
 					party_address=self.get("supplier_address"),
 					shipping_address=self.get("shipping_address"),
-					dispatch_address=self.get("dispatch_address"),
+					# dispatch_address=self.get("dispatch_address"),
 					company_address=self.get("billing_address"),
 					fetch_payment_terms_template=not self.get("ignore_default_payment_terms_template"),
 					ignore_permissions=self.flags.ignore_permissions,
@@ -348,8 +348,9 @@ class BuyingController(SubcontractingController):
 					)
 
 				net_rate = item.base_net_amount
-				if item.sales_incoming_rate:  # for internal transfer
+				if getattr(item, 'sales_incoming_rate', None) is not None:
 					net_rate = item.qty * item.sales_incoming_rate
+
 
 				qty_in_stock_uom = flt(item.qty * item.conversion_factor)
 				if self.get("is_old_subcontracting_flow"):

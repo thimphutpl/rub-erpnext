@@ -43,6 +43,7 @@ class Employee(NestedSet):
 		self.validate_reports_to()
 		self.set_preferred_email()
 		self.validate_preferred_email()
+		self.create_faculty()
 
 		if self.user_id:
 			self.validate_user_details()
@@ -61,6 +62,35 @@ class Employee(NestedSet):
 		self.employee_name = " ".join(
 			filter(lambda x: x, [self.first_name, self.middle_name, self.last_name])
 		)
+
+	def create_faculty(self):
+		# Check if marked as Faculty
+		if self.faculty:
+			# Check if Faculty already exists for this Employee
+			exists = frappe.db.exists("Faculty", {"employee": self.name})
+			if not exists:
+				faculty = frappe.new_doc("Faculty")
+				# Map common fields
+				faculty.employee = self.name
+				faculty.employee_name = self.employee_name
+				faculty.department = self.department
+				faculty.designation = self.designation
+				faculty.email = self.company_email
+				faculty.phone_number = self.cell_number
+				# Add more mappings as needed
+				faculty.first_name = self.first_name
+				faculty.middle_name = self.middle_name
+				faculty.last_name = self.last_name
+				faculty.employee_name = self.employee_name
+				faculty.salutation = self.salutation
+				faculty.status = self.status
+				faculty.gender = self.gender
+				faculty.date_of_birth =self.date_of_birth
+				faculty.date_of_joining = self.date_of_joining
+				faculty.user_id = self.user_id
+				faculty.company =self.company
+				faculty.insert(ignore_permissions=True)
+				frappe.db.commit()	
 
 	def validate_user_details(self):
 		if self.user_id:

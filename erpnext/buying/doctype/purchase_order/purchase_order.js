@@ -921,3 +921,36 @@ frappe.ui.form.on("Purchase Order", "is_subcontracted", function (frm) {
 
 
 
+frappe.ui.form.on("Purchase Order Item", {
+    items_add: function (frm, cdt, cdn) {
+        set_expense_account(frm, cdt, cdn);
+    },
+    item_code: function (frm, cdt, cdn) {
+        set_expense_account(frm, cdt, cdn);
+    }
+});
+
+function set_expense_account(frm, cdt, cdn) {
+    let row = locals[cdt][cdn];
+    if (!row.item_code) return;
+
+    frappe.call({
+        method: "erpnext.buying.doctype.purchase_order.purchase_order.fetch_expense_account",
+        args: { item_code: row.item_code },
+        callback: function (r) {
+            let account_name = r.message;
+            if (!account_name) return;
+
+            let updated_items = frm.doc.items.map(item => {
+                if (item.name === cdn) {
+                    item.expense_account = account_name;
+                }
+                return item;
+            });
+
+            frm.set_value("items", updated_items);
+        }
+    });
+}
+
+

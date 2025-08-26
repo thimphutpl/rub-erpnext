@@ -14,8 +14,11 @@ class ItemSubGroup(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		asset_category: DF.Link | None
+		asset_sub_category: DF.Link | None
 		company: DF.Link | None
 		disabled: DF.Check
+		expense_head: DF.Link | None
 		item_code_base: DF.Data | None
 		item_group: DF.Link
 		item_sub_group: DF.Data

@@ -820,3 +820,41 @@ def make_in_transit_stock_entry(source_name, in_transit_warehouse):
 		row.t_warehouse = in_transit_warehouse
 
 	return ste_doc
+
+@frappe.whitelist()
+def fetch_expense_account(item_code):
+    item = frappe.get_doc("Item", item_code)
+    if not item:
+        frappe.throw(f"Item {item_code} not found")
+
+    if item.item_group == "Fixed Asset":
+        if not item.item_sub_group:
+            frappe.throw(f"Item Sub Group not set for {item_code}")
+
+        asset_category = frappe.db.get_value(
+            "Item Sub Group",
+            item.item_sub_group,
+            "asset_category"
+        )
+        if not asset_category:
+            frappe.throw(f"Asset Category not set for Item Sub Group {item.item_sub_group}")
+
+        fixed_asset_account = frappe.db.get_value(
+            "Asset Category Account",
+            {"parent": asset_category},
+            "fixed_asset_account"
+        )
+        if not fixed_asset_account:
+            frappe.throw(f"No Fixed Asset Account found for Asset Category {asset_category}")
+        return fixed_asset_account
+
+    # Consumable case
+    elif item.item_group in ["Consumable","Services"]:
+        if not item.item_sub_group:
+            frappe.throw(f"Item Sub Group not set for {item_code}")
+        expense_head = frappe.db.get_value("Item Sub Group", item.item_sub_group, "expense_head")
+        if not expense_head:
+            frappe.throw(f"No Expense Head set for Item Sub Group {item.item_sub_group}")
+        return expense_head
+
+    frappe.throw(f"No expense account found for item {item_code}")

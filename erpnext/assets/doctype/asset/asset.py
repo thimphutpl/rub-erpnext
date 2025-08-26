@@ -73,7 +73,7 @@ class Asset(AccountsController):
 		comprehensive_insurance: DF.Data | None
 		cost_center: DF.Link | None
 		credit_account: DF.Link | None
-		custodian: DF.Link
+		custodian: DF.Link | None
 		custodian_name: DF.Data | None
 		customer: DF.Link | None
 		default_finance_book: DF.Link | None
@@ -86,6 +86,7 @@ class Asset(AccountsController):
 		finance_books: DF.Table[AssetFinanceBook]
 		frequency_of_depreciation: DF.Int
 		gross_purchase_amount: DF.Currency
+		hostel: DF.Link | None
 		image: DF.AttachImage | None
 		income_tax_opening_depreciation_amount: DF.Currency
 		insurance_end_date: DF.Date | None
@@ -95,6 +96,7 @@ class Asset(AccountsController):
 		is_composite_asset: DF.Check
 		is_existing_asset: DF.Check
 		is_fully_depreciated: DF.Check
+		is_hostel_asset: DF.Check
 		is_opening_asset: DF.Check
 		item_code: DF.Link
 		item_name: DF.ReadOnly | None

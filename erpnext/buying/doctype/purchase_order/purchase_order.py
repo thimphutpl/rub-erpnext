@@ -217,10 +217,10 @@ class PurchaseOrder(BuyingController):
 	def warehouse_from_branch(doc):
 		branchname=doc.branch
 		query = """
-        SELECT parent 
-        FROM `tabWarehouse Branch` 
-        WHERE branch=%s
-        """
+		SELECT parent 
+		FROM `tabWarehouse Branch` 
+		WHERE branch=%s
+		"""
 
 		warehouse = frappe.db.sql(query, (branchname,), as_dict=True)
 		if warehouse:
@@ -996,36 +996,36 @@ def is_subcontracting_order_created(po_name) -> bool:
 
 @frappe.whitelist()
 def create_purchase_order(source_name, target_doc=None):
-    from frappe.model.mapper import get_mapped_doc
+	from frappe.model.mapper import get_mapped_doc
 
-    def set_missing_values(source, target):
-        # Assuming the first supplier from the child table is mapped to the supplier field
-        if source.suppliers:  
-            target.supplier = source.suppliers[0].supplier  # Maps the first supplier in the list
-        target.run_method("set_missing_values")
-        target.run_method("calculate_taxes_and_totals")
+	def set_missing_values(source, target):
+		# Assuming the first supplier from the child table is mapped to the supplier field
+		if source.suppliers:  
+			target.supplier = source.suppliers[0].supplier  # Maps the first supplier in the list
+		target.run_method("set_missing_values")
+		target.run_method("calculate_taxes_and_totals")
 
-    doc = get_mapped_doc(
-        "Request for Quotation",  # Source Doctype
-        source_name,
-        {
-            "Request for Quotation": {  
-                "doctype": "Purchase Order", 
-                "field_map": {
-                    "field_in_source": "field_in_target",  
-                },
-            },
-            "Request for Quotation Item": {  
-                "doctype": "Purchase Order Item",
-                "field_map": {
-                    "child_field_in_source": "child_field_in_target",
-                },
-            },
-        },
-        target_doc,
-        set_missing_values,
-    )
-    return doc
+	doc = get_mapped_doc(
+		"Request for Quotation",  # Source Doctype
+		source_name,
+		{
+			"Request for Quotation": {  
+				"doctype": "Purchase Order", 
+				"field_map": {
+					"field_in_source": "field_in_target",  
+				},
+			},
+			"Request for Quotation Item": {  
+				"doctype": "Purchase Order Item",
+				"field_map": {
+					"child_field_in_source": "child_field_in_target",
+				},
+			},
+		},
+		target_doc,
+		set_missing_values,
+	)
+	return doc
 
 def get_permission_query_conditions(user):
 	if not user: user = frappe.session.user
@@ -1052,5 +1052,39 @@ def get_permission_query_conditions(user):
 
 
 @frappe.whitelist()
-def fetch_item_gl(cdn):
-	frappe.throw(str(cdn))
+def fetch_expense_account(item_code):
+    item = frappe.get_doc("Item", item_code)
+    if not item:
+        frappe.throw(f"Item {item_code} not found")
+
+    if item.item_group == "Fixed Asset":
+        if not item.item_sub_group:
+            frappe.throw(f"Item Sub Group not set for {item_code}")
+
+        asset_category = frappe.db.get_value(
+            "Item Sub Group",
+            item.item_sub_group,
+            "asset_category"
+        )
+        if not asset_category:
+            frappe.throw(f"Asset Category not set for Item Sub Group {item.item_sub_group}")
+
+        fixed_asset_account = frappe.db.get_value(
+            "Asset Category Account",
+            {"parent": asset_category},
+            "fixed_asset_account"
+        )
+        if not fixed_asset_account:
+            frappe.throw(f"No Fixed Asset Account found for Asset Category {asset_category}")
+        return fixed_asset_account
+
+    # Consumable case
+    elif item.item_group in ["Consumable","Services"]:
+        if not item.item_sub_group:
+            frappe.throw(f"Item Sub Group not set for {item_code}")
+        expense_head = frappe.db.get_value("Item Sub Group", item.item_sub_group, "expense_head")
+        if not expense_head:
+            frappe.throw(f"No Expense Head set for Item Sub Group {item.item_sub_group}")
+        return expense_head
+
+    frappe.throw(f"No expense account found for item {item_code}")

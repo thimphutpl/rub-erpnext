@@ -601,6 +601,7 @@ class Company(NestedSet):
 			},
 			{
 				"cost_center_name": _("Main"),
+				# "cost_center_name": _("Main") + " - " + self.abbr,
 				"company": self.name,
 				"is_group": 0,
 				"parent_cost_center": self.name + " - " + self.abbr,

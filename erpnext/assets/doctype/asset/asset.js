@@ -23,6 +23,13 @@ frappe.ui.form.on("Asset", {
 				},
 			};
 		});
+		frm.set_query("company", function () {
+			return {
+				filters: {
+					is_group: 0,
+				},
+			};
+		});
 
 		frm.set_query("branch", function (doc) {
 			return {

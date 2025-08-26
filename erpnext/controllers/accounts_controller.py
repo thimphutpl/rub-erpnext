@@ -1,4 +1,4 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
+	# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
 
@@ -743,10 +743,6 @@ class AccountsController(TransactionBase):
 					frappe.throw(_(msg), title=_("Internal Transfer Reference Missing"))
 
 	def validate_internal_transaction(self):
-		if not cint(
-			frappe.db.get_single_value("Accounts Settings", "maintain_same_internal_transaction_rate")
-		):
-			return
 
 		doctypes_list = ["Sales Order", "Sales Invoice", "Purchase Order", "Purchase Invoice"]
 

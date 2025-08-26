@@ -22,6 +22,7 @@
   "gender",
   "date_of_birth",
   "salutation",
+  "faculty",
   "column_break1",
   "date_of_joining",
   "image",
@@ -856,6 +857,13 @@
    "fieldtype": "Link",
    "label": "Employee Group",
    "options": "Employee Group"
+  },
+  {
+   "default": "0",
+   "fieldname": "faculty",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Faculty"
   }
  ],
  "icon": "fa fa-user",
@@ -863,7 +871,7 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2025-08-12 15:50:34.538046",
+ "modified": "2025-08-25 15:22:32.624390",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Employee",

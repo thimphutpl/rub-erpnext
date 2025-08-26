@@ -10,8 +10,11 @@
   "item_sub_group",
   "item_code_base",
   "column_break_sqsl",
-  "disabled",
-  "company"
+  "expense_head",
+  "asset_category",
+  "asset_sub_category",
+  "company",
+  "disabled"
  ],
  "fields": [
   {
@@ -56,12 +59,39 @@
    "in_list_view": 1,
    "label": "Company",
    "options": "Company"
+  },
+  {
+   "depends_on": "eval:(doc.item_group==\"Consumable\" || doc.item_group==\"Services\")",
+   "fieldname": "expense_head",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Budget Expense Head",
+   "mandatory_depends_on": "eval:(doc.item_group==\"Consumable\" || doc.item_group==\"Services\")",
+   "options": "Company"
+  },
+  {
+   "depends_on": "eval:doc.item_group==\"Fixed Asset\"",
+   "fieldname": "asset_category",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Asset Category",
+   "mandatory_depends_on": "eval:doc.item_group==\"Fixed Asset\"",
+   "options": "Company"
+  },
+  {
+   "depends_on": "eval:doc.item_group==\"Fixed Asset\"",
+   "fieldname": "asset_sub_category",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Asset Sub Category ",
+   "mandatory_depends_on": "eval:doc.item_group==\"Fixed Asset\"",
+   "options": "Company"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-15 14:15:18.362883",
- "modified_by": "pralad.rai@thimphutechpark.bt",
+ "modified": "2025-08-22 16:49:38.550290",
+ "modified_by": "Administrator",
  "module": "Stock",
  "name": "Item Sub Group",
  "naming_rule": "By fieldname",
