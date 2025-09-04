@@ -1,0 +1,213 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SWS.YY.MM.####",
+ "creation": "2025-09-01 11:35:30.449508",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "student_member_details_section",
+  "student_code",
+  "full_name",
+  "program",
+  "year",
+  "semester",
+  "column_break_sqzy",
+  "phone_number",
+  "scholarship_type",
+  "bank_account_number",
+  "claim_details_section",
+  "claim_type",
+  "description_of_the_claim",
+  "column_break_tkzo",
+  "name_of_the_deceased",
+  "cid_number",
+  "relation_to_the_member",
+  "date_of_the_incident",
+  "remarks",
+  "attach",
+  "payment_receivable_section",
+  "receivable_amount_in_figures",
+  "column_break_amul",
+  "receivable_amount_in_words",
+  "section_break_oiea",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "student_member_details_section",
+   "fieldtype": "Section Break",
+   "label": "Student Member Details "
+  },
+  {
+   "fieldname": "student_code",
+   "fieldtype": "Link",
+   "label": "Student Code",
+   "options": "Student"
+  },
+  {
+   "fetch_from": "student_code.student_name",
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "label": "Full Name"
+  },
+  {
+   "fieldname": "program",
+   "fieldtype": "Data",
+   "label": "Program"
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Data",
+   "label": "Year"
+  },
+  {
+   "fieldname": "semester",
+   "fieldtype": "Data",
+   "label": "Semester"
+  },
+  {
+   "fieldname": "column_break_sqzy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "student_code.student_mobile_number",
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number"
+  },
+  {
+   "fieldname": "scholarship_type",
+   "fieldtype": "Data",
+   "label": "Scholarship Type",
+   "options": "\n"
+  },
+  {
+   "fetch_from": "student_code.blood_group",
+   "fieldname": "bank_account_number",
+   "fieldtype": "Data",
+   "label": "Bank Account Number"
+  },
+  {
+   "fieldname": "claim_details_section",
+   "fieldtype": "Section Break",
+   "label": "Claim Details"
+  },
+  {
+   "fieldname": "claim_type",
+   "fieldtype": "Link",
+   "label": "Claim Type",
+   "options": "SWS Claim Type"
+  },
+  {
+   "depends_on": "eval: doc.claim_type != \"Beravement Semso (Student)\" && doc.claim_type !=\"Beravement Semso (Parent)\" && doc.claim_type !=\"Beravement Semso (Sibling)\"",
+   "fieldname": "description_of_the_claim",
+   "fieldtype": "Long Text",
+   "label": "Description of the Claim"
+  },
+  {
+   "fieldname": "column_break_tkzo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: doc.claim_type == \"Beravement Semso (Student)\" || doc.claim_type == \"Beravement Semso (Parent)\" || doc.claim_type == \"Beravement Semso (Sibling)\"",
+   "fieldname": "name_of_the_deceased",
+   "fieldtype": "Data",
+   "label": "Name of the Deceased"
+  },
+  {
+   "depends_on": "eval: doc.claim_type == \"Beravement Semso (Student)\" || doc.claim_type == \"Beravement Semso (Parent)\" || doc.claim_type == \"Beravement Semso (Sibling)\"",
+   "fieldname": "cid_number",
+   "fieldtype": "Data",
+   "label": "CID Number"
+  },
+  {
+   "depends_on": "eval: doc.claim_type == \"Beravement Semso (Student)\" || doc.claim_type == \"Beravement Semso (Parent)\" || doc.claim_type == \"Beravement Semso (Sibling)\"",
+   "fieldname": "relation_to_the_member",
+   "fieldtype": "Data",
+   "label": "Relation to the Member"
+  },
+  {
+   "depends_on": "eval: doc.claim_type == \"Beravement Semso (Student)\" || doc.claim_type == \"Beravement Semso (Parent)\" || doc.claim_type == \"Beravement Semso (Sibling)\"",
+   "fieldname": "date_of_the_incident",
+   "fieldtype": "Date",
+   "label": "Date of the Incident"
+  },
+  {
+   "depends_on": "eval: doc.claim_type == \"Beravement Semso (Student)\" || doc.claim_type == \"Beravement Semso (Parent)\" || doc.claim_type == \"Beravement Semso (Sibling)\"",
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "description": "Attach any relevant documents",
+   "fieldname": "attach",
+   "fieldtype": "Attach",
+   "label": "Attach"
+  },
+  {
+   "fieldname": "payment_receivable_section",
+   "fieldtype": "Section Break",
+   "label": "Payment Receivable"
+  },
+  {
+   "fetch_from": "claim_type.claim_amount",
+   "fieldname": "receivable_amount_in_figures",
+   "fieldtype": "Currency",
+   "label": "Receivable Amount (In Figures)"
+  },
+  {
+   "fieldname": "column_break_amul",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "receivable_amount_in_words",
+   "fieldtype": "Data",
+   "label": "Receivable Amount (In Words)"
+  },
+  {
+   "fieldname": "section_break_oiea",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Student Welfare Scheme Claim",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-09-01 11:57:08.013454",
+ "modified_by": "Administrator",
+ "module": "Student Services",
+ "name": "Student Welfare Scheme Claim",
+ "naming_rule": "Expression (old style)",
+ "owner": "kalden.dorji@thimphutechpark.bt",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

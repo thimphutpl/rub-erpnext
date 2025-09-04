@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-20 09:38:11.627158",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "course",
+  "academic_term",
+  "hours_per_week",
+  "class_schedule"
+ ],
+ "fields": [
+  {
+   "fieldname": "course",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Course",
+   "options": "Course",
+   "reqd": 1
+  },
+  {
+   "fieldname": "academic_term",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Academic Term",
+   "options": "Academic Term",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hours_per_week",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Hours/Week",
+   "reqd": 1
+  },
+  {
+   "fieldname": "class_schedule",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Class Schedule",
+   "options": "Class Schedule"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-08-20 09:53:49.124155",
+ "modified_by": "Administrator",
+ "module": "Faculty Management",
+ "name": "Faculty Course Assignment",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

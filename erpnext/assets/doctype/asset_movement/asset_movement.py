@@ -23,10 +23,11 @@ class AssetMovement(Document):
 		amended_from: DF.Link | None
 		assets: DF.Table[AssetMovementItem]
 		attachment: DF.Attach | None
-		based_on: DF.Literal["", "Custodian", "Cost Center"]
+		based_on: DF.Literal["", "Custodian", "Hostel"]
 		company: DF.Link
 		cost_center: DF.Link | None
 		from_employee: DF.Link | None
+		frrom_hostel: DF.Link | None
 		project: DF.Link | None
 		purpose: DF.Literal["", "Transfer", "Receipt"]
 		reference_doctype: DF.Link | None

@@ -55,6 +55,21 @@ frappe.ui.form.on('Asset Movement', {
 				}
 			}
 		})
+		frm.set_query("company", () => {
+			return {
+				filters: {
+				is_group: 0
+				}
+			}
+		})
+		frm.set_query("from_asset", (doc) => {
+			return {
+				filters: {
+				company: doc.company
+				}
+			}
+		}
+		})
 	},
 	onload: (frm) => {
 		frm.trigger('set_required_fields');

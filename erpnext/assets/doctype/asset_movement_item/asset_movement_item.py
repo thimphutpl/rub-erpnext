@@ -20,6 +20,7 @@ class AssetMovementItem(Document):
 		company: DF.Link | None
 		from_employee: DF.Link | None
 		from_employee_name: DF.Data | None
+		from_hostel: DF.Link | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
@@ -27,6 +28,7 @@ class AssetMovementItem(Document):
 		target_cost_center: DF.Link | None
 		to_employee: DF.Link | None
 		to_employee_name: DF.Data | None
+		to_hostel: DF.Link | None
 	# end: auto-generated types
 
 	pass

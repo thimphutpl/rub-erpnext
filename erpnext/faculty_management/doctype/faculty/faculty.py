@@ -120,11 +120,11 @@ class Faculty(NestedSet):
 			self.validate_for_enabled_user_id(data.get("enabled", 0))
 			self.validate_duplicate_user_id()
 
-	def update_nsm_model(self):
-		frappe.utils.nestedset.update_nsm(self)
+	# def update_nsm_model(self):
+	# 	frappe.utils.nestedset.update_nsm(self)
 
 	def on_update(self):
-		self.update_nsm_model()
+		# self.update_nsm_model()
 		frappe.clear_cache()
 		if self.user_id:
 			self.update_user()

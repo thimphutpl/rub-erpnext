@@ -1,0 +1,175 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-26 15:30:40.551599",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "activity_details_section",
+  "college",
+  "club_name",
+  "activity_name",
+  "description",
+  "column_break_rnmc",
+  "club_coordinator",
+  "first_name",
+  "last_name",
+  "program",
+  "year",
+  "activities_section",
+  "table_hulc",
+  "attendance_list_section",
+  "table_nevm",
+  "expenses_details_section",
+  "table_mngb",
+  "total_expenses",
+  "attachments_if_any",
+  "section_break_qpmp",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "activity_details_section",
+   "fieldtype": "Section Break",
+   "label": "Activity Details "
+  },
+  {
+   "fieldname": "college",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "College",
+   "reqd": 1
+  },
+  {
+   "fieldname": "club_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Club Name",
+   "options": "Club List",
+   "reqd": 1
+  },
+  {
+   "fieldname": "activity_name",
+   "fieldtype": "Data",
+   "label": "Activity Name"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_rnmc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "club_coordinator",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Club Coordinator",
+   "reqd": 1
+  },
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "label": "First Name"
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name"
+  },
+  {
+   "fieldname": "program",
+   "fieldtype": "Data",
+   "label": "Program"
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Data",
+   "label": "Year"
+  },
+  {
+   "fieldname": "activities_section",
+   "fieldtype": "Section Break",
+   "label": "Activities"
+  },
+  {
+   "fieldname": "table_hulc",
+   "fieldtype": "Table",
+   "options": "Club Activity Details"
+  },
+  {
+   "fieldname": "attendance_list_section",
+   "fieldtype": "Section Break",
+   "label": "Attendance List"
+  },
+  {
+   "fieldname": "table_nevm",
+   "fieldtype": "Table",
+   "options": "Club Attendance Details"
+  },
+  {
+   "fieldname": "expenses_details_section",
+   "fieldtype": "Section Break",
+   "label": "Expenses Details"
+  },
+  {
+   "fieldname": "table_mngb",
+   "fieldtype": "Table",
+   "options": "Club Activity Expenses Details"
+  },
+  {
+   "fieldname": "total_expenses",
+   "fieldtype": "Data",
+   "label": "Total Expenses"
+  },
+  {
+   "fieldname": "attachments_if_any",
+   "fieldtype": "Attach",
+   "label": "Attachments, If any"
+  },
+  {
+   "fieldname": "section_break_qpmp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Club Activity",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-09-01 11:15:11.934695",
+ "modified_by": "Administrator",
+ "module": "Student Services",
+ "name": "Club Activity",
+ "owner": "kalden.dorji@thimphutechpark.bt",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

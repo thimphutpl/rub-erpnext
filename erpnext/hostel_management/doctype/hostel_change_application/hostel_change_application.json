@@ -1,0 +1,208 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "HCA.YYYY.##",
+ "creation": "2025-07-29 15:45:20.670205",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "applied_by_section",
+  "applied_by",
+  "company",
+  "first_name",
+  "last_name",
+  "change_details_section",
+  "current_room",
+  "hostel_type",
+  "column_break_grdp",
+  "requested_room",
+  "hostel_type_req",
+  "section_break_fpqz",
+  "qrc",
+  "student_code",
+  "room",
+  "type",
+  "section_break_oozj",
+  "reason_for_change_for_student",
+  "column_break_ispe",
+  "comments_approver",
+  "section_break_h0ro",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "applied_by_section",
+   "fieldtype": "Section Break",
+   "label": "Applied by"
+  },
+  {
+   "fetch_from": "applied_by.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "College",
+   "options": "Company"
+  },
+  {
+   "fetch_from": "applied_by.first_name",
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "label": "First Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "applied_by.last_name",
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "change_details_section",
+   "fieldtype": "Section Break",
+   "label": "Change Details "
+  },
+  {
+   "fieldname": "current_room",
+   "fieldtype": "Link",
+   "label": "Current Room",
+   "options": "Hostel Room"
+  },
+  {
+   "fetch_from": "current_room.hostel_type",
+   "fieldname": "hostel_type",
+   "fieldtype": "Data",
+   "label": "Hostel Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_grdp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.qrc != 1",
+   "fieldname": "requested_room",
+   "fieldtype": "Link",
+   "label": "Requested Room",
+   "options": "Hostel Room"
+  },
+  {
+   "fetch_from": "requested_room.hostel_type",
+   "fieldname": "hostel_type_req",
+   "fieldtype": "Data",
+   "label": "Hostel Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_oozj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reason_for_change_for_student",
+   "fieldtype": "Small Text",
+   "label": "Reason for Change (for Student)"
+  },
+  {
+   "fieldname": "column_break_ispe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.workflow_state == \"Waiting for Approval\" || doc.workflow_state == \"Approved\"",
+   "fieldname": "comments_approver",
+   "fieldtype": "Small Text",
+   "label": "Comments (Approver) "
+  },
+  {
+   "fieldname": "section_break_h0ro",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Hostel Change Application",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "applied_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Student Code",
+   "options": "Student",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_fpqz",
+   "fieldtype": "Section Break",
+   "label": "Switch Room"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "default": "0",
+   "fieldname": "qrc",
+   "fieldtype": "Check",
+   "label": "Request Room Change",
+   "set_only_once": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "depends_on": "qrc",
+   "fieldname": "student_code",
+   "fieldtype": "Link",
+   "label": "Student Code",
+   "mandatory_depends_on": "qrc",
+   "options": "Student"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "depends_on": "qrc",
+   "fieldname": "room",
+   "fieldtype": "Link",
+   "label": "Room",
+   "mandatory_depends_on": "qrc",
+   "options": "Hostel Room",
+   "set_only_once": 1
+  },
+  {
+   "depends_on": "qrc",
+   "fetch_from": "room.hostel_type",
+   "fieldname": "type",
+   "fieldtype": "Data",
+   "label": "Type",
+   "mandatory_depends_on": "qrc"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-08-29 15:55:59.746375",
+ "modified_by": "Administrator",
+ "module": "Hostel Management",
+ "name": "Hostel Change Application",
+ "naming_rule": "Expression (old style)",
+ "owner": "kalden.dorji@thimphutechpark.bt",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

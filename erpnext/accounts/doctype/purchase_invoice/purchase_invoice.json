@@ -81,6 +81,7 @@
   "column_break_58",
   "column_break_49",
   "section_break_51",
+  "column_break_tinc",
   "taxes",
   "advances_section",
   "allocate_advances_automatically",
@@ -727,6 +728,7 @@
    "fetch_from": "tax_withholding_category.category_name",
    "fieldname": "taxes_and_charges",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Purchase Taxes and Charges Template",
    "oldfieldname": "purchase_other_charges",
    "oldfieldtype": "Link",
@@ -1758,22 +1760,29 @@
   {
    "fieldname": "dispatch",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Dispatch"
   },
   {
    "default": "0",
    "fieldname": "for_project",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "For Project",
    "read_only": 1
+  },
+  {
+   "fieldname": "column_break_tinc",
+   "fieldtype": "Column Break",
+   "hidden": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 204,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-30 15:44:50.546179",
- "modified_by": "Administrator",
+ "modified": "2025-08-22 16:17:27.330851",
+ "modified_by": "pralad.rai@thimphutechpark.bt",
  "module": "Accounts",
  "name": "Purchase Invoice",
  "naming_rule": "By \"Naming Series\" field",
@@ -1827,6 +1836,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "posting_date, supplier, bill_no, base_grand_total, outstanding_amount",
  "show_name_in_global_search": 1,
  "sort_field": "modified",

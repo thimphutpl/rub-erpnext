@@ -29,6 +29,7 @@ class Company(NestedSet):
 
 		abbr: DF.Data
 		accumulated_depreciation_account: DF.Link | None
+		advance_account: DF.Link | None
 		allow_account_creation_against_child_company: DF.Check
 		asset_received_but_not_billed: DF.Link | None
 		auto_err_frequency: DF.Literal["Daily", "Weekly", "Monthly"]
@@ -74,6 +75,7 @@ class Company(NestedSet):
 		default_warehouse_for_sales_return: DF.Link | None
 		depreciation_cost_center: DF.Link | None
 		depreciation_expense_account: DF.Link | None
+		discount_account: DF.Link | None
 		disposal_account: DF.Link | None
 		domain: DF.Data | None
 		email: DF.Data | None

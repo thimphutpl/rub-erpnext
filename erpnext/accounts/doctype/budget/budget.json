@@ -29,7 +29,8 @@
   "action_if_annual_budget_exceeded",
   "action_if_accumulated_monthly_budget_exceeded",
   "section_break_21",
-  "accounts"
+  "accounts",
+  "budget_details"
  ],
  "fields": [
   {
@@ -204,12 +205,17 @@
    "print_hide": 1,
    "read_only": 1,
    "set_only_once": 1
+  },
+  {
+   "fieldname": "budget_details",
+   "fieldtype": "HTML",
+   "label": "Budget Details"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-06 13:38:30.539420",
+ "modified": "2025-08-28 10:51:44.498405",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Budget",
@@ -233,6 +239,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

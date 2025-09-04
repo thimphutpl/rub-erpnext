@@ -1,0 +1,66 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-25 00:11:13.772334",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "quatification_code",
+  "qualification_name",
+  "level",
+  "duration_years"
+ ],
+ "fields": [
+  {
+   "fieldname": "quatification_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Quatification Code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "qualification_name",
+   "fieldtype": "Data",
+   "label": "Qualification Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "level",
+   "fieldtype": "Select",
+   "label": "Level",
+   "options": "\nCertificate\nDiploma\nBachelor's\nMaster's\nDoctorate"
+  },
+  {
+   "fieldname": "duration_years",
+   "fieldtype": "Float",
+   "label": "Duration (Years)"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-08-25 00:15:42.060306",
+ "modified_by": "Administrator",
+ "module": "Faculty Management",
+ "name": "Qualification Type",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

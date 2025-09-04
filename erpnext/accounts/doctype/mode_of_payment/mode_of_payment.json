@@ -11,9 +11,7 @@
   "mode_of_payment",
   "enabled",
   "type",
-  "accounts",
-  "section_break_wfhs",
-  "branch_accounts"
+  "accounts"
  ],
  "fields": [
   {
@@ -44,22 +42,13 @@
    "fieldname": "enabled",
    "fieldtype": "Check",
    "label": "Enabled"
-  },
-  {
-   "fieldname": "section_break_wfhs",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "branch_accounts",
-   "fieldtype": "Table",
-   "options": "Mode of Payment Branch Account"
   }
  ],
  "icon": "fa fa-credit-card",
  "idx": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-18 09:47:00.882937",
+ "modified": "2025-09-01 12:05:55.055812",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Mode of Payment",
@@ -110,6 +99,7 @@
   }
  ],
  "quick_entry": 1,
+ "row_format": "Dynamic",
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "ASC",

@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:hostel_type",
+ "autoname": "field:room_number",
  "creation": "2025-07-29 14:14:41.656542",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -32,15 +32,15 @@
    "fieldname": "room_number",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Room Number"
+   "label": "Room Number",
+   "unique": 1
   },
   {
    "fieldname": "hostel_type",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Hostel Type ",
-   "options": "Hostel Type",
-   "unique": 1
+   "options": "Hostel Type"
   },
   {
    "fieldname": "hostel_asset_items_section",
@@ -77,14 +77,14 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Company",
+   "label": "Company/College",
    "options": "Company"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-13 15:27:30.475283",
+ "modified": "2025-09-01 16:03:22.823863",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Room",

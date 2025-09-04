@@ -23,3 +23,5 @@ Library Demo
 Hostel Management
 Faculty Management
 ePayment
+Student Services
+Legal

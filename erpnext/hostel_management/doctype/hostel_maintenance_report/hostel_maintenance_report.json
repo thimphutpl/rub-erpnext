@@ -1,0 +1,234 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "HMR.YYYY.MM.######",
+ "creation": "2025-09-01 23:01:08.686374",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "applier_details_section",
+  "student_code",
+  "first_name",
+  "last_name",
+  "branch",
+  "cost_center",
+  "column_break_tnfu",
+  "college",
+  "hostel_type",
+  "phone_number",
+  "hostel_room",
+  "maintenance_requirement_sect",
+  "maintenance_type",
+  "maintenance_required_on",
+  "column_break_uaja",
+  "description_of_maintenance",
+  "hostel_maintenance_report_section",
+  "damage_type",
+  "maintenance_focal",
+  "expenses_borne_by",
+  "column_break_pwka",
+  "report_on_maintenance",
+  "expenses_section",
+  "items",
+  "total_expenses_incurred",
+  "section_break_pxnf",
+  "jv",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Hostel Maintenance Report",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "applier_details_section",
+   "fieldtype": "Section Break",
+   "label": "Applier Details"
+  },
+  {
+   "fieldname": "student_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Student Code",
+   "options": "Student"
+  },
+  {
+   "fetch_from": "student_code.first_name",
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "label": "First Name"
+  },
+  {
+   "fetch_from": "student_code.last_name",
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number"
+  },
+  {
+   "fieldname": "column_break_tnfu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "student_code.company",
+   "fieldname": "college",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "College",
+   "options": "Company"
+  },
+  {
+   "fetch_from": "hostel_room.hostel_type",
+   "fieldname": "hostel_type",
+   "fieldtype": "Link",
+   "label": "Hostel Type",
+   "options": "Hostel Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hostel_room",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Hostel Room",
+   "options": "Hostel Room"
+  },
+  {
+   "fieldname": "maintenance_requirement_sect",
+   "fieldtype": "Section Break",
+   "label": "Maintenance Requirement"
+  },
+  {
+   "fieldname": "maintenance_type",
+   "fieldtype": "Select",
+   "label": "Maintenance Type",
+   "options": "\nRepair\nReplacement"
+  },
+  {
+   "fieldname": "maintenance_required_on",
+   "fieldtype": "Date",
+   "label": "Maintenance Required On"
+  },
+  {
+   "fieldname": "column_break_uaja",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "description_of_maintenance",
+   "fieldtype": "Small Text",
+   "label": "Description of Maintenance"
+  },
+  {
+   "fieldname": "hostel_maintenance_report_section",
+   "fieldtype": "Section Break",
+   "label": "Hostel Maintenance Report"
+  },
+  {
+   "fieldname": "damage_type",
+   "fieldtype": "Select",
+   "label": "Damage Type",
+   "options": "\nVandalism\nLoss or Misuse of Property\nDamage to Shared Facilities"
+  },
+  {
+   "fieldname": "maintenance_focal",
+   "fieldtype": "Link",
+   "label": "Maintenance Focal",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "expenses_borne_by",
+   "fieldtype": "Select",
+   "label": "Expenses Borne by",
+   "options": "\nStudent\nCollege"
+  },
+  {
+   "fieldname": "column_break_pwka",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "report_on_maintenance",
+   "fieldtype": "Small Text",
+   "label": "Report on Maintenance"
+  },
+  {
+   "fieldname": "expenses_section",
+   "fieldtype": "Section Break",
+   "label": "Expenses"
+  },
+  {
+   "fieldname": "total_expenses_incurred",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Expenses Incurred"
+  },
+  {
+   "fieldname": "section_break_pxnf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "jv",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Journal Entry",
+   "options": "Journal Entry"
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Branch",
+   "options": "Branch"
+  },
+  {
+   "fetch_from": "branch.cost_center",
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Cost Center",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "options": "Hostel Maintenance Expenses Item"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-09-04 10:56:22.918811",
+ "modified_by": "Administrator",
+ "module": "Hostel Management",
+ "name": "Hostel Maintenance Report",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

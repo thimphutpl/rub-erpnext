@@ -235,9 +235,14 @@ class AccountsController(TransactionBase):
 
 		self.disable_pricing_rule_on_internal_transfer()
 		self.disable_tax_included_prices_for_internal_transfer()
-		self.set_incoming_rate()
 		self.init_internal_values()
 		self.validate_against_voucher_outstanding()
+
+		#changes by for sanga 
+		if self.doctype == "Hostel Maintenance Report":
+			return
+		# else:	
+		self.set_incoming_rate()
 
 		# Need to set taxes based on taxes_and_charges template
 		# before calculating taxes and totals

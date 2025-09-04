@@ -962,9 +962,13 @@ class JournalEntry(AccountsController):
 
 			if d.account_currency != self.company_currency and d.account_currency not in alternate_currency:
 				alternate_currency.append(d.account_currency)
+			else:
+				alternate_currency.append(d.account_currency)	
 
 		if alternate_currency:
 			if not self.multi_currency:
+				self.multi_currency = d.account_currency
+			else:	
 				frappe.throw(_("Please check Multi Currency option to allow accounts with other currency"))
 
 		self.set_exchange_rate()

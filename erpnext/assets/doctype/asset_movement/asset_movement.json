@@ -12,6 +12,7 @@
   "column_break_4",
   "transaction_date",
   "from_employee",
+  "frrom_hostel",
   "project",
   "cost_center",
   "to_single",
@@ -35,7 +36,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Company",
+   "label": "Company/College",
    "options": "Company",
    "remember_last_selected_value": 1,
    "reqd": 1
@@ -158,7 +159,7 @@
    "fieldname": "based_on",
    "fieldtype": "Select",
    "label": "Select Assets Based On",
-   "options": "\nCustodian\nCost Center"
+   "options": "\nCustodian\nHostel"
   },
   {
    "depends_on": "eval:doc.based_on == 'Cost Center'",
@@ -174,12 +175,20 @@
    "label": "Cost Center",
    "mandatory_depends_on": "eval:doc.based_on == 'Cost Center'",
    "options": "Cost Center"
+  },
+  {
+   "depends_on": "eval:doc.based_on == 'Hostel';",
+   "fieldname": "frrom_hostel",
+   "fieldtype": "Link",
+   "label": "From Hostel",
+   "mandatory_depends_on": "eval:doc.based_on == 'Hostel';",
+   "options": "Hostel Room"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-17 23:39:13.656932",
+ "modified": "2025-09-01 15:59:54.393659",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset Movement",
@@ -232,6 +241,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
