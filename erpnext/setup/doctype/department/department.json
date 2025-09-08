@@ -12,6 +12,9 @@
   "column_break_3",
   "company",
   "is_group",
+  "is_division",
+  "is_section",
+  "is_unit",
   "disabled",
   "lft",
   "rgt",
@@ -84,13 +87,37 @@
   {
    "fieldname": "column_break_3",
    "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "default": "0",
+   "fieldname": "is_division",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": " Is Division"
+  },
+  {
+   "bold": 1,
+   "default": "0",
+   "fieldname": "is_section",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": " Is Section"
+  },
+  {
+   "bold": 1,
+   "default": "0",
+   "fieldname": "is_unit",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": " Is Unit"
   }
  ],
  "icon": "fa fa-sitemap",
  "idx": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2024-06-12 16:10:31.451257",
+ "modified": "2025-09-08 15:38:58.885535",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Department",
@@ -138,6 +165,7 @@
    "select": 1
   }
  ],
+ "row_format": "Dynamic",
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "ASC",
