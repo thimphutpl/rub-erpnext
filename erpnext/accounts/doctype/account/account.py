@@ -408,33 +408,33 @@ class Account(NestedSet):
 
 		super().on_trash(True)
 
-	def on_trash_account(doc, method):
-		parent_company = doc.company
-		# get child companies
-		child_companies = frappe.get_all(
-			"Company", filters={"parent_company": parent_company}, pluck="name"
-		)
+def on_trash_account(doc, method):
+	parent_company = doc.company
+	# get child companies
+	child_companies = frappe.get_all(
+		"Company", filters={"parent_company": parent_company}, pluck="name"
+	)
 
-		if not child_companies:
-			if frappe.db.exists("GL Entry", {"account": parent_company}):
-					throw(_("Account with existing transaction can not be deleted"))
+	if not child_companies:
+		if frappe.db.exists("GL Entry", {"account": parent_company}):
+				throw(_("Account with existing transaction can not be deleted"))
 
-			
-		for child in child_companies:
-			child_acc = frappe.db.get_value("Account", {
-				"company": child,
-				"account_name": doc.account_name
-			}, "name")
+		
+	for child in child_companies:
+		child_acc = frappe.db.get_value("Account", {
+			"company": child,
+			"account_name": doc.account_name
+		}, "name")
 
-			if child_acc:
-				# check usage in GL Entry
-				if frappe.db.exists("GL Entry", {"account": child_acc}):
-					frappe.throw(
-						f"Cannot delete account {doc.name}. It is used in child company {child} (account {child_acc})."
-					)
-				else:
-					frappe.delete_doc("Account", child_acc, force=1)	
-					frappe.msgprint(_("Account {0} is deleted in the child company {1}").format(child_acc, child))	
+		if child_acc:
+			# check usage in GL Entry
+			if frappe.db.exists("GL Entry", {"account": child_acc}):
+				frappe.throw(
+					f"Cannot delete account {doc.name}. It is used in child company {child} (account {child_acc})."
+				)
+			else:
+				frappe.delete_doc("Account", child_acc, force=1)	
+				frappe.msgprint(_("Account {0} is deleted in the child company {1}").format(child_acc, child))	
 
 
 @frappe.whitelist()
