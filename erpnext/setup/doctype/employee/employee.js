@@ -30,6 +30,17 @@ frappe.ui.form.on("Employee", {
 		// 	};
 		// });
 	},
+	
+	// department: function(frm) {
+    //     frm.set_query('department', function() {
+    //         return {
+    //             filters: {
+    //                 is_department: 1, // show only records flagged as Department
+    //                 disabled: 0       // exclude disabled records
+    //             }
+    //         };
+    //     });
+    // },
 	prefered_contact_email: function (frm) {
 		frm.events.update_contact(frm);
 	},

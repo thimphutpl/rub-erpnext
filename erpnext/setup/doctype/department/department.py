@@ -20,6 +20,7 @@ class Department(NestedSet):
 		company: DF.Link
 		department_name: DF.Data
 		disabled: DF.Check
+		is_department: DF.Check
 		is_division: DF.Check
 		is_group: DF.Check
 		is_section: DF.Check

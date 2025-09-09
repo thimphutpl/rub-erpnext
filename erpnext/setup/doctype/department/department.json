@@ -12,6 +12,8 @@
   "column_break_3",
   "company",
   "is_group",
+  "hierarchy",
+  "is_department",
   "is_division",
   "is_section",
   "is_unit",
@@ -111,13 +113,26 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": " Is Unit"
+  },
+  {
+   "fieldname": "hierarchy",
+   "fieldtype": "Heading",
+   "label": "Departmental Hierarchy"
+  },
+  {
+   "bold": 1,
+   "default": "0",
+   "fieldname": "is_department",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Department"
   }
  ],
  "icon": "fa fa-sitemap",
  "idx": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2025-09-08 15:38:58.885535",
+ "modified": "2025-09-08 16:55:49.592933",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Department",
