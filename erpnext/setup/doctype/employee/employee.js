@@ -22,13 +22,49 @@ erpnext.setup.EmployeeController = class EmployeeController extends frappe.ui.fo
 
 frappe.ui.form.on("Employee", {
 	onload: function (frm) {
-		// frm.set_query("department", function () {
-		// 	return {
-		// 		filters: {
-		// 			company: frm.doc.company,
-		// 		},
-		// 	};
-		// });
+		frm.set_query("department", function () {
+			return {
+				filters: {
+					company: frm.doc.company,
+					is_department:1
+
+
+				},
+			};
+		});
+		frm.set_query("division", function () {
+			return {
+				filters: {
+					company: frm.doc.company,
+					is_division:1,
+					parent_department:frm.doc.department
+
+
+				},
+			};
+		});
+		frm.set_query("section", function () {
+			return {
+				filters: {
+					company: frm.doc.company,
+					is_section:1,
+					parent_department:frm.doc.division
+
+
+				},
+			};
+		});
+		frm.set_query("unit", function () {
+			return {
+				filters: {
+					company: frm.doc.company,
+					is_unit:1,
+					parent_department:frm.doc.section
+
+
+				},
+			};
+		});
 	},
 	
 	// department: function(frm) {
