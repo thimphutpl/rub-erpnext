@@ -194,6 +194,20 @@ class Account(NestedSet):
 		# ignore validation while creating new compnay or while syncing to child companies
 		if frappe.local.flags.ignore_root_company_validation or self.flags.ignore_root_company_validation:
 			return
+
+		# Check if this company is a child company
+		parent_company = frappe.get_cached_value("Company", self.company, "parent_company")
+		if parent_company:
+			# Get existing parent_account from DB
+			old_parent = frappe.db.get_value("Account", self.name, "parent_account")
+
+			# If parent_account changed, block it
+			if old_parent and old_parent != self.parent_account:
+				frappe.throw(
+					_("You cannot change the Parent Account in child company {0}. "
+					"Please change it from the root company {1}.")
+					.format(frappe.bold(self.company), frappe.bold(parent_company))
+				)
 		ancestors = get_root_company(self.company)
 		if ancestors:
 			if frappe.get_cached_value(
@@ -353,12 +367,17 @@ class Account(NestedSet):
 				# update the parent company's value in child companies
 				doc = frappe.get_doc("Account", child_account)
 				parent_value_changed = False
-				for field in ["account_type", "freeze_account", "balance_must_be"]:
+				for field in ["parent_account", "account_type", "freeze_account", "balance_must_be"]:
 					if doc.get(field) != self.get(field):
 						parent_value_changed = True
 						doc.set(field, self.get(field))
-
+				# Handle parent_account separately (use mapping)
+				if doc.parent_account != parent_acc_name_map[company]:
+					parent_value_changed = True
+					doc.parent_account = parent_acc_name_map[company]
+					
 				if parent_value_changed:
+					doc.flags.ignore_root_company_validation = True
 					doc.save()
 
 	@frappe.whitelist()
@@ -401,40 +420,72 @@ class Account(NestedSet):
 		if not self.report_type:
 			throw(_("Report Type is mandatory"))
 
+	# def on_trash(self):
+	# 	self.validate_root_company_and_delete_account_in_children()
+	# 	# child_companies = frappe.get_all(
+	# 	# 	"Company", filters={"parent_company": self.company}, pluck="name"
+	# 	# )
+	# 	# for child in child_companies:
+	# 	# 	child_acc = frappe.db.get_value("Account", {
+	# 	# 		"company": child,
+	# 	# 		"account_name": self.account_name
+	# 	# 	}, "name")
+
+	# 	# 	if child_acc:
+	# 	# 		if self.check_gle_exists():
+	# 	# 			frappe.throw(
+	# 	# 				f"Cannot delete account {self.name}. It is used in child company {child} (account {child_acc})."
+	# 	# 			)
+	# 	# 		else:
+	# 	# 			frappe.delete_doc("Account", child_acc)	
+	# 	# 			frappe.msgprint(_("Account {0} is deleted in the child company {1}").format(child_acc, child))						
+	# 	# checks gl entries and if child exists
+	# 	# if self.check_gle_exists():
+	# 	# 	throw(_("Account with existing transaction can not be deleted"))
+
+	# 	super().on_trash(True)
+
 	def on_trash(self):
-		# checks gl entries and if child exists
-		if self.check_gle_exists():
-			throw(_("Account with existing transaction can not be deleted"))
+		self.validate_root_company_and_delete_account_in_children()
+		super().on_trash()
 
-		super().on_trash(True)
+	def validate_root_company_and_delete_account_in_children(self):
+		# ignore validation while syncing
+		if frappe.local.flags.ignore_root_company_validation or self.flags.ignore_root_company_validation:
+			return
 
-def on_trash_account(doc, method):
-	parent_company = doc.company
-	# get child companies
-	child_companies = frappe.get_all(
-		"Company", filters={"parent_company": parent_company}, pluck="name"
-	)
+		parent_company = frappe.get_cached_value("Company", self.company, "parent_company")
 
-	if not child_companies:
-		if frappe.db.exists("GL Entry", {"account": parent_company}):
-				throw(_("Account with existing transaction can not be deleted"))
+		if parent_company:
+			# This is a child company
+			frappe.throw(
+				_("Please delete the account from root level Company - {}").format(parent_company)
+			)
+		else:
+			# This is a root company -> continue with cascade delete
+			descendants = get_descendants_of("Company", self.company)
+			if not descendants:
+				return
 
-		
-	for child in child_companies:
-		child_acc = frappe.db.get_value("Account", {
-			"company": child,
-			"account_name": doc.account_name
-		}, "name")
+			for company in descendants:
+				filters = {"account_name": self.account_name, "company": company}
+				if self.account_number:
+					filters["account_number"] = self.account_number
 
-		if child_acc:
-			# check usage in GL Entry
-			if frappe.db.exists("GL Entry", {"account": child_acc}):
-				frappe.throw(
-					f"Cannot delete account {doc.name}. It is used in child company {child} (account {child_acc})."
-				)
-			else:
-				frappe.delete_doc("Account", child_acc, force=1)	
-				frappe.msgprint(_("Account {0} is deleted in the child company {1}").format(child_acc, child))	
+				child_account = frappe.db.get_value("Account", filters, "name")
+
+				if child_account:
+					# ensure not used
+					if frappe.db.exists("GL Entry", {"account": child_account}):
+						frappe.throw(
+							_("Cannot delete account {0} from {1} as it has transactions.")
+							.format(frappe.bold(self.account_name), frappe.bold(company))
+						)
+					else:
+						frappe.local.flags.ignore_root_company_validation = True
+						frappe.delete_doc("Account", child_account, force=1)
+						frappe.msgprint(_("Account {0} is deleted in the child company {1}").format(child_account, company))						
+						frappe.local.flags.ignore_root_company_validation = False
 
 
 @frappe.whitelist()
