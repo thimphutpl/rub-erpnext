@@ -11,6 +11,13 @@ frappe.ui.form.on('Asset Issue Details', {
 				}
 			}
 		});
+		frm.set_query("asset_custodian_type", function () {
+			return {
+				filters: {
+					"name": ["in", ["Employee", "Hostel Room", "Room"]],
+				},
+			};
+		});
 	},
 	refresh: function (frm) {
 		frm.set_query('issued_to', function(doc, cdt, cdn) {

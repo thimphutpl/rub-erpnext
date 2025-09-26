@@ -29,8 +29,11 @@
   "model",
   "serial_number",
   "asset_issue_detail_section",
+  "asset_custodian_type",
   "qty",
   "issued_to",
+  "hostel",
+  "roombuilding",
   "location",
   "asset_rate",
   "column_break_17",
@@ -55,7 +58,7 @@
    "fieldname": "company",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
+   "label": "Company/College",
    "options": "Company",
    "reqd": 1
   },
@@ -143,14 +146,16 @@
    "reqd": 1
   },
   {
+   "depends_on": "eval:doc.asset_custodian_type == \"Employee\";",
    "fieldname": "issued_to",
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
    "label": "Issued To",
-   "options": "Employee",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.asset_custodian_type == \"Employee\";",
+   "options": "Employee"
   },
   {
+   "depends_on": "eval:!doc.asset_custodian_type;",
    "fieldname": "emp_branch",
    "fieldtype": "Data",
    "label": "Employee Branch",
@@ -210,15 +215,15 @@
   },
   {
    "fieldname": "equipment_type",
-   "fieldtype": "Link",
-   "label": "Equipment Type",
-   "options": "Equipment Type"
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Equipment Type"
   },
   {
    "fieldname": "model",
-   "fieldtype": "Link",
-   "label": "Model",
-   "options": "Equipment Model"
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Model"
   },
   {
    "fieldname": "engine_no",
@@ -253,12 +258,34 @@
    "fieldtype": "Date",
    "label": "Purchase Date",
    "read_only": 1
+  },
+  {
+   "fieldname": "asset_custodian_type",
+   "fieldtype": "Link",
+   "label": "Asset Custodian Type",
+   "options": "DocType"
+  },
+  {
+   "depends_on": "eval:doc.asset_custodian_type == \"Hostel Room\";",
+   "fieldname": "hostel",
+   "fieldtype": "Link",
+   "label": "Hostel",
+   "mandatory_depends_on": "eval:doc.asset_custodian_type == \"Hostel Room\";",
+   "options": "Hostel Room"
+  },
+  {
+   "depends_on": "eval:doc.asset_custodian_type == \"Room\";",
+   "fieldname": "roombuilding",
+   "fieldtype": "Link",
+   "label": "Room/Building",
+   "mandatory_depends_on": "eval:doc.asset_custodian_type == \"Room\";",
+   "options": "Room"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-20 12:22:13.538080",
+ "modified": "2025-09-22 12:00:42.506129",
  "modified_by": "Administrator",
  "module": "Buying",
  "name": "Asset Issue Details",
@@ -323,6 +350,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

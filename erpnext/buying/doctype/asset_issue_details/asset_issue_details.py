@@ -18,6 +18,7 @@ class AssetIssueDetails(Document):
 
         amended_from: DF.Link | None
         amount: DF.Currency
+        asset_custodian_type: DF.Link | None
         asset_rate: DF.Currency
         branch: DF.Link
         brand: DF.Data | None
@@ -29,18 +30,20 @@ class AssetIssueDetails(Document):
         employee_name: DF.Data | None
         engine_no: DF.Data | None
         entry_date: DF.Date
-        equipment_type: DF.Link | None
+        equipment_type: DF.Data | None
+        hostel: DF.Link | None
         issued_date: DF.Date
-        issued_to: DF.Link
+        issued_to: DF.Link | None
         item_code: DF.Link
         item_name: DF.Data
         location: DF.Link | None
-        model: DF.Link | None
+        model: DF.Data | None
         purchase_date: DF.Date | None
         purchase_receipt: DF.Link | None
         qty: DF.Int
         reference_code: DF.Link | None
         reg_number: DF.Data | None
+        roombuilding: DF.Link | None
         serial_number: DF.Data | None
         uom: DF.Data | None
         warehouse: DF.Link | None
@@ -133,8 +136,11 @@ class AssetIssueDetails(Document):
                     "purchase_receipt": self.purchase_receipt,
                     "location": self.location,
                     "branch": self.branch,
-                    "custodian": self.issued_to,
-                    "custodian_name": self.employee_name,
+                    "is_hostel_asset": self.asset_custodian_type,
+                    "custodian": self.issued_to if self.asset_custodian_type == "Employee" else None,
+                    "custodian_name": self.employee_name if self.asset_custodian_type == "Employee" else None,
+                    "hostel": self.hostel if self.asset_custodian_type == "Hostel Room" else None,
+                    "roombuilding": self.roombuilding if self.asset_custodian_type == "Room" else None,
                     "available_for_use_date": self.issued_date,
                     "asset_account": fixed_asset_account,
                     "credit_account": credit_account,
@@ -166,8 +172,11 @@ class AssetIssueDetails(Document):
                     "purchase_receipt": self.purchase_receipt,
                     "location": self.location,
                     "branch": self.branch,
-                    "custodian": self.issued_to,
-                    "custodian_name": self.employee_name,
+                    "is_hostel_asset": self.asset_custodian_type,
+                    "custodian": self.issued_to if self.asset_custodian_type == "Employee" else None,
+                    "custodian_name": self.employee_name if self.asset_custodian_type == "Employee" else None,
+                    "hostel": self.hostel if self.asset_custodian_type == "Hostel Room" else None,
+                    "roombuilding": self.roombuilding if self.asset_custodian_type == "Room" else None,
                     "available_for_use_date": self.issued_date,
                     "asset_account": fixed_asset_account,
                     "credit_account": credit_account,
