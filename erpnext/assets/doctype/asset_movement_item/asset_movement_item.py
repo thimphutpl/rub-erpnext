@@ -16,19 +16,19 @@ class AssetMovementItem(Document):
 		from frappe.types import DF
 
 		asset: DF.Link
+		asset_custodian_type: DF.Link | None
 		asset_name: DF.Data | None
 		company: DF.Link | None
-		from_employee: DF.Link | None
+		from_employee: DF.DynamicLink | None
 		from_employee_name: DF.Data | None
-		from_hostel: DF.Link | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
 		source_cost_center: DF.Link | None
 		target_cost_center: DF.Link | None
-		to_employee: DF.Link | None
+		to_custodian_type: DF.Link | None
+		to_employee: DF.DynamicLink | None
 		to_employee_name: DF.Data | None
-		to_hostel: DF.Link | None
 	# end: auto-generated types
 
 	pass

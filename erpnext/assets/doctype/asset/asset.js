@@ -5,12 +5,20 @@ frappe.provide("erpnext.asset");
 frappe.provide("erpnext.accounts.dimensions");
 
 frappe.ui.form.on("Asset", {
+	
 	onload: function (frm) {
 		frm.set_query("item_code", function () {
 			return {
 				filters: {
 					is_fixed_asset: 1,
 					is_stock_item: 0,
+				},
+			};
+		});
+		frm.set_query("is_hostel_asset", function () {
+			return {
+				filters: {
+					"name": ["in", ["Employee", "Hostel Room", "Room"]],
 				},
 			};
 		});
@@ -111,6 +119,31 @@ frappe.ui.form.on("Asset", {
 	},
 
 	refresh: function (frm) {
+		frm.add_custom_button(
+			__("Regenerate QR Code"),
+			function () {
+				frappe.call({
+					method: "generate_qr_code",
+					doc: frm.doc,
+					callback: function(r){
+						let alert_dialog = new frappe.ui.Dialog({
+							title: "QR Code Generated. Window will be reloaded to reflect changes",
+							primary_action: values => {
+								alert_dialog.disable_primary_action();
+								window.location.reload()
+						},
+						primary_action_label: 'OK'
+						});
+						alert_dialog.show();
+
+					}
+				})
+			},
+			__("QR Code")
+		);
+		if(frm.doc.qr_code_link){
+			render_qr_code(frm)
+		}
 		frappe.ui.form.trigger("Asset", "is_existing_asset");
 		frm.toggle_display("next_depreciation_date", frm.doc.docstatus < 1);
 
@@ -507,8 +540,9 @@ frappe.ui.form.on("Asset", {
 				item_code: frm.doc.item_code,
 				asset_category: frm.doc.asset_category,
 				gross_purchase_amount: frm.doc.gross_purchase_amount,
+				company: frm.doc.company,
 				asset_sub_category:frm.doc.asset_sub_category,
-                available_for_use_date: frm.doc.available_for_use_date
+                available_for_use_date: frm.doc.available_for_use_date,
 			},
 			callback: function (r, rt) {
 				if (r.message) {
@@ -1001,3 +1035,14 @@ erpnext.asset.transfer_asset = function () {
 		},
 	});
 };
+var render_qr_code=function(frm){
+	if (frm.doc.qr_code_link) {
+		let img_html = `<img src="${frm.doc.qr_code_link}" 
+						   style="max-width:200px; border:1px solid #ccc; border-radius:5px;" />`;
+
+		frm.fields_dict.qr_code.$wrapper.html(img_html);
+	} else {
+		frm.fields_dict.qr_code.$wrapper.html("<p>QR not generated</p>");
+	}
+
+}

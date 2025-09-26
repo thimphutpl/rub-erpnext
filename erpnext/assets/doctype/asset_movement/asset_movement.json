@@ -2,21 +2,24 @@
  "actions": [],
  "allow_import": 1,
  "autoname": "ASM.-.YY.-.MM.-.###",
- "creation": "2016-04-25 18:00:23.559973",
+ "creation": "2025-09-22 15:27:10.412509",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "company",
   "purpose",
-  "based_on",
+  "asset_custodian_type",
   "column_break_4",
   "transaction_date",
   "from_employee",
-  "frrom_hostel",
+  "from_hostel",
+  "from_roombuilding",
   "project",
   "cost_center",
   "to_single",
   "to_employee",
+  "to_hostel",
+  "to_roombuilding",
   "section_break_10",
   "get_asset",
   "assets",
@@ -106,11 +109,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.based_on == 'Custodian'",
+   "depends_on": "eval:doc.asset_custodian_type == \"Employee\";",
    "fieldname": "from_employee",
    "fieldtype": "Link",
    "label": "From Employee",
-   "mandatory_depends_on": "eval:doc.based_on == 'Custodian'",
+   "mandatory_depends_on": "eval:doc.asset_custodian_type == \"Employee\";",
    "options": "Employee"
   },
   {
@@ -121,17 +124,17 @@
   },
   {
    "default": "0",
+   "description": "* Only one type of Custodian can be selected.",
    "fieldname": "to_single",
    "fieldtype": "Check",
-   "label": "To Single Employee"
+   "label": "To Single Custodian/Hostel/Room/Building"
   },
   {
-   "depends_on": "to_single",
+   "depends_on": "eval:doc.to_single == 1 && !doc.to_hostel && !doc.to_roombuilding;",
    "fieldname": "to_employee",
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
    "label": "To Employee",
-   "mandatory_depends_on": "to_single",
    "options": "Employee"
   },
   {
@@ -155,13 +158,6 @@
    "label": "attachment"
   },
   {
-   "depends_on": "eval:doc.purpose == \"Transfer\"",
-   "fieldname": "based_on",
-   "fieldtype": "Select",
-   "label": "Select Assets Based On",
-   "options": "\nCustodian\nHostel"
-  },
-  {
    "depends_on": "eval:doc.based_on == 'Cost Center'",
    "fieldname": "project",
    "fieldtype": "Link",
@@ -177,18 +173,46 @@
    "options": "Cost Center"
   },
   {
-   "depends_on": "eval:doc.based_on == 'Hostel';",
-   "fieldname": "frrom_hostel",
+   "depends_on": "eval:doc.asset_custodian_type == \"Room\";",
+   "fieldname": "from_roombuilding",
+   "fieldtype": "Link",
+   "label": "From Room/Building",
+   "mandatory_depends_on": "eval:doc.asset_custodian_type == \"Room/Building\";",
+   "options": "Room"
+  },
+  {
+   "fieldname": "asset_custodian_type",
+   "fieldtype": "Link",
+   "label": "Asset Custodian Type",
+   "options": "DocType"
+  },
+  {
+   "depends_on": "eval:doc.to_single == 1 && !doc.to_employee && !doc.to_roombuilding;",
+   "fieldname": "to_hostel",
+   "fieldtype": "Link",
+   "label": "To Hostel",
+   "options": "Hostel Room"
+  },
+  {
+   "depends_on": "eval:doc.to_single == 1 && !doc.to_employee && !doc.to_hostel;",
+   "fieldname": "to_roombuilding",
+   "fieldtype": "Link",
+   "label": "To Room/Building",
+   "options": "Room"
+  },
+  {
+   "depends_on": "eval:doc.asset_custodian_type == \"Hostel Room\";",
+   "fieldname": "from_hostel",
    "fieldtype": "Link",
    "label": "From Hostel",
-   "mandatory_depends_on": "eval:doc.based_on == 'Hostel';",
+   "mandatory_depends_on": "eval:doc.asset_custodian_type == \"Hostel\";",
    "options": "Hostel Room"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-01 15:59:54.393659",
+ "modified": "2025-09-22 15:57:07.297386",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset Movement",

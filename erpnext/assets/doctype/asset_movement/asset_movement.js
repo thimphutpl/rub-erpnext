@@ -17,8 +17,22 @@ frappe.ui.form.on('Asset Movement', {
 			}, __("View"));
 		}
 	},
-	
+	asset_custodian_type: function(frm) {
+        if (frm.doc.asset_custodian_type !== "Employee") {
+            frm.set_value("from_employee", null);
+            frm.set_value("to_employee", null);
+        }
+		frm.refresh_field("from_employee");
+		frm.refresh_field("to_employee");
+    },
 	setup: (frm) => {
+		frm.set_query("asset_custodian_type", function () {
+			return {
+				filters: {
+					"name": ["in", ["Employee", "Hostel Room", "Room"]],
+				},
+			};
+		});
 		frm.set_query("to_employee", "assets", (doc) => {
 			return {
 				filters: {
@@ -69,7 +83,7 @@ frappe.ui.form.on('Asset Movement', {
 				}
 			}
 		}
-		})
+		)
 	},
 	onload: (frm) => {
 		frm.trigger('set_required_fields');
@@ -116,6 +130,9 @@ frappe.ui.form.on('Asset Movement', {
 			frm.refresh_field("assets");
 		}
 	},
+	asset_custodian_type: function(frm){
+		frm.set_value("assets", []);
+	},
 	get_asset: function(frm){
 		get_asset_list(frm);
 	},
@@ -130,7 +147,6 @@ frappe.ui.form.on('Asset Movement', {
 });
 
 function get_asset_list(frm){
-	
 	frappe.call({
 		method:"get_asset_list",
 		doc: frm.doc,

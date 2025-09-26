@@ -6,6 +6,7 @@ import json
 import math
 from frappe.utils import get_link_to_form
 import frappe
+import qrcode
 from frappe import _
 from frappe.utils import (
 	cint,
@@ -96,7 +97,7 @@ class Asset(AccountsController):
 		is_composite_asset: DF.Check
 		is_existing_asset: DF.Check
 		is_fully_depreciated: DF.Check
-		is_hostel_asset: DF.Check
+		is_hostel_asset: DF.Link | None
 		is_opening_asset: DF.Check
 		item_code: DF.Link
 		item_name: DF.ReadOnly | None
@@ -114,8 +115,10 @@ class Asset(AccountsController):
 		purchase_date: DF.Date | None
 		purchase_invoice: DF.Link | None
 		purchase_receipt: DF.Link | None
+		qr_code_link: DF.Data | None
 		remarks: DF.SmallText | None
 		residual_value: DF.Data | None
+		roombuilding: DF.Link | None
 		serial_number: DF.Data | None
 		split_from: DF.Link | None
 		status: DF.Literal["Draft", "Submitted", "Partially Depreciated", "Fully Depreciated", "Sold", "Scrapped", "In Maintenance", "Out of Order", "Issue", "Receipt", "Capitalized", "Decapitalized"]
@@ -125,6 +128,15 @@ class Asset(AccountsController):
 		value_after_depreciation: DF.Currency
 		vehicle_number: DF.Data | None
 	# end: auto-generated types
+
+	def autoname(self):
+		asset_sub_category_code = frappe.get_value("Asset Sub Category", self.asset_sub_category, "asset_sub_category_code")
+		company_abbr = frappe.get_value("Company", self.company, "abbr")
+		year = getdate(self.purchase_date).year
+
+		from erpnext.accounts.utils import get_autoname_with_number
+		self.name = get_autoname_with_number("RUB-"+company_abbr+"/"+year+"/"+self.abbr+"/"+asset_sub_category_code+"/#####")
+
 
 	def validate(self):
 		self.validate_asset_values()
@@ -158,7 +170,29 @@ class Asset(AccountsController):
 		self.total_asset_cost = self.gross_purchase_amount
 		self.status = self.get_status()
 
+	# To auto update asset into Hostel Room
+	def update_hostel_room_items(doc):
+		if doc.is_hostel_asset == "Hostel" and doc.hostel:
+			hostel_room = frappe.get_doc("Hostel Room", doc.hostel)
+			found = False
+
+			for row in hostel_room.hostel_room_item:
+				if row.asset_code == doc.name:
+					row.number_of_asset = doc.asset_quantity or 1
+					found = True
+					break
+
+			if not found:
+				hostel_room.append("hostel_room_item", {
+					"asset_code": doc.name,
+					"number_of_asset": doc.asset_quantity or 1
+				})
+
+			hostel_room.save()
+			frappe.msgprint(f"Hostel Room {hostel_room.name} updated with Asset {doc.name}")
+
 	def on_submit(self):
+		self.update_hostel_room_items()
 		self.validate_in_use_date()
 		self.make_asset_movement() # jai, pls don't reomve this func.
 		self.make_asset_je_entry()
@@ -167,6 +201,7 @@ class Asset(AccountsController):
 		if self.calculate_depreciation and not self.split_from:
 			convert_draft_asset_depr_schedules_into_active(self)
 		self.set_status()
+		self.generate_qr_code()
 		add_asset_activity(self.name, _("Asset submitted"))
 
 	def on_cancel(self):
@@ -176,7 +211,7 @@ class Asset(AccountsController):
 		self.delete_depreciation_entries()
 		cancel_asset_depr_schedules(self)
 		self.set_status()
-		self.ignore_linked_doctypes = ("Journal Entry","GL Entry", "Stock Ledger Entry")
+		self.ignore_linked_doctypes = ("Stock Ledger Entry")
 		make_reverse_gl_entries(voucher_type="Asset", voucher_no=self.name)
 		self.db_set("booked_fixed_asset", 0)
 		add_asset_activity(self.name, _("Asset cancelled"))
@@ -211,6 +246,43 @@ class Asset(AccountsController):
 		doc = frappe.get_doc("Asset Issue Details",self.asset_issue_details)
 		doc.cancel()
 		frappe.db.commit()
+
+	@frappe.whitelist()
+	def generate_qr_code(self):
+		# if not self.qr_code_link:
+		if self.docstatus == 1:
+			qr = qrcode.QRCode(
+				version=1,
+				error_correction=qrcode.constants.ERROR_CORRECT_L,
+				box_size=10,
+				border=4,
+			)
+			url = "https://rub.thimphutechpark.bt/check-status?asset_code="+str(self.name)
+			qr.add_data(url)
+			# qr.add_data(get_link_to_form("Asset", self.name))
+
+			qr.make(fit=True)
+
+			img = qr.make_image(fill_color="black", back_color="white")
+			file_name = f"QR-{self.name}.png"
+			file_path = frappe.get_site_path("public", "files", file_name)
+			img.save(file_path)
+			file_doc = frappe.get_doc(
+				{
+					"doctype": "File",
+					"file_name": file_name,
+					"file_url": f"/files/{file_name}",
+					"attached_to_doctype": "Asset",
+					"attached_to_name": self.name,
+					"is_private": 0,
+				}
+			)
+			file_doc.insert(ignore_permissions=True)
+			self.qr_code_link = file_doc.file_url
+			self.db_update()
+		else:
+			self.qr_code_link = None
+			self.db_update()
 
 	def validate_asset_and_reference(self):
 		if self.purchase_invoice or self.purchase_receipt:
@@ -294,7 +366,8 @@ class Asset(AccountsController):
 				)
 
 	def set_missing_values(self):
-		finance_books = get_item_details(self.item_code, self.asset_category, self.gross_purchase_amount, self.asset_sub_category, self.available_for_use_date)
+		finance_books = get_item_details(self.item_code, self.asset_category, self.gross_purchase_amount, self.company, self.asset_sub_category, self.available_for_use_date)
+		# frappe.throw(str(finance_books))
 		if len(finance_books) == 0:
 			frappe.throw(f"Map {self.asset_sub_category} and Finance Book in {self.asset_category}")
 
@@ -479,11 +552,14 @@ class Asset(AccountsController):
 				)
 
 		if row.depreciation_start_date and getdate(row.depreciation_start_date) < getdate(self.purchase_date):
-			frappe.throw(
-				_("Depreciation Row {0}: Next Depreciation Date cannot be before Purchase Date").format(
-					row.idx
+			if not self.purchase_date:
+				frappe.throw(_("Please set Purchase Date"))
+			else:
+				frappe.throw(
+					_("Depreciation Row {0}: Next Depreciation Date cannot be before Purchase Date").format(
+						row.idx
+					)
 				)
-			)
 
 		if row.depreciation_start_date and getdate(row.depreciation_start_date) < getdate(
 			self.available_for_use_date
@@ -1022,11 +1098,12 @@ def transfer_asset(args):
 
 
 @frappe.whitelist()
-def get_item_details(item_code, asset_category, gross_purchase_amount, asset_sub_category, depreciation_start_date=None):
+def get_item_details(item_code, asset_category, gross_purchase_amount, company, asset_sub_category, depreciation_start_date=None):
 	asset_category_doc = frappe.get_doc("Asset Category", asset_category)
 	books = []
 	for d in asset_category_doc.finance_books:
-		if d.asset_sub_category == asset_sub_category:
+		# frappe.throw(str(company))
+		if d.asset_sub_category == asset_sub_category and d.finance_book == frappe.db.get_value("Company",company,"default_finance_book"):
 			books.append(
 				{
 					"finance_book": d.finance_book,
@@ -1036,8 +1113,7 @@ def get_item_details(item_code, asset_category, gross_purchase_amount, asset_sub
 					"daily_prorata_based": d.daily_prorata_based,
 					"shift_based": d.shift_based,
 					"salvage_value_percentage": d.salvage_value_percentage,
-					"expected_value_after_useful_life": flt(gross_purchase_amount)
-					* flt(d.salvage_value_percentage / 100),
+					"expected_value_after_useful_life": flt(gross_purchase_amount) * flt(d.salvage_value_percentage / 100),
 					"depreciation_start_date": get_last_day(depreciation_start_date),
 					"rate_of_depreciation": d.rate_of_depreciation,
 					"income_depreciation_percent":d.income_depreciation_percent,

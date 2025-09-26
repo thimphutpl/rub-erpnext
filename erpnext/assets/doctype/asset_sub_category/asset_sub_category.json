@@ -7,7 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "asset_category",
-  "asset_sub_category"
+  "asset_sub_category",
+  "asset_sub_category_code"
  ],
  "fields": [
   {
@@ -25,11 +26,18 @@
    "label": "Asset Sub Category",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "asset_sub_category_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Asset Sub Category Code",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-30 16:41:34.277960",
+ "modified": "2025-09-25 11:25:38.387694",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset Sub Category",
@@ -49,6 +57,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
