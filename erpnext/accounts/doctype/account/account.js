@@ -57,8 +57,7 @@ frappe.ui.form.on("Account", {
 					__("Actions")
 				);
 			}
-		*/
-		}
+		}*/
 	},
 	account_type: function (frm) {
 		if (frm.doc.is_group == 0) {
