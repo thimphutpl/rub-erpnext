@@ -316,6 +316,7 @@ class Account(NestedSet):
 				)
 
 	def create_account_for_child_company(self, parent_acc_name_map, descendants, parent_acc_name):
+		frappe.throw("Here")
 		for company in descendants:
 			company_bold = frappe.bold(company)
 			parent_acc_name_bold = frappe.bold(parent_acc_name)
@@ -346,7 +347,6 @@ class Account(NestedSet):
 				filters["account_number"] = self.account_number
 
 			child_account = frappe.db.get_value("Account", filters, "name")
-			frappe.throw("here1")
 			if not child_account:
 				frappe.thro
 				doc = frappe.copy_doc(self)
@@ -381,7 +381,6 @@ class Account(NestedSet):
 				if parent_value_changed:
 					doc.flags.ignore_root_company_validation = True
 					doc.save()
-			frappe.throw("here2")
 
 	@frappe.whitelist()
 	def convert_group_to_ledger(self):
