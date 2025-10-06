@@ -232,14 +232,14 @@ class Account(NestedSet):
 			}
 			if parent_acc_number:
 				filters["account_number"] = parent_acc_number
-
+			# frappe.throw(str(filters))
 			for d in frappe.db.get_values(
 				"Account", filters=filters, fieldname=["company", "name"], as_dict=True
 			):
 				parent_acc_name_map[d["company"]] = d["name"]
-
-			if not parent_acc_name_map:
-				return
+				# frappe.throw(str(d)+" heer")
+			# if not parent_acc_name_map:
+			# 	return
 
 			self.create_account_for_child_company(parent_acc_name_map, descendants, parent_acc_name)
 
