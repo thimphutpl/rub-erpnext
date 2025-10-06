@@ -347,7 +347,6 @@ class Account(NestedSet):
 
 			child_account = frappe.db.get_value("Account", filters, "name")
 			if not child_account:
-				frappe.thro
 				doc = frappe.copy_doc(self)
 				doc.flags.ignore_root_company_validation = True
 				doc.update(
