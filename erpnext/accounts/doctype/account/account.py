@@ -316,7 +316,7 @@ class Account(NestedSet):
 				)
 
 	def create_account_for_child_company(self, parent_acc_name_map, descendants, parent_acc_name):
-		frappe.throw("Here")
+		frappe.throw("Here "+str(descendants))
 		for company in descendants:
 			company_bold = frappe.bold(company)
 			parent_acc_name_bold = frappe.bold(parent_acc_name)
@@ -502,21 +502,40 @@ def get_parent_account(doctype, txt, searchfield, start, page_len, filters):
 	)
 
 
+# def get_account_currency(account):
+# 	"""Helper function to get account currency"""
+# 	if not account:
+# 		return
+
+# 	def generator():
+# 		account_currency, company = frappe.get_cached_value(
+# 			"Account", account, ["account_currency", "company"]
+# 		)
+# 		if not account_currency:
+# 			account_currency = frappe.get_cached_value("Company", company, "default_currency")
+	
+# 		return account_currency
+# 	return frappe.local_cache("account_currency", account, generator)
 def get_account_currency(account):
-	"""Helper function to get account currency"""
-	if not account:
-		return
+    """Helper function to get account currency"""
+    if not account:
+        return None
 
-	def generator():
-		account_currency, company = frappe.get_cached_value(
-			"Account", account, ["account_currency", "company"]
-		)
-		if not account_currency:
-			account_currency = frappe.get_cached_value("Company", company, "default_currency")
+    def generator():
+        result = frappe.get_cached_value("Account", account, ["account_currency", "company"])
+        
+        if not result:
+            frappe.throw(f"Account {account} does not exist or has no company set")
+        
+        account_currency, company = result
+        
+        if not account_currency:
+            account_currency = frappe.get_cached_value("Company", company, "default_currency")
+        
+        return account_currency
 
-		return account_currency
+    return frappe.local_cache("account_currency", account, generator)
 
-	return frappe.local_cache("account_currency", account, generator)
 
 
 def on_doctype_update():
