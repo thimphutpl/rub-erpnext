@@ -51,7 +51,7 @@ class Account(NestedSet):
 		is_group: DF.Check
 		lft: DF.Int
 		old_parent: DF.Data | None
-		parent_account: DF.Link
+		parent_account: DF.Link | None
 		report_type: DF.Literal["", "Balance Sheet", "Profit and Loss"]
 		rgt: DF.Int
 		root_type: DF.Literal["", "Asset", "Liability", "Income", "Expense", "Equity"]
@@ -346,7 +346,9 @@ class Account(NestedSet):
 				filters["account_number"] = self.account_number
 
 			child_account = frappe.db.get_value("Account", filters, "name")
+			frappe.throw("here1")
 			if not child_account:
+				frappe.thro
 				doc = frappe.copy_doc(self)
 				doc.flags.ignore_root_company_validation = True
 				doc.update(
@@ -379,6 +381,7 @@ class Account(NestedSet):
 				if parent_value_changed:
 					doc.flags.ignore_root_company_validation = True
 					doc.save()
+			frappe.throw("here2")
 
 	@frappe.whitelist()
 	def convert_group_to_ledger(self):
