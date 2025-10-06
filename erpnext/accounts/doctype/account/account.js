@@ -29,6 +29,7 @@ frappe.ui.form.on("Account", {
 		}
 
 		// read-only for root accounts
+		/*
 		if (!frm.is_new()) {
 			if (!frm.doc.parent_account) {
 				frm.set_read_only();
@@ -56,6 +57,7 @@ frappe.ui.form.on("Account", {
 					__("Actions")
 				);
 			}
+		*/
 		}
 	},
 	account_type: function (frm) {
