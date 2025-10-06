@@ -241,7 +241,7 @@ class Account(NestedSet):
 			# if not parent_acc_name_map:
 			# 	return
 
-			self.create_account_for_child_company(parent_acc_name_map, descendants, parent_acc_name)
+		self.create_account_for_child_company(parent_acc_name_map, descendants, parent_acc_name)
 
 	def validate_group_or_ledger(self):
 		doc_before_save = self.get_doc_before_save()
@@ -316,7 +316,7 @@ class Account(NestedSet):
 				)
 
 	def create_account_for_child_company(self, parent_acc_name_map, descendants, parent_acc_name):
-		frappe.throw("Here "+str(descendants))
+		# frappe.throw("Here "+str(descendants))
 		for company in descendants:
 			company_bold = frappe.bold(company)
 			parent_acc_name_bold = frappe.bold(parent_acc_name)
