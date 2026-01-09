@@ -30,10 +30,12 @@ class Company(NestedSet):
 		abbr: DF.Data
 		accumulated_depreciation_account: DF.Link | None
 		advance_account: DF.Link | None
+		advance_account_international: DF.Link | None
 		allow_account_creation_against_child_company: DF.Check
 		asset_received_but_not_billed: DF.Link | None
 		auto_err_frequency: DF.Literal["Daily", "Weekly", "Monthly"]
 		auto_exchange_rate_revaluation: DF.Check
+		bank_account: DF.Link | None
 		book_advance_payments_in_separate_party_account: DF.Check
 		capital_work_in_progress_account: DF.Link | None
 		chart_of_accounts: DF.Literal[None]
@@ -67,6 +69,7 @@ class Company(NestedSet):
 		default_letter_head: DF.Link | None
 		default_operating_cost_account: DF.Link | None
 		default_payable_account: DF.Link | None
+		default_payable_international_account: DF.Link | None
 		default_payroll_payable_account: DF.Link | None
 		default_provisional_account: DF.Link | None
 		default_receivable_account: DF.Link | None
@@ -88,13 +91,19 @@ class Company(NestedSet):
 		expenses_included_in_asset_valuation: DF.Link | None
 		expenses_included_in_valuation: DF.Link | None
 		fax: DF.Data | None
+		hostel_branch: DF.Link | None
+		income_account: DF.Link | None
+		income_accounts: DF.Link | None
 		is_group: DF.Check
+		is_overseeing_company: DF.Check
 		lft: DF.Int
 		monthly_sales_target: DF.Currency
 		old_parent: DF.Data | None
 		parent_company: DF.Link | None
 		payment_terms: DF.Link | None
 		phone_no: DF.Data | None
+		receivable_account: DF.Link | None
+		receivable_accounts: DF.Link | None
 		reconcile_on_advance_payment_date: DF.Check
 		reconciliation_takes_effect_on: DF.Literal["Advance Payment Date", "Oldest Of Invoice Or Advance", "Reconciliation Date"]
 		registration_details: DF.Code | None

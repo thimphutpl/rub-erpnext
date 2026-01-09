@@ -396,6 +396,16 @@ def get_party_account(party_type, party=None, company=None, include_advance=Fals
 		)
 
 		return frappe.get_cached_value("Company", company, default_account_name)
+	if party_type == "Supplier" and party:
+		supplier_type = frappe.get_cached_value("Supplier", party, "supplier_type")
+		if supplier_type == "International Vendor":
+			international_account = frappe.get_cached_value("Company", company, "default_payable_international_account")
+			if international_account:
+				return international_account
+		elif supplier_type == "Domestic Vendor":
+			domestic_account = frappe.get_cached_value("Company", company, "default_payable_account")
+			if domestic_account:
+				return domestic_account	
 
 	account = frappe.db.get_value(
 		"Party Account", {"parenttype": party_type, "parent": party, "company": company}, "account"
@@ -777,7 +787,7 @@ def validate_account_party_type(self):
 
 	if self.party_type and self.party:
 		account_type = frappe.get_cached_value("Account", self.account, "account_type")
-		if account_type and (account_type not in ["Receivable", "Payable","Tax"]):
+		if account_type and (account_type not in ["Receivable", "Payable","Tax", "Income Account"]):
 			frappe.throw(
 				_(
 					"Party Type and Party can only be set for Receivable / Payable account<br><br>" "{0}"

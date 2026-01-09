@@ -7,16 +7,18 @@ from frappe import _
 from frappe.utils import flt, getdate, formatdate, cstr, rounded
 from frappe.utils.data import get_first_day, get_last_day, add_years, date_diff, now, today, getdate
 from erpnext.custom_utils import get_date_diff
+# from frappe.desk.query_report import add_total_row
 
 def execute(filters=None):
     validate_filters(filters)
     data = get_data(filters)
     columns = get_columns()
+    # data = add_total_row(data, columns)
     return columns, data
 
 def validate_filters(filters):
-    if not filters.fiscal_year:
-        frappe.throw(_("Fiscal Year {0} is required").format(filters.fiscal_year))
+    if not filters.from_fiscal_year and not filters.to_fiscal_year :
+        frappe.throw(_("From and To Fiscal Year is required"))
 
     # fiscal_year = frappe.db.get_value("Fiscal Year", filters.fiscal_year, ["year_start_date", "year_end_date"], as_dict=True)
     # if not fiscal_year:
@@ -27,8 +29,8 @@ def validate_filters(filters):
     
     from datetime import datetime
 
-    filters.year_start_date = datetime.strptime(filters.fiscal_year + "-01-01", "%Y-%m-%d").date()
-    filters.year_end_date = datetime.strptime(filters.fiscal_year + "-12-31", "%Y-%m-%d").date()
+    filters.year_start_date = datetime.strptime(filters.from_fiscal_year + "-01-01", "%Y-%m-%d").date()
+    filters.year_end_date = datetime.strptime(filters.to_fiscal_year + "-12-31", "%Y-%m-%d").date()
 
 
     if not filters.from_date:
@@ -84,18 +86,19 @@ def get_depreciation_details(filters):
         WHERE ads.name=ds.parent AND ds.schedule_date <= '{to_date}'
         AND (IFNULL(ds.journal_entry,'') != '' )
         GROUP BY ds.parent
-    """.format(from_date=filters.from_date, to_date=filters.to_date, fiscal_year = filters.fiscal_year)
+    """.format(from_date=filters.from_date, to_date=filters.to_date)
 
     query_two= """
         SELECT
             ads.asset AS asset,
             SUM(ds.depreciation_amount) AS dep_total_next_year
         FROM `tabDepreciation Schedule` AS ds, `tabAsset Depreciation Schedule` ads
-        WHERE ads.name=ds.parent AND YEAR(ds.schedule_date) = '{fiscal_year}' 
+        WHERE ads.name=ds.parent AND YEAR(ds.schedule_date) between '{from_fiscal_year}' AND '{to_fiscal_year}'
+        AND ads.company = '{company}'
         AND (SELECT status FROM `tabAsset` WHERE name = ads.asset) IN ('Submitted','Partially Depreciated')
         GROUP BY ds.parent
 
-    """.format(fiscal_year = str(int(filters.fiscal_year)+1))
+    """.format(from_fiscal_year = str(int(filters.from_fiscal_year)), to_fiscal_year = str(int(filters.to_fiscal_year)), company=filters.company)
 
     depreciation_details = frappe._dict()
     depreciation_details_two = frappe._dict()
@@ -177,12 +180,13 @@ def get_data(filters):
             LEFT JOIN `tabAsset Finance Book` AS f ON f.parent = a.name       
         WHERE a.docstatus = 1 
         AND a.purchase_date <= '{to_date}'
+        AND a.company = '{company}'
         AND (
             a.status not in ('Scrapped', 'Sold')
             OR
             (a.status in ('Scrapped', 'Sold') AND a.disposal_date >= '{from_date}')
         )
-        """.format(from_date=filters.from_date, to_date=filters.to_date)
+        """.format(from_date=filters.from_date, to_date=filters.to_date, company=filters.company)
                 
     if filters.cost_center:
         query+=" and a.cost_center = \'" + filters.cost_center + "\'"
@@ -207,6 +211,7 @@ def get_data(filters):
         total_dep_adjustment = 0
         total_dep_total = 0
         total_dep_total_next_year = 0
+        total_quantity = 0
 
         total_actual_dep = 0	
         total_net = 0
@@ -217,6 +222,7 @@ def get_data(filters):
 
         for a in asset_data:
             gross_opening  	= flt(a.gross_opening,2)
+            quantity  	= flt(a.asset_quantity,2)
             gross_addition 	= flt(a.gross_addition,2)
             gross_adjustment= flt(a.gross_adjustment,2)
             gross_total	= gross_opening + gross_addition - gross_adjustment
@@ -253,6 +259,7 @@ def get_data(filters):
             total_dep_adjustment	+= dep_adjustment
             total_dep_total_next_year += dep_total_next_year
             total_dep_total		+= dep_total
+            total_quantity		+= quantity
 
             total_net+= flt(net_useful_life, 2)
             total_income 	 += flt(a.depreciation_income_tax, 2)
@@ -298,6 +305,8 @@ def get_data(filters):
             data.append(row)
         # total row
         row = {
+            "asset_code": "Total",
+            "qty": total_quantity, 
             "gross_opening": total_gross_opening, 
             "gross_addition": total_gross_addition, 
             "gross_adjustment": total_gross_adjustment,
@@ -355,6 +364,25 @@ def get_data(filters):
 #     for row in frappe.db.sql(query_two, as_dict=True):
 #         depreciation_details_two.setdefault(row.asset, row)
 #     return depreciation_details, depreciation_details_two
+def custom_add_total_row(data, columns, exclude=None):
+    exclude = exclude or []
+    total_row = frappe._dict()
+
+    for col in columns:
+        fieldname = col.get("fieldname")
+        fieldtype = col.get("fieldtype")
+
+        if fieldname and fieldtype in ["Currency", "Float", "Int"]:
+            if fieldname in exclude:
+                total_row[fieldname] = ""
+            else:
+                total_row[fieldname] = sum(flt(row.get(fieldname)) for row in data)
+        else:
+            total_row[fieldname] = ""
+
+    total_row[columns[0].get("fieldname")] = "Total"
+    data.append(total_row)
+    return data
 
 def get_columns():
     return [

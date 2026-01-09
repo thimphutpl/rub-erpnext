@@ -1437,8 +1437,8 @@ class AccountsController(TransactionBase):
 				advance_row["account"] = d.paid_from
 			if d.get("paid_to"):
 				advance_row["account"] = d.paid_to
-
 			self.append("advances", advance_row)
+	     
 
 	def get_advance_entries(self, include_unallocated=True):
 		party_account = []
@@ -1540,8 +1540,7 @@ class AccountsController(TransactionBase):
 	def make_precision_loss_gl_entry(self, gl_entries):
 		(
 			round_off_account,
-			round_off_cost_center,
-			round_off_for_opening,
+			round_off_cost_center
 		) = get_round_off_account_and_cost_center(
 			self.company, "Purchase Invoice", self.name, self.use_company_roundoff_cost_center
 		)
@@ -1773,9 +1772,9 @@ class AccountsController(TransactionBase):
 	def update_against_document_in_jv(self):
 		"""
 		Links invoice and advance voucher:
-		        1. cancel advance voucher
-		        2. split into multiple rows if partially adjusted, assign against voucher
-		        3. submit advance voucher
+				1. cancel advance voucher
+				2. split into multiple rows if partially adjusted, assign against voucher
+				3. submit advance voucher
 		"""
 
 		if self.doctype == "Sales Invoice":
@@ -3483,7 +3482,6 @@ def set_child_tax_template_and_map(item, child_item, parent_doc):
 		"company": parent_doc.get("company"),
 		"base_net_rate": item.get("base_net_rate"),
 	}
-
 	child_item.item_tax_template = _get_item_tax_template(args, item.taxes)
 	if child_item.get("item_tax_template"):
 		child_item.item_tax_rate = get_item_tax_map(
@@ -3704,7 +3702,7 @@ def update_child_qty_rate(parent_doctype, trans_items, parent_doctype_name, chil
 
 		1. Change rate of subcontracting - regardless of other changes.
 		2. Change qty and/or add new items and/or remove items
-		        Exception: Transfer/Consumption is already made, qty change not allowed.
+				Exception: Transfer/Consumption is already made, qty change not allowed.
 		"""
 
 		supplied_items_processed = any(

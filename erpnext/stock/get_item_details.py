@@ -23,6 +23,8 @@ from erpnext.setup.utils import get_exchange_rate
 from erpnext.stock.doctype.item.item import get_item_defaults, get_uom_conv_factor
 from erpnext.stock.doctype.item_manufacturer.item_manufacturer import get_item_manufacturer_part_no
 from erpnext.stock.doctype.price_list.price_list import get_price_list_details
+import traceback
+import inspect
 
 sales_doctypes = ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice", "POS Invoice"]
 purchase_doctypes = [
@@ -74,7 +76,6 @@ def get_item_details(args, doc=None, for_validate=False, overwrite_warehouse=Tru
 			args["bill_date"] = doc.get("bill_date")
 
 	out = get_basic_details(args, item, overwrite_warehouse)
-
 	get_item_tax_template(args, item, out)
 	out["item_tax_rate"] = get_item_tax_map(
 		args.company,
@@ -557,27 +558,28 @@ def get_item_tax_info(company, tax_category, item_codes, item_rates=None, item_t
 
 	return out
 
-
-def get_item_tax_template(args, item, out):
+@frappe.whitelist()
+def get_item_tax_template(args, item=None, out=None):
 	"""
 	args = {
 	        "tax_category": None
 	        "item_tax_template": None
 	}
 	"""
-	item_tax_template = None
-	if item.taxes:
-		item_tax_template = _get_item_tax_template(args, item.taxes, out)
+	if item:
+		item_tax_template = None
+		if item.taxes:
+			item_tax_template = _get_item_tax_template(args, item.taxes, out)
 
-	if not item_tax_template:
-		item_group = item.item_group
-		while item_group and not item_tax_template:
-			item_group_doc = frappe.get_cached_doc("Item Group", item_group)
-			item_tax_template = _get_item_tax_template(args, item_group_doc.taxes, out)
-			item_group = item_group_doc.parent_item_group
+		if not item_tax_template:
+			item_group = item.item_group
+			while item_group and not item_tax_template:
+				item_group_doc = frappe.get_cached_doc("Item Group", item_group)
+				item_tax_template = _get_item_tax_template(args, item_group_doc.taxes, out)
+				item_group = item_group_doc.parent_item_group
 
-	if args.get("child_doctype") and item_tax_template:
-		out.update(get_fetch_values(args.get("child_doctype"), "item_tax_template", item_tax_template))
+		if args.get("child_doctype") and item_tax_template:
+			out.update(get_fetch_values(args.get("child_doctype"), "item_tax_template", item_tax_template))
 
 
 def _get_item_tax_template(args, taxes, out=None, for_validate=False):

@@ -1,0 +1,79 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:",
+ "creation": "2025-11-01 13:17:01.009042",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "room_number",
+  "hostel_type",
+  "student_code",
+  "first_name",
+  "last_name",
+  "column_break_grmv",
+  "hostel_capacity"
+ ],
+ "fields": [
+  {
+   "fieldname": "column_break_grmv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "hostel_room.capacity",
+   "fieldname": "hostel_capacity",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hostel Capacity"
+  },
+  {
+   "fieldname": "room_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Room Number",
+   "options": "Hostel Room"
+  },
+  {
+   "fieldname": "student_code",
+   "fieldtype": "Link",
+   "label": "Student Code",
+   "options": "Student"
+  },
+  {
+   "fetch_from": "student_code.first_name",
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "label": "First Name",
+   "options": "Student"
+  },
+  {
+   "fetch_from": "student_code.last_name",
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name",
+   "options": "Student"
+  },
+  {
+   "fieldname": "hostel_type",
+   "fieldtype": "Link",
+   "label": "Hostel Type",
+   "options": "Hostel Type"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-11-04 11:42:54.961371",
+ "modified_by": "Administrator",
+ "module": "Hostel Management",
+ "name": "Block Counsellor Details",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

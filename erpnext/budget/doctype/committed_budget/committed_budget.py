@@ -16,6 +16,7 @@ class CommittedBudget(Document):
 		account: DF.Link
 		amended_from: DF.Link | None
 		amount: DF.Currency
+		business_activity: DF.Link | None
 		closed: DF.Check
 		committed_cost_center: DF.Link | None
 		company: DF.Link | None

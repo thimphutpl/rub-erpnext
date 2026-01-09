@@ -7,7 +7,8 @@ frappe.query_reports["Asset Balance Report"] = {
 			"fieldname": "company",
 			"label": __("Company"),
 			"fieldtype": "Link",
-			"options": "Company"
+			"options": "Company",
+			"reqd": 1
 		},
 		{
 			"fieldname": "from_date",
@@ -29,7 +30,17 @@ frappe.query_reports["Asset Balance Report"] = {
 			"fieldname": "branch",
 			"label": __("Branch"),
 			"fieldtype": "Link",
-			"options": "Branch"
+			"options": "Branch",
+			"get_query": function() {
+				var company = frappe.query_report.get_filter_value('company');
+				return {
+					'doctype': "Branch",
+					'filters': [
+						['disabled', '!=', '1'], 
+						['company', '=', company],
+					]
+				}
+			},
 		},
 	]
 };

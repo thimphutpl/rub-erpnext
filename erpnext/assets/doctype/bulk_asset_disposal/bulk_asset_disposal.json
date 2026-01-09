@@ -8,12 +8,16 @@
  "field_order": [
   "section_break_t0fv",
   "amended_from",
+  "company",
   "scrap_date",
   "asset_category",
   "branch",
+  "depreciation_backup",
   "column_break_xosw",
   "scrap",
   "customer",
+  "journal_entry",
+  "sales_invoice",
   "section_break_zrkq",
   "item",
   "amended_form",
@@ -64,7 +68,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Scrap",
-   "options": "\nScrap Asset",
+   "options": "\nScrap Asset\nSale Asset",
    "reqd": 1
   },
   {
@@ -97,12 +101,36 @@
    "fieldname": "refernece",
    "fieldtype": "Data",
    "label": "Refernece"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sales_invoice",
+   "fieldtype": "Data",
+   "label": "Sales Invoice",
+   "read_only": 1
+  },
+  {
+   "fieldname": "journal_entry",
+   "fieldtype": "Data",
+   "label": "Journal Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "depreciation_backup",
+   "fieldtype": "JSON",
+   "hidden": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-06-18 17:53:33.702639",
+ "modified": "2025-10-13 10:58:09.944983",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Bulk Asset Disposal",
@@ -123,6 +151,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

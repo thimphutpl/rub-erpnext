@@ -17,6 +17,20 @@ frappe.ui.form.on("Asset Category", {
 				},
 			};
 		});
+		frm.set_query("company_name", "accounts", function (doc, cdt, cdn) {
+			var d = locals[cdt][cdn];
+			return {
+				filters: {
+					is_group: 1,
+				},
+			};
+		});
+		frm.set_query("finance_book", "finance_books", function (doc, cdt, cdn) {
+			var d = locals[cdt][cdn];
+			return {
+				query: "erpnext.controllers.queries.filter_finance_books"
+			};
+		});
 
 		frm.set_query("accumulated_depreciation_account", "accounts", function (doc, cdt, cdn) {
 			var d = locals[cdt][cdn];

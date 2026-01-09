@@ -3,15 +3,15 @@
 
 frappe.provide("erpnext.buying");
 frappe.provide("erpnext.accounts.dimensions");
-
 cur_frm.cscript.tax_table = "Purchase Taxes and Charges";
 
 erpnext.accounts.taxes.setup_tax_filters("Purchase Taxes and Charges");
 erpnext.accounts.taxes.setup_tax_validations("Purchase Order");
 erpnext.buying.setup_buying_controller();
 
+
 frappe.ui.form.on("Purchase Order", {
-	
+
 	setup: function (frm) {
 		// frm.set_query("expense_account", "items", function () {
 		// 	// frappe.throw("here in method")
@@ -67,10 +67,42 @@ frappe.ui.form.on("Purchase Order", {
 				filters: { company: doc.company },
 			};
 		});
+
+		if (!frm.doc.branch && frm.doc.company) {
+			frappe.db.get_list("Branch", {
+				filters: { company: frm.doc.company },
+				fields: ["name"],
+				limit: 1, // get the first available branch
+				order_by: "name asc"
+			}).then(r => {
+				if (r.length) {
+					frm.set_value("branch", r[0].name);
+				}
+			});
+		}
 	},
 
 	company: function (frm) {
 		erpnext.accounts.dimensions.update_dimension(frm, frm.doctype);
+
+
+		frm.set_query("supplier", function () {
+			return {
+				query: "erpnext.buying.doctype.supplier.supplier.get_suppliers",
+				filters: {
+					company: frm.doc.company
+				}
+			};
+		});
+
+		if (frm.doc.items && frm.doc.items.length > 0) {
+			frm.doc.items.forEach(function (item) {
+				if (item.item_code) {
+					console.log(`Updating expense account for item: ${item.item_code}`);
+					set_expense_account(frm, "Purchase Order Item", item.name);
+				}
+			});
+		}
 	},
 
 	refresh: function (frm) {
@@ -85,7 +117,12 @@ frappe.ui.form.on("Purchase Order", {
 				}
 			});
 		}
-		
+		if (frm.doc.items) {
+			frm.doc.items.forEach((item, index) => {
+				console.log(`Item ${index}: ${item.item_code}, expense_account: ${item.expense_account}`);
+			});
+		}
+
 	},
 
 	get_materials_from_supplier: function (frm) {
@@ -139,6 +176,7 @@ frappe.ui.form.on("Purchase Order", {
 		if (frm.is_new()) {
 			frm.set_value("advance_paid", 0);
 		}
+
 	},
 
 	apply_tds: function (frm) {
@@ -166,10 +204,10 @@ frappe.ui.form.on("Purchase Order", {
 			},
 		});
 	},
-	
-	cost_center:function(frm){
-		if (frm.doc.cost_center){
-			frm.doc.items.map(v=>{
+
+	cost_center: function (frm) {
+		if (frm.doc.cost_center) {
+			frm.doc.items.map(v => {
 				v.cost_center = frm.doc.cost_center
 			})
 		}
@@ -181,12 +219,12 @@ frappe.ui.form.on("Purchase Order", {
 				fieldname: "warehouse",
 				filters: { name: frm.doc.cost_center },
 			},
-			callback: function(r, rt) {
-				if(r.message.warehouse) {
-					frm.doc.items.map(v=>{
+			callback: function (r, rt) {
+				if (r.message.warehouse) {
+					frm.doc.items.map(v => {
 						v.warehouse = r.message.warehouse
 					})
-				}else{
+				} else {
 					frappe.throw(__('Warehouse not define in this Cost Center'))
 				}
 			}
@@ -195,26 +233,26 @@ frappe.ui.form.on("Purchase Order", {
 
 	/* jai added */
 	schedule_date: function (frm) {
-		if (frm.doc.schedule_date){
-			frm.doc.items.map(v=>{
+		if (frm.doc.schedule_date) {
+			frm.doc.items.map(v => {
 				v.schedule_date = frm.doc.schedule_date
 			})
 		}
 	},
 
-	freight_and_insurance_charges: function(frm) {
+	freight_and_insurance_charges: function (frm) {
 		calculate_discount(frm)
 	},
 
-	discount: function(frm) {
+	discount: function (frm) {
 		calculate_discount(frm)
 	},
 
-	other_charges: function(frm) {
+	other_charges: function (frm) {
 		calculate_discount(frm)
 	},
 
-	tax: function(frm) {
+	tax: function (frm) {
 		calculate_discount(frm)
 	},
 });
@@ -253,11 +291,9 @@ frappe.ui.form.on("Purchase Order Item", {
 	},
 
 	item_code: async function (frm, cdt, cdn) {
-		
-		
-		
+
 		if (frm.doc.is_subcontracted && !frm.doc.is_old_subcontracting_flow) {
-			
+
 			var row = locals[cdt][cdn];
 
 			if (row.item_code && !row.fg_item) {
@@ -306,12 +342,12 @@ frappe.ui.form.on("Purchase Order Item", {
 				}
 			}
 		}
-		
+
 	},
 
 	fg_item: async function (frm, cdt, cdn) {
-		
-		
+
+
 		if (frm.doc.is_subcontracted && !frm.doc.is_old_subcontracting_flow) {
 			var row = locals[cdt][cdn];
 
@@ -333,7 +369,7 @@ frappe.ui.form.on("Purchase Order Item", {
 	},
 
 	qty: async function (frm, cdt, cdn) {
-		
+
 		if (frm.doc.is_subcontracted && !frm.doc.is_old_subcontracting_flow) {
 			var row = locals[cdt][cdn];
 
@@ -372,8 +408,8 @@ erpnext.buying.PurchaseOrderController = class PurchaseOrderController extends (
 		};
 		// debugger
 		super.setup();
-		
-		
+
+
 	}
 
 	refresh(doc, cdt, cdn) {
@@ -711,12 +747,12 @@ erpnext.buying.PurchaseOrderController = class PurchaseOrderController extends (
 
 									frappe.msgprint(
 										"Assigning " +
-											d.mr_name +
-											" to " +
-											d.item_code +
-											" (row " +
-											me.frm.doc.items[i].idx +
-											")"
+										d.mr_name +
+										" to " +
+										d.item_code +
+										" (row " +
+										me.frm.doc.items[i].idx +
+										")"
 									);
 									if (qty > 0) {
 										frappe.msgprint("Splitting " + qty + " units of " + d.item_code);
@@ -856,11 +892,6 @@ cur_frm.fields_dict["items"].grid.get_field("project").get_query = function (doc
 	};
 };
 
-// cur_frm.fields_dict["items"].grid.get_field("item_code").on("change", function(frm, cdt, cdn) {
-//     frappe.model.set_value(cdt, cdn, "expense_account", "Text");
-// });
-
-
 if (cur_frm.doc.is_old_subcontracting_flow) {
 	cur_frm.fields_dict["items"].grid.get_field("bom").get_query = function (doc, cdt, cdn) {
 		var d = locals[cdt][cdn];
@@ -875,29 +906,6 @@ if (cur_frm.doc.is_old_subcontracting_flow) {
 	};
 }
 
-// function fetch_item_code_gl(frm,cdt,cdn){
-// 	var row = locals[cdt][cdn];
-// 	frappe.model.set_value(cdt, cdn, 'expense_account', "20010301 - Settlement - Essential Service Provider - DK");
-    
-    // 2. Then refresh just that field
-    // var grid = frm.fields_dict['items'].grid;
-    // grid.refresh();
-
-	// frm.call({
-	// 	method: "erpnext.buying.doctype.purchase_order.purchase_order.fetch_item_gl",
-	// 	freeze: true,
-	// 	freeze_message: __("Creating Stock Entry"),
-	// 	args: {
-	// 		cdn : cdn
-	// 	},
-	// 	callback: function (r) {
-	// 		if (r && r.message) {
-	// 			const doc = frappe.model.sync(r.message);
-	// 			frappe.set_route("Form", doc[0].doctype, doc[0].name);
-	// 		}
-	// 	},
-	// });
-// }
 
 function set_schedule_date(frm) {
 	if (frm.doc.schedule_date) {
@@ -912,45 +920,185 @@ function set_schedule_date(frm) {
 }
 
 frappe.provide("erpnext.buying");
-
-frappe.ui.form.on("Purchase Order", "is_subcontracted", function (frm) {
-	if (frm.doc.is_old_subcontracting_flow) {
-		erpnext.buying.get_default_bom(frm);
-	}
-});
-
-
-
 frappe.ui.form.on("Purchase Order Item", {
-    items_add: function (frm, cdt, cdn) {
-        set_expense_account(frm, cdt, cdn);
-    },
-    item_code: function (frm, cdt, cdn) {
-        set_expense_account(frm, cdt, cdn);
-    }
+	items_add: function (frm, cdt, cdn) {
+		// Run immediately when a new item row is added
+		let row = locals[cdt][cdn];
+		if (row.item_code) {
+			set_expense_account(frm, cdt, cdn);
+		}
+	},
+
+	item_code: function (frm, cdt, cdn) {
+		// Run immediately when item_code is changed
+		let row = locals[cdt][cdn];
+		if (row.item_code) {
+			set_expense_account(frm, cdt, cdn);
+		}
+	},
+	expense_account: function (frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		console.log("expense_account changed to:", row.expense_account, "by external script");
+	}
+
 });
 
 function set_expense_account(frm, cdt, cdn) {
-    let row = locals[cdt][cdn];
-    if (!row.item_code) return;
+	let row = locals[cdt][cdn];
+	if (!row.item_code) {
+		console.log("No item_code found, skipping expense account setting");
+		return;
+	}
 
-    frappe.call({
-        method: "erpnext.buying.doctype.purchase_order.purchase_order.fetch_expense_account",
-        args: { item_code: row.item_code },
-        callback: function (r) {
-            let account_name = r.message;
-            if (!account_name) return;
+	// Check if expense_account is already set correctly
+	if (row.expense_account && row.expense_account.includes("Office supplies expenses")) {
+		console.log("Expense account already set correctly:", row.expense_account);
+		return;
+	}
 
-            let updated_items = frm.doc.items.map(item => {
-                if (item.name === cdn) {
-                    item.expense_account = account_name;
-                }
-                return item;
-            });
+	console.log("Setting expense account for item:", row.item_code, "Current expense_account:", row.expense_account);
 
-            frm.set_value("items", updated_items);
-        }
-    });
+	frappe.call({
+		method: "frappe.client.get_value",
+		args: {
+			doctype: "Item",
+			fieldname: ["item_group", "item_sub_group", "asset_category"],
+			filters: { name: row.item_code }
+		},
+		callback: function (r) {
+			if (r.message) {
+				let item_group = r.message.item_group;
+				let item_sub_group = r.message.item_sub_group;
+				let asset_category = r.message.asset_category;
+
+				console.log("Found item_group:", item_group, "item_sub_group:", item_sub_group);
+
+				if (!item_sub_group) {
+					frappe.msgprint(__("Item Sub Group not set for {0}", [row.item_code]));
+					return;
+				}
+				if (item_group === "Fixed Asset" && !asset_category) {
+					frappe.msgprint(__("Asset Category not set for item {0}", [row.item_code]));
+					return;
+				}
+
+
+				get_expense_account_based_on_group(frm, cdt, cdn, item_group, item_sub_group, asset_category);
+			}
+		}
+	});
+}
+
+function get_expense_account_based_on_group(frm, cdt, cdn, item_group, item_sub_group, asset_category) {
+	let row = locals[cdt][cdn];
+
+	// if (item_group === "Consumable") {
+	// 	frappe.call({
+	// 		method: "frappe.client.get_value",
+	// 		args: {
+	// 			doctype: "Item Sub Group",
+	// 			fieldname: ["expense_head"],
+	// 			filters: { name: item_sub_group }
+	// 		},
+	// 		callback: function (r) {
+	// 			if (r.message && r.message.expense_head) {
+	// 				modify_account_with_company_abbr(frm, cdt, cdn, r.message.expense_head);
+	// 			} else {
+	// 				frappe.msgprint(__("No Expense Head set for Item Sub Group {0}", [item_sub_group]));
+	// 			}
+	// 		}
+	// 	});
+
+	// } else
+	if (item_group === "Fixed Asset") {
+		frappe.call({
+			method: "erpnext.assets.doctype.asset_category.asset_category.get_fixed_asset_account",
+			args: { asset_category: asset_category },
+			callback: function (r) {
+				if (r.message && r.message.fixed_asset_account) {
+					modify_account_with_company_abbr(frm, cdt, cdn, r.message.fixed_asset_account);
+				} else {
+					frappe.msgprint(__("No Fixed Asset Account Account set for Asset Category: {0}", [asset_category]));
+				}
+			}
+		});
+	} else {
+		frappe.call({
+			method: "frappe.client.get_value",
+			args: {
+				doctype: "Item Sub Group",
+				fieldname: ["expense_head"],
+				filters: { name: item_sub_group }
+			},
+			callback: function (r) {
+				if (r.message && r.message.expense_head) {
+					modify_account_with_company_abbr(frm, cdt, cdn, r.message.expense_head);
+				} else {
+					frappe.msgprint(__("No Expense Head set for Item Sub Group {0}", [item_sub_group]));
+				}
+			}
+		});
+	}
+}
+function modify_account_with_company_abbr(frm, cdt, cdn, account_name) {
+	if (!account_name) {
+		return;
+	}
+
+	if (!frm.doc.company) {
+		set_expense_account_field(frm, cdt, cdn, account_name);
+		return;
+	}
+	frappe.call({
+		method: "frappe.client.get_value",
+		args: {
+			doctype: "Company",
+			fieldname: "abbr",
+			filters: { name: frm.doc.company }
+		},
+		callback: function (r) {
+			if (r.message && r.message.abbr) {
+				let company_abbr = r.message.abbr;
+				let modified_account_name = replace_account_suffix(account_name, company_abbr);
+				set_expense_account_field(frm, cdt, cdn, modified_account_name);
+			} else {
+				set_expense_account_field(frm, cdt, cdn, account_name);
+			}
+		}
+	});
+}
+
+function set_expense_account_field(frm, cdt, cdn, account_name) {
+	frappe.model.set_value(cdt, cdn, 'expense_account', account_name, function () {
+		frm.refresh_field('items');
+		let row = locals[cdt][cdn];
+		console.log("Verification - Current expense_account value:", row.expense_account);
+		if (!row.expense_account || row.expense_account !== account_name) {
+			console.log("Value not set correctly, retrying...");
+			frappe.model.set_value(cdt, cdn, 'expense_account', account_name);
+			frm.refresh_field('items');
+		}
+	});
+}
+
+function replace_account_suffix(account_name, company_abbr) {
+	let parts = account_name.split(' - ');
+
+	if (parts.length >= 2) {
+		let base_parts = parts.slice(0, -1);
+		base_parts.push(company_abbr);
+		return base_parts.join(' - ');
+	}
+
+	return account_name + ' - ' + company_abbr;
 }
 
 
+frappe.ui.form.on("Purchase Order Item", "expense_account", function (frm, cdt, cdn) {
+	let row = locals[cdt][cdn];
+	console.log("GLOBAL - expense_account changed to:", row.expense_account);
+	if (!row.expense_account && row.item_code) {
+		console.log("Expense account was cleared! Restoring immediately...");
+		set_expense_account(frm, cdt, cdn);
+	}
+});

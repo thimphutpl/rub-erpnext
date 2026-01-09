@@ -51,6 +51,8 @@ def get_conditions(filters):
 	conditions = ""
 	if filters.get("branch"):
 		conditions += ' and ar.branch = "{}"'.format(filters.get("branch"))
+	if filters.get("company"):
+		conditions += ' and ar.company = "{}"'.format(filters.get("company"))
 	return conditions
 
 def get_columns():

@@ -36,11 +36,39 @@ frappe.ui.form.on('Asset Movement', {
 		frm.set_query("to_employee", "assets", (doc) => {
 			return {
 				filters: {
-					company: doc.company
+					company: doc.to_company
 				}
 			};
 		})
 		frm.set_query("from_employee", "assets", (doc) => {
+			return {
+				filters: {
+					company: doc.company
+				}
+			};
+		})
+		frm.set_query("to_hostel", (doc) => {
+			return {
+				filters: {
+					company: doc.to_company
+				}
+			};
+		})
+		frm.set_query("from_hostel", (doc) => {
+			return {
+				filters: {
+					company: doc.company
+				}
+			};
+		})
+		frm.set_query("to_roombuilding", (doc) => {
+			return {
+				filters: {
+					company: doc.to_company
+				}
+			};
+		})
+		frm.set_query("from_roombuilding", (doc) => {
 			return {
 				filters: {
 					company: doc.company
@@ -90,7 +118,11 @@ frappe.ui.form.on('Asset Movement', {
 	},
 
 	purpose: (frm) => {
+		if(frm.doc.purpose != 'Transfer'){
+			frm.set_value("inter_company_transfer", 0);
+		}
 		frm.trigger('set_required_fields');
+
 	},
 
 	set_required_fields: (frm, cdt, cdn) => {
@@ -142,6 +174,13 @@ frappe.ui.form.on('Asset Movement', {
 				v.to_employee = frm.doc.to_employee
 			})
 			frm.refresh_field("assets")
+		}
+	},
+	inter_company_transfer:function(frm){
+		if (frm.doc.purpose === 'Transfer' && frm.doc.inter_company_transfer) {
+			frm.set_df_property("to_company", 'reqd', 1);
+		} else {
+			frm.set_df_property("to_company", 'reqd', 0);
 		}
 	}
 });

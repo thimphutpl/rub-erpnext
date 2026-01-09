@@ -1,0 +1,53 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:disciplinary_issue_type",
+ "creation": "2025-09-01 11:24:53.919177",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "disciplinary_issue_type",
+  "issue_severity"
+ ],
+ "fields": [
+  {
+   "fieldname": "disciplinary_issue_type",
+   "fieldtype": "Data",
+   "label": "Disciplinary Issue Type",
+   "unique": 1
+  },
+  {
+   "fieldname": "issue_severity",
+   "fieldtype": "Select",
+   "label": "Issue Severity",
+   "options": "Major Issue\nMinor Issue"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-22 22:01:17.910060",
+ "modified_by": "Administrator",
+ "module": "Student Services",
+ "name": "Disciplinary Issue Type",
+ "naming_rule": "By fieldname",
+ "owner": "kalden.dorji@thimphutechpark.bt",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

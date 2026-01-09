@@ -35,6 +35,7 @@ class GLEntry(Document):
 
 		account: DF.Link | None
 		account_currency: DF.Link | None
+		activity: DF.Link | None
 		against: DF.Text | None
 		against_voucher: DF.DynamicLink | None
 		against_voucher_type: DF.Link | None
@@ -80,7 +81,7 @@ class GLEntry(Document):
 		# frappe.msgprint(frappe.as_json(self))
 		self.flags.ignore_submit_comment = True
 		self.validate_and_set_fiscal_year()
-		self.pl_must_have_cost_center()
+		# self.pl_must_have_cost_center()
 
 		if not self.flags.from_repost and self.voucher_type != "Period Closing Voucher":
 			self.check_mandatory()
@@ -132,6 +133,7 @@ class GLEntry(Document):
 
 		if not (self.party_type and self.party):
 			account_type = frappe.get_cached_value("Account", self.account, "account_type")
+			# frappe.throw(str(account_type))
 			if account_type == "Receivable":
 				frappe.throw(
 					_("{0} {1}: Customer is required against Receivable account {2}").format(
@@ -161,22 +163,22 @@ class GLEntry(Document):
 				)
 			)
 
-	def pl_must_have_cost_center(self):
-		"""Validate that profit and loss type account GL entries have a cost center."""
+	# def pl_must_have_cost_center(self):
+	# 	"""Validate that profit and loss type account GL entries have a cost center."""
 
-		if self.cost_center or self.voucher_type == "Period Closing Voucher":
-			return
+	# 	if self.cost_center or self.voucher_type == "Period Closing Voucher":
+	# 		return
 
-		if frappe.get_cached_value("Account", self.account, "report_type") == "Profit and Loss":
-			msg = _("{0} {1}: Cost Center is required for 'Profit and Loss' account {2}.").format(
-				self.voucher_type, self.voucher_no, self.account
-			)
-			msg += " "
-			msg += _(
-				"Please set the cost center field in {0} or setup a default Cost Center for the Company."
-			).format(self.voucher_type)
+	# 	if frappe.get_cached_value("Account", self.account, "report_type") == "Profit and Loss":
+	# 		msg = _("{0} {1}: Cost Center is required for 'Profit and Loss' account {2}.").format(
+	# 			self.voucher_type, self.voucher_no, self.account
+	# 		)
+	# 		msg += " "
+	# 		msg += _(
+	# 			"Please set the cost center field in {0} or setup a default Cost Center for the Company."
+	# 		).format(self.voucher_type)
 
-			frappe.throw(msg, title=_("Missing Cost Center"))
+	# 		frappe.throw(msg, title=_("Missing Cost Center"))
 
 	def validate_dimensions_for_pl_and_bs(self):
 		account_type = frappe.get_cached_value("Account", self.account, "report_type")
@@ -244,12 +246,12 @@ class GLEntry(Document):
 				_("{0} {1}: Account {2} is inactive").format(self.voucher_type, self.voucher_no, self.account)
 			)
 
-		if ret.company != self.company:
-			frappe.throw(
-				_("{0} {1}: Account {2} does not belong to Company {3}").format(
-					self.voucher_type, self.voucher_no, self.account, self.company
-				)
-			)
+		# if ret.company != self.company:
+		# 	frappe.throw(
+		# 		_("{0} {1}: Account {2} does not belong to Company {3}").format(
+		# 			self.voucher_type, self.voucher_no, self.account, self.company
+		# 		)
+		# 	)
 
 	def validate_cost_center(self):
 		# frappe.log_error(f"{self.cost_center}")
@@ -259,12 +261,12 @@ class GLEntry(Document):
 
 		is_group, company = frappe.get_cached_value("Cost Center", self.cost_center, ["is_group", "company"])
 
-		if company != self.company:
-			frappe.throw(
-				_("{0} {1}: Cost Center {2} does not belong to Company {3}").format(
-					self.voucher_type, self.voucher_no, self.cost_center, self.company
-				)
-			)
+		# if company != self.company:
+		# 	frappe.throw(
+		# 		_("{0} {1}: Cost Center {2} does not belong to Company {3}").format(
+		# 			self.voucher_type, self.voucher_no, self.cost_center, self.company
+		# 		)
+		# 	)
 
 		if self.voucher_type != "Period Closing Voucher" and is_group:
 			frappe.throw(

@@ -36,6 +36,6 @@ class AssetSubCategory(Document):
 		else:
 			next_number = 1
 
-		self.code = f"{next_number:02d}"
+		# self.code = f"{next_number:02d}"
 
-		self.asset_sub_category_code = f"{self.code}"
+		self.asset_sub_category_code = str(next_number)

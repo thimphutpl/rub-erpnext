@@ -7,21 +7,23 @@
  "engine": "InnoDB",
  "field_order": [
   "applied_by_section",
-  "applied_by",
   "company",
+  "applied_by",
   "first_name",
   "last_name",
   "change_details_section",
   "current_room",
   "hostel_type",
+  "original_room",
+  "original_hostel_type",
   "column_break_grdp",
+  "operation_type",
   "requested_room",
   "hostel_type_req",
-  "section_break_fpqz",
-  "qrc",
   "student_code",
   "room",
   "type",
+  "original_rooms",
   "section_break_oozj",
   "reason_for_change_for_student",
   "column_break_ispe",
@@ -36,12 +38,12 @@
    "label": "Applied by"
   },
   {
-   "fetch_from": "applied_by.company",
    "fieldname": "company",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "College",
-   "options": "Company"
+   "options": "Company",
+   "reqd": 1
   },
   {
    "fetch_from": "applied_by.first_name",
@@ -65,8 +67,9 @@
   {
    "fieldname": "current_room",
    "fieldtype": "Link",
-   "label": "Current Room",
-   "options": "Hostel Room"
+   "label": "Changed Room",
+   "options": "Hostel Room",
+   "read_only": 1
   },
   {
    "fetch_from": "current_room.hostel_type",
@@ -80,13 +83,14 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.qrc != 1",
+   "depends_on": "eval:doc.operation_type == \"Room Transfer\";",
    "fieldname": "requested_room",
    "fieldtype": "Link",
    "label": "Requested Room",
    "options": "Hostel Room"
   },
   {
+   "depends_on": "eval:doc.operation_type == \"RoomTransfer\";",
    "fetch_from": "requested_room.hostel_type",
    "fieldname": "hostel_type_req",
    "fieldtype": "Data",
@@ -135,51 +139,68 @@
    "reqd": 1
   },
   {
-   "fieldname": "section_break_fpqz",
-   "fieldtype": "Section Break",
-   "label": "Switch Room"
-  },
-  {
    "allow_in_quick_entry": 1,
-   "default": "0",
-   "fieldname": "qrc",
-   "fieldtype": "Check",
-   "label": "Request Room Change",
-   "set_only_once": 1
-  },
-  {
-   "allow_in_quick_entry": 1,
-   "depends_on": "qrc",
+   "depends_on": "eval:doc.operation_type ==\"Room Swap\";",
    "fieldname": "student_code",
    "fieldtype": "Link",
    "label": "Student Code",
-   "mandatory_depends_on": "qrc",
    "options": "Student"
   },
   {
-   "allow_in_quick_entry": 1,
-   "depends_on": "qrc",
+   "depends_on": "eval:doc.operation_type ==\"Room Swap\";",
+   "fetch_from": "requested_room.hostel_type",
    "fieldname": "room",
    "fieldtype": "Link",
    "label": "Room",
-   "mandatory_depends_on": "qrc",
    "options": "Hostel Room",
-   "set_only_once": 1
+   "read_only": 1
   },
   {
-   "depends_on": "qrc",
+   "depends_on": "eval:doc.operation_type ==\"Room Swap\";",
    "fetch_from": "room.hostel_type",
    "fieldname": "type",
    "fieldtype": "Data",
    "label": "Type",
-   "mandatory_depends_on": "qrc"
+   "read_only": 1
+  },
+  {
+   "fieldname": "operation_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "\nRoom Transfer\nRoom Swap\nDay Scholar",
+   "reqd": 1
+  },
+  {
+   "fieldname": "original_room",
+   "fieldtype": "Link",
+   "label": "Previous Room",
+   "mandatory_depends_on": "eval:doc.docstatus==1\r\n",
+   "options": "Hostel Room",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "original_room.hostel_type",
+   "fieldname": "original_hostel_type",
+   "fieldtype": "Data",
+   "label": "Original Hostel Type",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "original_room.hostel_type",
+   "fieldname": "original_rooms",
+   "fieldtype": "Link",
+   "label": "Original Rooms",
+   "mandatory_depends_on": "eval:doc.operation_type == 'Room Swap' && doc.docstatus == 1;",
+   "options": "Hostel Room",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-29 15:55:59.746375",
+ "modified": "2025-12-29 12:02:07.533874",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Change Application",
@@ -195,6 +216,21 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SSO",
    "share": 1,
    "submit": 1,
    "write": 1

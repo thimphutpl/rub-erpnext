@@ -2,8 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Hostel Room", {
-	refresh: function(frm) {
-        
+	refresh: function(frm) { 
 	},
 	setup: function(frm){
 		frm.set_query("company", function(){
@@ -13,5 +12,12 @@ frappe.ui.form.on("Hostel Room", {
 				}
 			}
 		})
+		frm.set_query('cost_center', function(doc) {
+			return {
+				filters: {
+					"company": doc.company
+				}
+			}
+		}); 
 	}
 });

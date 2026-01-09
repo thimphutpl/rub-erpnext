@@ -23,6 +23,20 @@ frappe.ui.form.on("Asset", {
 			};
 		});
 
+		frm.set_query('hostel', function(doc, cdt, cdn) {
+			return {
+				filters: {
+					"company": doc.company
+				}
+			}
+		});
+		frm.set_query('roombuilding', function(doc, cdt, cdn) {
+			return {
+				filters: {
+					"company": doc.company
+				}
+			}
+		});
 		frm.set_query("warehouse", function () {
 			return {
 				filters: {
@@ -46,6 +60,14 @@ frappe.ui.form.on("Asset", {
 		});
 
 		frm.set_query("department", function () {
+			return {
+				filters: {
+					company: frm.doc.company,
+				},
+			};
+		});
+		
+		frm.set_query("custodian", function () {
 			return {
 				filters: {
 					company: frm.doc.company,
@@ -94,7 +116,63 @@ frappe.ui.form.on("Asset", {
 			};
 		});
 	},
-
+	cost_center: function(frm){
+		if(frm.doc.cost_center){
+			frappe.db.get_value("Branch", {"cost_center": frm.doc.cost_center}, "name")
+			.then(r => {
+				if (r && r.message) {
+					frm.set_value("branch", r.message.name);
+				}
+			});
+		}
+	},
+	hostel: function(frm){
+		if(frm.doc.hostel){
+			frappe.call({
+				method: "frappe.client.get_value",
+				args: {
+					doctype: "Hostel Room",
+					filters: { name: frm.doc.hostel },
+					fieldname: "cost_center",
+				},
+				callback: function (r) {
+					frm.set_value("cost_center", r.message.cost_center);
+				},
+			});
+		}
+		frm.refresh_field('cost_center');
+	},
+	roombuilding: function(frm){
+		if(frm.doc.roombuilding){
+			frappe.call({
+				method: "frappe.client.get_value",
+				args: {
+					doctype: "Room",
+					filters: { name: frm.doc.roombuilding },
+					fieldname: "cost_center",
+				},
+				callback: function (r) {
+					
+					frm.set_value("cost_center", r.message.cost_center);
+				},
+			});
+		}
+	},
+	custodian: function(frm){
+		if(frm.doc.custodian){
+			frappe.call({
+				method: "frappe.client.get_value",
+				args: {
+					doctype: "Employee",
+					filters: { name: frm.doc.custodian },
+					fieldname: "cost_center",
+				},
+				callback: function (r) {
+					frm.set_value("cost_center", r.message.cost_center);
+				},
+			});
+		}
+	},
 	branch: function(frm){
 		if(frm.doc.branch != null || frm.doc.branch != "" || frm.doc.branch != undefined){
 			frappe.call({

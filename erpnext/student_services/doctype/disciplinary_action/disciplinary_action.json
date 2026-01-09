@@ -1,0 +1,225 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{DA}{YY}{MM}{####}",
+ "creation": "2025-09-01 11:19:51.184778",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "student_details_section",
+  "company",
+  "student_code",
+  "name_student",
+  "program",
+  "semester",
+  "column_break_ltgx",
+  "posting_date",
+  "student_statement_section",
+  "student_statement_link",
+  "student_statement",
+  "attachments_student",
+  "problem_section",
+  "disciplinary_issue_type",
+  "issue_reported_by",
+  "name_reporter",
+  "designation",
+  "column_break_ddqn",
+  "date_of_the_issue",
+  "investigators_statement_section",
+  "small_text_xble",
+  "attachments_investigator",
+  "college_disciple_committee_section",
+  "cdc_remarks",
+  "attah_cdc",
+  "section_break_jx66",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "student_details_section",
+   "fieldtype": "Section Break",
+   "label": "Student Details"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "student_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Student Code",
+   "options": "Student",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "student_code.student_name",
+   "fieldname": "name_student",
+   "fieldtype": "Data",
+   "label": "Name"
+  },
+  {
+   "fetch_from": "student_code.programme",
+   "fieldname": "program",
+   "fieldtype": "Data",
+   "label": "Program"
+  },
+  {
+   "fetch_from": "student_code.semester",
+   "fieldname": "semester",
+   "fieldtype": "Data",
+   "label": "Semester"
+  },
+  {
+   "fieldname": "column_break_ltgx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "student_statement_section",
+   "fieldtype": "Section Break",
+   "label": "Student Statement"
+  },
+  {
+   "fieldname": "student_statement_link",
+   "fieldtype": "Link",
+   "label": "Student Statement Link",
+   "options": "Student Statement"
+  },
+  {
+   "fetch_from": "student_statement_link.long_text_niev",
+   "fieldname": "student_statement",
+   "fieldtype": "Long Text",
+   "label": "Student Statement"
+  },
+  {
+   "fieldname": "attachments_student",
+   "fieldtype": "Attach",
+   "label": "Attachments"
+  },
+  {
+   "fieldname": "problem_section",
+   "fieldtype": "Section Break",
+   "label": "Problem"
+  },
+  {
+   "fieldname": "disciplinary_issue_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Disciplinary Issue Type",
+   "options": "Disciplinary Issue Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "issue_reported_by",
+   "fieldtype": "Link",
+   "label": "Issue Reported By",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "issue_reported_by.employee_name",
+   "fieldname": "name_reporter",
+   "fieldtype": "Data",
+   "label": "Name"
+  },
+  {
+   "fetch_from": "issue_reported_by.designation",
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation"
+  },
+  {
+   "fieldname": "column_break_ddqn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_of_the_issue",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date of the Issue",
+   "reqd": 1
+  },
+  {
+   "fieldname": "investigators_statement_section",
+   "fieldtype": "Section Break",
+   "label": "Investigator's Statement"
+  },
+  {
+   "fieldname": "small_text_xble",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "attachments_investigator",
+   "fieldtype": "Attach",
+   "label": "Attachments"
+  },
+  {
+   "fieldname": "college_disciple_committee_section",
+   "fieldtype": "Section Break",
+   "label": "College Disciple Committee"
+  },
+  {
+   "fieldname": "cdc_remarks",
+   "fieldtype": "Text Editor",
+   "label": "College Discipline Committee Remarks"
+  },
+  {
+   "fieldname": "attah_cdc",
+   "fieldtype": "Attach",
+   "label": "Attachment"
+  },
+  {
+   "fieldname": "section_break_jx66",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Disciplinary Action",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-10-23 09:58:36.347988",
+ "modified_by": "kalden.dorji@thimphutechpark.bt",
+ "module": "Student Services",
+ "name": "Disciplinary Action",
+ "naming_rule": "Expression",
+ "owner": "kalden.dorji@thimphutechpark.bt",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

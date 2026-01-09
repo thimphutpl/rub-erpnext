@@ -3,6 +3,13 @@
 
 frappe.ui.form.on("Hostel Allocation Bulk Upload", {
     onload: function(frm) {
+        frm.set_query("company", function(){
+			return {
+				filters: {
+					"is_group": 0,
+				}
+			}
+		});   
         frm.fields_dict["table_caon"].grid.get_field("hostel_room").get_query = function(doc, cdt, cdn) {
             return {
                 filters: {

@@ -1,0 +1,225 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "STPRUN-.YYYY.-.#####",
+ "creation": "2025-11-03 16:26:17.694851",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "select_processing_period_section",
+  "company",
+  "month",
+  "start_date",
+  "end_date",
+  "payroll_frequency",
+  "number_of_students",
+  "column_break_hxdc",
+  "posting_date",
+  "fiscal_year",
+  "status",
+  "select_student_section",
+  "student_code",
+  "process_status_section",
+  "number_of_employees",
+  "stipend_slip_created",
+  "stipend_slip_submitted",
+  "column_break_yhov",
+  "successful",
+  "failed",
+  "section_break_knrl",
+  "students",
+  "section_break_h9a4",
+  "amended_from",
+  "failure_details_section",
+  "error_message"
+ ],
+ "fields": [
+  {
+   "fieldname": "select_processing_period_section",
+   "fieldtype": "Section Break",
+   "label": "Select Processing Period"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.fiscal_year",
+   "fieldname": "month",
+   "fieldtype": "Select",
+   "label": "Month",
+   "options": "\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
+   "reqd": 1
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "column_break_hxdc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "label": "Fiscal Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "description": "If stipend sis processed for only one student",
+   "fieldname": "select_student_section",
+   "fieldtype": "Section Break",
+   "label": "Select Student"
+  },
+  {
+   "fieldname": "student_code",
+   "fieldtype": "Link",
+   "label": "Student Code",
+   "options": "Student"
+  },
+  {
+   "fieldname": "process_status_section",
+   "fieldtype": "Section Break",
+   "label": "Process Status"
+  },
+  {
+   "fieldname": "number_of_employees",
+   "fieldtype": "Data",
+   "label": "Number of Students",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "stipend_slip_created",
+   "fieldtype": "Check",
+   "label": "Stipend Slip Created",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "stipend_slip_submitted",
+   "fieldtype": "Check",
+   "label": "Stipend Slip Submitted",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_yhov",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "successful",
+   "fieldtype": "Data",
+   "label": "Successful",
+   "read_only": 1
+  },
+  {
+   "fieldname": "failed",
+   "fieldtype": "Data",
+   "label": "Failed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_knrl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_h9a4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Stipend Entry",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "students",
+   "fieldtype": "Table",
+   "label": "Stipend Entry Details",
+   "options": "Stipend Entry Details"
+  },
+  {
+   "fieldname": "payroll_frequency",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Payroll Frequency",
+   "options": "\nMonthly"
+  },
+  {
+   "fieldname": "number_of_students",
+   "fieldtype": "Data",
+   "label": "Number of Students",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nSubmitted\nCancelled\nQueued\nFailed",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.status=='Failed';",
+   "fieldname": "failure_details_section",
+   "fieldtype": "Tab Break",
+   "label": "Failure Details"
+  },
+  {
+   "depends_on": "eval:doc.status=='Failed';",
+   "fieldname": "error_message",
+   "fieldtype": "Small Text",
+   "label": "Error Message",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-12-09 12:46:33.656983",
+ "modified_by": "Administrator",
+ "module": "Student Services",
+ "name": "Stipend Entry",
+ "naming_rule": "Expression (old style)",
+ "owner": "sonam.choki@thimphutechpark.bt",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

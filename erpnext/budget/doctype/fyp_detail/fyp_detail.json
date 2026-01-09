@@ -1,0 +1,98 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-11-25 12:47:12.364648",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "output_no",
+  "project_no",
+  "activities_no",
+  "proposed_budget",
+  "activity_link",
+  "column_break_faex",
+  "output",
+  "project",
+  "activities",
+  "approved_budget"
+ ],
+ "fields": [
+  {
+   "fieldname": "column_break_faex",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "proposed_budget",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Proposed Budget"
+  },
+  {
+   "fieldname": "approved_budget",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Approved Budget"
+  },
+  {
+   "fieldname": "output_no",
+   "fieldtype": "Int",
+   "label": "Output No",
+   "options": "Planning Output"
+  },
+  {
+   "fieldname": "activities_no",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Activities No",
+   "options": "Planning Activities"
+  },
+  {
+   "fieldname": "project_no",
+   "fieldtype": "Int",
+   "label": "Project No",
+   "options": "Planning Project"
+  },
+  {
+   "fieldname": "output",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Output",
+   "read_only": 1
+  },
+  {
+   "fieldname": "activities",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Activity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Project",
+   "read_only": 1
+  },
+  {
+   "fieldname": "activity_link",
+   "fieldtype": "Link",
+   "label": "Activity Link",
+   "options": "Planning Activities"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-12-20 16:32:26.794407",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "FYP Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -32,13 +32,13 @@ class SupplementaryBudget(Document):
 		remarks: DF.SmallText | None
 	# end: auto-generated types
 	def validate(self):
-		# validate_workflow_states(self)
+		validate_workflow_states(self)
 		self.validate_budget()
-		# if self.workflow_state != "Submitted":
-		# 	notify_workflow_states(self)
+		if self.workflow_state != "Submitted":
+			notify_workflow_states(self)
 
 	def on_submit(self):
-		# notify_workflow_states(self)
+		notify_workflow_states(self)
 		self.supplement_budget(cancel=False)
 
 	def on_cancel(self):

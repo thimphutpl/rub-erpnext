@@ -29,7 +29,7 @@ erpnext.accounts.PurchaseInvoice = class PurchaseInvoice extends erpnext.buying.
 			return {
 				filters: {
 					company: doc.company,
-					is_group: 0,
+					// is_group: 0,
 					root_type: "Liability",
 				},
 			};
@@ -47,8 +47,8 @@ erpnext.accounts.PurchaseInvoice = class PurchaseInvoice extends erpnext.buying.
 		// this.frm.set_df_property("apply_tds", "read_only", 0);
 		// refresh_field("apply_tds");
 		// console.log(frm.fields_dict['apply_tds']);
-		
-		
+
+
 		// Ignore linked advances
 		this.frm.ignore_doctypes_on_cancel_all = [
 			"Journal Entry",
@@ -244,13 +244,13 @@ erpnext.accounts.PurchaseInvoice = class PurchaseInvoice extends erpnext.buying.
 		erpnext.accounts.unreconcile_payment.add_unreconcile_btn(me.frm);
 	}
 	ld_days(frm) {
-		console.log("here "+String(cur_frm.doc.ld_days))
-		if(cur_frm.doc.ld_days && flt(cur_frm.doc.ld_days) > 0){
-			if(flt(cur_frm.doc.ld_days) < 100){
-				cur_frm.set_value("write_off_amount", flt((flt(cur_frm.doc.ld_days)/100)*0.1 * flt(cur_frm.doc.grand_total),2))
+		console.log("here " + String(cur_frm.doc.ld_days))
+		if (cur_frm.doc.ld_days && flt(cur_frm.doc.ld_days) > 0) {
+			if (flt(cur_frm.doc.ld_days) < 100) {
+				cur_frm.set_value("write_off_amount", flt((flt(cur_frm.doc.ld_days) / 100) * 0.1 * flt(cur_frm.doc.grand_total), 2))
 			}
-			else{
-				cur_frm.set_value("write_off_amount", flt((0.1) * flt(cur_frm.doc.grand_total),2))
+			else {
+				cur_frm.set_value("write_off_amount", flt((0.1) * flt(cur_frm.doc.grand_total), 2))
 			}
 		}
 	}
@@ -324,7 +324,7 @@ erpnext.accounts.PurchaseInvoice = class PurchaseInvoice extends erpnext.buying.
 
 		this.dialog.show();
 	}
-	
+
 
 	make_dialog_and_set_release_date() {
 		const me = this;
@@ -604,24 +604,24 @@ cur_frm.fields_dict["items"].grid.get_field("project").get_query = function (doc
 	};
 };
 frappe.ui.form.on("Purchase Invoice Item", {
-	refresh: function(frm, cdt, cdn){
+	refresh: function (frm, cdt, cdn) {
 		var i = locals[cdt][cdn];
 		frappe.call({
-			method:'frappe.client.get_value',
-			args:{
-				'doctype':'Item',
-				fieldname:"is_fixed_asset",
+			method: 'frappe.client.get_value',
+			args: {
+				'doctype': 'Item',
+				fieldname: "is_fixed_asset",
 				filters: {
 					"name": i.name
 				}
 			},
-			callback:(r)=>{
-				if(r.message.is_fixed_asset){
+			callback: (r) => {
+				if (r.message.is_fixed_asset) {
 					frm.toggle_display(['brand', 'model'], r.message.is_fixed_asset);
 				}
-				else{
+				else {
 					frm.toggle_display(['brand', 'model'], 0);
-					
+
 				}
 			}
 		})
@@ -630,21 +630,21 @@ frappe.ui.form.on("Purchase Invoice Item", {
 	item_code: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
 		frappe.call({
-			method:'frappe.client.get_value',
-			args:{
-				'doctype':'Item',
-				fieldname:"is_fixed_asset",
+			method: 'frappe.client.get_value',
+			args: {
+				'doctype': 'Item',
+				fieldname: "is_fixed_asset",
 				filters: {
 					"name": d.name
 				}
 			},
-			callback:(r)=>{
-				if(r.message.is_fixed_asset){
+			callback: (r) => {
+				if (r.message.is_fixed_asset) {
 					frm.toggle_display(['brand', 'model'], r.message.is_fixed_asset);
 				}
-				else{
+				else {
 					frm.toggle_display(['brand', 'model'], 0);
-					
+
 				}
 			}
 		})
@@ -653,13 +653,13 @@ frappe.ui.form.on("Purchase Invoice Item", {
 	amount_discount: function (frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
 		frappe.call({
-			method:"erpnext.accounts.doctype.purchase_invoice.purchase_invoice.set_discount_value",
-			args:{
+			method: "erpnext.accounts.doctype.purchase_invoice.purchase_invoice.set_discount_value",
+			args: {
 				rate: d.rate,
 				qty: d.qty,
-				company:frm.doc.company
+				company: frm.doc.company
 			},
-			callback: function(r){
+			callback: function (r) {
 				console.log(r.message)
 				if (r.message) {
 					frappe.model.set_value(cdt, cdn, "amount", r.message);
@@ -712,17 +712,52 @@ frappe.ui.form.on("Purchase Invoice", {
 		};
 	},
 	// Auto populate cost_center in taxes and charges
-	taxes_and_charges: function(frm) {
-        if (!frm.doc.cost_center) return;
-        setTimeout(() => {
-            (frm.doc.taxes || []).forEach(row => {
-                if (!row.cost_center) {
-                    frappe.model.set_value(row.doctype, row.name, 'cost_center', frm.doc.cost_center);
-                }
-            });
-        }, 500);
-    },
-	
+	// taxes_and_charges: function (frm) {
+
+	// 	// if (!frm.doc.cost_center) return;
+	// 	// setTimeout(() => {
+	// 	// 	(frm.doc.taxes || []).forEach(row => {
+	// 	// 		if (!row.cost_center) {
+	// 	// 			frappe.model.set_value(row.doctype, row.name, 'cost_center', frm.doc.cost_center);
+	// 	// 		}
+	// 	// 	});
+	// 	// }, 500);
+	// },
+
+	taxes_and_charges: function (frm) {
+		if (!frm.doc.company) {
+			frappe.msgprint(__('Please select a Company first.'));
+			frm.set_value("taxes_and_charges", null);
+			return;
+		}
+
+		// Wait for Frappe to populate taxes from the template
+		setTimeout(async () => {
+			if (!frm.doc.taxes || frm.doc.taxes.length === 0) return;
+
+			for (let row of frm.doc.taxes) {
+				// Find matching account for the selected company
+				const rate_pattern = `%${row.rate}%TDS%`;
+				const accounts = await frappe.db.get_list("Account", {
+					fields: ["name"],
+					filters: {
+						company: frm.doc.company,
+						account_name: ["like", rate_pattern]
+					},
+					limit: 1
+				});
+
+				if (accounts.length > 0) {
+					row.account_head = accounts[0].name;
+				}
+			}
+
+			frm.refresh_field("taxes");
+
+		}, 100);
+	},
+
+
 	refresh: function (frm) {
 		console.log(frm);
 		frm.events.add_custom_buttons(frm);
@@ -816,7 +851,6 @@ frappe.ui.form.on("Purchase Invoice", {
 
 	company: function (frm) {
 		erpnext.accounts.dimensions.update_dimension(frm, frm.doctype);
-
 		if (frm.doc.company) {
 			frappe.call({
 				method: "erpnext.accounts.party.get_party_account",
@@ -826,6 +860,7 @@ frappe.ui.form.on("Purchase Invoice", {
 					company: frm.doc.company,
 				},
 				callback: (response) => {
+
 					if (response) frm.set_value("credit_to", response.message);
 				},
 			});

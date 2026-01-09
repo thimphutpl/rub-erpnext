@@ -29,7 +29,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-01-18 21:13:41.161017",
+ "modified": "2025-10-15 16:05:30.333046",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Tax Category",
@@ -71,6 +71,7 @@
   }
  ],
  "quick_entry": 1,
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:feedback_type",
  "creation": "2025-08-27 11:52:14.245396",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -13,16 +14,18 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Feedback Type",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-01 11:15:10.710174",
+ "modified": "2025-12-18 12:39:55.140653",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Feedback Type",
+ "naming_rule": "By fieldname",
  "owner": "kalden.dorji@thimphutechpark.bt",
  "permissions": [
   {

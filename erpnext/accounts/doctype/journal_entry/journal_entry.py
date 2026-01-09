@@ -51,6 +51,7 @@ class JournalEntry(AccountsController):
 		from frappe.types import DF
 
 		accounts: DF.Table[JournalEntryAccount]
+		activity: DF.Link
 		amended_from: DF.Link | None
 		apply_tds: DF.Check
 		auto_repeat: DF.Link | None
@@ -219,6 +220,7 @@ class JournalEntry(AccountsController):
 			msgprint(_("The task has been enqueued as a background job."), alert=True)
 			self.queue_action("submit", timeout=4600)
 		else:
+			
 			return self._submit()
 
 	def cancel(self):
@@ -297,6 +299,7 @@ class JournalEntry(AccountsController):
 			account_currency = frappe.get_cached_value("Company", self.company, "default_currency")
 			previous_account_currency = frappe.get_cached_value("Company", doc.company, "default_currency")
 			if account_currency == previous_account_currency:
+			
 				if self.total_credit != doc.total_debit or self.total_debit != doc.total_credit:
 					frappe.throw(_("Total Credit/ Debit Amount should be same as linked Journal Entry"))
 
@@ -965,11 +968,11 @@ class JournalEntry(AccountsController):
 			else:
 				alternate_currency.append(d.account_currency)	
 
-		if alternate_currency:
-			if not self.multi_currency:
-				self.multi_currency = d.account_currency
-			else:	
-				frappe.throw(_("Please check Multi Currency option to allow accounts with other currency"))
+		# if alternate_currency:
+		# 	if not self.multi_currency:
+		# 		self.multi_currency = d.account_currency
+		# 	else:	
+		# 		frappe.throw(_("Please check Multi Currency option to allow accounts with other currency"))
 
 		self.set_exchange_rate()
 
@@ -1259,7 +1262,7 @@ class JournalEntry(AccountsController):
 								"cost_center": d.cost_center,
 								"project": d.project,
 								"finance_book": self.finance_book,
-								# "business_activity": d.business_activity,
+								"activity": self.activity,
 							},
 							item=d,
 						)

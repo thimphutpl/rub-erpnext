@@ -212,6 +212,17 @@ frappe.ui.form.on("Stock Entry", {
 	refresh: function (frm) {
 		frm.trigger("get_items_from_transit_entry");
 
+		frm.set_query("branch", function () {
+			return {
+				filters: {
+					company: frm.doc.company
+				}
+			};
+		});
+		frm.fields_dict['items'].grid.toggle_display('employee', frm.doc.stock_entry_type === "Material Issue" || frm.doc.stock_entry_type === "Material Transfer" ? true : false);
+
+
+
 		if (!frm.doc.docstatus) {
 			frm.trigger("validate_purpose_consumption");
 			frm.add_custom_button(
@@ -485,6 +496,7 @@ frappe.ui.form.on("Stock Entry", {
 			"read_only",
 			frm.doc.purpose == "Material Receipt" ? 0 : 1
 		);
+		frm.fields_dict['items'].grid.toggle_display('employee', frm.doc.stock_entry_type === "Material Issue" || frm.doc.stock_entry_type === "Material Transfer" ? true : false);
 	},
 
 	purpose: function (frm) {
@@ -507,6 +519,7 @@ frappe.ui.form.on("Stock Entry", {
 	},
 
 	company: function (frm) {
+		frm.set_value("branch", "");
 		if (frm.doc.company) {
 			var company_doc = frappe.get_doc(":Company", frm.doc.company);
 			if (company_doc.default_letter_head) {
@@ -1317,7 +1330,7 @@ erpnext.stock.StockEntry = class StockEntry extends erpnext.stock.StockControlle
 				doc.customer_address =
 				doc.delivery_note_no =
 				doc.sales_invoice_no =
-					null;
+				null;
 		} else {
 			doc.customer =
 				doc.customer_name =
@@ -1329,7 +1342,7 @@ erpnext.stock.StockEntry = class StockEntry extends erpnext.stock.StockControlle
 				doc.supplier_address =
 				doc.purchase_receipt_no =
 				doc.address_display =
-					null;
+				null;
 		}
 		if (doc.purpose == "Material Receipt") {
 			this.frm.set_value("from_bom", 0);

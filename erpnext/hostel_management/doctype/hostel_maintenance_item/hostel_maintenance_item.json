@@ -1,0 +1,115 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-09-19 14:29:53.391559",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "expenses_type",
+  "asset",
+  "asset_name",
+  "item_code",
+  "item_name",
+  "others",
+  "column_break_wswh",
+  "rate",
+  "qty",
+  "amount",
+  "warehouse",
+  "conversion_factor"
+ ],
+ "fields": [
+  {
+   "depends_on": "eval: doc.expenses_type == \"Asset\" && doc.expenses_type != \"Stock Item\"",
+   "fieldname": "asset",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Asset",
+   "options": "Asset"
+  },
+  {
+   "depends_on": "eval: doc.expenses_type == \"Asset\" && doc.expenses_type != \"Stock Item\"",
+   "fetch_from": "asset.asset_name",
+   "fieldname": "asset_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Asset Name"
+  },
+  {
+   "fieldname": "column_break_wswh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Rate"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Amount"
+  },
+  {
+   "fieldname": "expenses_type",
+   "fieldtype": "Select",
+   "label": "Expenses Type",
+   "options": "Asset\nStock Item\nOthers"
+  },
+  {
+   "depends_on": "eval: doc.expenses_type == \"Stock Item\" && doc.expenses_type != \"Asset\"",
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "depends_on": "eval: doc.expenses_type == \"Stock Item\" && doc.expenses_type != \"Asset\"",
+   "fetch_from": "item_code.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name"
+  },
+  {
+   "depends_on": "eval: doc.expenses_type == \"Others\"",
+   "fieldname": "others",
+   "fieldtype": "Data",
+   "label": "Others"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Quantity"
+  },
+  {
+   "fieldname": "conversion_factor",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Conversion Factor"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-27 23:11:43.074017",
+ "modified_by": "Administrator",
+ "module": "Hostel Management",
+ "name": "Hostel Maintenance Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

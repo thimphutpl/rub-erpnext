@@ -394,3 +394,24 @@ def has_record_permission(doc, user):
 	else:
 		return False 
 
+# def create_user(doc):
+#     # Get the email from your EmployeeMaster
+#     email = getattr(doc, "email", None) or getattr(doc, "email_id", None) or getattr(doc, "work_email", None)
+    
+#     if not email:
+#         frappe.msgprint(_("No email found for this employee. User not created."))
+#         return
+
+#     # Check if the User already exists
+#     if not frappe.db.exists("User", email):
+#         user = frappe.get_doc({
+#             "doctype": "User",
+#             "email": email,
+#             "first_name": getattr(doc, "full_name", email),
+#             "phone": getattr(doc, "phone", ""),
+#             "user_type": "System User",
+#             "send_welcome_email": 1  # Sends welcome/reset password email
+#         })
+#         user.insert(ignore_permissions=True)
+#         frappe.db.commit()
+#         frappe.msgprint(_("User created successfully: {0}").format(email))

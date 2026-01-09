@@ -23,10 +23,13 @@ class BulkAssetDisposal(Document):
 		amended_from: DF.Link | None
 		asset_category: DF.Link
 		branch: DF.Link | None
+		company: DF.Link
 		customer: DF.Link | None
 		item: DF.Table[BulkAssetDisposalItem]
+		journal_entry: DF.Data | None
 		refernece: DF.Data | None
-		scrap: DF.Literal["", "Scrap Asset"]
+		sales_invoice: DF.Data | None
+		scrap: DF.Literal["", "Scrap Asset", "Sale Asset"]
 		scrap_date: DF.Date
 	# end: auto-generated types
 	
@@ -51,8 +54,9 @@ class BulkAssetDisposal(Document):
 	def on_submit(self):
 		if self.scrap == "Scrap Asset":
 			self.scrap_asset()
-		else: 
-			self.sale_asset()
+		# else: 
+		# 	frappe.throw("hj")
+		# 	self.sale_asset()
 	
 	def before_cancel(self):
 		if self.scrap == "Scrap Asset":
@@ -62,8 +66,9 @@ class BulkAssetDisposal(Document):
 				jede = frappe.db.sql("""
 							select ds.journal_entry, ds.name, ds.depreciation_amount from `tabDepreciation Schedule` ds, `tabAsset Depreciation Schedule` ads  
 							where ds.parent = ads.name and ads.asset = '{0}' and  year(ds.schedule_date) = year('{1}')
-							and month(ds.schedule_date) = month('{1}') and ds.journal_entry is not NULL
+							and month(ds.schedule_date) = month('{1}') and ds.journal_entry is not NULL AND ads.docstatus != 2
                          """.format(a.asset, self.scrap_date), as_dict=1)
+				
 				if jede:
 					vad_reverse += flt(jede[0].depreciation_amount,2)
 					jede_doc = frappe.get_doc("Journal Entry", jede[0].journal_entry)
@@ -75,6 +80,7 @@ class BulkAssetDisposal(Document):
 
 	def on_cancel(self):
 		self.revert_asset()
+		self.revert_depreciation_schedule()
 	
 	def scrap_asset(self):
 		for data in self.item: 
@@ -90,8 +96,32 @@ class BulkAssetDisposal(Document):
 		for a in self.get("item"):
 			frappe.db.sql("update `tabAsset` set status = '{}' where name = '{}'".format(a.status, a.asset))		
 
+	def revert_depreciation_schedule(self):
+		for a in self.get("item"):
+			frappe.db.delete(
+				"Depreciation Schedule",
+				{"parent": frappe.get_value("Asset Depreciation Schedule",{"asset":a.asset, "docstatus": "1"}, "name")}
+			)
+			old_rows = frappe.get_all(
+				"Depreciation Schedule",
+				filters={"parent": frappe.get_value("Asset Depreciation Schedule",{"asset":a.asset, "docstatus": "2"}, "name")},
+				fields="*"
+			)
+
+			for row in old_rows:
+				for key in ("name", "creation", "modified", "owner", "modified_by"):
+					row.pop(key, None)
+				row["parent"] = frappe.get_value("Asset Depreciation Schedule",{"asset":a.asset, "docstatus": "1"}, "name")
+				row["docstatus"] = 1
+
+				frappe.get_doc({
+					"doctype": "Depreciation Schedule",
+					**row
+				}).insert()
+
 @frappe.whitelist()
-def sale_asset(branch, name, scrap_date, customer, posting_date):
+def sale_asset(branch, name, scrap_date, customer, posting_date, company):
+	
 	item = frappe.db.sql("""select a.item_code, a.item_name, a.asset, a.uom
 						from `tabBulk Asset Disposal Item` as a, `tabBulk Asset Disposal` as b 
 						where a.parent = b.name 
@@ -103,11 +133,13 @@ def sale_asset(branch, name, scrap_date, customer, posting_date):
 	si = frappe.new_doc("Sales Invoice")
 	si.branch = branch
 	# si.business_activity = business_activity
-	si.company = frappe.defaults.get_user_default("company")
+	si.company = company
+	# si.company = frappe.defaults.get_user_default("company")
 	si.customer = customer
 	si.set_posting_time = 1
 	si.posting_date = posting_date
-	company = frappe.defaults.get_user_default("company")
+	company = company
+	# company = frappe.defaults.get_user_default("company")
 	si.currency = frappe.get_cached_value('Company', company ,  "default_currency")
 	disposal_account, depreciation_cost_center = get_disposal_account_and_cost_center(company)
 	si.bulk_asset_disposal = name
@@ -125,7 +157,7 @@ def sale_asset(branch, name, scrap_date, customer, posting_date):
 			# "business_activity":business_activity, 
 			"rate": 0
 		})
-		frappe.throw(str(depreciation_cost_center))
+		# frappe.throw(str(depreciation_cost_center))
 		# frappe.log_error(f"here:{depreciation_cost_center}")
 	return si
 

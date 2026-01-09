@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "student_member_details_section",
+  "college",
   "student_code",
   "full_name",
   "program",
@@ -30,6 +31,14 @@
   "receivable_amount_in_figures",
   "column_break_amul",
   "receivable_amount_in_words",
+  "approver_details_section",
+  "treasurer_approval_date",
+  "column_break_qhmi",
+  "sso_approval_date",
+  "disbursement_details_section",
+  "reference_number",
+  "date_of_disbursement",
+  "attachment",
   "section_break_oiea",
   "amended_from"
  ],
@@ -42,29 +51,38 @@
   {
    "fieldname": "student_code",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Student Code",
-   "options": "Student"
+   "options": "Student",
+   "reqd": 1
   },
   {
    "fetch_from": "student_code.student_name",
    "fieldname": "full_name",
    "fieldtype": "Data",
-   "label": "Full Name"
+   "label": "Full Name",
+   "read_only": 1
   },
   {
+   "fetch_from": "student_code.programme",
    "fieldname": "program",
    "fieldtype": "Data",
-   "label": "Program"
+   "label": "Program",
+   "read_only": 1
   },
   {
+   "fetch_from": "student_code.year",
    "fieldname": "year",
    "fieldtype": "Data",
-   "label": "Year"
+   "label": "Year",
+   "read_only": 1
   },
   {
+   "fetch_from": "student_code.semester",
    "fieldname": "semester",
    "fieldtype": "Data",
-   "label": "Semester"
+   "label": "Semester",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_sqzy",
@@ -74,19 +92,23 @@
    "fetch_from": "student_code.student_mobile_number",
    "fieldname": "phone_number",
    "fieldtype": "Data",
-   "label": "Phone Number"
+   "label": "Phone Number",
+   "read_only": 1
   },
   {
+   "fetch_from": "student_code.scholarship_type",
    "fieldname": "scholarship_type",
    "fieldtype": "Data",
    "label": "Scholarship Type",
-   "options": "\n"
+   "options": "\n",
+   "read_only": 1
   },
   {
-   "fetch_from": "student_code.blood_group",
+   "fetch_from": "student_code.bank_account_number",
    "fieldname": "bank_account_number",
    "fieldtype": "Data",
-   "label": "Bank Account Number"
+   "label": "Bank Account Number",
+   "read_only": 1
   },
   {
    "fieldname": "claim_details_section",
@@ -178,14 +200,63 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "approver_details_section",
+   "fieldtype": "Section Break",
+   "label": "Approver Details"
+  },
+  {
+   "fieldname": "treasurer_approval_date",
+   "fieldtype": "Data",
+   "label": "Treasurer Approval Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_qhmi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sso_approval_date",
+   "fieldtype": "Data",
+   "label": "SSO Approval Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "disbursement_details_section",
+   "fieldtype": "Section Break",
+   "label": "Disbursement Details"
+  },
+  {
+   "fieldname": "reference_number",
+   "fieldtype": "Data",
+   "label": "Reference Number"
+  },
+  {
+   "fieldname": "date_of_disbursement",
+   "fieldtype": "Date",
+   "label": "Date of Disbursement",
+   "read_only": 1
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "Attachment"
+  },
+  {
+   "fieldname": "college",
+   "fieldtype": "Link",
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-01 11:57:08.013454",
- "modified_by": "Administrator",
+ "modified": "2026-01-09 15:23:20.123337",
+ "modified_by": "kalden.dorji@thimphutechpark.bt",
  "module": "Student Services",
  "name": "Student Welfare Scheme Claim",
  "naming_rule": "Expression (old style)",
@@ -202,6 +273,42 @@
    "role": "System Manager",
    "share": 1,
    "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Student",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Treasurer",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SSO",
+   "share": 1,
    "write": 1
   }
  ],

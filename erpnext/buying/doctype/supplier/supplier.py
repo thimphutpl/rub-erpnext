@@ -27,6 +27,7 @@ class Supplier(TransactionBase):
 
 	if TYPE_CHECKING:
 		from erpnext.accounts.doctype.allowed_to_transact_with.allowed_to_transact_with import AllowedToTransactWith
+		from erpnext.accounts.doctype.fiscal_year_company.fiscal_year_company import FiscalYearCompany
 		from erpnext.accounts.doctype.party_account.party_account import PartyAccount
 		from erpnext.utilities.doctype.portal_user.portal_user import PortalUser
 		from frappe.types import DF
@@ -44,6 +45,7 @@ class Supplier(TransactionBase):
 		bank_branch: DF.Link | None
 		bank_name: DF.Link | None
 		companies: DF.Table[AllowedToTransactWith]
+		company: DF.Table[FiscalYearCompany]
 		country: DF.Link | None
 		credit_days: DF.Int
 		credit_days_based_on: DF.Literal["", "Fixed Days", "Last Day of the Next Month"]
@@ -251,3 +253,31 @@ def get_supplier_primary_contact(doctype, txt, searchfield, start, page_len, fil
 			& (contact.name.like(f"%{txt}%"))
 		)
 	).run(as_dict=False)
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_suppliers(doctype, txt, searchfield, start, page_len, filters):
+    import json
+
+    # filters may come as JSON string
+    if isinstance(filters, str):
+        filters = json.loads(filters)
+
+    company = filters.get("company")
+
+    if company:
+        suppliers = frappe.db.sql("""
+            SELECT DISTINCT s.name
+            FROM `tabSupplier` s
+            INNER JOIN `tabFiscal Year Company` fyc 
+                ON fyc.parent = s.name
+            WHERE fyc.company = %s
+            ORDER BY s.name
+        """, (company,), as_dict=True)  # ✅ tuple with comma
+    else:
+        suppliers = frappe.db.sql("""
+            SELECT DISTINCT name
+            FROM `tabSupplier`
+            ORDER BY name
+        """, as_dict=True)
+
+    return [[d['name']] for d in suppliers]

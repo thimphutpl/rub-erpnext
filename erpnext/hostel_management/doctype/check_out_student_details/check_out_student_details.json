@@ -1,0 +1,78 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-12-10 14:43:49.760852",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "student_code",
+  "student_name",
+  "contact_number",
+  "column_break_eoyw",
+  "programme",
+  "semester",
+  "year"
+ ],
+ "fields": [
+  {
+   "fieldname": "student_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Student Code",
+   "options": "Student"
+  },
+  {
+   "fetch_from": "student_code.student_name",
+   "fieldname": "student_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Student Name"
+  },
+  {
+   "fetch_from": "student_code.student_mobile_number",
+   "fieldname": "contact_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Contact Number"
+  },
+  {
+   "fieldname": "column_break_eoyw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "student_code.programme",
+   "fieldname": "programme",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Programme"
+  },
+  {
+   "fetch_from": "student_code.semester",
+   "fieldname": "semester",
+   "fieldtype": "Data",
+   "label": "Semester"
+  },
+  {
+   "fetch_from": "student_code.year",
+   "fieldname": "year",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Year"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-12-10 14:47:04.824246",
+ "modified_by": "Administrator",
+ "module": "Hostel Management",
+ "name": "Check-Out Student Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

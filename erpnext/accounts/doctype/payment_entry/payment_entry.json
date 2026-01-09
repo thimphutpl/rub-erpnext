@@ -78,6 +78,7 @@
   "deductions",
   "transaction_references",
   "reference_no",
+  "research_reference",
   "column_break_23",
   "reference_date",
   "clearance_date",
@@ -248,7 +249,7 @@
    "reqd": 1
   },
   {
-   "depends_on": "paid_from",
+   "depends_on": "eval: doc.paid_from",
    "fieldname": "paid_from_account_currency",
    "fieldtype": "Link",
    "label": "Account Currency (From)",
@@ -293,7 +294,7 @@
   },
   {
    "allow_on_submit": 1,
-   "depends_on": "paid_to",
+   "depends_on": "eval: doc.paid_to",
    "fieldname": "paid_to_account_balance",
    "fieldtype": "Currency",
    "label": "Account Balance (To)",
@@ -340,10 +341,10 @@
    "bold": 1,
    "fieldname": "received_amount",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Received Amount",
    "options": "paid_to_account_currency",
-   "print_hide": 1,
-   "reqd": 1
+   "print_hide": 1
   },
   {
    "fieldname": "target_exchange_rate",
@@ -807,6 +808,13 @@
    "label": "Branch",
    "options": "Branch",
    "reqd": 1
+  },
+  {
+   "fieldname": "research_reference",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Research Reference",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -820,7 +828,7 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2025-07-04 17:07:20.322632",
+ "modified": "2025-10-28 10:10:21.093555",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Payment Entry",
@@ -858,8 +866,25 @@
    "share": 1,
    "submit": 1,
    "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SSO",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "show_name_in_global_search": 1,
  "sort_field": "creation",
  "sort_order": "DESC",

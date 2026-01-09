@@ -15,9 +15,10 @@ class ClubActivityDetails(Document):
 		from frappe.types import DF
 
 		activity: DF.Data | None
+		from_time: DF.Time | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
-		time: DF.Time | None
+		to_time: DF.Time | None
 	# end: auto-generated types
 	pass

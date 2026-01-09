@@ -1,13 +1,17 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:CAI{YY}{MM}{####}",
  "creation": "2025-08-26 14:50:13.721436",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "date",
+  "column_break_mzrk",
   "activity_name",
+  "status",
+  "section_break_hxii",
   "description"
  ],
  "fields": [
@@ -28,16 +32,32 @@
    "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Description"
+  },
+  {
+   "fieldname": "column_break_mzrk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_hxii",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Incomplete\nCompleted"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-09-01 11:15:13.017660",
+ "modified": "2025-12-19 09:48:44.325333",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Club Action Plan Details",
+ "naming_rule": "Expression",
  "owner": "kalden.dorji@thimphutechpark.bt",
  "permissions": [],
  "row_format": "Dynamic",

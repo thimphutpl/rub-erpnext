@@ -18,7 +18,9 @@
   {
    "fieldname": "posting_date",
    "fieldtype": "Date",
-   "label": "Posting Date"
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_bqtw",
@@ -48,21 +50,24 @@
    "fieldname": "company",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
-   "options": "Company"
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
   },
   {
    "fieldname": "year",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Year",
-   "options": "Fiscal Year"
+   "options": "Fiscal Year",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-28 15:51:55.510532",
+ "modified": "2025-10-28 10:40:27.231519",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Allocation Bulk Upload",
@@ -79,6 +84,22 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SSO",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

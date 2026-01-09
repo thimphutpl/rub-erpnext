@@ -1,0 +1,192 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-11-03 16:41:35.441430",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "student_code",
+  "fiscal_year",
+  "column_break_ltwy",
+  "company",
+  "month",
+  "start_date",
+  "end_date",
+  "stipend_entry",
+  "stipend_structure",
+  "bank_account_details_section",
+  "college_bank_account",
+  "gross_pay",
+  "net_pay",
+  "column_break_blea",
+  "student_bank_account",
+  "section_break_hexm",
+  "earnings",
+  "column_break_bqdj",
+  "deductions",
+  "section_break_pnbx",
+  "amended_from",
+  "journal_entry"
+ ],
+ "fields": [
+  {
+   "fieldname": "student_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Student Code",
+   "options": "Student",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "label": "Fiscal Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ltwy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "month",
+   "fieldtype": "Select",
+   "label": "Month",
+   "options": "January\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stipend_entry",
+   "fieldtype": "Link",
+   "label": "Stipend Entry",
+   "options": "Stipend Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "bank_account_details_section",
+   "fieldtype": "Section Break",
+   "label": "Bank Account Details"
+  },
+  {
+   "fieldname": "college_bank_account",
+   "fieldtype": "Link",
+   "label": "College Bank Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "column_break_blea",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "student_code.bank_account_number",
+   "fieldname": "student_bank_account",
+   "fieldtype": "Data",
+   "label": "Student Bank Account"
+  },
+  {
+   "fieldname": "section_break_hexm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_bqdj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_pnbx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Stipend Slip",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "stipend_structure",
+   "fieldtype": "Link",
+   "label": "Stipend Structure",
+   "options": "Stipend Structure",
+   "read_only": 1
+  },
+  {
+   "fieldname": "gross_pay",
+   "fieldtype": "Data",
+   "label": "Gross Pay",
+   "read_only": 1
+  },
+  {
+   "fieldname": "net_pay",
+   "fieldtype": "Data",
+   "label": "Net Pay",
+   "read_only": 1
+  },
+  {
+   "fieldname": "earnings",
+   "fieldtype": "Table",
+   "label": "Earnings",
+   "options": "Stipend Details"
+  },
+  {
+   "fieldname": "deductions",
+   "fieldtype": "Table",
+   "label": "Deductions",
+   "options": "Stipend Details"
+  },
+  {
+   "fieldname": "journal_entry",
+   "fieldtype": "Link",
+   "label": "Journal Entry",
+   "options": "Journal Entry"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-12-09 16:26:52.681214",
+ "modified_by": "Administrator",
+ "module": "Student Services",
+ "name": "Stipend Slip",
+ "owner": "sonam.choki@thimphutechpark.bt",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -40,6 +40,8 @@
   "represents_company",
   "column_break_16",
   "companies",
+  "company_section",
+  "company",
   "column_break2",
   "supplier_details",
   "column_break_30",
@@ -668,6 +670,17 @@
    "fieldname": "acc_no_swift",
    "fieldtype": "Data",
    "label": "Account Number"
+  },
+  {
+   "fieldname": "company_section",
+   "fieldtype": "Section Break",
+   "label": "Company"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Table",
+   "label": "Company",
+   "options": "Fiscal Year Company"
   }
  ],
  "icon": "fa fa-user",
@@ -680,7 +693,7 @@
    "link_fieldname": "party"
   }
  ],
- "modified": "2025-07-30 16:37:01.286502",
+ "modified": "2025-10-29 10:12:30.009852",
  "modified_by": "Administrator",
  "module": "Buying",
  "name": "Supplier",
@@ -747,6 +760,7 @@
   }
  ],
  "quick_entry": 1,
+ "row_format": "Dynamic",
  "search_fields": "supplier_group",
  "show_name_in_global_search": 1,
  "sort_field": "modified",

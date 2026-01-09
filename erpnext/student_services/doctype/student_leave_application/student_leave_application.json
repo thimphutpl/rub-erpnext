@@ -1,0 +1,254 @@
+{
+ "actions": [],
+ "autoname": "EDU-SLA-.YYYY.-.#####",
+ "creation": "2016-11-28 15:38:54.793854",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "student_and_leave_details_section",
+  "student",
+  "student_name",
+  "college",
+  "programme",
+  "column_break_3",
+  "from_date",
+  "to_date",
+  "total_leave_days",
+  "leave_type",
+  "section_break_5",
+  "reason",
+  "sb_approver",
+  "approver",
+  "approver_name",
+  "column_break_bbyz",
+  "approver_designation",
+  "sb_attachment",
+  "attach_zqhy",
+  "joining_details_section",
+  "rejoining_date",
+  "approved_by_sso",
+  "cb",
+  "reason_for_late_rejoining",
+  "section_break_vccc",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "student_and_leave_details_section",
+   "fieldtype": "Section Break",
+   "label": "<u>Student and Leave Details</u>"
+  },
+  {
+   "fieldname": "student",
+   "fieldtype": "Link",
+   "in_global_search": 1,
+   "label": "Student Code",
+   "options": "Student",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "student.student_name",
+   "fieldname": "student_name",
+   "fieldtype": "Read Only",
+   "in_global_search": 1,
+   "label": "Student Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "student.company",
+   "fieldname": "college",
+   "fieldtype": "Link",
+   "label": "College",
+   "options": "Company",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "programme",
+   "fieldtype": "Link",
+   "label": "Programme",
+   "options": "Programme Master",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "To Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_leave_days",
+   "fieldtype": "Float",
+   "label": "Total Leave Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "leave_type",
+   "fieldtype": "Link",
+   "label": "Leave Type",
+   "options": "Student Leave Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_5",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Text",
+   "label": "Reason"
+  },
+  {
+   "fieldname": "sb_approver",
+   "fieldtype": "Section Break",
+   "label": "<u>Approver Details</u>"
+  },
+  {
+   "fieldname": "approver",
+   "fieldtype": "Link",
+   "label": "Approver",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "approver.full_name",
+   "fieldname": "approver_name",
+   "fieldtype": "Data",
+   "label": "Approver Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_bbyz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "approver_designation",
+   "fieldtype": "Link",
+   "label": "Approver Designation",
+   "options": "Designation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_attachment",
+   "fieldtype": "Section Break",
+   "label": "<u>Attachments</u>"
+  },
+  {
+   "fieldname": "attach_zqhy",
+   "fieldtype": "Attach",
+   "label": "Attachments",
+   "reqd": 1
+  },
+  {
+   "fieldname": "joining_details_section",
+   "fieldtype": "Section Break",
+   "label": "<u>Joining Details</u>"
+  },
+  {
+   "fieldname": "rejoining_date",
+   "fieldtype": "Date",
+   "label": "Rejoining Date"
+  },
+  {
+   "default": "0",
+   "fieldname": "approved_by_sso",
+   "fieldtype": "Check",
+   "label": "Approved By SSO",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.rejoining_date > doc.to_date;",
+   "fieldname": "reason_for_late_rejoining",
+   "fieldtype": "Small Text",
+   "label": "Reason for Late Rejoining",
+   "mandatory_depends_on": "eval:doc.rejoining_date > doc.to_date;"
+  },
+  {
+   "fieldname": "section_break_vccc",
+   "fieldtype": "Section Break",
+   "label": "<u>More Info.<u></u></u>"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Student Leave Application",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-11-03 17:02:26.262730",
+ "modified_by": "sonam.choki@thimphutechpark.bt",
+ "module": "Student Services",
+ "name": "Student Leave Application",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Instructor",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Academics User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Student",
+   "share": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "show_name_in_global_search": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "student_name"
+}

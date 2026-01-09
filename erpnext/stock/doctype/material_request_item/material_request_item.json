@@ -11,6 +11,7 @@
   "item_name",
   "col_break1",
   "schedule_date",
+  "company_abbr",
   "section_break_4",
   "description",
   "column_break_12",
@@ -351,7 +352,8 @@
    "fieldtype": "Link",
    "label": "Expense Account",
    "options": "Account",
-   "print_hide": 1
+   "print_hide": 1,
+   "read_only": 1
   },
   {
    "fieldname": "cost_center",
@@ -485,19 +487,25 @@
    "options": "currency",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "company_abbr",
+   "fieldtype": "Data",
+   "label": "Company Abbr"
   }
  ],
  "idx": 1,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-26 18:30:03.684872",
+ "modified": "2025-09-29 15:18:03.446720",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Material Request Item",
  "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

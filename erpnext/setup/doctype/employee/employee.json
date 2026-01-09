@@ -43,6 +43,7 @@
   "promotion_cycle",
   "promotion_due_date",
   "parent_organization",
+  "is_teaching_staff",
   "leave_and_expense_claim_section",
   "reports_to",
   "second_approver",
@@ -1196,6 +1197,12 @@
    "fieldtype": "Link",
    "label": "Business Activity",
    "options": "Business Activity"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_teaching_staff",
+   "fieldtype": "Check",
+   "label": "Is Teaching Staff"
   }
  ],
  "icon": "fa fa-user",
@@ -1203,8 +1210,8 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2025-09-08 16:57:17.338416",
- "modified_by": "Administrator",
+ "modified": "2025-11-03 23:16:15.496848",
+ "modified_by": "sonam.zangmo@thimphutechpark.bt",
  "module": "Setup",
  "name": "Employee",
  "naming_rule": "By \"Naming Series\" field",

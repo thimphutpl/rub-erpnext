@@ -703,6 +703,7 @@ class calculate_taxes_and_totals:
 			if total_for_discount_amount:
 				# calculate item amount after Discount Amount
 				for item in self._items:
+					frappe.throw(str(item))
 					distributed_amount = (
 						flt(self.doc.discount_amount) * item.net_amount / total_for_discount_amount
 					)
@@ -891,7 +892,7 @@ class calculate_taxes_and_totals:
 				total_amount_to_pay - flt(paid_amount) + flt(change_amount),
 				self.doc.precision("outstanding_amount"),
 			)
-
+			# frappe.throw(str(self.doc.outstanding_amount))
 			if (
 				self.doc.doctype == "Sales Invoice"
 				and self.doc.get("is_pos")

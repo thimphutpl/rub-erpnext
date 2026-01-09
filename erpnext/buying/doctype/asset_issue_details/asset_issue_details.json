@@ -205,9 +205,9 @@
   {
    "fetch_from": "branch.cost_center",
    "fieldname": "cost_center",
-   "fieldtype": "Read Only",
+   "fieldtype": "Link",
    "label": "Cost Center",
-   "read_only": 1
+   "options": "Cost Center"
   },
   {
    "fieldname": "column_break_14",
@@ -285,8 +285,8 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-22 12:00:42.506129",
- "modified_by": "Administrator",
+ "modified": "2025-10-29 12:05:29.695901",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
  "module": "Buying",
  "name": "Asset Issue Details",
  "naming_rule": "Expression (old style)",

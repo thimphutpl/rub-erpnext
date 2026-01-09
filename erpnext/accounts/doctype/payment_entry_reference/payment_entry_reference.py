@@ -21,12 +21,12 @@ class PaymentEntryReference(Document):
 		due_date: DF.Date | None
 		exchange_gain_loss: DF.Currency
 		exchange_rate: DF.Float
+		hostel_maintenance_report: DF.Link | None
 		outstanding_amount: DF.Float
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
 		payment_request: DF.Link | None
-		payment_request_outstanding: DF.Float
 		payment_term: DF.Link | None
 		payment_term_outstanding: DF.Float
 		payment_type: DF.Data | None

@@ -15,6 +15,7 @@
   "asset_owner",
   "asset_owner_company",
   "is_existing_asset",
+  "is_donated_asset",
   "is_hostel_asset",
   "is_opening_asset",
   "old_asset_code",
@@ -719,12 +720,6 @@
    "label": "Existing PR Reference"
   },
   {
-   "fieldname": "is_hostel_asset",
-   "fieldtype": "Link",
-   "label": "Asset Custodian Type",
-   "options": "DocType"
-  },
-  {
    "depends_on": "eval:doc.is_hostel_asset == \"Hostel Room\";",
    "fieldname": "hostel",
    "fieldtype": "Link",
@@ -753,6 +748,18 @@
    "label": "Room/Building",
    "mandatory_depends_on": "eval:doc.is_hostel_asset == \"Room\";",
    "options": "Room"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_donated_asset",
+   "fieldtype": "Check",
+   "label": "Is Donated Asset"
+  },
+  {
+   "fieldname": "is_hostel_asset",
+   "fieldtype": "Link",
+   "label": "Asset Custodian Type",
+   "options": "DocType"
   }
  ],
  "idx": 72,
@@ -789,9 +796,14 @@
    "group": "Asset Capitalization",
    "link_doctype": "Asset Capitalization",
    "link_fieldname": "target_asset"
+  },
+  {
+   "group": "Asset Issue Details",
+   "link_doctype": "Asset Issue Details",
+   "link_fieldname": "reference_code"
   }
  ],
- "modified": "2025-09-22 16:03:32.917702",
+ "modified": "2025-10-14 15:59:34.191984",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset",

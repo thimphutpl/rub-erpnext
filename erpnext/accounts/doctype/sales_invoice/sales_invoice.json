@@ -20,6 +20,7 @@
   "posting_time",
   "set_posting_time",
   "due_date",
+  "bulk_asset_disposal",
   "column_break_14",
   "is_pos",
   "pos_profile",
@@ -2195,6 +2196,13 @@
    "print_hide": 1,
    "reqd": 1,
    "set_only_once": 1
+  },
+  {
+   "fieldname": "bulk_asset_disposal",
+   "fieldtype": "Link",
+   "label": "Bulk Asset Disposal",
+   "options": "Bulk Asset Disposal",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
@@ -2207,8 +2215,8 @@
    "link_fieldname": "consolidated_invoice"
   }
  ],
- "modified": "2025-03-20 10:59:07.744972",
- "modified_by": "Administrator",
+ "modified": "2025-10-10 19:00:09.306771",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
  "module": "Accounts",
  "name": "Sales Invoice",
  "naming_rule": "By \"Naming Series\" field",
@@ -2253,6 +2261,7 @@
   }
  ],
  "quick_entry": 1,
+ "row_format": "Dynamic",
  "search_fields": "posting_date, due_date, customer, base_grand_total, outstanding_amount",
  "show_name_in_global_search": 1,
  "sort_field": "modified",

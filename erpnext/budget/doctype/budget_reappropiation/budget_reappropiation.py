@@ -35,13 +35,13 @@ class BudgetReappropiation(Document):
 		total_reappropiation_amount: DF.Currency
 	# end: auto-generated types
 	def validate(self):
-		# validate_workflow_states(self)
+		validate_workflow_states(self)
 		self.validate_budget()
 		self.budget_check()
-		# if self.workflow_state != "Submitted":
-		# 	notify_workflow_states(self)
+		if self.workflow_state != "Submitted":
+			notify_workflow_states(self)
 	def on_submit(self):
-		# notify_workflow_states(self)
+		notify_workflow_states(self)
 		self.budget_appropriate(cancel=False)
 
 	def on_cancel(self):

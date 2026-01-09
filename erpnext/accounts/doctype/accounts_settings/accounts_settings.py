@@ -28,6 +28,7 @@ class AccountsSettings(Document):
 		advance_to_supplier: DF.Link | None
 		allow_multi_currency_invoices_against_single_party_account: DF.Check
 		allow_stale: DF.Check
+		asset_temporary_account: DF.Link
 		auto_reconcile_payments: DF.Check
 		auto_reconciliation_job_trigger: DF.Int
 		automatically_fetch_payment_terms: DF.Check

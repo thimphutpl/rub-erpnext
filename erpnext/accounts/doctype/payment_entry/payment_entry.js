@@ -239,14 +239,33 @@ frappe.ui.form.on("Payment Entry", {
 			};
 		});
 
-		frm.set_query("purchase_taxes_and_charges_template", function () {
+		// frm.set_query("purchase_taxes_and_charges_template", function () {
+		// 	return {
+		// 		filters: {
+		// 			// company: frm.doc.company,
+		// 			disabled: false,
+		// 		},
+		// 	};
+		// });
+		frm.set_query("purchase_taxes_and_charges_template", async function () {
+			// Always include current company
+			let allowed_companies = [frm.doc.company];
+			console.log("allowed_companies:", allowed_companies)
+
+			// Fetch parent company if it exists
+			const parent = await frappe.db.get_value("Company", frm.doc.company, "parent_company");
+			if (parent && parent.message && parent.message.parent_company) {
+				allowed_companies.push(parent.message.parent_company);
+			}
+			console.log(parent)
 			return {
 				filters: {
-					company: frm.doc.company,
-					disabled: false,
-				},
+					company: ["in", allowed_companies],
+					disabled: 0
+				}
 			};
 		});
+
 
 		frm.add_fetch(
 			"payment_request",
@@ -257,6 +276,10 @@ frappe.ui.form.on("Payment Entry", {
 	},
 
 	refresh: function (frm) {
+		if (frm.is_new() && frm.doc.company && !frm.doc.paid_from && !frm.doc.paid_to) {
+			frm.trigger("company");
+		}
+
 		erpnext.hide_company(frm);
 		frm.events.hide_unhide_fields(frm);
 		frm.events.set_dynamic_labels(frm);
@@ -283,6 +306,7 @@ frappe.ui.form.on("Payment Entry", {
 		frappe.flags.allocate_payment_amount = true;
 	},
 
+
 	validate_company: (frm) => {
 		if (!frm.doc.company) {
 			frappe.throw({ message: __("Please select a Company first."), title: __("Mandatory") });
@@ -294,6 +318,18 @@ frappe.ui.form.on("Payment Entry", {
 		frm.events.hide_unhide_fields(frm);
 		frm.events.set_dynamic_labels(frm);
 		erpnext.accounts.dimensions.update_dimension(frm, frm.doctype);
+
+		if (!frm.doc.company) return;
+
+		frappe.db.get_value("Company", frm.doc.company, ["bank_account", "receivable_account"])
+			.then(r => {
+				if (r.message) {
+					let { bank_account, receivable_account } = r.message;
+					if (bank_account) frm.set_value("paid_to", bank_account);
+					if (receivable_account) frm.set_value("paid_from", receivable_account);
+					frm.refresh_fields(["paid_from", "paid_to"]);
+				}
+			});
 	},
 
 	contact_person: function (frm) {
@@ -314,8 +350,8 @@ frappe.ui.form.on("Payment Entry", {
 		frm.toggle_display(
 			"target_exchange_rate",
 			frm.doc.received_amount &&
-				frm.doc.paid_to_account_currency != company_currency &&
-				frm.doc.paid_from_account_currency != frm.doc.paid_to_account_currency
+			frm.doc.paid_to_account_currency != company_currency &&
+			frm.doc.paid_from_account_currency != frm.doc.paid_to_account_currency
 		);
 
 		frm.toggle_display("base_paid_amount", frm.doc.paid_from_account_currency != company_currency);
@@ -335,24 +371,24 @@ frappe.ui.form.on("Payment Entry", {
 		frm.toggle_display(
 			"base_received_amount",
 			frm.doc.paid_to_account_currency != company_currency &&
-				frm.doc.paid_from_account_currency != frm.doc.paid_to_account_currency &&
-				frm.doc.base_paid_amount != frm.doc.base_received_amount
+			frm.doc.paid_from_account_currency != frm.doc.paid_to_account_currency &&
+			frm.doc.base_paid_amount != frm.doc.base_received_amount
 		);
 
 		frm.toggle_display(
 			"received_amount",
 			frm.doc.payment_type == "Internal Transfer" ||
-				frm.doc.paid_from_account_currency != frm.doc.paid_to_account_currency
+			frm.doc.paid_from_account_currency != frm.doc.paid_to_account_currency
 		);
 
 		frm.toggle_display(
 			["base_total_allocated_amount"],
 			frm.doc.paid_amount &&
-				frm.doc.received_amount &&
-				frm.doc.base_total_allocated_amount &&
-				((frm.doc.payment_type == "Receive" &&
-					frm.doc.paid_from_account_currency != company_currency) ||
-					(frm.doc.payment_type == "Pay" && frm.doc.paid_to_account_currency != company_currency))
+			frm.doc.received_amount &&
+			frm.doc.base_total_allocated_amount &&
+			((frm.doc.payment_type == "Receive" &&
+				frm.doc.paid_from_account_currency != company_currency) ||
+				(frm.doc.payment_type == "Pay" && frm.doc.paid_to_account_currency != company_currency))
 		);
 
 		var party_amount = frm.doc.payment_type == "Receive" ? frm.doc.paid_amount : frm.doc.received_amount;
@@ -695,7 +731,7 @@ frappe.ui.form.on("Payment Entry", {
 
 									if (
 										frm.doc.paid_from_account_currency ==
-											frm.doc.paid_to_account_currency &&
+										frm.doc.paid_to_account_currency &&
 										frm.doc.paid_amount != frm.doc.received_amount
 									) {
 										if (
@@ -1207,7 +1243,6 @@ frappe.ui.form.on("Payment Entry", {
 				return flt(d.amount);
 			})
 		);
-
 		frm.set_value(
 			"difference_amount",
 			difference_amount - total_deductions + flt(frm.doc.base_total_taxes_and_charges)
@@ -1400,44 +1435,103 @@ frappe.ui.form.on("Payment Entry", {
 		frm.trigger("fetch_taxes_from_template");
 	},
 
-	fetch_taxes_from_template: function (frm) {
+	// fetch_taxes_from_template: function (frm) {
+	// 	let master_doctype = "";
+	// 	let taxes_and_charges = "";
+
+	// 	if (frm.doc.party_type == "Supplier") {
+	// 		master_doctype = "Purchase Taxes and Charges Template";
+	// 		taxes_and_charges = frm.doc.purchase_taxes_and_charges_template;
+	// 	} else if (frm.doc.party_type == "Customer") {
+	// 		master_doctype = "Sales Taxes and Charges Template";
+	// 		taxes_and_charges = frm.doc.sales_taxes_and_charges_template;
+	// 	}
+
+	// 	if (!taxes_and_charges) {
+	// 		return;
+	// 	}
+
+	// 	frappe.call({
+	// 		method: "erpnext.controllers.accounts_controller.get_taxes_and_charges",
+	// 		args: {
+	// 			master_doctype: master_doctype,
+	// 			master_name: taxes_and_charges,
+	// 		},
+	// 		callback: function (r) {
+	// 			if (!r.exc && r.message) {
+	// 				// set taxes table
+	// 				if (r.message) {
+	// 					for (let tax of r.message) {
+	// 						if (tax.charge_type === "On Net Total") {
+	// 							tax.charge_type = "On Paid Amount";
+	// 						}
+	// 						frm.add_child("taxes", tax);
+	// 					}
+	// 					frm.events.apply_taxes(frm);
+	// 					frm.events.set_unallocated_amount(frm);
+	// 				}
+	// 			}
+	// 		},
+	// 	});
+	// },
+	fetch_taxes_from_template: async function (frm) {
 		let master_doctype = "";
 		let taxes_and_charges = "";
 
-		if (frm.doc.party_type == "Supplier") {
+		if (frm.doc.party_type === "Supplier") {
 			master_doctype = "Purchase Taxes and Charges Template";
 			taxes_and_charges = frm.doc.purchase_taxes_and_charges_template;
-		} else if (frm.doc.party_type == "Customer") {
+		} else if (frm.doc.party_type === "Customer") {
 			master_doctype = "Sales Taxes and Charges Template";
 			taxes_and_charges = frm.doc.sales_taxes_and_charges_template;
 		}
 
-		if (!taxes_and_charges) {
-			return;
-		}
+		if (!taxes_and_charges) return;
 
-		frappe.call({
+		// Clear existing taxes table
+		frm.clear_table("taxes");
+
+		// Fetch taxes from the selected template
+		const template_taxes = await frappe.call({
 			method: "erpnext.controllers.accounts_controller.get_taxes_and_charges",
 			args: {
 				master_doctype: master_doctype,
-				master_name: taxes_and_charges,
-			},
-			callback: function (r) {
-				if (!r.exc && r.message) {
-					// set taxes table
-					if (r.message) {
-						for (let tax of r.message) {
-							if (tax.charge_type === "On Net Total") {
-								tax.charge_type = "On Paid Amount";
-							}
-							frm.add_child("taxes", tax);
-						}
-						frm.events.apply_taxes(frm);
-						frm.events.set_unallocated_amount(frm);
-					}
-				}
-			},
+				master_name: taxes_and_charges
+			}
 		});
+
+		if (!template_taxes.message || template_taxes.message.length === 0) return;
+
+		// Fetch all TDS accounts for the company once
+		const tds_accounts = await frappe.db.get_list("Account", {
+			fields: ["name", "account_name"],
+			filters: {
+				company: frm.doc.company,
+				account_name: ["like", "%TDS%"]
+			}
+		});
+
+		// Loop through template taxes and match with TDS accounts
+		for (let tax of template_taxes.message) {
+			if (tax.charge_type === "On Net Total") {
+				tax.charge_type = "On Paid Amount";
+			}
+
+			// Match tax rate with TDS accounts
+			if (tax.rate) {
+				const rate_pattern = `${tax.rate}%`;
+				const matched_account = tds_accounts.find(a => a.account_name.includes(rate_pattern));
+				if (matched_account) {
+					tax.account_head = matched_account.name;
+				}
+			}
+
+			frm.add_child("taxes", tax);
+		}
+
+		frm.refresh_field("taxes");
+		frm.events.apply_taxes(frm);
+		frm.events.set_unallocated_amount(frm);
 	},
 
 	apply_taxes: function (frm) {
@@ -1649,6 +1743,7 @@ frappe.ui.form.on("Payment Entry", {
 					frm.doc.total_taxes_and_charges += flt(current_tax_amount / frm.doc.target_exchange_rate);
 				} else {
 					frm.doc.total_taxes_and_charges += current_tax_amount;
+
 				}
 			} else if (frm.doc.payment_type == "Receive") {
 				if (tax.currency != frm.doc.paid_from_account_currency) {
@@ -1685,7 +1780,14 @@ frappe.ui.form.on("Payment Entry", {
 		if (tax.charge_type == "Actual") {
 			current_tax_amount = flt(tax.tax_amount, precision("tax_amount", tax));
 		} else if (tax.charge_type == "On Paid Amount") {
-			current_tax_amount = flt((tax_rate / 100.0) * frm.doc.paid_amount_after_tax);
+			let total_amount = 0;
+			(frm.doc.references || []).forEach(ref => {
+				total_amount += flt(ref.total_amount || 0);
+			});
+			// alert(total_amount)
+			current_tax_amount = flt((tax_rate / 100.0) * total_amount);
+			// alert(current_tax_amount)
+			// current_tax_amount = flt((tax_rate / 100.0) * frm.doc.paid_amount_after_tax);
 		} else if (tax.charge_type == "On Previous Row Amount") {
 			current_tax_amount = flt((tax_rate / 100.0) * frm.doc["taxes"][cint(tax.row_id) - 1].tax_amount);
 		} else if (tax.charge_type == "On Previous Row Total") {
@@ -1915,11 +2017,11 @@ function get_deduction_amount_precision() {
 
 
 /* ePayment Begins */
-var create_custom_buttons = function(frm){
+var create_custom_buttons = function (frm) {
 	var status = ["Failed", "Upload Failed", "Cancelled", "Payment Failed", "Payment Cancelled"];
 
-	if(frm.doc.docstatus == 1 && frm.doc.payment_type == "Pay" && frm.doc.party_type == 'Supplier' && frm.doc.mode_of_payment == "ePayment"){
-		if(!frm.doc.bank_payment || status.includes(frm.doc.payment_status) ){
+	if (frm.doc.docstatus == 1 && frm.doc.payment_type == "Pay" && frm.doc.party_type == 'Supplier' && frm.doc.mode_of_payment == "ePayment") {
+		if (!frm.doc.bank_payment || status.includes(frm.doc.payment_status)) {
 			frm.page.set_primary_action(__('Process Payment'), () => {
 				frappe.model.open_mapped_doc({
 					method: "erpnext.accounts.doctype.payment_entry.payment_entry.make_bank_payment",

@@ -12,10 +12,13 @@
   "last_name",
   "branch",
   "cost_center",
+  "full_name",
   "column_break_tnfu",
-  "college",
-  "hostel_type",
+  "company",
+  "posting_date",
+  "posting_time",
   "phone_number",
+  "hostel_type",
   "hostel_room",
   "maintenance_requirement_sect",
   "maintenance_type",
@@ -33,7 +36,8 @@
   "total_expenses_incurred",
   "section_break_pxnf",
   "jv",
-  "amended_from"
+  "amended_from",
+  "hostel_maintenance_application"
  ],
  "fields": [
   {
@@ -78,14 +82,6 @@
   {
    "fieldname": "column_break_tnfu",
    "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": "student_code.company",
-   "fieldname": "college",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "College",
-   "options": "Company"
   },
   {
    "fetch_from": "hostel_room.hostel_type",
@@ -177,7 +173,7 @@
   {
    "fieldname": "jv",
    "fieldtype": "Link",
-   "in_list_view": 1,
+   "hidden": 1,
    "label": "Journal Entry",
    "options": "Journal Entry"
   },
@@ -199,14 +195,49 @@
   {
    "fieldname": "items",
    "fieldtype": "Table",
-   "options": "Hostel Maintenance Expenses Item"
+   "options": "Hostel Maintenance Report Item"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hostel_maintenance_application",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hostel Maintenance Application",
+   "options": "Hostel Maintenance Application"
+  },
+  {
+   "fetch_from": "student_code.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "College",
+   "options": "Company"
+  },
+  {
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Posting Time"
+  },
+  {
+   "fetch_from": "student_code.student_name",
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-04 10:56:22.918811",
+ "modified": "2025-12-10 16:21:59.167982",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Maintenance Report",
@@ -222,6 +253,22 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SSO",
+   "select": 1,
    "share": 1,
    "submit": 1,
    "write": 1

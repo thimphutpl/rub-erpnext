@@ -484,8 +484,8 @@
    "type": "Link"
   }
  ],
- "modified": "2025-07-25 13:11:25.903075",
- "modified_by": "pralad.rai@thimphutechpark.bt",
+ "modified": "2025-11-25 18:25:10.317767",
+ "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Accounting",
  "number_cards": [
@@ -512,7 +512,7 @@
  "quick_lists": [],
  "restrict_to_domain": "",
  "roles": [],
- "sequence_id": 2.0,
+ "sequence_id": 4.0,
  "shortcuts": [
   {
    "color": "Grey",
@@ -549,16 +549,19 @@
   {
    "label": "Accounts Receivable",
    "link_to": "Accounts Receivable",
+   "report_ref_doctype": "Sales Invoice",
    "type": "Report"
   },
   {
    "label": "General Ledger",
    "link_to": "General Ledger",
+   "report_ref_doctype": "GL Entry",
    "type": "Report"
   },
   {
    "label": "Trial Balance",
    "link_to": "Trial Balance",
+   "report_ref_doctype": "GL Entry",
    "type": "Report"
   },
   {

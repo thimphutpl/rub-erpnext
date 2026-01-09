@@ -1377,10 +1377,13 @@ def validate_field_number(doctype_name, docname, number_value, company, field_na
 			)
 
 
-def get_autoname_with_number(number_value, doc_title, company):
+def get_autoname_with_number(number_value, doc_title=None, company=None):
 	"""append title with prefix as number and suffix as company's abbreviation separated by '-'"""
 	company_abbr = frappe.get_cached_value("Company", company, "abbr")
-	parts = [doc_title.strip(), company_abbr]
+	if doc_title:
+		parts = [doc_title.strip(), company_abbr]
+	else:
+		parts = []
 
 	if cstr(number_value).strip():
 		parts.insert(0, cstr(number_value).strip())
@@ -2370,15 +2373,19 @@ def make_asset_transfer_gl(self, asset, date, from_cc, to_cc, cancel, not_legacy
     """
     SELECT accumulated_depreciation_account 
     FROM `tabAsset Category Account` 
-    WHERE parent = %s AND company_name = %s
+    WHERE parent = %s
     """,
-    (asset.asset_category, self.company),
+    (asset.asset_category),
     as_dict=True)[0].accumulated_depreciation_account
-
+	company = self.company
+	if self.doctype == "Asset Movement":
+		company = self.to_company
 	# frappe.throw(str(accumulated_dep_account))
-	ic_account = frappe.db.get_single_value("Accounts Settings", "intra_company_account")
+	# ic_account = frappe.db.get_single_value("Accounts Settings", "intra_company_account")
+	ic_account = frappe.db.get_single_value("Accounts Settings", "asset_temporary_account")
 	if not ic_account:
-		frappe.throw("Setup Intra Company Accounts under Accounts Settings")
+		frappe.throw("Setup Asset Temporary Accounts under Accounts Settings")
+	# ic_account = str(ic_account).split(" - ")[0]+" - "+str(frappe.db.get_value("Company", company, "abbr"))
 
 	from erpnext.accounts.general_ledger import make_gl_entries
 	from erpnext.custom_utils import prepare_gl
@@ -2396,7 +2403,7 @@ def make_asset_transfer_gl(self, asset, date, from_cc, to_cc, cancel, not_legacy
 	)
 	gl_entries.append(
 		prepare_gl(self, {
-		       "account":  asset.asset_account,
+		       "account": asset.asset_account.replace(" - "+frappe.db.get_value("Company", self.company, "abbr"), " - "+frappe.db.get_value("Company",self.to_company,"abbr")),
 		       "debit": asset.gross_purchase_amount,
 		       "debit_in_account_currency": asset.gross_purchase_amount,
 		       "against_voucher": asset.name,
@@ -2407,7 +2414,7 @@ def make_asset_transfer_gl(self, asset, date, from_cc, to_cc, cancel, not_legacy
 	if flt(accumulated_dep) > 0:
 		gl_entries.append(
 			prepare_gl(self, {
-			       "account": accumulated_dep_account,
+			       "account": accumulated_dep_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.to_company,"abbr")),
 			       "debit": accumulated_dep,
 			       "debit_in_account_currency": accumulated_dep,
 			       "against_voucher": asset.name,
@@ -2417,7 +2424,7 @@ def make_asset_transfer_gl(self, asset, date, from_cc, to_cc, cancel, not_legacy
 		)
 		gl_entries.append(
 			prepare_gl(self, {
-			       "account": accumulated_dep_account,
+			       "account": accumulated_dep_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.company,"abbr")),
 			       "credit": accumulated_dep,
 			       "credit_in_account_currency": accumulated_dep,
 			       "against_voucher": asset.name,
@@ -2429,7 +2436,7 @@ def make_asset_transfer_gl(self, asset, date, from_cc, to_cc, cancel, not_legacy
 	if flt(asset.value_after_depreciation) > 0:
 		gl_entries.append(
 			prepare_gl(self, {
-			       "account": ic_account,
+			       "account": ic_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.to_company,"abbr")),
 			       "debit": asset.value_after_depreciation,
 			       "debit_in_account_currency": asset.value_after_depreciation,
 			       "against_voucher": asset.name,

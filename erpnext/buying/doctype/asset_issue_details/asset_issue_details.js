@@ -11,6 +11,20 @@ frappe.ui.form.on('Asset Issue Details', {
 				}
 			}
 		});
+		frm.set_query('hostel', function(doc, cdt, cdn) {
+			return {
+				filters: {
+					"cost_center": doc.cost_center
+				}
+			}
+		});
+		frm.set_query('roombuilding', function(doc, cdt, cdn) {
+			return {
+				filters: {
+					"cost_center": doc.cost_center
+				}
+			}
+		});
 		frm.set_query("asset_custodian_type", function () {
 			return {
 				filters: {

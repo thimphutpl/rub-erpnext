@@ -1,0 +1,112 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:APA/{year}/{#}",
+ "creation": "2025-12-13 15:12:04.648317",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_utwy",
+  "fyp",
+  "year",
+  "apa_copies",
+  "column_break_teau",
+  "colleges",
+  "section_break_lcfb",
+  "get_planning_info",
+  "apa_details",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_utwy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "fyp",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Five Year Plan",
+   "options": "Five Year Plan",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_teau",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_lcfb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "get_planning_info",
+   "fieldtype": "Button",
+   "label": "Get Planning Info"
+  },
+  {
+   "fieldname": "colleges",
+   "fieldtype": "Link",
+   "label": "Colleges",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "apa_copies",
+   "fieldtype": "Check",
+   "label": "APA Copies Successfully Created",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Annual Performance Agreement",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "apa_details",
+   "fieldtype": "Table",
+   "options": "APA Detail"
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Link",
+   "label": "Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-12-13 15:27:20.102891",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "Annual Performance Agreement",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

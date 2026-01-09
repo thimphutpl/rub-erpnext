@@ -67,7 +67,7 @@
    "in_list_view": 1,
    "label": "Budget Expense Head",
    "mandatory_depends_on": "eval:(doc.item_group==\"Consumable\" || doc.item_group==\"Services\")",
-   "options": "Company"
+   "options": "Account"
   },
   {
    "depends_on": "eval:doc.item_group==\"Fixed Asset\"",
@@ -76,7 +76,7 @@
    "in_list_view": 1,
    "label": "Asset Category",
    "mandatory_depends_on": "eval:doc.item_group==\"Fixed Asset\"",
-   "options": "Company"
+   "options": "Asset Category"
   },
   {
    "depends_on": "eval:doc.item_group==\"Fixed Asset\"",
@@ -85,12 +85,12 @@
    "in_list_view": 1,
    "label": "Asset Sub Category ",
    "mandatory_depends_on": "eval:doc.item_group==\"Fixed Asset\"",
-   "options": "Company"
+   "options": "Asset Sub Category"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-22 16:49:38.550290",
+ "modified": "2025-09-25 10:42:01.905479",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Item Sub Group",

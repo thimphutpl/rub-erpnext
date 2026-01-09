@@ -227,6 +227,7 @@ class StockEntry(StockController):
 			# in Manufacture Entry
 			self.reset_default_field_value("from_warehouse", "items", "s_warehouse")
 			self.reset_default_field_value("to_warehouse", "items", "t_warehouse")
+		self.set_cost_center()
 
 	def on_submit(self):
 		self.validate_closed_subcontracting_order()
@@ -249,6 +250,7 @@ class StockEntry(StockController):
 			self.set_material_request_transfer_status("In Transit")
 		if self.purpose == "Material Transfer" and self.outgoing_stock_entry:
 			self.set_material_request_transfer_status("Completed")
+		self.set_cost_center()
 
 	def on_cancel(self):
 		self.validate_closed_subcontracting_order()
@@ -293,6 +295,14 @@ class StockEntry(StockController):
 			self.work_order = data.work_order
 			self.from_bom = 1
 			self.bom_no = data.bom_no
+
+	def set_cost_center(self):
+		cost_center = frappe.get_value("Branch", self.branch, "cost_center")
+		if cost_center:
+			for a in self.items:
+				a.cost_center = cost_center
+		else:
+			frappe.throw(_("Cost center not found for the branch {0}").format(self.branch))
 
 	def validate_job_card_item(self):
 		if not self.job_card:

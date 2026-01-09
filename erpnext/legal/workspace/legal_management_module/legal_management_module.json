@@ -8,7 +8,7 @@
  "for_user": "",
  "hide_custom": 0,
  "icon": "tool",
- "idx": 0,
+ "idx": 1,
  "indicator_color": "",
  "is_hidden": 0,
  "label": "Legal Management Module",
@@ -194,8 +194,8 @@
    "type": "Link"
   }
  ],
- "modified": "2025-09-01 12:14:27.128280",
- "modified_by": "lhendup.dorji@thimphutechpark.bt",
+ "modified": "2025-11-25 18:25:11.829657",
+ "modified_by": "Administrator",
  "module": "Legal",
  "name": "Legal Management Module",
  "number_cards": [],
@@ -205,7 +205,7 @@
  "quick_lists": [],
  "restrict_to_domain": "",
  "roles": [],
- "sequence_id": 19.1,
+ "sequence_id": 32.0,
  "shortcuts": [],
  "title": "Legal Management Module"
 }

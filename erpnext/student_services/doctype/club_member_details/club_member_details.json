@@ -9,7 +9,7 @@
   "student_code",
   "first_name",
   "last_name",
-  "program",
+  "programme",
   "year",
   "semester"
  ],
@@ -37,11 +37,6 @@
    "label": "Last Name"
   },
   {
-   "fieldname": "program",
-   "fieldtype": "Data",
-   "label": "Program"
-  },
-  {
    "fieldname": "year",
    "fieldtype": "Data",
    "label": "Year"
@@ -50,13 +45,18 @@
    "fieldname": "semester",
    "fieldtype": "Data",
    "label": "Semester"
+  },
+  {
+   "fieldname": "programme",
+   "fieldtype": "Data",
+   "label": "Programme"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-09-01 11:15:11.608627",
+ "modified": "2025-09-09 16:01:48.979546",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Club Member Details",

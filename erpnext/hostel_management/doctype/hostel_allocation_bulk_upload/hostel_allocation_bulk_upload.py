@@ -3,17 +3,99 @@ from frappe.model.document import Document
 from frappe import _
 
 class HostelAllocationBulkUpload(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
 
-    def before_submit(self):
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.model.document import Document
+        from frappe.types import DF
+
+        amended_from: DF.Link | None
+        company: DF.Link
+        posting_date: DF.Date
+        table_caon: DF.Table[Document]
+        year: DF.Link
+    # end: auto-generated types
+
+    def before_save(self):
         self.validate_room_capacity()
         self.validate_student_allocations()
         self.validate_previous_year_active_students()
 
     def on_submit(self):
         self.update_hostel_room_students()
+        
+    def on_cancel(self):
+        """Revert hostel room student allocations when this document is cancelled."""
+        room_allocations = {}
+
+        for row in self.table_caon:
+            if row.hostel_room and row.student_code:
+                room_allocations.setdefault(row.hostel_room, []).append(row.student_code)
+
+        for room_code, students_to_remove in room_allocations.items():
+            try:
+                hostel_room = frappe.get_doc("Hostel Room", room_code)
+                hostel_room.set("student_list", [])
+
+                existing_students = frappe.db.sql("""
+                    SELECT hai.student_code, hai.first_name, hai.last_name, hai.status, habu.year
+                    FROM `tabHostel Allocation Item` hai
+                    JOIN `tabHostel Allocation Bulk Upload` habu 
+                        ON hai.parent = habu.name
+                    WHERE habu.docstatus = 1
+                    AND habu.name != %s
+                    AND hai.hostel_room = %s
+                """, (self.name, room_code), as_dict=1)
+
+                for s in existing_students:
+                    hostel_room.append("student_list", s)
+
+                hostel_room.save()
+                frappe.msgprint(_("Reverted student list for room {0} after cancellation of allocation {1}")
+                                .format(room_code, self.name))
+
+            except frappe.DoesNotExistError:
+                frappe.msgprint(_("Hostel Room {0} does not exist.").format(room_code),
+                                indicator="orange", alert=True)
+            except Exception as e:
+                frappe.msgprint(_("Error reverting room {0}: {1}").format(room_code, str(e)),
+                                indicator="red", alert=True)
+
+        
+
+    # def validate_room_capacity(self):
+    #     """Validate that no room exceeds capacity for the same academic year."""
+    #     room_students = {}
+    #     for row in self.table_caon:
+    #         if row.hostel_room:
+    #             room_students[row.hostel_room] = room_students.get(row.hostel_room, 0) + 1
+
+    #     for room_code, new_count in room_students.items():
+    #         existing_count = frappe.db.sql("""
+    #             SELECT COUNT(*) as count
+    #             FROM `tabHostel Allocation Item` hai
+    #             JOIN `tabHostel Allocation Bulk Upload` habu 
+    #                 ON hai.parent = habu.name
+    #             WHERE habu.docstatus = 1 
+    #             AND hai.hostel_room = %s
+    #             AND habu.year = %s
+    #         """, (room_code, self.year), as_dict=1)[0].count
+
+    #         room_capacity = frappe.db.get_value("Hostel Room", room_code, "capacity")
+    #         if not room_capacity:
+    #             frappe.throw(_("Room {0} does not exist or capacity is not set.").format(room_code))
+
+    #         if existing_count + new_count > room_capacity:
+    #             frappe.throw(_("Room {0} will have {1} students after this allocation. "
+    #                            "Maximum allowed is {2} for academic year {3}.").format(
+    #                 room_code, existing_count + new_count, room_capacity, self.year
+    #             ))
 
     def validate_room_capacity(self):
-        """Validate that no room exceeds capacity for the same academic year."""
+        """Validate that no room exceeds capacity for the same academic year and status validation."""
         room_students = {}
         for row in self.table_caon:
             if row.hostel_room:
@@ -29,16 +111,18 @@ class HostelAllocationBulkUpload(Document):
                 AND hai.hostel_room = %s
                 AND habu.year = %s
             """, (room_code, self.year), as_dict=1)[0].count
-
             room_capacity = frappe.db.get_value("Hostel Room", room_code, "capacity")
             if not room_capacity:
                 frappe.throw(_("Room {0} does not exist or capacity is not set.").format(room_code))
-
-            if existing_count + new_count > room_capacity:
+            total_students = existing_count + new_count
+            if total_students > room_capacity:
                 frappe.throw(_("Room {0} will have {1} students after this allocation. "
-                               "Maximum allowed is {2} for academic year {3}.").format(
-                    room_code, existing_count + new_count, room_capacity, self.year
+                            "Maximum allowed is {2} for academic year {3}.").format(
+                    room_code, total_students, room_capacity, self.year
                 ))
+            if total_students == room_capacity:
+                frappe.msgprint(_("Room {0} has reached full capacity ({1}). No more allocations can be made.")
+                                .format(room_code, room_capacity))
 
     def validate_student_allocations(self):
         """Validate that a student is not assigned to multiple rooms in the SAME academic year."""

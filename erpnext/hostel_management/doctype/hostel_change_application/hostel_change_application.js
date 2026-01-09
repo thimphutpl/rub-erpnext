@@ -2,8 +2,36 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Hostel Change Application", {
-	refresh(frm) {    
+	refresh(frm) { 
+        frm.set_query("company", function(){
+			return {
+				filters: {
+					"is_group": 0,
+				}
+			}
+		});   
         frm.set_query("requested_room", function() {
+            return {
+                filters: {
+                    company: frm.doc.company
+                }
+            };
+        });
+        frm.set_query("applied_by", function() {
+            return {
+                filters: {
+                    company: frm.doc.company
+                }
+            };
+        });
+        frm.set_query("requested_room", function() {
+            return {
+                filters: {
+                    company: frm.doc.company
+                }
+            };
+        });
+        frm.set_query("student_code", function() {
             return {
                 filters: {
                     company: frm.doc.company

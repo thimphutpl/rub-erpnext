@@ -25,3 +25,4 @@ Faculty Management
 ePayment
 Student Services
 Legal
+Budget

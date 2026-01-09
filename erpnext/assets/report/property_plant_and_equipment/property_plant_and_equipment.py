@@ -23,13 +23,13 @@ def get_accounts(filters):
 				""",
 				as_dict=True,
 		):
-		gross_opening = get_values(a.fa, filters.to_date, filters.from_date, filters.cost_center, opening=True)[0]
-		gross = get_values(a.fa, filters.to_date, filters.from_date, filters.cost_center)[0]
-		dep_opening = get_values(a.acc, filters.to_date, filters.from_date, filters.cost_center, opening=True)[0]
-		acc_dep = get_values(a.acc, filters.to_date, filters.from_date, filters.cost_center)[0]
+		gross_opening = get_values(a.fa, filters.to_date, filters.from_date, filters.cost_center, filters.company, opening=True)[0]
+		gross = get_values(a.fa, filters.to_date, filters.from_date, filters.cost_center, filters.company)[0]
+		dep_opening = get_values(a.acc, filters.to_date, filters.from_date, filters.cost_center, filters.company, opening=True)[0]
+		acc_dep = get_values(a.acc, filters.to_date, filters.from_date, filters.cost_center, filters.company)[0]
 		# following line commented by SHIV on 2021/03/10 as it is not used anywhere
 		#dep = get_values(a.dep, filters.to_date, filters.from_date, filters.cost_center)[0]
-		adj = get_values(a.acc, filters.to_date, filters.from_date, filters.cost_center, adjustment=True)[0]		
+		adj = get_values(a.acc, filters.to_date, filters.from_date, filters.cost_center, filters.company, adjustment=True)[0]		
 
 		g_open = flt(gross_opening.debit) - flt(gross_opening.credit)
 		g_addition = flt(gross.debit)
@@ -46,16 +46,19 @@ def get_accounts(filters):
 		income_tax = frappe.db.sql("""select  sum(b.income_depreciation_amount) as total_income_tax
 										from `tabAsset` a, `tabDepreciation Schedule` b, `tabAsset Depreciation Schedule` ads
 										where ads.name = b.parent
+											and a.company = '{2}'
 											and ads.asset = a.name
 											and a.asset_category = '{0}'
 											and b.schedule_date between {1} and CURDATE()
 											and a.docstatus = 1
+											and (IFNULL(b.journal_entry,'') != '' )
 											and (
 												a.status not in ('Scrapped', 'Sold')
 												OR
 												(a.status in ('Scrapped', 'Sold') AND a.disposal_date >= '{1}')
 											)
-									""".format(a.name, filters.from_date), as_dict=True)
+
+									""".format(a.name, filters.from_date, filters.company), as_dict=True)
 
 		opening_it_dep = frappe.db.sql("""select 
 												sum(b.income_accumulated_depreciation) as acc_income_tax,
@@ -63,6 +66,7 @@ def get_accounts(filters):
 							   			from `tabAsset` a, `tabDepreciation Schedule` b, `tabAsset Depreciation Schedule` ads
 						 	 			where ads.name = b.parent
 											and ads.asset = a.name
+											and a.company = '{2}'
 						  					and a.asset_category = '{0}'
 						  					and ('{1}' between b.schedule_start_date and b.schedule_date
 												or 
@@ -78,11 +82,12 @@ def get_accounts(filters):
 												OR
 												(a.status in ('Scrapped', 'Sold') AND a.disposal_date >= '{1}')
 											)
-									""".format(a.name, filters.from_date), as_dict=True)
+									""".format(a.name, filters.from_date, filters.company), as_dict=True)
 
 		opening_dep = frappe.db.sql("""select  sum(a.income_tax_opening_depreciation_amount) as it_opening
 										from `tabAsset` a
 						 	 			where a.asset_category = '{0}'
+											and a.company = '{2}'
 						  					and a.docstatus = 1
 											and (
 												a.status not in ('Scrapped', 'Sold')
@@ -94,7 +99,7 @@ def get_accounts(filters):
 												from  `tabDepreciation Schedule` b, `tabAsset Depreciation Schedule` ads
 												where ads.asset = a.name and b.parent = ads.name
 											)	
-								""".format(a.name, filters.from_date), as_dict=True)
+								""".format(a.name, filters.from_date, filters.company), as_dict=True)
 		acc_it = opening_it_dep[0].acc_income_tax if opening_it_dep[0].acc_income_tax else 0.00
 		depreciation_it = opening_it_dep[0].depreciation_income_tax if opening_it_dep[0].depreciation_income_tax else 0.00
 		it_opening = opening_dep[0].it_opening if opening_dep[0].it_opening else 0.00
@@ -174,8 +179,10 @@ def get_cwip(filters):
 		})
 	return row
 
-def get_values(account, to_date, from_date, cost_center=None, opening=False, cwip=False, adjustment=False):
-#	query = "select sum(debit) as debit, sum(credit) as credit from `tabGL Entry` where account = \'" + str(account) + "\' and docstatus = 1"
+def get_values(account, to_date, from_date, cost_center=None, company=None, opening=False, cwip=False, adjustment=False):
+
+	#	query = "select sum(debit) as debit, sum(credit) as credit from `tabGL Entry` where account = \'" + str(account) + "\' and docstatus = 1"
+	account = account.replace(" - RUB", " - "+frappe.db.get_value("Company",company,"abbr"))
 	if cwip:
 		query = "select sum(debit) as debit, sum(credit) as credit from `tabGL Entry` where account in " + str(account) + " and docstatus = 1 and is_cancelled = 0"
 	elif adjustment:
@@ -321,8 +328,8 @@ def get_accounts_bkp20210310(filters):
 		cwip_acc.append(str(account.name))
 	cwip_accounts = tuple(cwip_acc)
 
-	cwip_open = get_values(cwip_accounts, filters.to_date, filters.from_date, filters.cost_center, opening=True, cwip=True)
-	cwip = get_values(cwip_accounts, filters.to_date, filters.from_date, filters.cost_center, cwip=True)
+	cwip_open = get_values(cwip_accounts, filters.to_date, filters.from_date, filters.cost_center, filters.company, opening=True, cwip=True)
+	cwip = get_values(cwip_accounts, filters.to_date, filters.from_date, filters.cost_center, filters.company, cwip=True)
 
 	cwip_open = cwip_open[0]
 	cwip = cwip[0]

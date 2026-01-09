@@ -37,7 +37,7 @@ erpnext.accounts.taxes = {
 						return {
 							filters: {
 								"company": doc.company,
-								"is_group": 0
+								// "is_group": 0
 							}
 						};
 					});

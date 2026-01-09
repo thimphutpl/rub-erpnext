@@ -19,7 +19,7 @@ class Feedback(Document):
 		employee: DF.Link | None
 		employee_name: DF.Data | None
 		feedback: DF.LongText | None
-		feedback_type: DF.Data
+		feedback_type: DF.Link
 		posting_date: DF.Date
 		resolution_date: DF.Date | None
 		what_was_the_resolution_drawn: DF.LongText | None

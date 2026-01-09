@@ -24,7 +24,7 @@ class AssetIssueDetails(Document):
         brand: DF.Data | None
         chesis_no: DF.Data | None
         company: DF.Link
-        cost_center: DF.ReadOnly | None
+        cost_center: DF.Link | None
         create_single_asset: DF.Check
         emp_branch: DF.Data | None
         employee_name: DF.Data | None
@@ -96,7 +96,9 @@ class AssetIssueDetails(Document):
 
         if item_doc.asset_category:
             asset_category = frappe.db.get_value("Asset Category", item_doc.asset_category, "name")
-            fixed_asset_account, credit_account=frappe.db.get_value("Asset Category Account", {'parent':asset_category,'company_name':self.company}, ['fixed_asset_account','credit_account'])
+            fixed_asset_account, credit_account=frappe.db.get_value("Asset Category Account", {'parent':asset_category}, ['fixed_asset_account','credit_account'])
+            fixed_asset_account = fixed_asset_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.company,"abbr"))
+            credit_account = credit_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.company,"abbr"))
             if item_doc.asset_sub_category:
                 for a in frappe.db.sql("""select total_number_of_depreciations, income_depreciation_percent 
                                         from `tabAsset Finance Book` where parent = '{0}' 

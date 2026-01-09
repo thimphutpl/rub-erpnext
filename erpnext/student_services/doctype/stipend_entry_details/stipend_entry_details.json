@@ -1,0 +1,89 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-11-03 16:33:42.672683",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "student_code",
+  "year",
+  "semester",
+  "column_break_yrto",
+  "full_name",
+  "programme",
+  "section_break_uhdn",
+  "status",
+  "error_log"
+ ],
+ "fields": [
+  {
+   "fieldname": "student_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Student Code",
+   "options": "Student"
+  },
+  {
+   "fetch_from": "student_code.year",
+   "fieldname": "year",
+   "fieldtype": "Data",
+   "label": "Year"
+  },
+  {
+   "fetch_from": "student_code.semester",
+   "fieldname": "semester",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Semester"
+  },
+  {
+   "fieldname": "column_break_yrto",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "student_code.student_name",
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name"
+  },
+  {
+   "fetch_from": "student_code.programme",
+   "fieldname": "programme",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Programme"
+  },
+  {
+   "fieldname": "section_break_uhdn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\nSuccess\nFailed"
+  },
+  {
+   "fieldname": "error_log",
+   "fieldtype": "Code",
+   "label": "Error Log"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-11-16 21:41:36.175677",
+ "modified_by": "Administrator",
+ "module": "Student Services",
+ "name": "Stipend Entry Details",
+ "owner": "sonam.choki@thimphutechpark.bt",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

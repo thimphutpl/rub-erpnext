@@ -14,6 +14,7 @@ class FinanceBook(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		company: DF.Link
 		finance_book_name: DF.Data | None
 	# end: auto-generated types
 

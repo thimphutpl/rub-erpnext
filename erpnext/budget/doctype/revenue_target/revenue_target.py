@@ -21,6 +21,7 @@ class RevenueTarget(Document):
 		amended_from: DF.Link | None
 		attachment: DF.Attach | None
 		company: DF.Link
+		cost_center: DF.Link | None
 		fiscal_year: DF.Link
 		revenue_target_account: DF.Table[RevenueTargetAccount]
 		title: DF.Data | None

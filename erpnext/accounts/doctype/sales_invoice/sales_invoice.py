@@ -85,6 +85,7 @@ class SalesInvoice(SellingController):
 		base_total_taxes_and_charges: DF.Currency
 		base_write_off_amount: DF.Currency
 		branch: DF.Link
+		bulk_asset_disposal: DF.Link | None
 		campaign: DF.Link | None
 		cash_bank_account: DF.Link | None
 		change_amount: DF.Currency
@@ -456,7 +457,9 @@ class SalesInvoice(SellingController):
 			self.update_against_document_in_jv()
 
 		self.update_time_sheet(self.name)
-
+		if self.bulk_asset_disposal:
+			bulk_asset_disposal_doc = frappe.get_doc("Bulk Asset Disposal", self.bulk_asset_disposal)
+			bulk_asset_disposal_doc.db_set("sales_invoice", self.name)
 		if frappe.db.get_single_value("Selling Settings", "sales_update_frequency") == "Each Transaction":
 			update_company_current_month_sales(self.company)
 			self.update_project()
@@ -543,7 +546,9 @@ class SalesInvoice(SellingController):
 			self.repost_future_sle_and_gle()
 
 		self.db_set("status", "Cancelled")
-
+		if self.bulk_asset_disposal:
+			bulk_asset_disposal_doc = frappe.get_doc("Bulk Asset Disposal", self.bulk_asset_disposal)
+			bulk_asset_disposal_doc.db_set("sales_invoice", "")
 		if frappe.db.get_single_value("Selling Settings", "sales_update_frequency") == "Each Transaction":
 			update_company_current_month_sales(self.company)
 			self.update_project()

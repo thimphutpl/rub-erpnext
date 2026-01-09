@@ -74,7 +74,7 @@ class BankPayment(Document):
 		to_date: DF.Date | None
 		total_amount: DF.Currency
 		transaction_no: DF.DynamicLink | None
-		transaction_type: DF.Literal["", "Salary", "Journal Entry", "Payment Entry", "Employee Loan Payment", "Bonus", "Imprest Recoup", "LTC", "PBVA", "Process MR Payment", "Bulk Leave Encashment"]
+		transaction_type: DF.Literal["", "Salary", "Journal Entry", "Payment Entry", "Employee Loan Payment", "Bonus", "Imprest Recoup", "LTC", "PBVA", "Process MR Payment", "Bulk Leave Encashment", "Hostel Maintenance Report", "Research Project Payment"]
 		uploads: DF.Table[BankPaymentUpload]
 		workflow_state: DF.Link | None
 	# end: auto-generated types
@@ -553,6 +553,8 @@ class BankPayment(Document):
 			data = self.get_pbva()
 		elif self.transaction_type == "Bulk Leave Encashment":
 			data = self.get_bulk_leave_encashment()
+		# elif self.transaction_type == "Hostel Maintenance Report":
+		# 	data = self.get_hostel_maintenace_report()	
 		data = merge_similar_entries(data)
 		return data
 
@@ -924,7 +926,7 @@ class BankPayment(Document):
 				beneficiary_bank as bank_name,
 				beneficiary_branch as bank_branch,
 				beneficiary_bank_account_no as bank_account_no,
-				round(net_amount,2) 	 as amount
+				round(total_expenses_incurred,2) 	 as amount
 			from `tabMechanical Payment` t1
 			where t1.expense_account = "{paid_from}"
 			and t1.docstatus = 1
@@ -946,6 +948,43 @@ class BankPayment(Document):
 			as_dict=True,
 		)
 		return data
+
+	# def get_hostel_maintenace_report(self):
+	# 	if self.transaction_no:
+	# 		cond = 'and h1.name = "{}"'.format(self.transaction_no)
+
+	# 	data = frappe.db.sql(
+	# 		"""
+	# 		select 
+	# 			'Hostel Maintenance Repoert' as transaction_type,
+	# 			name 		 as transaction_id, 
+	# 			posting_date 	 as transaction_date,
+	# 			beneficiary_name,
+	# 			beneficiary_bank as bank_name,
+	# 			beneficiary_branch as bank_branch,
+	# 			beneficiary_bank_account_no as bank_account_no,
+	# 			round(net_amount,2) 	 as amount
+	# 		from `tabHostel Maintenance Report` h1
+	# 		where t1.expense_account = "{paid_from}"
+	# 		and t1.docstatus = 1
+	# 		and t1.online_payment = 1
+	# 		and t1.bank_payment is null
+	# 		{cond}
+	# 		and not exists(select 1
+	# 			from `tabBank Payment Item` t2
+	# 			where t2.transaction_type = "{transaction_type}"
+	# 			and t2.transaction_id = t1.name
+	# 			and t2.docstatus < 2
+	# 			and t2.parent != "{name}")
+	# 	""".format(
+	# 			paid_from=self.paid_from,
+	# 			name=self.name,
+	# 			transaction_type=self.transaction_type,
+	# 			cond=cond,
+	# 		),
+	# 		as_dict=True,
+	# 	)
+	# 	return data	
 
 	# ltc payment added by cety on 12/16/2021
 	def get_ltc_payment(self):

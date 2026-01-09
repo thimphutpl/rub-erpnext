@@ -1,0 +1,116 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-12-10 14:40:07.516999",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "hostel_details_section",
+  "college",
+  "hostel_room",
+  "column_break_ujof",
+  "posting_date",
+  "student_details_section",
+  "table_fvvp",
+  "aseet_details_section",
+  "table_snes",
+  "section_break_cvd6",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_cvd6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Hostel Check-Out Form",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "hostel_details_section",
+   "fieldtype": "Section Break",
+   "label": "Hostel Details"
+  },
+  {
+   "fieldname": "college",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hostel_room",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Hostel Room",
+   "options": "Hostel Room",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ujof",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "student_details_section",
+   "fieldtype": "Section Break",
+   "label": "Student Details"
+  },
+  {
+   "fieldname": "table_fvvp",
+   "fieldtype": "Table",
+   "options": "Check-Out Student Details"
+  },
+  {
+   "fieldname": "aseet_details_section",
+   "fieldtype": "Section Break",
+   "label": "Aseet Details"
+  },
+  {
+   "fieldname": "table_snes",
+   "fieldtype": "Table",
+   "options": "Check-Out Asset Items"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-12-14 11:47:24.181239",
+ "modified_by": "Administrator",
+ "module": "Hostel Management",
+ "name": "Hostel Check-Out Form",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

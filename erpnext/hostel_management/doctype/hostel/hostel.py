@@ -14,6 +14,7 @@ class Hostel(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		cost_center: DF.Link | None
 		hostel_type: DF.Link | None
 	# end: auto-generated types
 	pass

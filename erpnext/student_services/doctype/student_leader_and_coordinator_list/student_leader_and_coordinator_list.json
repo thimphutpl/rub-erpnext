@@ -1,0 +1,84 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{academic_term}-{college_abbr} {academic_term}",
+ "creation": "2025-09-09 11:29:05.322353",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "academic_year",
+  "academic_term",
+  "column_break_zvff",
+  "company",
+  "college_abbr",
+  "section_break_germ",
+  "student_leader_and_coordinator_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "academic_year",
+   "fieldtype": "Link",
+   "label": "Academic Year",
+   "options": "Academic Year"
+  },
+  {
+   "fieldname": "academic_term",
+   "fieldtype": "Link",
+   "label": "Academic Term",
+   "options": "Academic Term"
+  },
+  {
+   "fieldname": "column_break_zvff",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "College",
+   "options": "Company"
+  },
+  {
+   "fieldname": "section_break_germ",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "student_leader_and_coordinator_details",
+   "fieldtype": "Table",
+   "label": "Student Leader and Coordinator Details",
+   "options": "Student Leader and Coordinator Items"
+  },
+  {
+   "fetch_from": "company.abbr",
+   "fieldname": "college_abbr",
+   "fieldtype": "Data",
+   "label": "College Abbr. "
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-11-03 14:36:24.233137",
+ "modified_by": "sonam.choki@thimphutechpark.bt",
+ "module": "Student Services",
+ "name": "Student Leader and Coordinator List",
+ "naming_rule": "Expression",
+ "owner": "kalden.dorji@thimphutechpark.bt",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

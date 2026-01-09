@@ -16,6 +16,7 @@ class ConsumedBudget(Document):
 		account: DF.Link
 		amended_from: DF.Link | None
 		amount: DF.Currency
+		business_activity: DF.Link | None
 		com_ref: DF.Link | None
 		company: DF.Link | None
 		consumed_cost_center: DF.Link | None

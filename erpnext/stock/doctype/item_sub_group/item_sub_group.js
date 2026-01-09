@@ -16,7 +16,7 @@ frappe.ui.form.on("Item Sub Group", {
 		frm.set_query("item_sub_group", function () {
 			return {
 				filters: {
-					item_group:frm.doc.item_group, // Make sure item_group exists in the DocType
+					item_group: frm.doc.item_group, // Make sure item_group exists in the DocType
 				},
 			};
 		});

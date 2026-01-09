@@ -1,0 +1,144 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "HB.YYYY.MM.#####",
+ "creation": "2025-11-03 09:51:49.756490",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_mqo3",
+  "college",
+  "hostel_councilor",
+  "hostel_councilor_name",
+  "column_break_hmrj",
+  "posting_date",
+  "hostel_block",
+  "section_break_hpza",
+  "expense_type",
+  "total_budget_collection",
+  "expenses_amount",
+  "balance_amount",
+  "section_break_jyos",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_mqo3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Hostel Budget",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "college",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hostel_councilor",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Hostel Councilor",
+   "options": "Student",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_hmrj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_hpza",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_budget_collection",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Total Budget Collection",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_jyos",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "balance_amount",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Balance Amount"
+  },
+  {
+   "fieldname": "hostel_block",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hostel Block",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expenses_amount",
+   "fieldtype": "Table",
+   "label": "Expenses Amount",
+   "options": "Hostel Budget Item"
+  },
+  {
+   "fieldname": "expense_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Expense Type",
+   "options": "Expense Type"
+  },
+  {
+   "fetch_from": "hostel_councilor.student_name",
+   "fieldname": "hostel_councilor_name",
+   "fieldtype": "Data",
+   "label": "Hostel Councilor Name",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-11-25 16:10:05.582217",
+ "modified_by": "kalden.dorji@thimphutechpark.bt",
+ "module": "Hostel Management",
+ "name": "Hostel Budget",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

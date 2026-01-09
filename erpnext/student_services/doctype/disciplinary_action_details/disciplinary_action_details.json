@@ -1,0 +1,65 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-22 23:19:21.405394",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "disciplinary_issue_type",
+  "date",
+  "reference_doctype",
+  "link_student_statements",
+  "link_disciplinary_action"
+ ],
+ "fields": [
+  {
+   "fieldname": "disciplinary_issue_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Disciplinary Issue Type"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reference_doctype",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Reference Doctype"
+  },
+  {
+   "depends_on": "eval:doc.disciplinary_issue_type=='Minor Issue'",
+   "fieldname": "link_student_statements",
+   "fieldtype": "Link",
+   "label": "Link Student Statements",
+   "options": "Student Statement"
+  },
+  {
+   "depends_on": "eval:doc.disciplinary_issue_type=='Major Issue'",
+   "fieldname": "link_disciplinary_action",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Link Disciplinary Action",
+   "options": "Disciplinary Action"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-23 11:49:36.753567",
+ "modified_by": "kalden.dorji@thimphutechpark.bt",
+ "module": "Student Services",
+ "name": "Disciplinary Action Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

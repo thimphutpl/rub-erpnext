@@ -9,11 +9,14 @@
   "student_details_section",
   "college",
   "posting_date",
+  "from_date",
+  "to",
+  "status",
   "column_break_krfh",
   "student_code",
   "first_name",
   "last_name",
-  "program",
+  "programme",
   "year",
   "semester",
   "club_details_section",
@@ -70,18 +73,14 @@
    "read_only": 1
   },
   {
-   "fieldname": "program",
-   "fieldtype": "Data",
-   "label": "Program ",
-   "read_only": 1
-  },
-  {
+   "fetch_from": "student_code.year",
    "fieldname": "year",
    "fieldtype": "Data",
    "label": "Year",
    "read_only": 1
   },
   {
+   "fetch_from": "student_code.semester",
    "fieldname": "semester",
    "fieldtype": "Data",
    "label": "Semester",
@@ -96,7 +95,7 @@
    "fieldname": "applying_for_club",
    "fieldtype": "Link",
    "label": "Applying for Club",
-   "options": "Club List"
+   "options": "Club"
   },
   {
    "fieldname": "remarks",
@@ -116,20 +115,47 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fetch_from": "student_code.programme",
+   "fieldname": "programme",
+   "fieldtype": "Data",
+   "label": "Programme",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.status=='In Active'",
+   "fieldname": "to",
+   "fieldtype": "Date",
+   "label": "To"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nIn Active"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-01 11:15:10.953440",
- "modified_by": "Administrator",
+ "modified": "2026-01-09 14:36:54.862684",
+ "modified_by": "mon.chhetri@thimphutechpark.bt",
  "module": "Student Services",
  "name": "Club Membership Application",
  "naming_rule": "Expression",
  "owner": "kalden.dorji@thimphutechpark.bt",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -139,6 +165,7 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

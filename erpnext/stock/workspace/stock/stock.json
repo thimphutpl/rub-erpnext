@@ -657,8 +657,8 @@
    "type": "Link"
   }
  ],
- "modified": "2025-07-29 17:50:10.964918",
- "modified_by": "pralad.rai@thimphutechpark.bt",
+ "modified": "2025-11-25 18:25:11.081104",
+ "modified_by": "Administrator",
  "module": "Stock",
  "name": "Stock",
  "number_cards": [
@@ -681,7 +681,7 @@
  "quick_lists": [],
  "restrict_to_domain": "",
  "roles": [],
- "sequence_id": 9.0,
+ "sequence_id": 18.0,
  "shortcuts": [
   {
    "color": "Green",
@@ -730,11 +730,13 @@
   {
    "label": "Stock Ledger",
    "link_to": "Stock Ledger",
+   "report_ref_doctype": "Stock Ledger Entry",
    "type": "Report"
   },
   {
    "label": "Stock Balance",
    "link_to": "Stock Balance",
+   "report_ref_doctype": "Stock Ledger Entry",
    "type": "Report"
   },
   {

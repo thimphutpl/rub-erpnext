@@ -188,11 +188,13 @@
   {
    "fieldname": "naming_series",
    "fieldtype": "Select",
-   "hidden": 1,
    "label": "Series",
    "oldfieldname": "naming_series",
    "oldfieldtype": "Select",
-   "options": "\nConsumables\nFixed Asset\nSales Product\nSpare Parts\nServices Miscellaneous\nServices Works\nLabour Contract"
+   "options": "\nConsumables\nFixed Asset\nSales Product\nSpare Parts\nServices Miscellaneous\nServices Works\nLabour Contract",
+   "print_hide": 1,
+   "reqd": 1,
+   "set_only_once": 1
   },
   {
    "bold": 1,
@@ -1336,7 +1338,7 @@
  "idx": 105,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-22 16:53:37.529437",
+ "modified": "2025-10-09 12:03:16.961893",
  "modified_by": "Administrator",
  "module": "Buying",
  "name": "Purchase Order",

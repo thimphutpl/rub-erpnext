@@ -32,6 +32,7 @@ class Employee(NestedSet):
 		
 	def validate(self):
 		#frappe.log_error()
+		self.set_preferred_email()
 		self.ignore_linked_doctypes = (
 			"Department",
 			"Stock Ledger Entry",
@@ -107,6 +108,13 @@ class Employee(NestedSet):
 	def on_update(self):
 	
 		self.update_nsm_model()
+		if (not self.user_id and self.status == "Active" and (self.company_email or self.personal_email)):
+			email=self.prefered_email
+			create_user(self.name,email=email)
+			self.reload()
+		elif self.user_id and self.status != "Active":
+			self.sync_user_status()	
+
 		if self.user_id:
 			self.update_user()
 			self.update_user_permissions()
@@ -382,7 +390,7 @@ def create_user(employee, user=None, email=None):
 	user = frappe.new_doc("User")
 	user.update(
 		{
-			"name": emp.employee_name,
+			"name": emp.company_email,
 			"email": emp.prefered_email,
 			"enabled": 1,
 			"first_name": first_name,
@@ -391,7 +399,7 @@ def create_user(employee, user=None, email=None):
 			"gender": emp.gender,
 			"birth_date": emp.date_of_birth,
 			"phone": emp.cell_number,
-			"bio": emp.bio,
+			"bio": emp.bio
 		}
 	)
 	user.insert()

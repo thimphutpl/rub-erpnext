@@ -27,3 +27,23 @@ def sync_child_account():
              doc.validate_root_company_and_sync_account_to_children()
              print(str(count)+". "+acc.rub_account)
              count += 1
+
+def notify_user_on_desk():
+    """
+    Send a notification to the ERPNext notification bar for a specific user.
+    
+    Args:
+        user (str): User email or username
+        message (str): Notification message
+        doc (frappe.Document, optional): Optional document reference
+    """
+    frappe.publish_realtime(
+        event="custom_notification",
+        user="aitasubba.cst@rub.edu.bt",
+        message="Test haha",
+        # Optional: link notification to a document
+        # doc_type="hihif doc else None",
+        # doc_name="doc.name if doc else None",
+        # Optional: icon for notification
+        # indicator="orange"
+    )

@@ -28,8 +28,11 @@ class StockEntryDetail(Document):
 		conversion_factor: DF.Float
 		cost_center: DF.Link | None
 		description: DF.TextEditor | None
+		employee: DF.Link | None
+		employee_name: DF.Data | None
 		expense_account: DF.Link | None
 		has_item_scanned: DF.Check
+		hostel_maintenance_report: DF.Link | None
 		image: DF.Attach | None
 		is_finished_item: DF.Check
 		is_scrap_item: DF.Check

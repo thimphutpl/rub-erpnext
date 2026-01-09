@@ -17,7 +17,7 @@ from erpnext.accounts.doctype.accounting_dimension_filter.accounting_dimension_f
 	get_dimension_filter_map,
 )
 from erpnext.accounts.doctype.accounting_period.accounting_period import ClosedAccountingPeriod
-from erpnext.budget.doctype.budget.budget import validate_expense_against_budget
+# from erpnext.budget.doctype.budget.budget import validate_against_planning_activities
 from erpnext.accounts.utils import create_payment_ledger_entry
 from erpnext.exceptions import InvalidAccountDimensionError, MandatoryAccountDimensionError
 
@@ -383,14 +383,17 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 	gle.flags.update_outstanding = update_outstanding or "Yes"
 	gle.flags.notify_update = False
 	gle.submit()
-
+	
 	if not from_repost and gle.voucher_type != "Period Closing Voucher":
 		#Commit and Consume budget
 		transactions = [d.transaction for d in frappe.get_all("Budget Transaction", fields='transaction')]
+		# frappe.throw(str(transactions))
 		if args.voucher_type in transactions and args.against_voucher_type != 'Asset':
 			account_types = [d.account_type for d in frappe.get_all("Budget Settings Account Types", fields='account_type')]
 			if frappe.db.get_value("Account", args.account, "account_type") in account_types:
-				validate_expense_against_budget(args)
+				# validate_expense_against_budget(args)
+				validate_against_planning_activities(args)
+				
 				cc_doc = frappe.get_doc("Cost Center", args.cost_center)
 				# budget_cost_center = cc_doc.budget_cost_center if cc_doc.use_budget_from_parent else args.cost_center
 				budget_cost_center = args.cost_center
@@ -408,7 +411,7 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 						"amount": flt(args.debit_in_account_currency),
 						"company": args.company,
 						"closed": 1,
-						# "business_activity": args.business_activity,
+						"business_activity": args.activity,
 					})
 					bud_obj.flags.ignore_permissions=1
 					bud_obj.submit()
@@ -426,7 +429,7 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 						"amount": flt(args.debit_in_account_currency),
 						"company": args.company,
 						"com_ref": bud_obj.name,
-						# "business_activity": args.business_activity,
+						"business_activity": args.activity,
 					})
 					con_obj.flags.ignore_permissions=1
 					con_obj.submit()
@@ -797,3 +800,53 @@ def validate_allowed_dimensions(gl_entry, dimension_filter_map):
 
 def is_immutable_ledger_enabled():
 	return frappe.db.get_single_value("Accounts Settings", "enable_immutable_ledger")
+
+def validate_against_planning_activities(args):
+	total_budget_consumed=get_actual_expense(args)
+	budget_amount=get_budget_amount(args)
+	# frappe.throw(str(budget_amount))
+	
+	# args.actual_expense, args.requested_amount, args.ordered_amount = get_actual_expense(args), 0, 0
+	total_expense = flt(total_budget_consumed) + flt(args.debit)
+	# frappe.throw(str(total_expense))
+
+	if total_expense > budget_amount:
+		frappe.throw("Expense exceeded the allocated Budget")
+def get_budget_amount(self):
+	posting_date = self.posting_date
+	posting_year =getdate(posting_date).year 
+	result = frappe.db.sql(
+		"""
+		SELECT apa.approved_budget
+		FROM `tabAPA Detail` apa
+		INNER JOIN `tabAnnual Performance Agreement` apa_parent
+			ON apa.parent = apa_parent.name
+		WHERE apa.activity_link = %s
+		  AND apa_parent.docstatus = 1
+		  AND apa_parent.colleges = %s
+		  AND apa_parent.year = %s
+		""",
+		(self.activity, self.company, posting_year),
+	)
+
+	return flt(result[0][0]) if result and result[0][0] else 0
+
+
+def get_actual_expense(args):
+	amount = flt(
+		frappe.db.sql(
+			"""
+			SELECT SUM(gle.debit - gle.credit) AS actual_expense
+			FROM `tabGL Entry` gle
+			INNER JOIN `tabAccount` acc ON acc.name = gle.account
+			WHERE gle.is_cancelled = 0
+			  AND gle.docstatus = 1
+			  AND acc.root_type = 'Expense'
+			  AND gle.activity = %s
+			""",
+			(args.activity,),
+		)[0][0]
+	)
+
+	return amount
+

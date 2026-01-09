@@ -1,0 +1,157 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SS.YY.MM.####",
+ "creation": "2025-09-01 11:54:59.125021",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "student_details_section",
+  "company",
+  "student_code",
+  "name_student",
+  "program",
+  "semester",
+  "column_break_xenr",
+  "posting_date",
+  "disciplinary_issue_type",
+  "verifier_details_section",
+  "verifier",
+  "column_break_dhiw",
+  "verifier_designation",
+  "student_statement_section",
+  "student_statement",
+  "section_break_8cna",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "student_details_section",
+   "fieldtype": "Section Break",
+   "label": "Student Details"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "student_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Student Code",
+   "options": "Student",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "student_code.programme",
+   "fieldname": "program",
+   "fieldtype": "Data",
+   "label": "Program"
+  },
+  {
+   "fieldname": "column_break_xenr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "disciplinary_issue_type",
+   "fieldtype": "Link",
+   "label": "Disciplinary Issue Type",
+   "options": "Disciplinary Issue Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "verifier_details_section",
+   "fieldtype": "Section Break",
+   "label": "Verifier Details"
+  },
+  {
+   "fieldname": "verifier",
+   "fieldtype": "Data",
+   "label": "Verifier"
+  },
+  {
+   "fieldname": "column_break_dhiw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "verifier_designation",
+   "fieldtype": "Data",
+   "label": "Verifier Designation"
+  },
+  {
+   "fieldname": "student_statement_section",
+   "fieldtype": "Section Break",
+   "label": "Student Statement"
+  },
+  {
+   "fieldname": "section_break_8cna",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Student Statement",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "student_statement",
+   "fieldtype": "Long Text",
+   "label": "Statement"
+  },
+  {
+   "fetch_from": "student_code.student_name",
+   "fieldname": "name_student",
+   "fieldtype": "Data",
+   "label": "Name"
+  },
+  {
+   "fetch_from": "student_code.semester",
+   "fieldname": "semester",
+   "fieldtype": "Data",
+   "label": "Semester"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-10-23 00:43:14.672633",
+ "modified_by": "Administrator",
+ "module": "Student Services",
+ "name": "Student Statement",
+ "naming_rule": "Expression (old style)",
+ "owner": "kalden.dorji@thimphutechpark.bt",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

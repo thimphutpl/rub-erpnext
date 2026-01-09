@@ -1,0 +1,104 @@
+{
+ "actions": [],
+ "autoname": "field:component",
+ "creation": "2025-11-03 16:00:11.776497",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "component",
+  "description",
+  "column_break_slwv",
+  "component_type",
+  "payment_method",
+  "default_amount",
+  "accounting_details_section",
+  "stipend_component_details",
+  "structure_mapping_tab",
+  "field_name"
+ ],
+ "fields": [
+  {
+   "fieldname": "component",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Component",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_slwv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "component_type",
+   "fieldtype": "Select",
+   "label": "Component Type",
+   "options": "Earning\nDeduction",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval: doc.component_type == \"Deduction\"",
+   "fieldname": "payment_method",
+   "fieldtype": "Select",
+   "label": "Payment Method",
+   "options": "Lumpsum\nPercent"
+  },
+  {
+   "fieldname": "default_amount",
+   "fieldtype": "Currency",
+   "label": "Default Amount"
+  },
+  {
+   "fieldname": "accounting_details_section",
+   "fieldtype": "Section Break",
+   "label": "Accounting Details"
+  },
+  {
+   "fieldname": "structure_mapping_tab",
+   "fieldtype": "Tab Break",
+   "label": "Structure Mapping"
+  },
+  {
+   "fieldname": "field_name",
+   "fieldtype": "Data",
+   "label": "Field Name"
+  },
+  {
+   "fieldname": "stipend_component_details",
+   "fieldtype": "Table",
+   "options": "Stipend Component Details"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-11-14 20:17:29.624812",
+ "modified_by": "Administrator",
+ "module": "Student Services",
+ "name": "Stipend Component",
+ "naming_rule": "By fieldname",
+ "owner": "sonam.choki@thimphutechpark.bt",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

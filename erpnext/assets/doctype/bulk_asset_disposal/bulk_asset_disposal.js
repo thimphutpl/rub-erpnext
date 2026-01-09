@@ -22,6 +22,31 @@ frappe.ui.form.on("Bulk Asset Disposal", {
 				}
 			).addClass("btn-primary custom-create custom-create-css")
 		}
+		if (frm.doc.company != ''){
+			frm.set_query('branch', function() {
+				return {
+					filters: {
+						company: frm.doc.company
+					}
+				};
+			});
+		}
+		frm.fields_dict["item"].grid.get_field("asset").get_query = function(doc, cdt, cdn) {
+			// let row = locals[cdt][cdn];
+			let filters = [
+					["company", "=", frm.doc.company],
+					["asset_category", "=", frm.doc.asset_category],
+					["status", "not in", ["Scrapped", "Draft", "Cancelled", "Sold"]]
+				]
+		
+			// Only filter by branch if status is not "Scrapped"
+			if (frm.doc.scrap !== "Scrap Asset") {
+				filters.push(["branch", "=", frm.doc.branch]);
+			}
+		
+			// If status is Scrapped, skip branch filter
+			return { filters: filters };
+		};
 	},
 
     scrap: function (frm) {
@@ -39,7 +64,8 @@ frappe.ui.form.on("Bulk Asset Disposal", {
 				name: frm.doc.name,
 				scrap_date: frm.doc.scrap_date,
 				customer: frm.doc.customer,
-				posting_date: frm.doc.scrap_date
+				posting_date: frm.doc.scrap_date,
+				company: frm.doc.company,
 			},
 			callback: function (r) {
 				var doclist = frappe.model.sync(r.message);
@@ -47,7 +73,9 @@ frappe.ui.form.on("Bulk Asset Disposal", {
 			}
 		});
 	},
-
+	company: function(frm) {
+        frm.set_value('branch', '');
+    },
 	on_submit: function(frm) {
 		console.log("on_submit")
 		if(frm.doc.scrap == 'Scrap Asset'){

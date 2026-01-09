@@ -136,7 +136,7 @@ class AssetValueAdjustment(Document):
 
 		je = frappe.new_doc("Journal Entry")
 		je.voucher_type = "Journal Entry"
-		je.naming_series = "Journal Entry"
+		je.naming_series = "Journal Voucher"
 		je.posting_date = self.date
 		je.company = self.company
 		je.remark = f"Asset Adjustment Entry against {self.asset} worth {self.difference_amount}"
@@ -280,7 +280,7 @@ class AssetValueAdjustment(Document):
 			"user_remark": "Value (" + str(value) +" ) added to " + asset.name + " (" + asset.asset_name + ") ",
 			"posting_date": start_date,
 			"branch": asset.branch,
-			"naming_series":'Journal Entry'
+			"naming_series":'Journal Voucher'
 			})
 
 		#credit account update

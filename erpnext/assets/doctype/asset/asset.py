@@ -95,6 +95,7 @@ class Asset(AccountsController):
 		insured_value: DF.Data | None
 		insurer: DF.Data | None
 		is_composite_asset: DF.Check
+		is_donated_asset: DF.Check
 		is_existing_asset: DF.Check
 		is_fully_depreciated: DF.Check
 		is_hostel_asset: DF.Link | None
@@ -134,8 +135,9 @@ class Asset(AccountsController):
 		company_abbr = frappe.get_value("Company", self.company, "abbr")
 		year = getdate(self.purchase_date).year
 
-		from erpnext.accounts.utils import get_autoname_with_number
-		self.name = get_autoname_with_number("RUB-"+company_abbr+"/"+year+"/"+self.abbr+"/"+asset_sub_category_code+"/#####")
+		# from erpnext.accounts.utils import get_autoname_with_number
+		from frappe.model.naming import make_autoname
+		self.name = make_autoname("RUB-"+company_abbr+"/"+str(year)+"/"+self.abbr+"/"+asset_sub_category_code+"/.#####")
 
 
 	def validate(self):
@@ -172,7 +174,7 @@ class Asset(AccountsController):
 
 	# To auto update asset into Hostel Room
 	def update_hostel_room_items(doc):
-		if doc.is_hostel_asset == "Hostel" and doc.hostel:
+		if doc.is_hostel_asset == "Hostel Room" and doc.hostel:
 			hostel_room = frappe.get_doc("Hostel Room", doc.hostel)
 			found = False
 
@@ -265,6 +267,7 @@ class Asset(AccountsController):
 
 			img = qr.make_image(fill_color="black", back_color="white")
 			file_name = f"QR-{self.name}.png"
+			file_name = file_name.replace("/",".")
 			file_path = frappe.get_site_path("public", "files", file_name)
 			img.save(file_path)
 			file_doc = frappe.get_doc(
@@ -366,7 +369,7 @@ class Asset(AccountsController):
 				)
 
 	def set_missing_values(self):
-		finance_books = get_item_details(self.item_code, self.asset_category, self.gross_purchase_amount, self.company, self.asset_sub_category, self.available_for_use_date)
+		finance_books = get_item_details(self.item_code, self.asset_category, self.gross_purchase_amount, self.asset_sub_category, self.available_for_use_date)
 		# frappe.throw(str(finance_books))
 		if len(finance_books) == 0:
 			frappe.throw(f"Map {self.asset_sub_category} and Finance Book in {self.asset_category}")
@@ -486,7 +489,8 @@ class Asset(AccountsController):
 				"asset": self.name,
 				"asset_name": self.asset_name,
 				"target_cost_center": self.cost_center,
-				"to_employee": self.custodian
+				"to_employee": self.custodian,
+				"to_custodian_type": self.is_hostel_asset
 			}
 		]
 		asset_movement = frappe.get_doc(
@@ -498,6 +502,8 @@ class Asset(AccountsController):
 				"transaction_date": transaction_date,
 				"reference_doctype": reference_doctype,
 				"reference_name": reference_docname,
+				"inter_company_transfer": 0,
+				"to_company": None,
 			}
 		).insert()
 		asset_movement.submit()
@@ -793,7 +799,7 @@ class Asset(AccountsController):
 
 	def get_fixed_asset_account(self):
 		fixed_asset_account = get_asset_category_account(
-			"fixed_asset_account", None, self.name, None, self.asset_category, self.company
+			"fixed_asset_account", None, self.name, None, self.asset_category
 		)
 		if not fixed_asset_account:
 			frappe.throw(
@@ -1098,12 +1104,13 @@ def transfer_asset(args):
 
 
 @frappe.whitelist()
-def get_item_details(item_code, asset_category, gross_purchase_amount, company, asset_sub_category, depreciation_start_date=None):
+def get_item_details(item_code, asset_category, gross_purchase_amount, asset_sub_category, depreciation_start_date=None):
 	asset_category_doc = frappe.get_doc("Asset Category", asset_category)
+	parent_company = frappe.db.get_value("Company",{"is_group": 1}, "name")
 	books = []
 	for d in asset_category_doc.finance_books:
 		# frappe.throw(str(company))
-		if d.asset_sub_category == asset_sub_category and d.finance_book == frappe.db.get_value("Company",company,"default_finance_book"):
+		if d.asset_sub_category == asset_sub_category and d.finance_book == frappe.db.get_value("Finance Book", {"company":parent_company}, "name"):
 			books.append(
 				{
 					"finance_book": d.finance_book,
@@ -1129,14 +1136,13 @@ def get_account_info(asset_category,company):
 	asset_cat = []
 	
 	for d in asset_category_doc.accounts:
-			if d.company_name == company:
-				asset_cat.append(
-					{
-						"fixed_asset_account": d.fixed_asset_account,
-						"accumulated_depreciation_account":d.accumulated_depreciation_account,
-						"credit_account":d.credit_account,
-					}
-				)
+			asset_cat.append(
+				{
+					"fixed_asset_account": d.fixed_asset_account.replace(" - RUB", " - "+frappe.db.get_value("Company",company,"abbr")),
+					"accumulated_depreciation_account":d.accumulated_depreciation_account.replace(" - RUB", " - "+frappe.db.get_value("Company",company,"abbr")),
+					"credit_account":d.credit_account.replace(" - RUB", " - "+frappe.db.get_value("Company",company,"abbr")),
+				}
+			)
 	
 	if not asset_cat:
 		# frappe.throw("Set accounts setting for {} in {} asset category".format(company,asset_category))
@@ -1235,6 +1241,7 @@ def make_asset_movement(assets, purpose=None):
 				"asset": asset.get("name"),
 				"source_location": asset.get("location"),
 				"from_employee": asset.get("custodian"),
+				"to_custodian_type": asset.get("is_hostel_asset"),
 			},
 		)
 

@@ -660,7 +660,6 @@ erpnext.utils.update_child_items = function (opts) {
 			},
 			onchange: function () {
 				const me = this;
-
 				frm.call({
 					method: "erpnext.stock.get_item_details.get_item_details",
 					args: {

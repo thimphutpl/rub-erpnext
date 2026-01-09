@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:room_number",
+ "autoname": "format:{room_number}-{college_abbreviation}",
  "creation": "2025-07-29 14:14:41.656542",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -9,10 +9,13 @@
   "hostel_type",
   "room_number",
   "capacity",
+  "room_description",
   "column_break_sbzz",
   "company",
+  "college_abbreviation",
+  "cost_center",
   "hostel_asset_items_section",
-  "table_jpww",
+  "hostel_room_item",
   "student_list_section",
   "student_list",
   "amended_from"
@@ -32,8 +35,7 @@
    "fieldname": "room_number",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Room Number",
-   "unique": 1
+   "label": "Room Number"
   },
   {
    "fieldname": "hostel_type",
@@ -46,11 +48,6 @@
    "fieldname": "hostel_asset_items_section",
    "fieldtype": "Section Break",
    "label": "Hostel Asset Items "
-  },
-  {
-   "fieldname": "table_jpww",
-   "fieldtype": "Table",
-   "options": "Hostel Asset Item"
   },
   {
    "fieldname": "student_list_section",
@@ -78,17 +75,43 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Company/College",
-   "options": "Company"
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hostel_room_item",
+   "fieldtype": "Table",
+   "options": "Hostel Asset Item"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Cost Center",
+   "options": "Cost Center",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "company.abbr",
+   "fieldname": "college_abbreviation",
+   "fieldtype": "Data",
+   "label": "College Abbreviation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "room_description",
+   "fieldtype": "Text",
+   "label": "Room Description"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-01 16:03:22.823863",
+ "modified": "2025-10-28 11:41:26.787921",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Room",
- "naming_rule": "By fieldname",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
@@ -100,6 +123,19 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SSO",
+   "select": 1,
    "share": 1,
    "write": 1
   }

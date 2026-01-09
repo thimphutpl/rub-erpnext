@@ -1,6 +1,6 @@
 {% extends "templates/web.html" %}
 
-{% block title %}{{ _("Search Applicant") }}{% endblock %}
+{% block title %}{{ _("Search Asset") }}{% endblock %}
 
 {% block script %}
 <!-- <script src="assets/js/moment-bundle.min.js"></script>
@@ -16,8 +16,8 @@
                 <div class="col">
                     <form onsubmit="getApplicantInfo(); return false;">
                         <div class="input-group">
-                            <input name="cid" class="form-control" type="text" value="{{ frappe.form_dict.cid or '' }}"
-                                placeholder="{{ _('Enter Applicant CID') }}" required pattern="[0-9]{11}">
+                            <input name="asset_code" class="form-control" type="text" value="{{ frappe.form_dict.asset_code or '' }}"
+                                placeholder="{{ _('Enter Asset Code') }}" >
                             
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-sm btn-primary btn-search">
@@ -25,16 +25,16 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="input-description">
+                        <!-- <div class="input-description">
                             <span class="input-description-text">[Note: CID should be an integer with 11 digits.]</span>
-                        </div>
+                        </div> -->
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="applicant-info"></div>
+    <div id="asset-info"></div>
 
     <style>
         .table-bordered {

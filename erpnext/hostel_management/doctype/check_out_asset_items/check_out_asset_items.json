@@ -1,0 +1,73 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-12-10 14:48:37.495955",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "asset_code",
+  "asset_name",
+  "asset_condition_check_in",
+  "remarks_check_in",
+  "column_break_tccp",
+  "asset_condition_check_out",
+  "remarks_check_out"
+ ],
+ "fields": [
+  {
+   "fieldname": "asset_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Asset Code",
+   "options": "Asset"
+  },
+  {
+   "fieldname": "asset_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Asset Name"
+  },
+  {
+   "fieldname": "asset_condition_check_in",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Asset Condition (Check In)"
+  },
+  {
+   "fieldname": "remarks_check_in",
+   "fieldtype": "Small Text",
+   "label": "Remarks (Check In)"
+  },
+  {
+   "fieldname": "column_break_tccp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "asset_condition_check_out",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Asset Condition (Check Out)",
+   "options": "New\nGood\nFair\nDamaged\nNot Working"
+  },
+  {
+   "fieldname": "remarks_check_out",
+   "fieldtype": "Small Text",
+   "label": "Remarks (Check Out)"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-12-10 14:51:15.613157",
+ "modified_by": "Administrator",
+ "module": "Hostel Management",
+ "name": "Check-Out Asset Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

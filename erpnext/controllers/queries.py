@@ -123,6 +123,34 @@ def lead_query(doctype, txt, searchfield, start, page_len, filters):
 		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
 	)
 
+# searches for leads which are not converted
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def filter_finance_books(doctype, txt, searchfield, start, page_len, filters):
+	# fields = get_fields(doctype, ["fb.name", "fb.company"])
+	searchfields = frappe.get_meta(doctype).get_search_fields()
+	searchfields = " or ".join("fb."+field + " like %(txt)s" for field in searchfields)
+
+	return frappe.db.sql(
+		"""select fb.name, fb.company from `tabFinance Book` fb, `tabCompany` c
+		where
+			fb.company = c.name
+			and c.is_group = 1
+			and (fb.{key} like %(txt)s
+				or fb.name like %(txt)s
+				or fb.company like %(txt)s
+				or {scond})
+		order by
+			fb.idx desc,
+			fb.name, fb.company
+		limit %(page_len)s offset %(start)s""".format(
+			**{
+				"key": searchfield,
+				"scond": searchfields,
+			}
+		),
+		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	)
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
@@ -597,6 +625,24 @@ def get_blanket_orders(doctype, txt, searchfield, start, page_len, filters):
 		)
 	)
 
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def club_action_plan_query(doctype, txt, searchfield, start, page_len, filters):
+	return frappe.db.sql(
+		"""select boi.name, boi.activity_name
+		from `tabClub Action Plan` bo, `tabClub Action Plan Details` boi
+		where
+			boi.parent = bo.name
+			and bo.club_name = {club_name}
+			and bo.company = {company}
+			and bo.name = {club_action_plan}
+			""".format(
+			club_name=frappe.db.escape(filters.get("club_name")),
+			company=frappe.db.escape(filters.get("company")),
+			club_action_plan=frappe.db.escape(filters.get("club_action_plan")),
+		)
+	)
+
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
@@ -877,7 +923,6 @@ def get_tax_template(doctype, txt, searchfield, start, page_len, filters):
 			"company": company,
 			"base_net_rate": filters.get("base_net_rate"),
 		}
-
 		taxes = _get_item_tax_template(args, taxes, for_validate=True)
 		txt = txt.lower()
 		return [(d,) for d in set(taxes) if not txt or txt in d.lower()]

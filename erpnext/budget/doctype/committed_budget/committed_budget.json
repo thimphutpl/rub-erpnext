@@ -19,7 +19,8 @@
   "unconsumed_amount",
   "company",
   "amended_from",
-  "committed_cost_center"
+  "committed_cost_center",
+  "business_activity"
  ],
  "fields": [
   {
@@ -110,13 +111,19 @@
    "fieldtype": "Link",
    "label": "Committed Cost Center",
    "options": "Cost Center"
+  },
+  {
+   "fieldname": "business_activity",
+   "fieldtype": "Link",
+   "label": "Activity",
+   "options": "Planning Activities"
   }
  ],
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-09-02 17:25:37.763717",
+ "modified": "2025-12-20 17:00:36.631503",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Committed Budget",
@@ -171,6 +178,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

@@ -311,7 +311,7 @@ class PurchaseInvoice(BuyingController):
 		self.cal_amount_for_discount()
 
 		self.calculate_taxes_and_totals()
-		self.set_status()
+		self.set_status(update=True)
 		self.validate_purchase_receipt_if_update_stock()
 		validate_inter_company_party(
 			self.doctype, self.supplier, self.company, self.inter_company_invoice_reference
@@ -335,6 +335,7 @@ class PurchaseInvoice(BuyingController):
 		# frappe.throw(str(self.outstanding_amount))
 		self.outstanding_amount = self.total - self.discount- flt(self.write_off_amount) - flt(self.total_advance)+(self.total_taxes_and_charges)
 		# frappe.throw(str(self.outstanding_amount))
+	
 
 	def cal_total_discount_for_each_item(self):
 		self.discount = 0
@@ -354,10 +355,10 @@ class PurchaseInvoice(BuyingController):
 		# branchname=doc.branch
 		cost_center= frappe.db.get_value("Branch", doc.branch,"cost_center")
 		query = """
-        SELECT warehouse 
-        FROM `tabCost Center` 
-        WHERE name=%s
-        """
+		SELECT warehouse 
+		FROM `tabCost Center` 
+		WHERE name=%s
+		"""
 
 		warehouse = frappe.db.sql(query, (cost_center,), as_dict=True)
 		if warehouse:
@@ -918,9 +919,10 @@ class PurchaseInvoice(BuyingController):
 				budget_cost_center = bud_acc_dtl.cost_center
 			else:
 				#check Budget Cost for child cost centers
-				cc_doc = frappe.get_doc("Cost Center", cost_center)
+				# cc_doc = frappe.get_doc("Cost Center", cost_center)
 				# budget_cost_center = cc_doc.budget_cost_center if cc_doc.use_budget_from_parent else cost_center
 				budget_cost_center =  cost_center
+				# frappe.throw(budget_cost_center)
 				committed_consumed_cost_center = cost_center
 			if expense:
 				if bud_acc_dtl.account_type in ("Fixed Asset", "Expense Account"):
@@ -1118,6 +1120,11 @@ class PurchaseInvoice(BuyingController):
 			# else self.base_grand_total,
 			self.precision("base_grand_total"),
 		)
+		# frappe.throw("Outstanding Amount: "+str(self.outstanding_amount))
+
+			
+		# frappe.throw("Base Grand Total: "+str(base_grand_total))	
+
 		# if self.taxes_and_charges_deducted > 0:
 		# 	# base_grand_total = (self.total) -(self.taxes_and_charges_deducted)
 		# 	base_grand_total = self.base_grand_total if self.base_grand_total else self.grand_total
@@ -1130,7 +1137,7 @@ class PurchaseInvoice(BuyingController):
 					advance_amount += flt(a.allocated_amount)
 					# advance_amount_pe_currency == flt(a.advance_amount_pe_currency,2)
 					# base_grand_total -= flt(a.allocated_amount)
-
+		# frappe.throw("Advance Amount: "+str(advance_amount))
 		# if advance_amount > 0:
 		# 	# base_grand_total -= flt(advance_amount)
 			
@@ -1176,7 +1183,8 @@ class PurchaseInvoice(BuyingController):
 					item=self,
 				)
 			)
-
+		
+	
 	def make_item_gl_entries(self, gl_entries):
 		# item gl entries
 		stock_items = self.get_stock_items()
@@ -2161,34 +2169,91 @@ class PurchaseInvoice(BuyingController):
 		outstanding_amount = flt(self.outstanding_amount, self.precision("outstanding_amount"))
 		total = get_total_in_party_account_currency(self)
 
-		if not status:
-			if self.docstatus == 2:
-				status = "Cancelled"
-			elif self.docstatus == 1:
-				if self.is_internal_transfer():
-					self.status = "Internal Transfer"
-				elif is_overdue(self, total):
-					self.status = "Overdue"
-				elif 0 < outstanding_amount < total:
-					self.status = "Partly Paid"
-				elif outstanding_amount > 0 and getdate(self.due_date) >= getdate():
-					self.status = "Unpaid"
-				# Check if outstanding amount is 0 due to debit note issued against invoice
-				elif self.is_return == 0 and frappe.db.get_value(
-					"Purchase Invoice", {"is_return": 1, "return_against": self.name, "docstatus": 1}
-				):
-					self.status = "Debit Note Issued"
-				elif self.is_return == 1:
-					self.status = "Return"
-				elif outstanding_amount <= 0:
+		# if not status:
+		if self.docstatus == 2:
+			status = "Cancelled"
+		elif self.docstatus == 1:
+			if self.is_internal_transfer():
+				self.status = "Internal Transfer"
+			elif is_overdue(self, total):
+				self.status = "Overdue"
+			elif 0 < outstanding_amount < total:
+				self.status = "Partly Paid"
+			elif outstanding_amount > 0 and getdate(self.due_date) >= getdate():
+				self.status = "Unpaid"
+			elif self.is_return == 0 and frappe.db.get_value(
+				"Purchase Invoice", {"is_return": 1, "return_against": self.name, "docstatus": 1}
+			):
+				self.status = "Debit Note Issued"
+			elif self.is_return == 1:
+				self.status = "Return"
+			elif outstanding_amount <= 0:
+				allocated_amount = 0
+				self.status = "Paid"
+			
+				for a in frappe.get_all("Payment Entry Reference", {"reference_name": self.name, "docstatus": 1}, "allocated_amount"):
+					allocated_amount += flt(a.allocated_amount)
+				if allocated_amount == flt(self.base_grand_total):
 					self.status = "Paid"
 				else:
-					self.status = "Submitted"
+					self.status = "Partly Paid"
 			else:
-				self.status = "Draft"
+				self.status = "Submitted"
+
+		else:
+			self.status = "Draft"
 
 		if update:
 			self.db_set("status", self.status, update_modified=update_modified)
+	# def set_status(self, update=False, status=None, update_modified=True):
+	# 	# 🛡️ Prevent automatic recalculation when triggered by update_voucher_outstanding
+	# 	for frame in inspect.stack():
+	# 		if "update_voucher_outstanding" in frame.function:
+	# 			return
+
+	# 	# 🆕 Handle new/amended documents
+	# 	if self.is_new():
+	# 		if self.get("amended_from"):
+	# 			self.status = "Draft"
+	# 		return
+
+	# 	# Calculate outstanding & total
+	# 	outstanding_amount = flt(self.outstanding_amount, self.precision("outstanding_amount"))
+	# 	total = get_total_in_party_account_currency(self)
+
+	# 	# 🧾 Main status logic
+	# 	if self.docstatus == 2:
+	# 		status = "Cancelled"
+	# 	elif self.docstatus == 1:
+	# 		if self.is_internal_transfer():
+	# 			self.status = "Internal Transfer"
+	# 		elif is_overdue(self, total):
+	# 			self.status = "Overdue"
+	# 		elif 0 < outstanding_amount < total:
+	# 			frappe.msgprint(f"Outstanding: {outstanding_amount}")
+	# 			self.status = "Partly Paid"
+	# 		elif outstanding_amount > 0 and getdate(self.due_date) >= getdate():
+	# 			self.status = "Unpaid"
+	# 		elif self.is_return == 0 and frappe.db.get_value(
+	# 			"Purchase Invoice", {"is_return": 1, "return_against": self.name, "docstatus": 1}
+	# 		):
+	# 			self.status = "Debit Note Issued"
+	# 		elif self.is_return == 1:
+	# 			self.status = "Return"
+	# 		elif outstanding_amount <= 0:
+	# 			frappe.msgprint(f"Outstanding: {outstanding_amount}")
+	# 			self.status = "Paid"
+	# 		else:
+	# 			self.status = "Submitted"
+	# 	else:
+	# 		self.status = "Draft"
+
+	# 	# 🧩 Optional debug print
+	# 	frappe.msgprint(f"Final Status: {self.status}")
+
+	# 	# ✅ Update DB if requested
+	# 	if update:
+	# 		frappe.db.set_value(self.doctype, self.name, "status", self.status, update_modified=update_modified)
 
 
 # to get details of purchase invoice/receipt from which this doc was created for exchange rate difference handling

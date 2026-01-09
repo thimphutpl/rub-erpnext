@@ -205,8 +205,48 @@ class PaymentEntry(AccountsController):
 		self.update_payment_schedule()
 		self.update_payment_requests()
 		self.make_advance_payment_ledger_entries()
-		self.update_advance_paid()  # advance_paid_status depends on the payment request amount
+		self.update_advance_paid()  
 		self.set_status()
+		self.update_research_milestones()
+ 
+ 	# added sonam
+	def update_research_milestones(self):
+		"""
+		Update Reference Payment Entry for approved milestones.
+		Handles submit, cancel, and amend properly.
+		"""
+		milestones = frappe.get_all(
+			"Research Milestone Item",
+			filters={
+				"status": "Approved",
+				"parent": self.research_reference
+				  
+			},
+			fields=["name", "reference_payment_entry"]
+		)
+
+		if self.docstatus == 1: 
+			for milestone in milestones:
+				if not milestone.reference_payment_entry or frappe.db.get_value("Payment Entry", milestone.reference_payment_entry, "docstatus") == 2:
+					frappe.db.set_value(
+						"Research Milestone Item",
+						milestone.name,
+						"reference_payment_entry",
+						self.name
+					)
+
+		elif self.docstatus == 2:
+			for milestone in milestones:
+				if milestone.reference_payment_entry == self.name:
+					frappe.db.set_value(
+						"Research Milestone Item",
+						milestone.name,
+						"reference_payment_entry",
+						None
+					)
+
+		
+
 
 	def validate_for_repost(self):
 		validate_docs_for_voucher_types(["Payment Entry"])
@@ -650,7 +690,7 @@ class PaymentEntry(AccountsController):
 				)
 
 	def validate_mandatory(self):
-		for field in ("paid_amount", "received_amount", "source_exchange_rate", "target_exchange_rate"):
+		for field in ("paid_amount", "source_exchange_rate", "target_exchange_rate"):
 			if not self.get(field):
 				frappe.throw(_("{0} is mandatory").format(self.meta.get_label(field)))
 
@@ -1220,6 +1260,7 @@ class PaymentEntry(AccountsController):
 
 		base_party_amount = flt(self.base_total_allocated_amount) + flt(base_unallocated_amount)
 		included_taxes = self.get_included_taxes()
+	
 
 		if self.payment_type == "Receive":
 			self.difference_amount = base_party_amount - self.base_received_amount + included_taxes
@@ -1227,6 +1268,7 @@ class PaymentEntry(AccountsController):
 			self.difference_amount = self.base_paid_amount - base_party_amount - included_taxes
 		else:
 			self.difference_amount = self.base_paid_amount - flt(self.base_received_amount) - included_taxes
+
 
 		total_deductions = sum(flt(d.amount) for d in self.get("deductions"))
 
@@ -2164,8 +2206,8 @@ class PaymentEntry(AccountsController):
 def get_matched_payment_request_of_references(references=None):
 	"""
 	Get those `Payment Requests` which are matched with `References`.\n
-	        - Amount must be same.
-	        - Only single `Payment Request` available for this amount.
+			- Amount must be same.
+			- Only single `Payment Request` available for this amount.
 
 	Example: [(reference_doctype, reference_name, allocated_amount, payment_request), ...]
 	"""
@@ -2219,8 +2261,8 @@ def get_matched_payment_request_of_references(references=None):
 def get_references_outstanding_amount(references=None):
 	"""
 	Fetch accurate outstanding amount of `References`.\n
-	    - If `Payment Term` is set, then fetch outstanding amount from `Payment Schedule`.
-	    - If `Payment Term` is not set, then fetch outstanding amount from `References` it self.
+		- If `Payment Term` is set, then fetch outstanding amount from `Payment Schedule`.
+		- If `Payment Term` is not set, then fetch outstanding amount from `References` it self.
 
 	Example: {(reference_doctype, reference_name, payment_term): outstanding_amount, ...}
 	"""
@@ -2267,7 +2309,7 @@ def get_outstanding_of_references_with_payment_term(references=None):
 def get_outstanding_of_references_with_no_payment_term(references):
 	"""
 	Fetch outstanding amount of `References` which have no `Payment Term` set.\n
-	        - Fetch outstanding amount from `References` it self.
+			- Fetch outstanding amount from `References` it self.
 
 	Note: `None` is used for allocation of `Payment Request`
 	Example: {(reference_doctype, reference_name, None): outstanding_amount, ...}
@@ -2860,7 +2902,6 @@ def get_reference_details(
 
 	ref_doc = frappe.get_doc(reference_doctype, reference_name)
 	company_currency = ref_doc.get("company_currency") or erpnext.get_company_currency(ref_doc.company)
-
 	# Only applies for Reverse Payment Entries
 	account_type = None
 	payment_type = None
@@ -2964,6 +3005,7 @@ def get_payment_entry(
 	if not party_type:
 		party_type = set_party_type(dt)
 
+
 	party_account = set_party_account(dt, dn, doc, party_type)
 	party_account_currency = set_party_account_currency(dt, party_account, doc)
 
@@ -3030,7 +3072,7 @@ def get_payment_entry(
 		pe.project = doc.get("project") or reduce(
 			lambda prev, cur: prev or cur, [x.get("project") for x in doc.get("items")], None
 		)  # get first non-empty project from items
-
+    
 	if pe.party_type in ["Customer", "Supplier"]:
 		bank_account = get_party_bank_account(pe.party_type, pe.party)
 		pe.set("party_bank_account", bank_account)
@@ -3123,7 +3165,7 @@ def get_payment_entry(
 def get_open_payment_requests_for_references(references=None):
 	"""
 	Fetch all unpaid Payment Requests for the references. \n
-	        - Each reference can have multiple Payment Requests. \n
+			- Each reference can have multiple Payment Requests. \n
 
 	Example: {("Sales Invoice", "SINV-00001"): {"PREQ-00001": 1000, "PREQ-00002": 2000}}
 	"""
@@ -3172,29 +3214,29 @@ def allocate_open_payment_requests_to_references(references=None, precision=None
 	Allocate unpaid Payment Requests to the references. \n
 	---
 	- Allocation based on below factors
-	    - Reference Allocated Amount
-	    - Reference Outstanding Amount (With Payment Terms or without Payment Terms)
-	    - Reference Payment Request's outstanding amount
+		- Reference Allocated Amount
+		- Reference Outstanding Amount (With Payment Terms or without Payment Terms)
+		- Reference Payment Request's outstanding amount
 	---
 	- Allocation based on below scenarios
-	    - Reference's Allocated Amount == Payment Request's Outstanding Amount
-	        - Allocate the Payment Request to the reference
-	        - This PR will not be allocated further
-	    - Reference's Allocated Amount < Payment Request's Outstanding Amount
-	        - Allocate the Payment Request to the reference
-	        - Reduce the PR's outstanding amount by the allocated amount
-	        - This PR can be allocated further
-	    - Reference's Allocated Amount > Payment Request's Outstanding Amount
-	        - Allocate the Payment Request to the reference
-	        - Reduce Allocated Amount of the reference by the PR's outstanding amount
-	        - Create a new row for the remaining amount until the Allocated Amount is 0
-	            - Allocate PR if available
+		- Reference's Allocated Amount == Payment Request's Outstanding Amount
+			- Allocate the Payment Request to the reference
+			- This PR will not be allocated further
+		- Reference's Allocated Amount < Payment Request's Outstanding Amount
+			- Allocate the Payment Request to the reference
+			- Reduce the PR's outstanding amount by the allocated amount
+			- This PR can be allocated further
+		- Reference's Allocated Amount > Payment Request's Outstanding Amount
+			- Allocate the Payment Request to the reference
+			- Reduce Allocated Amount of the reference by the PR's outstanding amount
+			- Create a new row for the remaining amount until the Allocated Amount is 0
+				- Allocate PR if available
 	---
 	- Note:
-	    - Priority is given to the first Payment Request of respective references.
-	    - Single Reference can have multiple rows.
-	        - With Payment Terms or without Payment Terms
-	        - With Payment Request or without Payment Request
+		- Priority is given to the first Payment Request of respective references.
+		- Single Reference can have multiple rows.
+			- With Payment Terms or without Payment Terms
+			- With Payment Request or without Payment Request
 	"""
 	if not references:
 		return
@@ -3318,7 +3360,7 @@ def get_bank_cash_account(doc, bank_account):
 def set_party_type(dt):
 	if dt in ("Sales Invoice", "Sales Order", "Dunning"):
 		party_type = "Customer"
-	elif dt in ("Purchase Invoice", "Purchase Order"):
+	elif dt in ("Purchase Order", "Purchase Invoice"):
 		party_type = "Supplier"
 	return party_type
 
@@ -3341,10 +3383,11 @@ def set_party_account_currency(dt, party_account, doc):
 	return party_account_currency
 
 
+
 def set_payment_type(dt, doc):
 	if (
 		(dt == "Sales Order" or (dt == "Sales Invoice" and doc.outstanding_amount > 0))
-		or (dt == "Purchase Invoice" and doc.outstanding_amount < 0)
+		# or (dt == "Purchase Invoice" and doc.outstanding_amount < 0)
 		or dt == "Dunning"
 	):
 		payment_type = "Receive"
@@ -3713,3 +3756,26 @@ def make_bank_payment(source_name, target_doc=None):
 		ignore_permissions=True,
 	)
 	return doc
+# @frappe.whitelist()
+# def get_tds_accounts(doctype, txt, searchfield, start, page_len, filters=None):
+# 	company = filters.get("company") if filters else None
+# 	if not company:
+# 		return []
+
+# 	accounts = frappe.get_all(
+# 		"Account",
+# 		filters={
+# 			"company": company,
+# 			"account_name": ["like", "%TDS%"]
+# 		},
+# 		fields=["name", "account_name"],
+# 		limit_page_length=page_len
+# 	)
+
+# 	# Return one entry per item
+# 	return [
+# 		{
+# 			t["name"]
+# 		}
+# 		for t in accounts
+# 	]

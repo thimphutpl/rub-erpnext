@@ -20,5 +20,6 @@ class ClubActionPlanDetails(Document):
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
+		status: DF.Literal["Incomplete", "Completed"]
 	# end: auto-generated types
 	pass

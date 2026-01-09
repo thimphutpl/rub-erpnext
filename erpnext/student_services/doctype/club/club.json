@@ -1,0 +1,111 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "format:{club_name} - {abbr}",
+ "creation": "2025-08-26 14:17:20.549863",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "club_details_section",
+  "company",
+  "club_name",
+  "club_capacity",
+  "column_break_zmxl",
+  "abbr",
+  "club_mangement_section",
+  "club_management",
+  "club_activities_section",
+  "club_activities"
+ ],
+ "fields": [
+  {
+   "fieldname": "club_details_section",
+   "fieldtype": "Section Break",
+   "label": "Club Details"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "club_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Club Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "club_capacity",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Club Capacity",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_zmxl",
+   "fieldtype": "Column Break",
+   "options": "226386781"
+  },
+  {
+   "fetch_from": "company.abbr",
+   "fieldname": "abbr",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Abbr. College"
+  },
+  {
+   "fieldname": "club_mangement_section",
+   "fieldtype": "Section Break",
+   "label": "Club Management"
+  },
+  {
+   "fieldname": "club_activities_section",
+   "fieldtype": "Section Break",
+   "label": "Club Activities "
+  },
+  {
+   "fieldname": "club_activities",
+   "fieldtype": "Table",
+   "options": "Club Action Plan Details"
+  },
+  {
+   "fieldname": "club_management",
+   "fieldtype": "Table",
+   "options": "Club Management Details"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-15 12:20:01.767565",
+ "modified_by": "kalden.dorji@thimphutechpark.bt",
+ "module": "Student Services",
+ "name": "Club",
+ "naming_rule": "Expression",
+ "owner": "kalden.dorji@thimphutechpark.bt",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

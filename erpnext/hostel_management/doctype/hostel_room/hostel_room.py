@@ -16,11 +16,14 @@ class HostelRoom(Document):
 
 		amended_from: DF.Link | None
 		capacity: DF.Int
-		company: DF.Link | None
+		college_abbreviation: DF.Data | None
+		company: DF.Link
+		cost_center: DF.Link
+		hostel_room_item: DF.Table[Document]
 		hostel_type: DF.Link | None
+		room_description: DF.Text | None
 		room_number: DF.Data | None
 		student_list: DF.Table[Document]
-		table_jpww: DF.Table[Document]
 	# end: auto-generated types
 	from typing import TYPE_CHECKING
 

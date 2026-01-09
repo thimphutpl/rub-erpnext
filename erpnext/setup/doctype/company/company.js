@@ -205,7 +205,7 @@ frappe.ui.form.on("Company", {
 										company: data.company_name,
 									},
 									freeze: true,
-									callback: function (r, rt) {},
+									callback: function (r, rt) { },
 									onerror: function () {
 										frappe.msgprint(__("Wrong Password"));
 									},

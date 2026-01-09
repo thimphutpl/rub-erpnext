@@ -20,6 +20,7 @@
   "update_existing_price_list_rate",
   "conversion_factor_section",
   "allow_to_edit_stock_uom_qty_for_sales",
+  "allow_to_make_quality_inspection_after_purchase_or_delivery",
   "column_break_lznj",
   "allow_to_edit_stock_uom_qty_for_purchase",
   "stock_validations_tab",
@@ -33,6 +34,7 @@
   "show_barcode_field",
   "clean_description_html",
   "allow_internal_transfer_at_arms_length_price",
+  "allow_uom_with_conversion_rate_defined_in_item",
   "quality_inspection_settings_section",
   "action_if_quality_inspection_is_not_submitted",
   "column_break_23",
@@ -467,6 +469,18 @@
    "fieldname": "allow_existing_serial_no",
    "fieldtype": "Check",
    "label": "Allow existing Serial No to be Manufactured/Received again"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_to_make_quality_inspection_after_purchase_or_delivery",
+   "fieldtype": "Check",
+   "label": "Allow to Make Quality Inspection After Purchase or Delivery"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_uom_with_conversion_rate_defined_in_item",
+   "fieldtype": "Check",
+   "label": "Allow UOM with Conversion Rate Defined In Item"
   }
  ],
  "icon": "icon-cog",
@@ -474,7 +488,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-12-09 17:52:36.030456",
+ "modified": "2025-09-10 09:44:44.496112",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Stock Settings",
@@ -495,6 +509,7 @@
   }
  ],
  "quick_entry": 1,
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "ASC",
  "states": [],

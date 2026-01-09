@@ -1,48 +1,44 @@
 // JavaScript Function to Retrieve Applicant Information
 function getApplicantInfo() {
-    var cidInput = document.getElementsByName("cid")[0];
-    var cidValue = parseInt(cidInput.value);
+    console.log("here wai")
 
-    if (!cidInput.checkValidity() || isNaN(cidValue) || cidValue.toString().length !== 11) {
-        alert("Please enter a valid 11-digit CID (numeric only).");
-        return;
-    }
+    let assetValue = document.querySelector("input[name='asset_code']").value;
+    console.log(assetValue)
+    // if (isNaN(assetValue) || assetValue.toString().length !== 11) {
+    //     alert("Please enter a valid 11-digit CID (numeric only).");
+    //     return;
+    // }
     frappe.call({
-        method: "erpnext.www.check-status.index.get_applicant_info", // Replace with the actual method path
+        method: "erpnext.www.check-status.index.get_asset_info", // Replace with the actual method path
         args: {
-            cid: cidValue
+            asset_code: assetValue
         },
         callback: function (r) {
             if (!r.message) {
                 alert("Error: Unable to retrieve applicant information.");
                 return;
             }
-            console.log(r.message) 
-            displayApplicantInfo(r.message);
+            console.log(r.message)
+            displayAssetInfo(r.message);
         }
     });
 }
 
-function displayApplicantInfo(response) {
-    var infoContainer = document.getElementById("applicant-info");
+function displayAssetInfo(response) {
+    var infoContainer = document.getElementById("asset-info");
 
-    if (response && response.applicant_info && response.applicant_info.length > 0) {
-        var applicant = response.applicant_info[0]; // Access the first applicant in the array
+    if (response && response.asset_info && response.asset_info.length > 0) {
+        var asset = response.asset_info[0]; // Access the first applicant in the array
 
         var tableHTML = '<table class="table table-bordered table-striped table-condensed table-custom-width">' +
             '<colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>' +
-            '<thead><tr><th colspan="2" class="table-heading-one">Applicant Information</th></tr></thead>' +
-            '<tbody>' + 
-            '<tr><td class="table-heading">CID</td><td>' + applicant.cid + '</td></tr>' +
-            '<tr><td class="table-heading">Applicant Name</td><td>' + applicant.applicant_name + '</td></tr>' +
-            '<tr><td class="table-heading">Employment Type</td><td>' + applicant.employment_type + '</td></tr>' +
-            '<tr><td class="table-heading">Location</td><td>' + applicant.work_station + '</td></tr>' +
-            '<tr><td class="table-heading">Applicant Rank</td><td>' + applicant.applicant_rank + '</td></tr>' +
-            '<tr><td class="table-heading">Mobile No</td><td>' + applicant.mobile_no + '</td></tr>' +
-            '<tr><td class="table-heading">Status</td><td>' + applicant.application_status + '</td></tr>' +
-            '<tr><td class="table-heading">Building Classification</td><td>' + applicant.building_classification + '</td></tr>' +
-            '<tr><td class="table-heading">Application Date & Time</td><td>' + applicant.application_date_time + '</td></tr>' +
-           
+            '<thead><tr><th colspan="2" class="table-heading-one">Asset Information</th></tr></thead>' +
+            '<tbody>' +
+            '<tr><td class="table-heading">Asset Code</td><td>' + asset.name + '</td></tr>' +
+            '<tr><td class="table-heading">Asset Name</td><td>' + asset.asset_name + '</td></tr>' +
+            '<tr><td class="table-heading">Custodian/Hostel/Room</td><td>' + asset.custodian + '</td></tr>' +
+            '<tr><td class="table-heading">Purchase Date</td><td>' + asset.purchase_date + '</td></tr>' +
+            '<tr><td class="table-heading">Asset Rate</td><td>' + asset.asset_rate + '</td></tr>' +
             '</tbody></table>';
 
         infoContainer.innerHTML = tableHTML;
@@ -51,3 +47,14 @@ function displayApplicantInfo(response) {
     }
 }
 
+frappe.ready(function () {
+    console.log("loaded")
+    // Get the input field
+    let inputField = document.querySelector("input[name='asset_code']");
+    let asset_code = inputField.value;
+
+    // If input has a value, fetch and display details
+    if (asset_code && asset_code.trim() !== "") {
+        getApplicantInfo(asset_code);
+    }
+});

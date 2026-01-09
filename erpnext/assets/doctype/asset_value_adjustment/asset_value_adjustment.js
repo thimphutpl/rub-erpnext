@@ -8,7 +8,6 @@ cur_frm.add_fetch("asset","asset_account", "fixed_asset_account");
 
 frappe.ui.form.on("Asset Value Adjustment", {
 	setup: function (frm) {
-		frm.add_fetch("company", "cost_center", "cost_center");
 		frm.set_query("cost_center", function () {
 			return {
 				filters: {
@@ -25,6 +24,18 @@ frappe.ui.form.on("Asset Value Adjustment", {
 				},
 			};
 		});
+		frappe.db.get_value("Company", {"is_group": 1}, "name").then((r) => {
+			if(r.message && r.message.name){
+				frm.set_query('finance_book', function(doc) {
+					return {
+						filters: {
+							"company": r.message.name
+						}
+					}
+				});
+			}
+
+		})
 	},
 
 	onload: function (frm) {

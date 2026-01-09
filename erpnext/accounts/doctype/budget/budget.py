@@ -138,6 +138,8 @@ class Budget(Document):
 	def before_naming(self):
 		self.naming_series = f"{{{frappe.scrub(self.budget_against)}}}./.{self.fiscal_year}/.###"
 
+	def validate_against_planning_activities(args):
+		frappe.throw("GUGU")
 
 def validate_expense_against_budget(args, expense_amount=0):
 	args = frappe._dict(args)

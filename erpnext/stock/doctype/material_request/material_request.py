@@ -34,7 +34,7 @@ class MaterialRequest(BuyingController):
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
-		branch: DF.Link
+		branch: DF.Link | None
 		company: DF.Link
 		customer: DF.Link | None
 		items: DF.Table[MaterialRequestItem]
@@ -447,7 +447,7 @@ def make_purchase_order(source_name, target_doc=None, args=None):
 			},
 		},
 		target_doc,
-		postprocess,
+		# postprocess,
 	)
 
 	doclist.set_onload("load_after_mapping", False)
@@ -822,11 +822,14 @@ def make_in_transit_stock_entry(source_name, in_transit_warehouse):
 	return ste_doc
 
 @frappe.whitelist()
-def fetch_expense_account(item_code):
+def fetch_expense_account(item_code, company=None):
     item = frappe.get_doc("Item", item_code)
     if not item:
         frappe.throw(f"Item {item_code} not found")
 
+    expense_account = None
+    
+    # For Fixed Asset item group
     if item.item_group == "Fixed Asset":
         if not item.item_sub_group:
             frappe.throw(f"Item Sub Group not set for {item_code}")
@@ -846,15 +849,17 @@ def fetch_expense_account(item_code):
         )
         if not fixed_asset_account:
             frappe.throw(f"No Fixed Asset Account found for Asset Category {asset_category}")
-        return fixed_asset_account
+        expense_account = fixed_asset_account
 
     # Consumable case
-    elif item.item_group in ["Consumable","Services"]:
+    elif item.item_group in ["Consumable", "Services", "Sales Product", "Spare Parts", "Services Miscellaneous", "Services Works"]:	
         if not item.item_sub_group:
             frappe.throw(f"Item Sub Group not set for {item_code}")
         expense_head = frappe.db.get_value("Item Sub Group", item.item_sub_group, "expense_head")
         if not expense_head:
             frappe.throw(f"No Expense Head set for Item Sub Group {item.item_sub_group}")
-        return expense_head
+        expense_account = expense_head
+    else:
+        frappe.throw(f"No expense account found for item {item_code}")
 
-    frappe.throw(f"No expense account found for item {item_code}")
+    return expense_account

@@ -75,6 +75,8 @@ class AssetCategory(Document):
 			"depreciation_expense_account": {"account_type": ["Depreciation"]},
 			"capital_work_in_progress_account": {"account_type": ["Capital Work in Progress"]},
 		}
+		if len(self.accounts) > 1:
+			frpape.throw(_("You can only have one row in Accounts table."), title=_("Invalid"))
 		for d in self.accounts:
 			for fieldname in account_type_map.keys():
 				if d.get(fieldname):
@@ -132,8 +134,24 @@ def get_asset_category_account(
 
 	account = frappe.db.get_value(
 		"Asset Category Account",
-		filters={"parent": asset_category, "company_name": company},
+		filters={"parent": asset_category},
 		fieldname=fieldname,
 	)
 
 	return account
+
+
+@frappe.whitelist()
+def get_fixed_asset_account(asset_category=None):
+	"""
+	Returns the Depreciation Expense Account for a given Asset Category.
+	"""
+	if not asset_category:
+		return {}
+
+	doc = frappe.get_doc("Asset Category", asset_category)
+
+	if doc.accounts:
+		# Assuming first row is enough; you can modify to select based on company if needed
+		return {"fixed_asset_account": doc.accounts[0].fixed_asset_account}
+	return {}

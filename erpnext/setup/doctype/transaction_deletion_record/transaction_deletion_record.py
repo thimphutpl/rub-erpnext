@@ -501,13 +501,21 @@ def is_deletion_doc_running(company: str | None = None, err_msg: str | None = No
 			get_link_to_form("Transaction Deletion Record", running_deletion_job), err_msg or ""
 		),
 	)
-
-
+	
 def check_for_running_deletion_job(doc, method=None):
 	# Check if DocType has 'company' field
 	if doc.doctype in LEDGER_ENTRY_DOCTYPES or not doc.meta.has_field("company"):
 		return
 
+	company = None
+
+	if isinstance(doc.company, str):
+		company = doc.company
+	elif isinstance(doc.company, list) and doc.company:
+		first_entry = doc.company[0]
+		if isinstance(first_entry, dict) and "company" in first_entry:
+			company = first_entry["company"]
+
 	is_deletion_doc_running(
-		doc.company, _("Cannot make any transactions until the deletion job is completed")
+		company, _("Cannot make any transactions until the deletion job is completed")
 	)

@@ -1,0 +1,176 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-11-03 16:06:48.794994",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "student_code",
+  "full_name",
+  "programme",
+  "semester",
+  "year",
+  "column_break_ygpu",
+  "company",
+  "deductions_section",
+  "eligible_for_rent",
+  "eligible_for_mess_fees",
+  "stipend_breakup_section",
+  "earnings",
+  "column_break_fsqj",
+  "deductions",
+  "section_break_nxxv",
+  "total_earnings",
+  "total_deductions",
+  "net_amount",
+  "section_break_bong",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "student_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Student Code",
+   "options": "Student",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "student_code.student_name",
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "student_code.programme",
+   "fieldname": "programme",
+   "fieldtype": "Data",
+   "label": "Programme",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "student_code.semester",
+   "fieldname": "semester",
+   "fieldtype": "Data",
+   "label": "Semester",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "student_code.year",
+   "fieldname": "year",
+   "fieldtype": "Data",
+   "label": "Year",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ygpu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "student_code.company",
+   "fieldname": "company",
+   "fieldtype": "Data",
+   "label": "College",
+   "read_only": 1
+  },
+  {
+   "fieldname": "deductions_section",
+   "fieldtype": "Section Break",
+   "label": "Deductions"
+  },
+  {
+   "default": "0",
+   "fieldname": "eligible_for_rent",
+   "fieldtype": "Check",
+   "label": "Eligible for Rent"
+  },
+  {
+   "default": "0",
+   "fieldname": "eligible_for_mess_fees",
+   "fieldtype": "Check",
+   "label": "Eligible for Mess Fees"
+  },
+  {
+   "fieldname": "stipend_breakup_section",
+   "fieldtype": "Section Break",
+   "label": "Stipend Breakup"
+  },
+  {
+   "fieldname": "earnings",
+   "fieldtype": "Table",
+   "label": "Earnings",
+   "options": "Stipend Details"
+  },
+  {
+   "fieldname": "column_break_fsqj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "deductions",
+   "fieldtype": "Table",
+   "label": "Deductions",
+   "options": "Stipend Details"
+  },
+  {
+   "fieldname": "section_break_nxxv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_earnings",
+   "fieldtype": "Currency",
+   "label": "Total Earnings"
+  },
+  {
+   "fieldname": "total_deductions",
+   "fieldtype": "Currency",
+   "label": "Total Deductions "
+  },
+  {
+   "fieldname": "net_amount",
+   "fieldtype": "Data",
+   "label": "Net Amount"
+  },
+  {
+   "fieldname": "section_break_bong",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Stipend Structure",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-12-01 10:38:24.260198",
+ "modified_by": "Administrator",
+ "module": "Student Services",
+ "name": "Stipend Structure",
+ "owner": "sonam.choki@thimphutechpark.bt",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

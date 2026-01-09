@@ -17,6 +17,7 @@ class ClubManagementDetails(Document):
 		designation: DF.Data | None
 		employee_id: DF.Link | None
 		first_name: DF.Data | None
+		full_name_employee: DF.Data | None
 		last_name: DF.Data | None
 		parent: DF.Data
 		parentfield: DF.Data

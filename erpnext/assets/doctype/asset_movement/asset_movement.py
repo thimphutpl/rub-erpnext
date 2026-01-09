@@ -29,10 +29,12 @@ class AssetMovement(Document):
 		from_employee: DF.Link | None
 		from_hostel: DF.Link | None
 		from_roombuilding: DF.Link | None
+		inter_company_transfer: DF.Check
 		project: DF.Link | None
 		purpose: DF.Literal["", "Transfer", "Receipt"]
 		reference_doctype: DF.Link | None
 		reference_name: DF.DynamicLink | None
+		to_company: DF.Link | None
 		to_employee: DF.Link | None
 		to_hostel: DF.Link | None
 		to_roombuilding: DF.Link | None
@@ -57,7 +59,7 @@ class AssetMovement(Document):
 			if self.purpose == "Transfer" and status in ("Draft", "Scrapped", "Sold"):
 				frappe.throw(_("{0} asset cannot be transferred").format(status))
 
-			if company != self.company:
+			if self.inter_company_transfer == 0 and company != self.company:
 				frappe.throw(_("Asset {0} does not belong to company {1}").format(d.asset, self.company))
 			if d.to_custodian_type == "Employee" and not (d.from_employee and d.to_employee):
 				if not d.source_cost_center and not d.from_employee and not d.to_employee:
@@ -225,24 +227,30 @@ class AssetMovement(Document):
 						_("Employee {0} does not belongs to the company {1}").format(d.to_employee, self.company)
 					)
 			elif d.to_custodian_type == "Hostel Room":
-				if d.to_employee and frappe.db.get_value("Hostel Room", d.to_employee, "company") != self.company:
+				if d.to_employee and frappe.db.get_value("Hostel Room", d.to_employee, "company") != self.company and self.inter_company_transfer == 0:
 					frappe.throw(
 						_("Hostel Room {0} does not belong to the company {1}").format(d.to_employee, self.company)
 					)
 			elif d.to_custodian_type == "Room":
-				if d.to_employee and frappe.db.get_value("Room", d.to_employee, "company") != self.company:
+				if d.to_employee and frappe.db.get_value("Room", d.to_employee, "company") != self.company and self.inter_company_transfer == 0:
 					frappe.throw(
 						_("Room {0} does not belongs to the company {1}").format(d.to_employee, self.company)
 					)
 
 	def before_submit(self):
 		for d in self.assets:
-			d.from_employee, d.from_cost_center = frappe.db.get_value("Asset", d.asset, ["custodian", "cost_center"])
+			if d.asset_custodian_type == "Employee":
+				d.from_employee = frappe.db.get_value("Asset", d.asset, "custodian")
+			elif d.asset_custodian_type == "Hostel Room":
+				d.from_employee = frappe.db.get_value("Asset", d.asset, "hostel")
+			else:
+				d.from_employee = frappe.db.get_value("Asset", d.asset, "roombuilding")
+			d.from_cost_center = frappe.db.get_value("Asset", d.asset, "cost_center")
 			if self.asset_custodian_type == "Employee" and self.from_employee != d.from_employee:
 				frappe.throw("Asset data ("+str(d.asset)+") had changed since you created the document. Pull the assets again")
 			if self.asset_custodian_type == "Hostel Room" and self.from_hostel != d.from_employee:
 				frappe.throw("Asset data ("+str(d.asset)+") had changed since you created the document. Pull the assets again")
-			if self.asset_custodian_type == "Employee" and self.from_roombuilding != d.from_employee:
+			if self.asset_custodian_type == "Room" and self.from_roombuilding != d.from_employee:
 				frappe.throw("Asset data ("+str(d.asset)+") had changed since you created the document. Pull the assets again")
 			if self.cost_center and self.cost_center != d.from_cost_center:
 				frappe.throw("Asset data ("+str(d.asset)+") had changed since you created the document. Pull the assets again")
@@ -296,15 +304,18 @@ class AssetMovement(Document):
 					current_roombuilding = latest_movement_entry[0][1]
 				current_employee_name = latest_movement_entry[0][2]
 
-			branch = frappe.get_value("Branch", {"cost_center":current_cost_center}, "name")
+			branch = frappe.get_value("Branch", {"cost_center": d.target_cost_center if not cancel else d.source_cost_center}, "name")
+			from_custodian = self.from_roombuilding if self.asset_custodian_type == "Room" else (self.from_hostel if self.asset_custodian_type == "Hostel Room" else self.from_employee)
 			frappe.db.set_value("Asset", d.asset, "branch", branch, update_modified=False)
-			frappe.db.set_value("Asset", d.asset, "cost_center", current_cost_center, update_modified=False)
-			if d.asset_custodian_type == "Employee":
+			frappe.db.set_value("Asset", d.asset, "cost_center", d.target_cost_center if not cancel else d.source_cost_center, update_modified=False)
+			frappe.db.set_value("Asset", d.asset, "is_hostel_asset", d.to_custodian_type if not cancel else d.asset_custodian_type, update_modified=False)
+			frappe.db.set_value("Asset", d.asset, "company", self.to_company if not cancel else self.company, update_modified=False)
+			if d.to_custodian_type == "Employee":
 				frappe.db.set_value("Asset", d.asset, "custodian", current_employee, update_modified=False)
 				frappe.db.set_value("Asset", d.asset, "custodian_name", current_employee_name, update_modified=False)
-			elif d.asset_custodian_type == "Hostel Room":
+			elif d.to_custodian_type == "Hostel Room":
 				frappe.db.set_value("Asset", d.asset, "hostel", d.to_employee if not cancel else d.from_employee, update_modified=False)
-			elif d.asset_custodian_type == "Room":
+			elif d.to_custodian_type == "Room":
 				frappe.db.set_value("Asset", d.asset, "roombuilding", d.to_employee if not cancel else d.from_employee, update_modified=False)
 
 			equipment = frappe.db.get_value("Equipment", {"asset_code": d.asset}, "name")
@@ -428,7 +439,7 @@ class AssetMovement(Document):
 						to_custodian = ''
 						to_cost_center = ''
 					data = {"asset":x.name, 
-							"from_employee":x.custodian if x.is_hostel_asset == "Employee" else (x.hostel if x.is_hostel_asset == "Hostel" else x.roombuilding),
+							"from_employee":str(x.custodian) if x.is_hostel_asset == "Employee" else (x.hostel if x.is_hostel_asset == "Hostel Room" else x.roombuilding),
 							"to_employee":to_custodian,
 							"from_employee_name":x.custodian_name if x.is_hostel_asset == "Employee" else (frappe.db.get_value("Hostel Room", x.hostel, "room_number") if x.is_hostel_asset == "Hostel Room" else frappe.db.get_value("Room", x.roombuilding, "room_name")), 
 							"source_cost_center":x.cost_center,

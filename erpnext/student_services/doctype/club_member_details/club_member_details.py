@@ -19,7 +19,7 @@ class ClubMemberDetails(Document):
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
-		program: DF.Data | None
+		programme: DF.Data | None
 		semester: DF.Data | None
 		student_code: DF.Link
 		year: DF.Data | None
