@@ -3,6 +3,18 @@
 
 frappe.ui.form.on("Student Welfare Scheme Claim", {
 	refresh(frm) {
+
+        frm.set_query("student_code",function(){
+             return {
+                    filters:{
+                        "company":frm.doc.college
+
+                    }  
+
+             }
+        }
+
+        )
         if (frm.doc.workflow_state === 'Waiting for Disbursement'||frm.doc.workflow_state === 'Approved') {
             frm.set_df_property('reference_number', 'hidden', 0); // Show the field
         } else {

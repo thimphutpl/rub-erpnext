@@ -1,7 +1,7 @@
 # Copyright (c) 2025, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 
@@ -24,4 +24,16 @@ class ClubActionPlan(Document):
 		club_name: DF.Link
 		company: DF.Link
 	# end: auto-generated types
-	pass
+	def validate(self):
+		self.check_dublicate()
+
+	def check_dublicate(self):
+		exists=frappe.db.exists("Club Action Plan",
+								{"company":self.company,
+								"club_name":self.club_name,
+								"academic_term":self.academic_term
+
+								}
+								)
+		if exists:
+			frappe.throw("Club Action Plan is already exists for " + str(self.academic_term))

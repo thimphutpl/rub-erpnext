@@ -68,6 +68,7 @@
    "search_index": 1
   },
   {
+   "allow_bulk_edit": 1,
    "fieldname": "apa_details",
    "fieldtype": "Table",
    "options": "APA Detail"
@@ -84,8 +85,8 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-12-13 15:27:20.102891",
- "modified_by": "Administrator",
+ "modified": "2026-01-11 17:17:58.243951",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
  "module": "Budget",
  "name": "Annual Performance Agreement",
  "naming_rule": "Expression",

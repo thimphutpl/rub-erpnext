@@ -15,6 +15,7 @@ class StudentCreditRecord(Document):
 		from erpnext.student_services.doctype.student_credit_details.student_credit_details import StudentCreditDetails
 		from frappe.types import DF
 
+		academic_term: DF.Link
 		amended_from: DF.Link | None
 		company: DF.Link
 		credit_type: DF.Link

@@ -21,6 +21,7 @@ class StudentCreditDetails(Document):
 		parenttype: DF.Data
 		programme: DF.Data | None
 		semester: DF.Data | None
+		status: DF.Literal["Unpaid", "Paid"]
 		student_code: DF.Link
 		year: DF.Data | None
 	# end: auto-generated types

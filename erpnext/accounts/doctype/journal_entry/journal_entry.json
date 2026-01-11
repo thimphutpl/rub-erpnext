@@ -676,8 +676,8 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2025-12-20 14:17:29.684605",
- "modified_by": "Administrator",
+ "modified": "2026-01-11 16:53:41.661484",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
  "module": "Accounts",
  "name": "Journal Entry",
  "naming_rule": "By \"Naming Series\" field",

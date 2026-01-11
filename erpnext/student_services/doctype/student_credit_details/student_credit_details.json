@@ -12,7 +12,8 @@
   "semester",
   "year",
   "column_break_swlq",
-  "amount"
+  "amount",
+  "status"
  ],
  "fields": [
   {
@@ -62,14 +63,22 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Amount "
+  },
+  {
+   "default": "Unpaid",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Unpaid\nPaid",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-23 15:33:17.348064",
- "modified_by": "Administrator",
+ "modified": "2026-01-11 11:52:26.993618",
+ "modified_by": "kalden.dorji@thimphutechpark.bt",
  "module": "Student Services",
  "name": "Student Credit Details",
  "owner": "Administrator",

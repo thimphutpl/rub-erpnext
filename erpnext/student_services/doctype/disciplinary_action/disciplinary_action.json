@@ -96,7 +96,7 @@
    "options": "Student Statement"
   },
   {
-   "fetch_from": "student_statement_link.long_text_niev",
+   "fetch_from": "student_statement_link.student_statement",
    "fieldname": "student_statement",
    "fieldtype": "Long Text",
    "label": "Student Statement"
@@ -197,7 +197,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-23 09:58:36.347988",
+ "modified": "2026-01-11 11:02:24.541582",
  "modified_by": "kalden.dorji@thimphutechpark.bt",
  "module": "Student Services",
  "name": "Disciplinary Action",

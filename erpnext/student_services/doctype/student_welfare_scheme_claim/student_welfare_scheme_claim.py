@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from datetime import date
+from frappe.utils import money_in_words
 
 
 class StudentWelfareSchemeClaim(Document):
@@ -43,6 +44,10 @@ class StudentWelfareSchemeClaim(Document):
 	# end: auto-generated types
 	def validate(self):
 		self.set_dates()
+		self.set_number_to_money_in_words()
+	def set_number_to_money_in_words(self):
+		amount=self.receivable_amount_in_figures
+		self.receivable_amount_in_words=money_in_words(amount)
 
 
 	def set_dates(self):

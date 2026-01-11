@@ -29,6 +29,13 @@ frappe.ui.form.on("Club Activity", {
 				}
 			};
 		});
+        frm.set_query("club_action_plan", function() {
+			return {
+				"filters": {
+					"club_name": frm.doc.club_name,
+				}
+			};
+		});
 
         // frm.set_query("activity_name", function() {
         //     return {

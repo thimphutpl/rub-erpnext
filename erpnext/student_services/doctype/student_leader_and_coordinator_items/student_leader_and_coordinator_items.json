@@ -47,6 +47,7 @@
    "options": "Student Responsibilities"
   },
   {
+   "depends_on": "eval: doc.student_responisibility == \"Hostel Counsellor\"",
    "fieldname": "hostel_counsellor",
    "fieldtype": "Link",
    "label": "Hostel Block",
@@ -57,8 +58,8 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-11-03 14:56:38.553135",
- "modified_by": "Administrator",
+ "modified": "2026-01-11 11:25:16.141333",
+ "modified_by": "kalden.dorji@thimphutechpark.bt",
  "module": "Student Services",
  "name": "Student Leader and Coordinator Items",
  "owner": "kalden.dorji@thimphutechpark.bt",
