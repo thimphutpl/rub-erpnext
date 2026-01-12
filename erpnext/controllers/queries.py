@@ -152,6 +152,38 @@ def filter_finance_books(doctype, txt, searchfield, start, page_len, filters):
 		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
 	)
 
+#Following added by Kinley Dorji 2026/01/12
+# searches for programmee in a college
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def filter_college_programmes(doctype, txt, searchfield, start, page_len, filters):
+	# fields = get_fields(doctype, ["fb.name", "fb.company"])
+	searchfields = frappe.get_meta(doctype).get_search_fields()
+	searchfields = " or ".join("p."+field + " like %(txt)s" for field in searchfields)
+	if not filters.get("college"):
+		frappe.throw("Please select College")
+	return frappe.db.sql(
+		"""select p.name, c.company from `tabProgramme` p, `tabColleges` c
+		where
+			c.parent = p.name
+			and c.company = '{company}'
+			and (p.{key} like %(txt)s
+				or p.name like %(txt)s
+				or c.company like %(txt)s
+				or {scond})
+		order by
+			c.idx desc,
+			p.name, c.company
+		limit %(page_len)s offset %(start)s""".format(
+			company = filters.get("college"),
+			**{
+				"key": searchfield,
+				"scond": searchfields,
+			}
+		),
+		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	)
+
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def tax_account_query(doctype, txt, searchfield, start, page_len, filters):
