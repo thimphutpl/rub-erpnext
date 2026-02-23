@@ -49,6 +49,7 @@
   "rate",
   "amount",
   "item_tax_template",
+  "gst_amount",
   "col_break4",
   "base_rate",
   "base_amount",
@@ -1015,18 +1016,26 @@
    "label": "Discount Account",
    "options": "Account",
    "read_only": 1
+  },
+  {
+   "fieldname": "gst_amount",
+   "fieldtype": "Currency",
+   "label": "GST Amount",
+   "precision": "2",
+   "read_only": 1
   }
  ],
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-05-19 11:22:28.187790",
+ "modified": "2026-02-23 14:04:11.702442",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Purchase Invoice Item",
  "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

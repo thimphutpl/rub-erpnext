@@ -724,25 +724,60 @@ frappe.ui.form.on("Purchase Invoice", {
 	// 	// }, 500);
 	// },
 
+	// taxes_and_charges: function (frm) {
+	// 	if (!frm.doc.company) {
+	// 		frappe.msgprint(__('Please select a Company first.'));
+	// 		frm.set_value("taxes_and_charges", null);
+	// 		return;
+	// 	}
+
+	// 	// Wait for Frappe to populate taxes from the template
+	// 	setTimeout(async () => {
+	// 		if (!frm.doc.taxes || frm.doc.taxes.length === 0) return;
+
+	// 		for (let row of frm.doc.taxes) {
+	// 			// Find matching account for the selected company
+	// 			const rate_pattern = `%${row.rate}%TDS%`;
+	// 			const accounts = await frappe.db.get_list("Account", {
+	// 				fields: ["name"],
+	// 				filters: {
+	// 					company: frm.doc.company,
+	// 					account_name: ["like", rate_pattern]
+	// 				},
+	// 				limit: 1
+	// 			});
+
+	// 			if (accounts.length > 0) {
+	// 				row.account_head = accounts[0].name;
+	// 			}
+	// 		}
+
+	// 		frm.refresh_field("taxes");
+
+	// 	}, 100);
+	// },
 	taxes_and_charges: function (frm) {
+		if (!frm.doc.taxes_and_charges) {
+			frm.doc.taxes = [];
+			frm.refresh_field("taxes");
+			return;
+		}
+
 		if (!frm.doc.company) {
 			frappe.msgprint(__('Please select a Company first.'));
 			frm.set_value("taxes_and_charges", null);
 			return;
 		}
-
-		// Wait for Frappe to populate taxes from the template
 		setTimeout(async () => {
 			if (!frm.doc.taxes || frm.doc.taxes.length === 0) return;
-
 			for (let row of frm.doc.taxes) {
-				// Find matching account for the selected company
-				const rate_pattern = `%${row.rate}%TDS%`;
+				if (!row.account_head) continue;
+				let base_name = row.account_head.split(' - ')[0].trim();
 				const accounts = await frappe.db.get_list("Account", {
 					fields: ["name"],
 					filters: {
 						company: frm.doc.company,
-						account_name: ["like", rate_pattern]
+						account_name: ["like", `%${base_name}%`]
 					},
 					limit: 1
 				});
@@ -751,10 +786,8 @@ frappe.ui.form.on("Purchase Invoice", {
 					row.account_head = accounts[0].name;
 				}
 			}
-
 			frm.refresh_field("taxes");
-
-		}, 100);
+		}, 200);
 	},
 
 

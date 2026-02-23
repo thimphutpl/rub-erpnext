@@ -1,0 +1,37 @@
+{
+ "chart_name": "Company Compact",
+ "chart_type": "Report",
+ "creation": "2025-09-22 11:37:54.588908",
+ "custom_options": "{\"x_field\": \"kpi\", \"chart_type\": \"Bar\", \"y_axis_fields\": [{\"idx\": 1, \"__islocal\": true, \"name\": \"row 1\", \"y_field\": \"weight 2025\", \"color\": \"#ED6396\"}, {\"idx\": 2, \"__islocal\": true, \"name\": \"row 2\", \"y_field\": \"weight_achieved 2025\", \"color\": \"#449CF0\"}], \"y_fields\": [\"weight 2025\", \"weight_achieved 2025\"], \"colors\": [\"#ED6396\", \"#449CF0\"]}",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart",
+ "filters_json": "{\"company\":\"State Mining Corporation Ltd\",\"fiscal_year\":\"2025\",\"to_fiscal_year\":\"2025\",\"report_type\":\"Overall Compact Achievement\"}",
+ "group_by_type": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "modified": "2025-09-25 11:07:43.940470",
+ "modified_by": "pralad.rai@thimphutechpark.bt",
+ "module": "PMS",
+ "name": "Company Compact",
+ "number_of_groups": 0,
+ "owner": "pralad.rai@thimphutechpark.bt",
+ "report_name": "Company Compact Report",
+ "roles": [],
+ "time_interval": "Yearly",
+ "timeseries": 0,
+ "timespan": "Last Year",
+ "type": "Bar",
+ "use_report_chart": 0,
+ "x_field": "kpi",
+ "y_axis": [
+  {
+   "color": "#ED6396",
+   "y_field": "weight 2025"
+  },
+  {
+   "color": "#449CF0",
+   "y_field": "weight_achieved 2025"
+  }
+ ]
+}

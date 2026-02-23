@@ -1,0 +1,33 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2025-08-19 15:41:27.017009",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "label"
+ ],
+ "fields": [
+  {
+   "fieldname": "label",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Label",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-08-19 15:41:27.017009",
+ "modified_by": "Administrator",
+ "module": "PMS",
+ "name": "Non Financial Tables",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

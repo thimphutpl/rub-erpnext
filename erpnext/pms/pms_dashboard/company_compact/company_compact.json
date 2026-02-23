@@ -1,0 +1,25 @@
+{
+ "cards": [
+  {
+   "card": "comp"
+  }
+ ],
+ "charts": [
+  {
+   "chart": "Company Compact",
+   "width": "Half"
+  }
+ ],
+ "creation": "2025-09-25 11:07:54.769581",
+ "dashboard_name": "Company Compact",
+ "docstatus": 0,
+ "doctype": "Dashboard",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "modified": "2025-09-26 12:56:09.250114",
+ "modified_by": "pralad.rai@thimphutechpark.bt",
+ "module": "PMS",
+ "name": "Company Compact",
+ "owner": "pralad.rai@thimphutechpark.bt"
+}

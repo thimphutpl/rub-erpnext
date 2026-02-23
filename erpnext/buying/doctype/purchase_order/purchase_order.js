@@ -255,6 +255,39 @@ frappe.ui.form.on("Purchase Order", {
 	tax: function (frm) {
 		calculate_discount(frm)
 	},
+	taxes_and_charges: function (frm) {
+		if (!frm.doc.taxes_and_charges) {
+			frm.doc.taxes = [];
+			frm.refresh_field("taxes");
+			return;
+		}
+
+		if (!frm.doc.company) {
+			frappe.msgprint(__('Please select a Company first.'));
+			frm.set_value("taxes_and_charges", null);
+			return;
+		}
+		setTimeout(async () => {
+			if (!frm.doc.taxes || frm.doc.taxes.length === 0) return;
+			for (let row of frm.doc.taxes) {
+				if (!row.account_head) continue;
+				let base_name = row.account_head.split(' - ')[0].trim();
+				const accounts = await frappe.db.get_list("Account", {
+					fields: ["name"],
+					filters: {
+						company: frm.doc.company,
+						account_name: ["like", `%${base_name}%`]
+					},
+					limit: 1
+				});
+
+				if (accounts.length > 0) {
+					row.account_head = accounts[0].name;
+				}
+			}
+			frm.refresh_field("taxes");
+		}, 200);
+	}
 });
 // cur_frm.fields_dict["items"].grid.get_field("expense_account").get_query = function (doc, cdt, cdn) {
 // 	debugger
@@ -297,21 +330,17 @@ frappe.ui.form.on("Purchase Order Item", {
 			var row = locals[cdt][cdn];
 
 			if (row.item_code && !row.fg_item) {
-				frappe.throw("Hi0")
 				var result = await frm.events.get_subcontracting_boms_for_service_item(row.item_code);
 
 				if (result.message && Object.keys(result.message).length) {
-					frappe.throw("Hi1")
 					var finished_goods = Object.keys(result.message);
 
 					// Set FG if only one active Subcontracting BOM is found
 					if (finished_goods.length === 1) {
-						frappe.throw("Hi2")
 						row.fg_item = result.message[finished_goods[0]].finished_good;
 						row.uom = result.message[finished_goods[0]].finished_good_uom;
 						refresh_field("items");
 					} else {
-						frappe.throw("Hi3")
 						const dialog = new frappe.ui.Dialog({
 							title: __("Select Finished Good"),
 							size: "small",

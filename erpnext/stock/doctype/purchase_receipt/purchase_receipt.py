@@ -68,7 +68,7 @@ class PurchaseReceipt(BuyingController):
 		discount: DF.Currency
 		discount_amount: DF.Currency
 		for_project: DF.Check
-		freight_insurance_charges: DF.Currency
+		freight_and_insurance_charges: DF.Currency
 		grand_total: DF.Currency
 		group_same_items: DF.Check
 		ignore_pricing_rule: DF.Check
@@ -274,7 +274,7 @@ class PurchaseReceipt(BuyingController):
 		self.reset_default_field_value("set_warehouse", "items", "warehouse")
 		self.reset_default_field_value("rejected_warehouse", "items", "rejected_warehouse")
 		self.reset_default_field_value("set_from_warehouse", "items", "from_warehouse")
-		self.calculate_total_add_ded()
+		# self.calculate_total_add_ded()
 
 	def validate_project(self):
 		if self.for_project == 1:
@@ -306,12 +306,12 @@ class PurchaseReceipt(BuyingController):
 					company=self.company,
 				)
 				break
-	def calculate_total_add_ded(self):
-		self.total_add_ded = flt(self.freight_insurance_charges) - flt(self.discount) + flt(self.tax) + flt(self.other_charges)
-		if self.total_add_ded:
-			self.net_total = self.total + self.total_add_ded
-			self.grand_total = self.net_total
-			self.in_words = money_in_words(self.grand_total, self.currency)
+	# def calculate_total_add_ded(self):
+	# 	self.total_add_ded = flt(self.freight_insurance_charges) - flt(self.discount) + flt(self.tax) + flt(self.other_charges)
+	# 	if self.total_add_ded:
+	# 		self.net_total = self.total + self.total_add_ded
+	# 		self.grand_total = self.net_total
+	# 		self.in_words = money_in_words(self.grand_total, self.currency)
 	def validate_provisional_expense_account(self):
 		provisional_accounting_for_non_stock_items = cint(
 			frappe.db.get_value("Company", self.company, "enable_provisional_accounting_for_non_stock_items")
@@ -380,10 +380,10 @@ class PurchaseReceipt(BuyingController):
 		# branchname=doc.branch
 		cost_center= frappe.db.get_value("Branch", doc.branch,"cost_center")
 		query = """
-        SELECT warehouse 
-        FROM `tabCost Center` 
-        WHERE name=%s
-        """
+		SELECT warehouse 
+		FROM `tabCost Center` 
+		WHERE name=%s
+		"""
 
 		warehouse = frappe.db.sql(query, (cost_center,), as_dict=True)
 		if warehouse:
@@ -430,6 +430,9 @@ class PurchaseReceipt(BuyingController):
 
 		self.make_bundle_for_sales_purchase_return()
 		self.make_bundle_using_old_serial_batch_fields()
+		supplier_type = frappe.db.get_value("Supplier",self.supplier,"Country")
+		if supplier_type != "Bhutan":
+			self.make_tax_payment()
 		# Updating stock ledger should always be called after updating prevdoc status,
 		# because updating ordered qty, reserved_qty_for_subcontract in bin
 		# depends upon updated ordered qty in PO
@@ -1096,6 +1099,83 @@ class PurchaseReceipt(BuyingController):
 			.where(sle_table.voucher_no == self.name)
 			.where(sle_table.voucher_type == "Purchase Receipt")
 		).run()
+	def make_tax_payment(source_name, target_doc=None, args=None):
+		supplier = frappe.db.get_value("Supplier",source_name.supplier,'supplier_type')
+		if supplier == "Domestic Vendor":
+			return
+		def set_missing_values(source, target):
+			target.posting_date = source_name.posting_date
+			gst_input_account = None
+			target.cost_center = source_name.cost_center
+			
+			for tax in source_name.taxes:
+				if tax.is_gst == 1:
+					gst_input_account = tax.account_head		
+			bank_account = frappe.db.get_value("Branch", source_name.branch, "expense_bank_account")
+			gst_amount = total_charges = 0
+			post_gst_jv = 0
+			party_type = "Supplier"
+			target.branch = source_name.branch
+			party = source_name.supplier
+			target.tax_payment_jv = 1
+			target.purchase_invoice = source_name.name
+			target.voucher_type = 'Bank Entry'
+			target.naming_series = 'Bank Payment Voucher'
+			for tax in source_name.taxes:
+				if tax.is_gst == 0 and tax.is_custom_charges == 1:
+					custom_row = target.append("accounts")
+					custom_row.account = tax.account_head
+					custom_row.debit = flt(tax.base_tax_amount_after_discount_amount,2)
+					custom_row.debit_in_account_currency = flt(tax.base_tax_amount_after_discount_amount,2)
+					custom_row.cost_center = cost_center
+					custom_row.reference_type = "Purchase Receipt"
+					custom_row.reference_name = source_name.name
+					total_charges += tax.base_tax_amount_after_discount_amount
+				else:
+					
+					gst_amount += tax.base_tax_amount_after_discount_amount
+					cost_center = tax.cost_center if tax.cost_center else cost_center
+					party_type = tax.party_type if tax.party_type else party_type
+					party = tax.party if tax.party else party
+					total_charges += tax.base_tax_amount_after_discount_amount
+			gst_row = target.append("accounts")
+			gst_row.account = gst_input_account
+			gst_row.party_type = party_type
+			gst_row.debit = flt(gst_amount,2)
+			gst_row.debit_in_account_currency = flt(gst_amount,2)
+			gst_row.cost_center = source_name.cost_center
+			gst_row.reference_type = "Purchase Receipt"
+			gst_row.reference_name = source_name.name
+			bank_row = target.append("accounts")
+			bank_row.account = bank_account
+			bank_row.credit = flt(total_charges,2)
+			bank_row.credit_in_account_currency = flt(total_charges,2)
+			bank_row.cost_center = source_name.cost_center
+			bank_row.reference_type = "Purchase Receipt"
+			bank_row.reference_name = source_name.name
+
+
+		doclist = get_mapped_doc(
+			"Purchase Receipt",
+			source_name,
+			{
+				"Purchase Receipt": {
+					"doctype": "Journal Entry",
+					"posting_date":source_name.posting_date,
+					"validation": {
+						"docstatus": ["=", 1],
+					},
+				},
+			},
+			target_doc,
+			set_missing_values,
+		)
+		
+	
+		doclist.save()
+		frappe.db.set_value("Purchase Receipt", source_name.name, "journal_no", doclist.name)
+		
+		return doclist
 
 def get_stock_value_difference(voucher_no, voucher_detail_no, warehouse):
 	return frappe.db.get_value(
@@ -1298,42 +1378,48 @@ def get_item_wise_returned_qty(pr_doc):
 @frappe.whitelist()
 def make_purchase_invoice(source_name, target_doc=None, args=None):
 	from erpnext.accounts.party import get_payment_terms_template
-
-	doc = frappe.get_doc("Purchase Receipt", source_name)
-	returned_qty_map = get_returned_qty_map(source_name)
-	invoiced_qty_map = get_invoiced_qty_map(source_name)
+	from frappe.model.mapper import get_mapped_doc
 
 	def set_missing_values(source, target):
-		if len(target.get("items")) == 0:
+		if not target.get("items"):
 			frappe.throw(_("All items have already been Invoiced/Returned"))
 
-		doc = frappe.get_doc(target)
-		doc.payment_terms_template = get_payment_terms_template(source.supplier, "Supplier", source.company)
-		doc.run_method("onload")
-		doc.run_method("set_missing_values")
+		# ✅ target is already a document
+		target.payment_terms_template = get_payment_terms_template(
+			source.supplier, "Supplier", source.company
+		)
 
-		if args and args.get("merge_taxes"):
-			merge_taxes(source.get("taxes") or [], doc)
-		delivery_dates = []
-		delivery_date = None
-		for dd in source.items:
-			if dd.schedule_date not in delivery_dates:
-				delivery_dates.append(dd.schedule_date)
-				delivery_date = dd.schedule_date
-		if len(delivery_dates) != len(set(delivery_dates)):
-			frappe.throw("Multiple delivery dates in Items Table. Same delivery date required to calculate LD days")
-		if delivery_date:
-			if source.actual_receipt_date > delivery_date:
-				ld_days = date_diff(source.actual_receipt_date, delivery_date)
-				target.ld_days = ld_days
-				target.ld_days = flt(ld_days)
-				if flt(ld_days) < 100:
-					target.write_off_amount = flt((flt(ld_days)/100)*0.1 * flt(source.grand_total),2)
-				else:
-					target.write_off_amount = flt((0.1) * flt(source.grand_total),2)
-				target.write_off_account = frappe.db.get_value("Company", source.company, "write_off_account")
-		doc.run_method("calculate_taxes_and_totals")
-		doc.set_payment_schedule()
+		target.run_method("onload")
+		target.run_method("set_missing_values")
+
+		# ❌ Remove merge_taxes (this causes total difference)
+		# if args and args.get("merge_taxes"):
+		#     merge_taxes(source.get("taxes") or [], target)
+
+		# ✅ Just calculate once
+		target.run_method("calculate_taxes_and_totals")
+		target.set_payment_schedule()
+
+	doc = get_mapped_doc(
+		"Purchase Receipt",
+		source_name,
+		{
+			"Purchase Receipt": {
+				"doctype": "Purchase Invoice",
+			},
+			"Purchase Receipt Item": {
+				"doctype": "Purchase Invoice Item",
+				"field_map": {
+					"name": "pr_detail",
+					"parent": "purchase_receipt",
+				},
+			},
+		},
+		target_doc,
+		set_missing_values,
+	)
+
+	return doc
 
 	def update_other_charges(source, target, sp):
 		target.discount = flt(source.discount)

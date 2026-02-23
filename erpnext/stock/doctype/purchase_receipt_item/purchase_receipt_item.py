@@ -37,6 +37,7 @@ class PurchaseReceiptItem(Document):
 		discount_percentage: DF.Percent
 		expense_account: DF.Link | None
 		from_warehouse: DF.Link | None
+		gst_amount: DF.Currency
 		image: DF.Attach | None
 		include_exploded_items: DF.Check
 		is_fixed_asset: DF.Check
