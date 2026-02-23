@@ -36,6 +36,8 @@
   "reports_to_name",
   "job_type",
   "parent_agency_eid",
+  "pms_group",
+  "staff_category",
   "column_break_22",
   "employment_status",
   "probation_end_date",
@@ -62,12 +64,13 @@
   "section",
   "unit",
   "column_break_25",
-  "cost_center",
   "branch",
+  "cost_center",
   "business_activity",
   "employment_details",
   "scheduled_confirmation_date",
   "contract_start_date",
+  "applicant_id",
   "column_break_32",
   "final_confirmation_date",
   "contract_end_date",
@@ -75,6 +78,7 @@
   "col_break_22",
   "notice_number_of_days",
   "date_of_retirement",
+  "selected_doc",
   "section_break_vzdb",
   "contract_summary",
   "contact_details",
@@ -1203,6 +1207,30 @@
    "fieldname": "is_teaching_staff",
    "fieldtype": "Check",
    "label": "Is Teaching Staff"
+  },
+  {
+   "fieldname": "pms_group",
+   "fieldtype": "Link",
+   "label": "PMS Group",
+   "options": "PMS Group"
+  },
+  {
+   "fieldname": "staff_category",
+   "fieldtype": "Select",
+   "label": "Staff Category",
+   "options": "\nTeaching\nNon-Teaching"
+  },
+  {
+   "fieldname": "applicant_id",
+   "fieldtype": "Data",
+   "label": "Applicant ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "selected_doc",
+   "fieldtype": "Data",
+   "label": "Selected Doc",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-user",
@@ -1210,7 +1238,7 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2025-11-03 23:16:15.496848",
+ "modified": "2026-02-23 23:27:29.921291",
  "modified_by": "sonam.zangmo@thimphutechpark.bt",
  "module": "Setup",
  "name": "Employee",
