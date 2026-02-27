@@ -12,8 +12,15 @@
   "name_student",
   "program",
   "semester",
+  "section",
+  "scholarship",
   "column_break_ltgx",
   "posting_date",
+  "problem_date",
+  "problem_time",
+  "location_of_issue_caused",
+  "contact_number",
+  "hostel",
   "student_statement_section",
   "student_statement_link",
   "student_statement",
@@ -79,7 +86,7 @@
   },
   {
    "fieldname": "posting_date",
-   "fieldtype": "Data",
+   "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Posting Date",
    "reqd": 1
@@ -191,14 +198,58 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fetch_from": "student_code.student_mobile_number",
+   "fieldname": "contact_number",
+   "fieldtype": "Data",
+   "label": "Contact Number"
+  },
+  {
+   "fieldname": "problem_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Problem Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "problem_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Problem Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "location_of_issue_caused",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Location of Issue Caused",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section",
+   "fieldtype": "Data",
+   "label": "Section"
+  },
+  {
+   "fieldname": "scholarship",
+   "fieldtype": "Select",
+   "label": "Scholarship",
+   "options": "\nSelf\nGovernment Scholarship"
+  },
+  {
+   "fieldname": "hostel",
+   "fieldtype": "Link",
+   "label": "Hostel",
+   "options": "Hostel Room"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-11 11:02:24.541582",
- "modified_by": "kalden.dorji@thimphutechpark.bt",
+ "modified": "2026-02-21 09:48:00.715766",
+ "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Disciplinary Action",
  "naming_rule": "Expression",

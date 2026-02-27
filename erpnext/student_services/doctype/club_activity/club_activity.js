@@ -2,11 +2,29 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Club Activity", {
+    setup(frm){
+        frm.set_query('club_name', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company/College"]
+					}
+				};
+			}
+			return {
+				filters: {
+					company: frm.doc.company
+				}
+			};
+		});
+    },
+
+     
 	refresh(frm) {
-        frm.set_query("club_name", function() {
+        frm.set_query("club_action_plan", function() {
 			return {
 				"filters": {
-					"company": frm.doc.company
+					"Club Name": frm.doc.club_name
 				
 				}
 			};
@@ -22,13 +40,13 @@ frappe.ui.form.on("Club Activity", {
 				}
 			};
 		});
-        frm.set_query("club_name", function() {
-			return {
-				"filters": {
-					"club_name": frm.doc.club_name,
-				}
-			};
-		});
+        // frm.set_query("club_name", function() {
+		// 	return {
+		// 		"filters": {
+		// 			"club_name": frm.doc.club_name,
+		// 		}
+		// 	};
+		// });
         frm.set_query("club_action_plan", function() {
 			return {
 				"filters": {
@@ -60,18 +78,18 @@ frappe.ui.form.on("Club Activity", {
        
 
 	},
-    company: function(frm){
-        frm.set_query("activity_name", function() {
-			return {
-                query: "erpnext.controllers.queries.club_action_plan_query",
-				filters: {
-					"club_name": frm.doc.club_name,
-                    "company": frm.doc.company,
-                    "club_action_plan": frm.doc.club_action_plan
-				}
-			};
-		});
-    },
+    // company: function(frm){
+    //     frm.set_query("activity_name", function() {
+	// 		return {
+    //             query: "erpnext.controllers.queries.club_action_plan_query",
+	// 			filters: {
+	// 				"club_name": frm.doc.club_name,
+    //                 "company": frm.doc.company,
+    //                 "club_action_plan": frm.doc.club_action_plan
+	// 			}
+	// 		};
+	// 	});
+    // },
     activity_name: function(frm){
         frappe.flag
         if(frm.doc.activity_name) {

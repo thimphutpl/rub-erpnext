@@ -58,7 +58,7 @@
    "fieldname": "credit_type",
    "fieldtype": "Link",
    "label": "Credit Type",
-   "options": "Credit Type",
+   "options": "Credit Types",
    "reqd": 1
   },
   {
@@ -77,8 +77,8 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-03 15:45:13.892836",
- "modified_by": "Administrator",
+ "modified": "2026-02-23 11:58:49.293026",
+ "modified_by": "sonam.choki@thimphutechpark.bt",
  "module": "Student Services",
  "name": "Credit Clearance Record",
  "naming_rule": "Expression",

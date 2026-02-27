@@ -1,24 +1,23 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:SCR{YY}{MM}{####}",
- "creation": "2025-10-23 15:20:31.552974",
+ "autoname": "SSP.YYYY.###",
+ "creation": "2026-02-23 15:10:57.314570",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "company",
-  "credit_type",
-  "column_break_arsy",
+  "section_break_otkk",
+  "college",
+  "fiscal_year",
+  "column_break_uray",
   "posting_date",
-  "academic_term",
-  "student_details_section",
-  "student_details",
-  "section_break_snnn",
+  "section_break_ynrk",
+  "student_list",
   "amended_from"
  ],
  "fields": [
   {
-   "fieldname": "section_break_snnn",
+   "fieldname": "section_break_otkk",
    "fieldtype": "Section Break"
   },
   {
@@ -26,13 +25,13 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Student Credit Record",
+   "options": "Student Sports Player",
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
   },
   {
-   "fieldname": "company",
+   "fieldname": "college",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "College",
@@ -40,15 +39,15 @@
    "reqd": 1
   },
   {
-   "fieldname": "credit_type",
+   "fieldname": "fiscal_year",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Credit Type",
-   "options": "Credit Types",
+   "label": "Fiscal Year",
+   "options": "Fiscal Year",
    "reqd": 1
   },
   {
-   "fieldname": "column_break_arsy",
+   "fieldname": "column_break_uray",
    "fieldtype": "Column Break"
   },
   {
@@ -59,32 +58,26 @@
    "reqd": 1
   },
   {
-   "fieldname": "student_details_section",
-   "fieldtype": "Section Break",
-   "label": "Student Details"
+   "fieldname": "section_break_ynrk",
+   "fieldtype": "Section Break"
   },
   {
-   "fieldname": "student_details",
+   "allow_bulk_edit": 1,
+   "fieldname": "student_list",
    "fieldtype": "Table",
-   "options": "Student Credit Details"
-  },
-  {
-   "fieldname": "academic_term",
-   "fieldtype": "Link",
-   "label": "Academic Term",
-   "options": "Academic Term",
-   "reqd": 1
+   "label": "Student List",
+   "options": "Sports Player"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-23 11:49:11.999516",
- "modified_by": "sonam.choki@thimphutechpark.bt",
+ "modified": "2026-02-23 23:37:35.561512",
+ "modified_by": "Administrator",
  "module": "Student Services",
- "name": "Student Credit Record",
- "naming_rule": "Expression",
+ "name": "Student Sports Player",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -104,6 +97,5 @@
  "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
- "track_changes": 1
+ "states": []
 }

@@ -30,25 +30,22 @@ class CreditClearanceRecord(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from frappe.model.document import Document
+		from erpnext.student_services.doctype.credit_clearance_details.credit_clearance_details import CreditClearanceDetails
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
 		college: DF.Link
 		credit_type: DF.Link
 		posting_date: DF.Date
-		student_details: DF.Table[Document]
+		student_details: DF.Table[CreditClearanceDetails]
 		student_record_ref: DF.Link | None
 	# end: auto-generated types
 	def on_submit(self):
 		for child in self.student_details:
 			if child.status=='Unpaid':
-				frappe.throw("All the student status should paid")
-		
-
-
-
-	
+				return
+				# frappe.throw("All the student status should paid")
+			
 @frappe.whitelist()
 def get_credit_clearance(dt, dn):
 	doc = frappe.get_doc(dt, dn)

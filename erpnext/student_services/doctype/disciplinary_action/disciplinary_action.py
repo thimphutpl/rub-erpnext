@@ -20,14 +20,21 @@ class DisciplinaryAction(Document):
 		attah_cdc: DF.Attach | None
 		cdc_remarks: DF.TextEditor | None
 		company: DF.Link
+		contact_number: DF.Data | None
 		date_of_the_issue: DF.Date
 		designation: DF.Data | None
 		disciplinary_issue_type: DF.Link
+		hostel: DF.Link | None
 		issue_reported_by: DF.Link
+		location_of_issue_caused: DF.Data
 		name_reporter: DF.Data | None
 		name_student: DF.Data | None
-		posting_date: DF.Data
+		posting_date: DF.Date
+		problem_date: DF.Date
+		problem_time: DF.Time
 		program: DF.Data | None
+		scholarship: DF.Literal["", "Self", "Government Scholarship"]
+		section: DF.Data | None
 		semester: DF.Data | None
 		small_text_xble: DF.SmallText | None
 		student_code: DF.Link
