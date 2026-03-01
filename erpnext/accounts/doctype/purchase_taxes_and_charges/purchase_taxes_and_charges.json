@@ -32,7 +32,9 @@
   "base_tax_amount",
   "base_total",
   "base_tax_amount_after_discount_amount",
-  "item_wise_tax_detail"
+  "item_wise_tax_detail",
+  "party_type",
+  "party"
  ],
  "fields": [
   {
@@ -240,13 +242,27 @@
    "fieldname": "is_gst",
    "fieldtype": "Check",
    "label": "Is GST"
+  },
+  {
+   "fieldname": "party_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Party Type",
+   "options": "\nSupplier"
+  },
+  {
+   "fieldname": "party",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "label": "Party",
+   "options": "party_type"
   }
  ],
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-24 00:06:43.333194",
- "modified_by": "Administrator",
+ "modified": "2026-03-01 15:34:39.046309",
+ "modified_by": "03230133.gcbs@rub.edu.bt",
  "module": "Accounts",
  "name": "Purchase Taxes and Charges",
  "naming_rule": "Random",

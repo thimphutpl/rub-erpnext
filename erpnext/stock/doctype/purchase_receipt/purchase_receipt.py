@@ -81,6 +81,7 @@ class PurchaseReceipt(BuyingController):
 		is_return: DF.Check
 		is_subcontracted: DF.Check
 		items: DF.Table[PurchaseReceiptItem]
+		journal_no: DF.Link | None
 		language: DF.Data | None
 		letter_head: DF.Link | None
 		lr_date: DF.Date | None
@@ -1106,7 +1107,7 @@ class PurchaseReceipt(BuyingController):
 		def set_missing_values(source, target):
 			target.posting_date = source_name.posting_date
 			gst_input_account = None
-			target.cost_center = source_name.cost_center
+			cost_center = source_name.cost_center
 			
 			for tax in source_name.taxes:
 				if tax.is_gst == 1:
@@ -1118,11 +1119,11 @@ class PurchaseReceipt(BuyingController):
 			target.branch = source_name.branch
 			party = source_name.supplier
 			target.tax_payment_jv = 1
-			target.purchase_invoice = source_name.name
+			target.purchase_receipt = source_name.name
 			target.voucher_type = 'Bank Entry'
 			target.naming_series = 'Bank Payment Voucher'
 			for tax in source_name.taxes:
-				if tax.is_gst == 0 and tax.is_custom_charges == 1:
+				if tax.is_gst == 0:
 					custom_row = target.append("accounts")
 					custom_row.account = tax.account_head
 					custom_row.debit = flt(tax.base_tax_amount_after_discount_amount,2)

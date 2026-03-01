@@ -111,6 +111,7 @@
   "references_section",
   "material_request",
   "purchase_order",
+  "journal_no",
   "column_break_rndc",
   "material_request_date",
   "purchase_order_date",
@@ -713,8 +714,7 @@
    "default": "1",
    "fieldname": "disable_rounded_total",
    "fieldtype": "Check",
-   "label": "Disable Rounded Total",
-   "read_only": 1
+   "label": "Disable Rounded Total"
   },
   {
    "fieldname": "in_words",
@@ -1363,13 +1363,19 @@
    "print_hide": 1,
    "print_width": "30%",
    "width": "30%"
+  },
+  {
+   "fieldname": "journal_no",
+   "fieldtype": "Link",
+   "label": "Journal No",
+   "options": "Journal Entry"
   }
  ],
  "icon": "fa fa-truck",
  "idx": 261,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-23 23:25:03.629475",
+ "modified": "2026-03-01 15:25:04.677412",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Purchase Receipt",
