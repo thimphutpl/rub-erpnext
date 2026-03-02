@@ -45,6 +45,7 @@ class AssetValueAdjustment(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		activity: DF.Link | None
 		amended_from: DF.Link | None
 		asset: DF.Link
 		asset_category: DF.ReadOnly | None
