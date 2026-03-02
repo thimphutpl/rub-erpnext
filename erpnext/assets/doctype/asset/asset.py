@@ -654,7 +654,7 @@ class Asset(AccountsController):
 	def cancel_adjustment_entries(self):
 		movements = frappe.db.sql(
 			"""SELECT ava.name
-			FROM `tabAsset Value Adjust` ava
+			FROM `tabAsset Value Adjustment` ava
 			WHERE ava.asset=%s and ava.docstatus=1""",
 			self.name,
 			as_dict=1,
