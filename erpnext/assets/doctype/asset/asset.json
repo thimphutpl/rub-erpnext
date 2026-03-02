@@ -428,7 +428,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:!doc.is_composite_asset && !doc.is_existing_asset",
+   "depends_on": "eval:!doc.is_composite_asset && !doc.is_existing_asset && !doc.is_donated_asset",
    "fieldname": "purchase_receipt",
    "fieldtype": "Link",
    "label": "Purchase Receipt",
@@ -437,7 +437,7 @@
    "print_hide": 1
   },
   {
-   "depends_on": "eval:!doc.is_composite_asset && !doc.is_existing_asset",
+   "depends_on": "eval:!doc.is_composite_asset && !doc.is_existing_asset && !doc.is_donated_asset",
    "fieldname": "purchase_invoice",
    "fieldtype": "Link",
    "label": "Purchase Invoice",
@@ -625,6 +625,7 @@
   },
   {
    "depends_on": "eval:doc.is_hostel_asset == \"Employee\";",
+   "fetch_from": "custodian.employee_name",
    "fieldname": "custodian_name",
    "fieldtype": "Data",
    "label": "Custodian Name",
@@ -757,9 +758,9 @@
   },
   {
    "fieldname": "is_hostel_asset",
-   "fieldtype": "Link",
+   "fieldtype": "Select",
    "label": "Asset Custodian Type",
-   "options": "DocType"
+   "options": "\nEmployee\nHostel Room\nRoom"
   }
  ],
  "idx": 72,
@@ -803,7 +804,7 @@
    "link_fieldname": "reference_code"
   }
  ],
- "modified": "2025-10-14 15:59:34.191984",
+ "modified": "2026-02-06 11:17:30.647929",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset",

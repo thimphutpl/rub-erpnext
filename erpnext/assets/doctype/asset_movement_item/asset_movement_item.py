@@ -16,7 +16,7 @@ class AssetMovementItem(Document):
 		from frappe.types import DF
 
 		asset: DF.Link
-		asset_custodian_type: DF.Link | None
+		asset_custodian_type: DF.Link
 		asset_name: DF.Data | None
 		company: DF.Link | None
 		from_employee: DF.DynamicLink | None
@@ -26,7 +26,7 @@ class AssetMovementItem(Document):
 		parenttype: DF.Data
 		source_cost_center: DF.Link | None
 		target_cost_center: DF.Link | None
-		to_custodian_type: DF.Link | None
+		to_custodian_type: DF.Literal["", "Employee", "Hostel Room", "Room"]
 		to_employee: DF.DynamicLink | None
 		to_employee_name: DF.Data | None
 	# end: auto-generated types

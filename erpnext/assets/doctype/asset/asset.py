@@ -98,7 +98,7 @@ class Asset(AccountsController):
 		is_donated_asset: DF.Check
 		is_existing_asset: DF.Check
 		is_fully_depreciated: DF.Check
-		is_hostel_asset: DF.Link | None
+		is_hostel_asset: DF.Literal["", "Employee", "Hostel Room", "Room"]
 		is_opening_asset: DF.Check
 		item_code: DF.Link
 		item_name: DF.ReadOnly | None
@@ -459,6 +459,8 @@ class Asset(AccountsController):
 
 		if self.available_for_use_date and getdate(self.available_for_use_date) < getdate(self.purchase_date):
 			frappe.throw(_("Available-for-use Date should be after purchase date"))
+		if getdate(self.available_for_use_date) > getdate(nowdate()):
+			frappe.throw("Available For Use Date for Future Date is not Permitted")
 
 	def validate_gross_and_purchase_amount(self):
 		if self.is_existing_asset or self.is_opening_asset:

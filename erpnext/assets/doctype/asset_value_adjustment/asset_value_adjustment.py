@@ -141,6 +141,7 @@ class AssetValueAdjustment(Document):
 		je.company = self.company
 		je.remark = f"Asset Adjustment Entry against {self.asset} worth {self.difference_amount}"
 		je.finance_book = self.finance_book
+		# je.activity = self.activity
 		je.branch = self.branch
 
 		credit_entry = {
@@ -272,7 +273,7 @@ class AssetValueAdjustment(Document):
 	def make_gl_entry(self, asset_account, credit_account, value, asset, start_date):
 		je = frappe.new_doc("Journal Entry")
 		je.flags.ignore_permissions = 1
-
+		# je.activity = self.activity
 		je.update({
 			"voucher_type": "Journal Entry",
 			"company": asset.company,

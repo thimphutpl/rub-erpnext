@@ -24,25 +24,76 @@ frappe.ui.form.on("Asset", {
 		});
 
 		frm.set_query('hostel', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company"]
+					}
+				};
+			}
 			return {
 				filters: {
-					"company": doc.company
+					company: frm.doc.company
 				}
-			}
+			};
 		});
-		frm.set_query('roombuilding', function(doc, cdt, cdn) {
-			return {
-				filters: {
-					"company": doc.company
-				}
+		frm.set_query('credit_account', () => {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company"]
+					}
+				};
 			}
-		});
-		frm.set_query("warehouse", function () {
 			return {
 				filters: {
 					company: frm.doc.company,
-					is_group: 0,
-				},
+					is_group: 0
+				}
+			};
+		});
+		frm.set_query('asset_account', () => {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company"]
+					}
+				};
+			}
+			return {
+				filters: {
+					company: frm.doc.company,
+					is_group: 0
+				}
+			};
+		});
+		frm.set_query('roombuilding', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company"]
+					}
+				};
+			}
+			return {
+				filters: {
+					company: frm.doc.company
+				}
+			};
+		});
+		frm.set_query("warehouse", function () {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company"]
+					}
+				};
+			}
+			return {
+				filters: {
+					company: frm.doc.company,
+					is_group: 0
+				}
 			};
 		});
 		frm.set_query("company", function () {
@@ -54,24 +105,47 @@ frappe.ui.form.on("Asset", {
 		});
 
 		frm.set_query("branch", function (doc) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company"]
+					}
+				};
+			}
 			return {
-				filters: { company: doc.company },
+				filters: {
+					company: frm.doc.company
+				}
 			};
 		});
 
 		frm.set_query("department", function () {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company"]
+					}
+				};
+			}
 			return {
 				filters: {
-					company: frm.doc.company,
-				},
+					company: frm.doc.company
+				}
 			};
 		});
 		
 		frm.set_query("custodian", function () {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company"]
+					}
+				};
+			}
 			return {
 				filters: {
-					company: frm.doc.company,
-				},
+					company: frm.doc.company
+				}
 			};
 		});
 

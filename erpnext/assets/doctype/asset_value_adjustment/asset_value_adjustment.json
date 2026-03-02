@@ -9,6 +9,7 @@
   "asset",
   "asset_name",
   "asset_category",
+  "activity",
   "column_break_4",
   "company",
   "date",
@@ -30,10 +31,12 @@
  ],
  "fields": [
   {
+   "fetch_from": "asset.company",
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
-   "options": "Company"
+   "options": "Company",
+   "read_only": 1
   },
   {
    "fieldname": "asset",
@@ -99,7 +102,8 @@
    "fieldname": "cost_center",
    "fieldtype": "Link",
    "label": "Cost Center",
-   "options": "Cost Center"
+   "options": "Cost Center",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -146,13 +150,15 @@
    "fieldname": "branch",
    "fieldtype": "Link",
    "label": "Branch",
-   "options": "Branch"
+   "options": "Branch",
+   "read_only": 1
   },
   {
    "fieldname": "fixed_asset_account",
    "fieldtype": "Link",
    "label": "Fixed Asset Account",
    "options": "Account",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -160,14 +166,22 @@
    "fieldtype": "Link",
    "label": "Credit Account",
    "options": "Account",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "activity",
+   "fieldtype": "Link",
+   "label": "Activity",
+   "options": "Planning Activities",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-11 16:25:09.933499",
- "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "modified": "2026-01-14 13:05:49.499826",
+ "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset Value Adjustment",
  "naming_rule": "Expression",

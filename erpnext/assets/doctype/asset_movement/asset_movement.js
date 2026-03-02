@@ -33,56 +33,147 @@ frappe.ui.form.on('Asset Movement', {
 				},
 			};
 		});
-		frm.set_query("to_employee", "assets", (doc) => {
+		frm.set_query('to_employee', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company/College"]
+					}
+				};
+			}
+			if (frm.doc.inter_company_transfer && !frm.doc.to_company){
+				return {
+					filters: {
+						company: ["=", "Please Select To Company/College"]
+					}
+				};
+			}
+			if (frm.doc.to_company) {
+				return {
+					filters: {
+						company: frm.doc.to_company
+					}
+				};
+			}
 			return {
 				filters: {
-					company: doc.to_company
+					company: frm.doc.company
 				}
 			};
-		})
-		frm.set_query("from_employee", "assets", (doc) => {
+		});
+		frm.set_query('from_employee', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company/College"]
+					}
+				};
+			}
 			return {
 				filters: {
-					company: doc.company
+					company: frm.doc.company
 				}
 			};
-		})
-		frm.set_query("to_hostel", (doc) => {
+		});
+		frm.set_query('to_hostel', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company/College"]
+					}
+				};
+			}
+			if (frm.doc.inter_company_transfer && !frm.doc.to_company){
+				return {
+					filters: {
+						company: ["=", "Please Select To Company/College"]
+					}
+				};
+			}
+			if (frm.doc.to_company) {
+				return {
+					filters: {
+						company: frm.doc.to_company
+					}
+				};
+			}
 			return {
 				filters: {
-					company: doc.to_company
+					company: frm.doc.company
 				}
 			};
-		})
-		frm.set_query("from_hostel", (doc) => {
+		});
+		frm.set_query('from_hostel', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company/College"]
+					}
+				};
+			}
 			return {
 				filters: {
-					company: doc.company
+					company: frm.doc.company
 				}
 			};
-		})
-		frm.set_query("to_roombuilding", (doc) => {
+		});
+		frm.set_query('to_roombuilding', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company/College"]
+					}
+				};
+			}
+			if (frm.doc.inter_company_transfer && !frm.doc.to_company){
+				return {
+					filters: {
+						company: ["=", "Please Select To Company/College"]
+					}
+				};
+			}
+			if (frm.doc.to_company) {
+				return {
+					filters: {
+						company: frm.doc.to_company
+					}
+				};
+			}
 			return {
 				filters: {
-					company: doc.to_company
+					company: frm.doc.company
 				}
 			};
-		})
-		frm.set_query("from_roombuilding", (doc) => {
+		});
+		frm.set_query('from_roombuilding', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company/College"]
+					}
+				};
+			}
 			return {
 				filters: {
-					company: doc.company
+					company: frm.doc.company
 				}
 			};
-		})
-		frm.set_query("reference_name", (doc) => {
+		});
+		frm.set_query('reference_name', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company/College"]
+					}
+				};
+			}
 			return {
 				filters: {
-					company: doc.company,
+					company: frm.doc.company,
 					docstatus: 1
 				}
 			};
-		})
+		});
 		frm.set_query("reference_doctype", () => {
 			return {
 				filters: {
@@ -104,14 +195,20 @@ frappe.ui.form.on('Asset Movement', {
 				}
 			}
 		})
-		frm.set_query("from_asset", (doc) => {
+		frm.set_query('from_asset', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company/College"]
+					}
+				};
+			}
 			return {
 				filters: {
-				company: doc.company
+					company: frm.doc.company
 				}
-			}
-		}
-		)
+			};
+		});
 	},
 	onload: (frm) => {
 		frm.trigger('set_required_fields');
@@ -181,6 +278,8 @@ frappe.ui.form.on('Asset Movement', {
 			frm.set_df_property("to_company", 'reqd', 1);
 		} else {
 			frm.set_df_property("to_company", 'reqd', 0);
+			frm.set_value("to_company", "");
+			frm.refresh_field("to_company");
 		}
 	}
 });

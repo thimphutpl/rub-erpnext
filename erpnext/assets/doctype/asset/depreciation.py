@@ -1342,7 +1342,6 @@ def depreciate_asset(asset_doc, date, notes):
 	asset_doc.flags.ignore_validate_update_after_submit = True
 
 	make_new_active_asset_depr_schedules_and_cancel_current_ones(asset_doc, notes, date_of_disposal=date)
-
 	asset_doc.save()
 
 	make_depreciation_entry_for_all_asset_depr_schedules(asset_doc, date)

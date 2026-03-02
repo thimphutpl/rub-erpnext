@@ -4,8 +4,11 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import get_link_to_form
-
+from frappe.utils import get_link_to_form, flt, cint
+import erpnext
+from erpnext.accounts.general_ledger import (
+	make_reverse_gl_entries,
+)
 from erpnext.assets.doctype.asset_activity.asset_activity import add_asset_activity
 from erpnext.accounts.utils import make_asset_transfer_gl
 
@@ -44,9 +47,9 @@ class AssetMovement(Document):
 	# end: auto-generated types
 
 	def validate(self):
-		if self.asset_custodian_type == "Hostel Room":
-			self.from_employee = None
-			self.to_employee = None
+		# if self.asset_custodian_type == "Hostel Room":
+		# 	self.from_employee = None
+		# 	self.to_employee = None
 		if self.purpose == 'Receipt':
 			return
 		self.validate_asset()
@@ -196,33 +199,35 @@ class AssetMovement(Document):
 
 	def validate_employee(self):
 		for d in self.assets:
-			if d.to_custodian_type == "Employee":
-				if d.from_employee:
-					current_custodian = frappe.db.get_value("Asset", d.asset, "custodian")
-
-					if current_custodian != d.from_employee:
-						frappe.throw(
-							_("Asset {0} does not belongs to the custodian {1}").format(d.asset, d.from_employee)
-						)
-			elif d.asset_custodian_type == "Hostel Room":
-				if d.from_employee:
+			if d.from_employee:
+				current_custodian = frappe.db.get_value("Asset", d.asset, "custodian")
+				if not current_custodian:
 					current_custodian = frappe.db.get_value("Asset", d.asset, "hostel")
-
-					if current_custodian != d.from_employee:
-						frappe.throw(
-							_("Asset {0} does not belong to the Hostel Room {1}").format(d.asset, d.from_employee)
-						)
-			elif d.to_custodian_type == "Room":
-				if d.from_employee:
+				if not current_custodian:
 					current_custodian = frappe.db.get_value("Asset", d.asset, "roombuilding")
+				if current_custodian != d.from_employee:
+					frappe.throw(
+						_("Asset {0} does not belong to custodian {1}").format(d.asset, d.from_employee)
+					)
+			# elif d.asset_custodian_type == "Hostel Room":
+			# 	if d.from_employee:
+			# 		current_custodian = frappe.db.get_value("Asset", d.asset, "hostel")
 
-					if current_custodian != d.from_employee:
-						frappe.throw(
-							_("Asset {0} does not belong to the Room/Building {1}").format(d.asset, d.from_employee)
-						)
+			# 		if current_custodian != d.from_employee:
+			# 			frappe.throw(
+			# 				_("Asset {0} does not belong to the Hostel Room {1}").format(d.asset, d.from_employee)
+			# 			)
+			# elif d.to_custodian_type == "Room":
+			# 	if d.from_employee:
+			# 		current_custodian = frappe.db.get_value("Asset", d.asset, "roombuilding")
+
+			# 		if current_custodian != d.from_employee:
+			# 			frappe.throw(
+			# 				_("Asset {0} does not belong to the Room/Building {1}").format(d.asset, d.from_employee)
+			# 			)
 
 			if d.to_custodian_type == "Employee":
-				if d.to_employee and frappe.db.get_value("Employee", d.to_employee, "company") != self.company:
+				if d.to_employee and frappe.db.get_value("Employee", d.to_employee, "company") != self.company and self.inter_company_transfer == 0:
 					frappe.throw(
 						_("Employee {0} does not belongs to the company {1}").format(d.to_employee, self.company)
 					)
@@ -263,13 +268,147 @@ class AssetMovement(Document):
 	
 	def on_submit(self):
 		self.set_latest_location_and_custodian_in_asset()
+		if self.inter_company_transfer == 1:
+			self.make_asset_je()
 
 	def on_cancel(self):
 		self.ignore_linked_doctypes = (
 			"GL Entry",
 			"Payment Ledger Entry",
 		)
-		self.set_latest_location_and_custodian_in_asset(1)
+		if frappe.db.exists("Journal Entry Account", {"reference_name": self.name, "docstatus": 0}):
+			for jea in frappe.db.sql("select distinct parent from `tabJournal Entry Account` where reference_name = '{}' and docstatus = 0".format(self.name), as_dict=1):
+				doc = frappe.get_doc("Journal Entry", jea.parent)
+				doc.delete()
+		make_reverse_gl_entries(voucher_type=self.doctype, voucher_no=self.name)
+
+		self.set_latest_location_and_custodian_in_asset(cancel=1)
+
+
+
+	def make_asset_je(self):
+		from erpnext.accounts.general_ledger import merge_similar_entries
+		gl_entries = []
+		gain_or_loss_account_from_company = frappe.db.get_value("Company", self.company, "disposal_account")
+		gain_or_loss_account_to_company = frappe.db.get_value("Company", self.to_company, "disposal_account")
+		if not gain_or_loss_account_from_company:
+			frappe.throw("Gain/Loss Account on Asset Disposal is not set for company {}".format(self.company))
+		if not gain_or_loss_account_to_company:
+			frappe.throw("Gain/Loss Account on Asset Disposal is not set for company {}".format(self.to_company))
+		for a in self.assets:
+			je_from = frappe.new_doc("Journal Entry")
+			je_from.flags.ignore_permissions = 1 
+
+			je_from.voucher_type = "Journal Entry"
+			je_from.naming_series = "Journal Voucher"
+			je_from.company = self.company
+			je_from.branch = frappe.db.get_value("Branch", {"cost_center": a.source_cost_center}, "name")
+			je_from.posting_date = self.transaction_date
+			je_from.remark = f"Depreciation Entry against asset {a.asset}"
+			asset_category = frappe.db.get_value("Asset", a.asset, "asset_category")
+			if not asset_category:
+				frappe.throw("Asset Category is not set for Asset {}".format(a.asset))
+			fa_account = frappe.db.get_value("Asset Category Account", {"parent": asset_category}, "fixed_asset_account")
+			ad_account = frappe.db.get_value("Asset Category Account", {"parent": asset_category} , "accumulated_depreciation_account")
+			if not fa_account:
+				frappe.throw("Fixed Asset Account is not set for Asset Cateogry".format(asset_category))
+			asset_net_book_value = frappe.db.get_value("Asset Finance Book", {"parent":a.asset}, "value_after_depreciation")
+			accumulated_dep = frappe.db.sql("""select ifnull(ds.accumulated_depreciation_amount,0) as acc_dep from `tabDepreciation Schedule` ds,
+			`tabAsset Depreciation Schedule` ads 
+			where ads.asset = '{}' and ads.docstatus =1 
+			and ds.parent = ads.name and journal_entry is not null order by schedule_date desc limit 1 """.format(a.asset),as_dict=1)
+			if len(accumulated_dep):
+				accumulated_dep = accumulated_dep[0].acc_dep
+			else:
+				accumulated_dep = 0
+			je_from.append(
+				"accounts",
+					{
+						"account": gain_or_loss_account_from_company,
+						"against": fa_account,
+						"debit": flt(asset_net_book_value,2),
+						"debit_in_account_currency": flt(asset_net_book_value,2),
+						"reference_name": self.name,
+						"reference_type": self.doctype,
+						"cost_center": a.source_cost_center,
+						"company": self.company,
+					}
+			)
+			je_from.append(
+				"accounts",
+					{
+						"account": fa_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.company,"abbr")),
+						"against": ", ".join(filter(None, [ad_account,gain_or_loss_account_from_company,])) ,
+						"credit": flt(asset_net_book_value+accumulated_dep,2),
+						"credit_in_account_currency": flt(asset_net_book_value+accumulated_dep,2),
+						"reference_name": self.name,
+						"reference_type": self.doctype,
+						"cost_center": a.source_cost_center,
+						"company": self.company,
+					}
+			)
+			je_from.append(
+					"accounts",
+					{
+						"account": ad_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.company,"abbr")),
+						"against": fa_account,
+						"debit": flt(accumulated_dep,2),
+						"debit_in_account_currency": flt(accumulated_dep,2),
+						"reference_name": self.name,
+						"reference_type": self.doctype,
+						"cost_center": a.source_cost_center,
+						"company": self.company
+					}
+			)
+			je_from.insert()
+			je_to = frappe.new_doc("Journal Entry")
+			je_to.voucher_type = "Journal Entry"
+			je_to.naming_series = "Journal Voucher"
+			je_to.company = self.to_company
+			je_to.branch = frappe.db.get_value("Branch", {"cost_center": a.target_cost_center}, "name")
+			je_to.posting_date = self.transaction_date
+			je_to.remark = f"Depreciation Entry against asset {a.asset}"
+			je_to.append(
+				"accounts",
+					{
+						"account": gain_or_loss_account_to_company,
+						"against": fa_account,
+						"credit": flt(asset_net_book_value,2),
+						"credit_in_account_currency": flt(asset_net_book_value,2),
+						"reference_name": self.name,
+						"reference_type": self.doctype,
+						"cost_center": a.target_cost_center,
+						"project": self.project,
+						"company": self.to_company,
+					}
+			)
+			je_to.append(
+				"accounts",
+					{
+						"account": fa_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.to_company,"abbr")),
+						"against": gain_or_loss_account_to_company,
+						"debit": flt(asset_net_book_value+accumulated_dep,2),
+						"debit_in_account_currency": flt(asset_net_book_value+accumulated_dep,2),
+						"reference_name": self.name,
+						"reference_type": self.doctype,
+						"cost_center": a.target_cost_center,
+						"company": self.to_company
+					}
+			)
+			je_to.append(
+				"accounts",
+					{
+						"account": ad_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.to_company,"abbr")),
+						"against": fa_account,
+						"credit": flt(accumulated_dep,2),
+						"credit_in_account_currency": flt(accumulated_dep,2),
+						"reference_name": self.name,
+						"reference_type": self.doctype,
+						"cost_center": a.target_cost_center,
+						"company": self.to_company
+					}
+			)
+			je_to.insert()
 
 	def set_latest_location_and_custodian_in_asset(self, cancel=0):
 		current_cost_center, current_employee, current_employee_name, current_hostel, current_roombuilding = "", "", "", "", ""
@@ -317,7 +456,10 @@ class AssetMovement(Document):
 				frappe.db.set_value("Asset", d.asset, "hostel", d.to_employee if not cancel else d.from_employee, update_modified=False)
 			elif d.to_custodian_type == "Room":
 				frappe.db.set_value("Asset", d.asset, "roombuilding", d.to_employee if not cancel else d.from_employee, update_modified=False)
-
+			if cancel == 1:
+				frappe.db.set_value("Asset", d.asset, "roombuilding", None if d.asset_custodian_type != "Room" else d.from_employee)
+				frappe.db.set_value("Asset", d.asset, "custodian", None if d.asset_custodian_type != "Employee" else d.from_employee)
+				frappe.db.set_value("Asset", d.asset, "hostel", None if d.asset_custodian_type != "Hostel Room" else d.from_employee)
 			equipment = frappe.db.get_value("Equipment", {"asset_code": d.asset}, "name")
 			if equipment:
 				equip = frappe.get_doc("Equipment", equipment)
@@ -407,15 +549,15 @@ class AssetMovement(Document):
 				self.to_employee=''
 
 			condition_statement=''
-			if self.asset_custodian_type == 'Employee':
+			if  self.from_employee:
 				condition_statement = f"custodian = '{self.from_employee}'"
-			elif self.asset_custodian_type == 'Hostel Room':
+			elif self.from_hostel:
 				condition_statement = f"hostel = '{self.from_hostel}'"
-			elif self.asset_custodian_type == 'Room':
+			elif self.from_roombuilding:
 				condition_statement = f"roombuilding = '{self.from_roombuilding}'"
 			elif self.cost_center:
 				condition_statement = f"cost_center = '{self.cost_center}'"
-			
+			condition_statement += f" and company = '{self.company}'"
 			asset_list = frappe.db.sql("""
 				select name, custodian_name, custodian, cost_center, is_hostel_asset, hostel, roombuilding
 				from `tabAsset` 
