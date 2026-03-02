@@ -49,7 +49,8 @@ class AssetIssueDetails(Document):
         warehouse: DF.Link | None
     # end: auto-generated types
     def validate(self):
-        pass
+        if getdate(self.issued_date) > getdate(nowdate()):
+            frappe.throw("Issuing for Future Date is not Permitted")
 
     def on_submit(self):
         self.check_qty_balance()

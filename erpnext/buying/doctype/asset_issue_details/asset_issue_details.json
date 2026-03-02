@@ -7,11 +7,11 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "branch",
+  "company",
   "entry_date",
   "column_break_3",
+  "branch",
   "cost_center",
-  "company",
   "item_detail_section",
   "item_code",
   "item_name",
@@ -207,7 +207,8 @@
    "fieldname": "cost_center",
    "fieldtype": "Link",
    "label": "Cost Center",
-   "options": "Cost Center"
+   "options": "Cost Center",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_14",
@@ -285,8 +286,8 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-29 12:05:29.695901",
- "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "modified": "2026-01-14 11:59:52.677395",
+ "modified_by": "Administrator",
  "module": "Buying",
  "name": "Asset Issue Details",
  "naming_rule": "Expression (old style)",

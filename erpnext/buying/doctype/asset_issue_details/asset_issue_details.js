@@ -25,6 +25,62 @@ frappe.ui.form.on('Asset Issue Details', {
 				}
 			}
 		});
+		frm.set_query('branch', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company"]
+					}
+				};
+			}
+			return {
+				filters: {
+					company: frm.doc.company
+				}
+			};
+		});
+		frm.set_query('hostel', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company"]
+					}
+				};
+			}
+			return {
+				filters: {
+					company: frm.doc.company
+				}
+			};
+		});
+		frm.set_query('roombuilding', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company"]
+					}
+				};
+			}
+			return {
+				filters: {
+					company: frm.doc.company
+				}
+			};
+		});
+		frm.set_query('purchase_receipt', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company"]
+					}
+				};
+			}
+			return {
+				filters: {
+					company: frm.doc.company
+				}
+			};
+		});
 		frm.set_query("asset_custodian_type", function () {
 			return {
 				filters: {
@@ -35,12 +91,22 @@ frappe.ui.form.on('Asset Issue Details', {
 	},
 	refresh: function (frm) {
 		frm.set_query('issued_to', function(doc, cdt, cdn) {
-			return {
-				filters: {
-					"branch": frm.doc.branch,
-					"status":"Active"
+			if (!frm.doc.branch) {
+				return {
+					filters: {
+						branch: ["=", "Please Select Branch"]
+					}
+				};
+			}
+			else{
+				return {
+					filters: {
+						"branch": frm.doc.branch,
+						"status":"Active"
+					}
 				}
 			}
+
 		});
 		frm.set_query("purchase_receipt",function(doc) {
 			return {
