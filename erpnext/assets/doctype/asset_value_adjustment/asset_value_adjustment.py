@@ -82,6 +82,7 @@ class AssetValueAdjustment(Document):
 		self.update_asset()
 
 	def on_cancel(self):
+		self.ignore_linked_doctypes = ("Stock Ledger Entry", "GL Entry")
 		if self.journal_entry:
 			doc = frappe.get_doc("Journal Entry", self.journal_entry)
 			doc.cancel()
