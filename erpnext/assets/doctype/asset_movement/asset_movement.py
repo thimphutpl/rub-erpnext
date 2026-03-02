@@ -448,7 +448,9 @@ class AssetMovement(Document):
 			frappe.db.set_value("Asset", d.asset, "branch", branch, update_modified=False)
 			frappe.db.set_value("Asset", d.asset, "cost_center", d.target_cost_center if not cancel else d.source_cost_center, update_modified=False)
 			frappe.db.set_value("Asset", d.asset, "is_hostel_asset", d.to_custodian_type if not cancel else d.asset_custodian_type, update_modified=False)
-			frappe.db.set_value("Asset", d.asset, "company", self.to_company if not cancel else self.company, update_modified=False)
+			if self.inter_company_transfer == 1:
+				frappe.db.set_value("Asset", d.asset, "company", self.to_company if not cancel else self.company, update_modified=False)
+
 			if d.to_custodian_type == "Employee":
 				frappe.db.set_value("Asset", d.asset, "custodian", current_employee, update_modified=False)
 				frappe.db.set_value("Asset", d.asset, "custodian_name", current_employee_name, update_modified=False)
