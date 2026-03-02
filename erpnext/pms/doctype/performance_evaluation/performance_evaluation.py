@@ -12,6 +12,77 @@ from frappe.model.mapper import get_mapped_doc
 from erpnext.custom_workflow import validate_workflow_states, notify_workflow_states
 
 class PerformanceEvaluation(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from erpnext.pms.doctype.evaluate_additional_achievements.evaluate_additional_achievements import EvaluateAdditionalAchievements
+		from erpnext.pms.doctype.evaluate_competency_item.evaluate_competency_item import EvaluateCompetencyItem
+		from erpnext.pms.doctype.evaluate_target_item.evaluate_target_item import EvaluateTargetItem
+		from frappe.types import DF
+
+		achievements_items: DF.Table[EvaluateAdditionalAchievements]
+		agreed_by_perc: DF.Literal["", "Yes", "No"]
+		amended_from: DF.Link | None
+		approver: DF.Link | None
+		approver_designation: DF.Data | None
+		approver_fl_designation: DF.Data | None
+		approver_fl_name: DF.Data | None
+		approver_in_first_level: DF.Data | None
+		approver_name: DF.Data | None
+		branch: DF.Link | None
+		company: DF.Link | None
+		competency_total_weightage: DF.Percent
+		cost_center: DF.Link | None
+		date_of_joining: DF.Date | None
+		department: DF.Link | None
+		designation: DF.Link | None
+		division: DF.Link | None
+		employee: DF.Link
+		employee_comment: DF.SmallText | None
+		employee_name: DF.ReadOnly | None
+		end_date: DF.Date | None
+		eval_workflow_state: DF.Data | None
+		evaluate_competency_item: DF.Table[EvaluateCompetencyItem]
+		evaluate_target_item: DF.Table[EvaluateTargetItem]
+		evaluation_date: DF.Date | None
+		final_score: DF.Float
+		final_score_percent: DF.Percent
+		form_i_score: DF.Float
+		form_i_total_rating: DF.Float
+		form_ii_score: DF.Float
+		form_ii_total_rating: DF.Float
+		gender: DF.Data | None
+		grade: DF.Link | None
+		max_rating_limit: DF.Float
+		no_of_months_served: DF.Literal["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+		old_employee_id: DF.Data | None
+		overall_rating: DF.Link | None
+		perc_approver: DF.Link | None
+		perc_name: DF.Data | None
+		perc_required: DF.Literal["", "Yes", "No"]
+		pms_calendar: DF.Link
+		pms_group: DF.Link
+		reason: DF.SmallText | None
+		reference: DF.Link | None
+		required_to_set_target: DF.Data | None
+		review: DF.Link | None
+		section: DF.Link | None
+		set_manual_approver: DF.Check
+		star_obtained: DF.Rating
+		start_date: DF.Date | None
+		supervisor_comment: DF.SmallText | None
+		supervisor_manager: DF.Link | None
+		supervisor_manager_comment: DF.SmallText | None
+		supervisor_manager_name: DF.Data | None
+		supervisors_manager_designation: DF.Data | None
+		target_total_weightage: DF.Percent
+		unit: DF.Link | None
+		upload_old_data: DF.Data | None
+		user_id: DF.Link | None
+	# end: auto-generated types
 	def validate(self):
 		if self.upload_old_data:
 			return 

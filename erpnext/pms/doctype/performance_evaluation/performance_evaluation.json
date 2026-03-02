@@ -29,8 +29,6 @@
   "review",
   "date_of_joining",
   "section_break_20",
-  "region",
-  "column_break_22",
   "unit",
   "pms_calendar_section",
   "pms_calendar",
@@ -41,7 +39,6 @@
   "end_date",
   "column_break_34",
   "evaluation_date",
-  "section_break_18",
   "part_a_section",
   "get_target",
   "evaluate_target_item",
@@ -72,14 +69,12 @@
   "supervisor_comment",
   "column_break_56",
   "supervisor_manager_comment",
-  "review_by_supervisors_manager_section",
   "perc_community_intervention_section",
   "perc_required",
   "perc_approver",
   "column_break_62",
   "agreed_by_perc",
   "perc_name",
-  "section_break_57",
   "approver_detail_section",
   "approver",
   "set_manual_approver",
@@ -240,10 +235,6 @@
    "fieldtype": "Date",
    "label": "End Date",
    "read_only": 1
-  },
-  {
-   "fieldname": "section_break_18",
-   "fieldtype": "Section Break"
   },
   {
    "fetch_from": "pms_group.required_to_set_target",
@@ -459,12 +450,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "review_by_supervisors_manager_section",
-   "fieldtype": "Section Break",
-   "hidden": 1,
-   "label": "Review By Supervisor's Manager"
-  },
-  {
    "fieldname": "supervisor_manager",
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
@@ -502,11 +487,6 @@
    "fieldtype": "Select",
    "label": "Agreed By PERC?",
    "options": "\nYes\nNo"
-  },
-  {
-   "fieldname": "section_break_57",
-   "fieldtype": "Section Break",
-   "hidden": 1
   },
   {
    "collapsible": 1,
@@ -548,14 +528,6 @@
    "in_list_view": 1,
    "label": "Division",
    "options": "Department",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "employee.region",
-   "fieldname": "region",
-   "fieldtype": "Link",
-   "label": "Region",
-   "options": "Region",
    "read_only": 1
   },
   {
@@ -650,10 +622,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "column_break_22",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -732,7 +700,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-09 12:11:08.139027",
+ "modified": "2026-01-14 22:16:44.435793",
  "modified_by": "Administrator",
  "module": "PMS",
  "name": "Performance Evaluation",
@@ -831,6 +799,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

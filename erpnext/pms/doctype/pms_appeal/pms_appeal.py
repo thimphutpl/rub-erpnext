@@ -10,6 +10,41 @@ from frappe.model.mapper import get_mapped_doc
 from erpnext.custom_workflow import validate_workflow_states, notify_workflow_states
 
 class PMSAppeal(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from erpnext.pms.doctype.form_i.form_i import FormI
+		from erpnext.pms.doctype.form_ii.form_ii import FormII
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		appeal_based_on: DF.Link
+		appeal_date: DF.Date | None
+		approver: DF.Link | None
+		approver_name: DF.Data | None
+		branch: DF.Link | None
+		company: DF.Link | None
+		cost_center: DF.Link | None
+		department: DF.Link | None
+		designation: DF.Link | None
+		division: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		form_i: DF.Table[FormI]
+		form_ii: DF.Table[FormII]
+		gender: DF.Data | None
+		grade: DF.Link | None
+		old_employee_id: DF.Data | None
+		pms_calendar: DF.Link
+		pms_group: DF.Link
+		section: DF.Link | None
+		unit: DF.Link | None
+		user_id: DF.Link | None
+		workflow_state: DF.Data | None
+	# end: auto-generated types
 	def validate(self):
 		# validate_workflow_states(self)
 		self.check_value_length()

@@ -24,7 +24,6 @@
   "section",
   "column_break_13",
   "designation",
-  "region",
   "unit",
   "user_id",
   "pms_calendar_section",
@@ -34,7 +33,6 @@
   "start_date",
   "column_break_16",
   "end_date",
-  "section_break_12",
   "part_a_section",
   "get_target",
   "review_target_item",
@@ -94,10 +92,6 @@
    "label": "PMS Group",
    "options": "PMS Group",
    "read_only": 1
-  },
-  {
-   "fieldname": "section_break_12",
-   "fieldtype": "Section Break"
   },
   {
    "fetch_from": "employee.grade",
@@ -332,13 +326,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "region",
-   "fieldtype": "Link",
-   "label": "Region",
-   "options": "Region",
-   "read_only": 1
-  },
-  {
    "fieldname": "unit",
    "fieldtype": "Link",
    "label": "Unit",
@@ -390,7 +377,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-07 10:56:53.683517",
+ "modified": "2026-01-14 22:15:53.142311",
  "modified_by": "Administrator",
  "module": "PMS",
  "name": "Review",
@@ -475,6 +462,7 @@
    "share": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

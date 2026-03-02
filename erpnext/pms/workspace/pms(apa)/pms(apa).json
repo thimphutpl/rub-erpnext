@@ -5,15 +5,18 @@
    "label": "Company Compact"
   }
  ],
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">PMS</span>\",\"col\":12}},{\"type\":\"chart\",\"data\":{\"chart_name\":\"Company Compact\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Master Data\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"PMS Transaction\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"PMS Setting\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Report\",\"col\":4}}]",
+ "content": "[{\"id\":\"QUSRVhMMzg\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">PMS(APA)</span>\",\"col\":12}},{\"id\":\"52VxdQKMU_\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Company Compact\",\"col\":12}},{\"id\":\"jP20YEuCJS\",\"type\":\"card\",\"data\":{\"card_name\":\"Master Data\",\"col\":4}},{\"id\":\"7lq5cNxXFo\",\"type\":\"card\",\"data\":{\"card_name\":\"PMS Transaction\",\"col\":4}},{\"id\":\"BhjDXKh_0E\",\"type\":\"card\",\"data\":{\"card_name\":\"PMS Setting\",\"col\":4}},{\"id\":\"OTR_O2ceWa\",\"type\":\"card\",\"data\":{\"card_name\":\"Report\",\"col\":4}}]",
  "creation": "2025-07-24 20:20:38.264828",
+ "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
  "hide_custom": 0,
  "icon": "color-review-points",
  "idx": 0,
- "label": "PMS",
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "PMS(APA)",
  "links": [
   {
    "hidden": 0,
@@ -188,10 +191,11 @@
    "type": "Link"
   }
  ],
- "modified": "2025-09-25 11:09:37.646577",
- "modified_by": "pralad.rai@thimphutechpark.bt",
+ "modified": "2026-01-14 22:21:58.284820",
+ "modified_by": "Administrator",
  "module": "PMS",
- "name": "PMS",
+ "name": "PMS(APA)",
+ "number_cards": [],
  "owner": "pralad.rai@thimphutechpark.bt",
  "parent_page": "",
  "public": 1,
@@ -199,5 +203,5 @@
  "roles": [],
  "sequence_id": 24.0,
  "shortcuts": [],
- "title": "PMS"
+ "title": "PMS(APA)"
 }

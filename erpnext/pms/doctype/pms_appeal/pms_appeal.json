@@ -24,7 +24,6 @@
   "column_break_17",
   "gender",
   "branch",
-  "region",
   "unit",
   "pms_calendar_section",
   "pms_calendar",
@@ -229,19 +228,11 @@
    "options": "Form II"
   },
   {
-   "fieldname": "region",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Region",
-   "options": "Region",
-   "read_only": 1
-  },
-  {
    "fieldname": "unit",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Unit",
-   "options": "Unit",
+   "options": "Department",
    "read_only": 1
   },
   {
@@ -294,7 +285,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2025-06-24 11:25:07.663085",
+ "modified": "2026-01-14 22:17:41.222830",
  "modified_by": "Administrator",
  "module": "PMS",
  "name": "PMS Appeal",
@@ -373,6 +364,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

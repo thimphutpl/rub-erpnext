@@ -9,6 +9,45 @@ from frappe.utils import flt
 from frappe import _
 
 class PMSSummary(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		approver: DF.Link | None
+		approver_designation: DF.Data | None
+		approver_name: DF.Data | None
+		branch: DF.Link | None
+		company: DF.Link | None
+		cost_center: DF.Link | None
+		date_of_joining: DF.Data | None
+		department: DF.Link | None
+		designation: DF.Link | None
+		division: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		final_score: DF.Float
+		final_score_percent: DF.Percent
+		form_i_score: DF.Float
+		form_i_total_rating: DF.Float
+		form_i_weightage: DF.Percent
+		form_ii_score: DF.Float
+		form_ii_total_rating: DF.Float
+		form_ii_weightage: DF.Percent
+		gender: DF.Data | None
+		max_rating_limit: DF.Float
+		overall_rating: DF.Link | None
+		pms_calendar: DF.Link
+		pms_group: DF.Link | None
+		posting_date: DF.Date | None
+		section: DF.Link | None
+		star_obtained: DF.Rating
+		unit: DF.Link | None
+	# end: auto-generated types
 	def validate(self):
 		self.get_summary()
 	
