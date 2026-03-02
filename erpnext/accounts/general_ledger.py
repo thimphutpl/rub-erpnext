@@ -811,7 +811,7 @@ def validate_against_planning_activities(args):
 	# frappe.throw(str(total_expense))
 
 	if total_expense > budget_amount and args.against_voucher != "Asset Movement":
-		frappe.throw("Expense exceeded the allocated Budget")
+		frappe.throw("Expense exceeded the allocated Budget "+args.against_voucher)
 def get_budget_amount(self):
 	posting_date = self.posting_date
 	posting_year =getdate(posting_date).year 
