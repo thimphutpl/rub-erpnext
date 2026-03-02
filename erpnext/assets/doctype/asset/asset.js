@@ -22,7 +22,20 @@ frappe.ui.form.on("Asset", {
 				},
 			};
 		});
-
+		frm.set_query('branch', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select /College"]
+					}
+				};
+			}
+			return {
+				filters: {
+					company: frm.doc.company
+				}
+			};
+		});
 		frm.set_query('hostel', function(doc, cdt, cdn) {
 			if (!frm.doc.company) {
 				return {
