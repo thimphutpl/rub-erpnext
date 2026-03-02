@@ -252,7 +252,7 @@ class Asset(AccountsController):
 	@frappe.whitelist()
 	def generate_qr_code(self):
 		# if not self.qr_code_link:
-		url = frappe.db.get_single_value("Asset Settings", "qr_gen_rul")
+		url = frappe.db.get_single_value("Asset Settings", "qr_gen_url")
 		if not url:
 			frappe.throw("Asset QR Generation URL cannot be blank")
 		if self.docstatus == 1:
