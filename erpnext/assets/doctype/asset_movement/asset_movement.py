@@ -200,11 +200,13 @@ class AssetMovement(Document):
 	def validate_employee(self):
 		for d in self.assets:
 			if d.from_employee:
-				current_custodian = frappe.db.get_value("Asset", d.asset, "custodian")
-				if not current_custodian:
+				custodian_type = frappe.db.get_value("Asset", d.asset, "is_hostel_asset")
+				if custodian_type == "Hostel":
 					current_custodian = frappe.db.get_value("Asset", d.asset, "hostel")
-				if not current_custodian:
+				elif custodian_type == "Room/Building":
 					current_custodian = frappe.db.get_value("Asset", d.asset, "roombuilding")
+				else:
+					current_custodian = frappe.db.get_value("Asset", d.asset, "custodian")
 				if current_custodian != d.from_employee:
 					frappe.throw(
 						_("Asset {0} does not belong to custodian {1}").format(d.asset, d.from_employee)
