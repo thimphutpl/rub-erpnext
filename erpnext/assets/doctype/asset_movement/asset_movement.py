@@ -201,7 +201,7 @@ class AssetMovement(Document):
 		for d in self.assets:
 			if d.from_employee:
 				custodian_type = frappe.db.get_value("Asset", d.asset, "is_hostel_asset")
-				if custodian_type == "Hostel":
+				if custodian_type == "Hostel Room":
 					current_custodian = frappe.db.get_value("Asset", d.asset, "hostel")
 				elif custodian_type == "Room/Building":
 					current_custodian = frappe.db.get_value("Asset", d.asset, "roombuilding")
