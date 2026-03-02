@@ -568,6 +568,12 @@ class AssetMovement(Document):
 				where {cond} 
 				and docstatus = 1 
 				""".format(cond=condition_statement),as_dict = 1)
+			frappe.throw("""
+				select name, custodian_name, custodian, cost_center, is_hostel_asset, hostel, roombuilding
+				from `tabAsset` 
+				where {cond} 
+				and docstatus = 1 
+				""".format(cond=condition_statement))
 			if asset_list:
 				self.set("assets",[])
 				for x in asset_list:
