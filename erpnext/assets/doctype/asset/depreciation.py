@@ -1536,6 +1536,7 @@ def get_gl_entries_on_asset_disposal(
 					"debit_in_account_currency": accumulated_depr_amount,
 					"debit": accumulated_depr_amount,
 					"posting_date": date,
+					"cost_center": asset.cost_center,
 				},
 				item=asset,
 			),
