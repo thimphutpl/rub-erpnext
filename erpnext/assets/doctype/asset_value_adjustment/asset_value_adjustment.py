@@ -324,44 +324,44 @@ class AssetValueAdjustment(Document):
 		sch.db_set("income_depreciation_amount", income)
 		sch.db_set("income_accumulated_depreciation", accu_income)
 		
-	def update_asset(self, cancel=False):
-		if self.re_valued:
-			if cancel:
-				frappe.db.set_value("Asset",self.asset,"revalued_asset_value", 0)
-				frappe.db.set_value("Asset",self.asset, "re_valued", 0)
-			else:
-				frappe.db.set_value("Asset",self.asset,"revalued_asset_value", self.new_asset_value)
-				frappe.db.set_value("Asset",self.asset,"re_valued", 1)
-	# def update_asset(self, asset_value):
-	# 	asset = frappe.get_doc("Asset", self.asset)
+	# def update_asset(self, cancel=False):
+	# 	if self.re_valued:
+	# 		if cancel:
+	# 			frappe.db.set_value("Asset",self.asset,"revalued_asset_value", 0)
+	# 			frappe.db.set_value("Asset",self.asset, "re_valued", 0)
+	# 		else:
+	# 			frappe.db.set_value("Asset",self.asset,"revalued_asset_value", self.new_asset_value)
+	# 			frappe.db.set_value("Asset",self.asset,"re_valued", 1)
+	def update_asset(self, asset_value):
+		asset = frappe.get_doc("Asset", self.asset)
 
-	# 	if not asset.calculate_depreciation:
-	# 		asset.value_after_depreciation = asset_value
-	# 		asset.save()
-	# 		return
+		if not asset.calculate_depreciation:
+			asset.value_after_depreciation = asset_value
+			asset.save()
+			return
 
-	# 	asset.flags.decrease_in_asset_value_due_to_value_adjustment = True
+		asset.flags.decrease_in_asset_value_due_to_value_adjustment = True
 
-	# 	if self.docstatus == 1:
-	# 		notes = _(
-	# 			"This schedule was created when Asset {0} was adjusted through Asset Value Adjustment {1}."
-	# 		).format(
-	# 			get_link_to_form("Asset", asset.name),
-	# 			get_link_to_form(self.get("doctype"), self.get("name")),
-	# 		)
-	# 	elif self.docstatus == 2:
-	# 		notes = _(
-	# 			"This schedule was created when Asset {0}'s Asset Value Adjustment {1} was cancelled."
-	# 		).format(
-	# 			get_link_to_form("Asset", asset.name),
-	# 			get_link_to_form(self.get("doctype"), self.get("name")),
-	# 		)
+		if self.docstatus == 1:
+			notes = _(
+				"This schedule was created when Asset {0} was adjusted through Asset Value Adjustment {1}."
+			).format(
+				get_link_to_form("Asset", asset.name),
+				get_link_to_form(self.get("doctype"), self.get("name")),
+			)
+		elif self.docstatus == 2:
+			notes = _(
+				"This schedule was created when Asset {0}'s Asset Value Adjustment {1} was cancelled."
+			).format(
+				get_link_to_form("Asset", asset.name),
+				get_link_to_form(self.get("doctype"), self.get("name")),
+			)
 
-	# 	make_new_active_asset_depr_schedules_and_cancel_current_ones(
-	# 		asset, notes, value_after_depreciation=asset_value, ignore_booked_entry=True
-	# 	)
-	# 	asset.flags.ignore_validate_update_after_submit = True
-	# 	asset.save()
+		make_new_active_asset_depr_schedules_and_cancel_current_ones(
+			asset, notes, value_after_depreciation=asset_value, ignore_booked_entry=True
+		)
+		asset.flags.ignore_validate_update_after_submit = True
+		asset.save()
 
 	@frappe.whitelist()
 	def update_def_account(self):
