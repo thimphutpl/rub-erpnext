@@ -270,7 +270,7 @@
    "mandatory_depends_on": "eval:(!doc.is_composite_asset || doc.docstatus==1)"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "calculate_depreciation",
    "fieldtype": "Check",
    "label": "Calculate Depreciation",
@@ -804,7 +804,7 @@
    "link_fieldname": "reference_code"
   }
  ],
- "modified": "2026-02-06 11:17:30.647929",
+ "modified": "2026-03-03 00:14:24.729680",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset",
