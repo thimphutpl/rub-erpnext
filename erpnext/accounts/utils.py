@@ -2403,7 +2403,7 @@ def make_asset_transfer_gl(self, asset, date, from_cc, to_cc, cancel, not_legacy
 	)
 	gl_entries.append(
 		prepare_gl(self, {
-		       "account": asset.asset_account.replace(" - "+frappe.db.get_value("Company", self.company, "abbr"), " - "+frappe.db.get_value("Company",self.to_company,"abbr")),
+		       "account": asset.asset_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.company,"abbr")),
 		       "debit": asset.gross_purchase_amount,
 		       "debit_in_account_currency": asset.gross_purchase_amount,
 		       "against_voucher": asset.name,
@@ -2414,7 +2414,7 @@ def make_asset_transfer_gl(self, asset, date, from_cc, to_cc, cancel, not_legacy
 	if flt(accumulated_dep) > 0:
 		gl_entries.append(
 			prepare_gl(self, {
-			       "account": accumulated_dep_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.to_company,"abbr")),
+			       "account": accumulated_dep_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.to_company,"abbr")) if self.to_company else accumulated_dep_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.company,"abbr")),
 			       "debit": accumulated_dep,
 			       "debit_in_account_currency": accumulated_dep,
 			       "against_voucher": asset.name,
