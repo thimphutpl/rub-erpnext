@@ -466,9 +466,9 @@ class AssetMovement(Document):
 				equip.branch = branch
 				equip.save()
 			""" Asset transfer gl """
-			if d.source_cost_center != d.target_cost_center and self.purpose == "Transfer" and self.inter_company_transfer == 0:
-				self.posting_date = self.transaction_date
-				make_asset_transfer_gl(self, d.asset, self.transaction_date, d.source_cost_center, d.target_cost_center, cancel)
+			# if d.source_cost_center != d.target_cost_center and self.purpose == "Transfer" and self.inter_company_transfer == 0:
+			# 	self.posting_date = self.transaction_date
+			# 	make_asset_transfer_gl(self, d.asset, self.transaction_date, d.source_cost_center, d.target_cost_center, cancel)
 
 			if current_cost_center and current_employee:
 				add_asset_activity(
