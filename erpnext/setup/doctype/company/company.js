@@ -17,6 +17,20 @@ frappe.ui.form.on("Company", {
 				frm.toggle_enable("default_currency", !r.message);
 			});
 		}
+		frm.set_query("hr_manager", function () {
+			return {
+				filters: {
+					company: frm.doc.name
+				}
+			};
+		});
+		frm.set_query("hr_approver", function () {
+			return {
+				filters: {
+					company: frm.doc.name
+				}
+			};
+		});
 	},
 	setup: function (frm) {
 		frm.__rename_queue = "long";

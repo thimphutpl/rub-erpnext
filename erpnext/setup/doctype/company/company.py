@@ -92,6 +92,9 @@ class Company(NestedSet):
 		expenses_included_in_valuation: DF.Link | None
 		fax: DF.Data | None
 		hostel_branch: DF.Link | None
+		hr_approver: DF.Link | None
+		hr_manager: DF.Link | None
+		hr_manager_name: DF.Data | None
 		income_account: DF.Link | None
 		income_accounts: DF.Link | None
 		is_group: DF.Check
