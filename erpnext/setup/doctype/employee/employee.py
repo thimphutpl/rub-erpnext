@@ -75,6 +75,18 @@ class Employee(NestedSet):
 				validate_employee_role(user, ignore_emp_check=True)
 				user.save(ignore_permissions=True)
 				remove_user_permission("Employee", self.name, existing_user_id)
+		
+		# erecruitment integration -------------------------------------------------------------------------------------------
+		if self.applicant_id and self.selected_doc:
+			from hrms.hr.doctype.selected_candidate.selected_candidate import update_status # type: ignore
+			update_status(self.applicant_id, 'ACCEPTED')
+			self.update_selected_list_doctype()
+
+	# erecruitment integration -----------------------------------------------------------------------------------------------
+	def update_selected_list_doctype(self):
+		doc = frappe.get_doc("Selected List", self.selected_doc)
+		doc.eid = self.name
+		doc.save(ignore_permissions=True)
 
 	def after_rename(self, old, new, merge):
 		self.db_set("employee", new)
