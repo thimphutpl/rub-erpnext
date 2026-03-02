@@ -51,7 +51,7 @@ class JournalEntry(AccountsController):
 		from frappe.types import DF
 
 		accounts: DF.Table[JournalEntryAccount]
-		activity: DF.Link
+		activity: DF.Link | None
 		amended_from: DF.Link | None
 		apply_tds: DF.Check
 		auto_repeat: DF.Link | None
@@ -172,6 +172,7 @@ class JournalEntry(AccountsController):
 		self.set_amounts_in_company_currency()
 		self.validate_debit_credit_amount()
 		self.set_total_debit_credit()
+		self.validate_activity()
 		# Do not validate while importing via data import
 		if not frappe.flags.in_import:
 			self.validate_total_debit_and_credit()
@@ -196,6 +197,16 @@ class JournalEntry(AccountsController):
 
 		if not self.title:
 			self.title = self.get_title()
+
+	def validate_activity(self):
+		mandatory = 1
+		for a in self.accounts:
+			if "Asset" in a.reference_type:
+				mandatory = 0
+			else:
+				return	
+		if mandatory == 1 and (not self.activity or self.activity == ""):
+			frappe.throw("Activity is Mandatory")
 
 	def validate_advance_accounts(self):
 		journal_accounts = set([x.account for x in self.accounts])

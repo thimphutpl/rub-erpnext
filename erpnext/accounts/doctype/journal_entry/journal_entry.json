@@ -10,6 +10,7 @@
  "field_order": [
   "entry_type_and_date",
   "is_system_generated",
+  "company",
   "title",
   "branch",
   "voucher_type",
@@ -21,7 +22,6 @@
   "column_break1",
   "mode_of_payment",
   "from_template",
-  "company",
   "posting_date",
   "apply_tds",
   "tax_withholding_category",
@@ -660,8 +660,7 @@
    "fieldname": "activity",
    "fieldtype": "Link",
    "label": "Activity",
-   "options": "Planning Activities",
-   "reqd": 1
+   "options": "Planning Activities"
   }
  ],
  "icon": "fa fa-file-text",
@@ -676,7 +675,7 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2026-01-11 16:53:41.661484",
+ "modified": "2026-01-14 11:47:12.425866",
  "modified_by": "sonam.bomjan@thimphutechpark.bt",
  "module": "Accounts",
  "name": "Journal Entry",
