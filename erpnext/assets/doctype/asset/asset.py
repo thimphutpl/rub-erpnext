@@ -245,9 +245,10 @@ class Asset(AccountsController):
 		add_asset_activity(self.name, _("Asset deleted"))
 
 	def cancel_asset_recieved_entries(self):
-		doc = frappe.get_doc("Asset Issue Details",self.asset_issue_details)
-		doc.cancel()
-		frappe.db.commit()
+		if self.asset_issue_details:
+			doc = frappe.get_doc("Asset Issue Details",self.asset_issue_details)
+			doc.cancel()
+			frappe.db.commit()
 
 	@frappe.whitelist()
 	def generate_qr_code(self):
