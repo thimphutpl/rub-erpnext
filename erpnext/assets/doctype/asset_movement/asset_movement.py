@@ -530,6 +530,8 @@ class AssetMovement(Document):
 					d.asset,
 					_("Asset issued to Room/Building {0}").format(get_link_to_form("Room", current_roombuilding)),
 				)
+			asset = frappe.get_doc("Asset", d.asset)
+			asset.generate_qr_code()
 
 	@frappe.whitelist()
 	def get_asset_list(self):
