@@ -209,7 +209,7 @@ class Asset(AccountsController):
 	def on_cancel(self):
 		self.validate_cancellation()
 		self.cancel_movement_entries()
-		self.cancel_adjustement_entries()
+		self.cancel_adjustment_entries()
 		self.cancel_capitalization()
 		self.delete_depreciation_entries()
 		cancel_asset_depr_schedules(self)
