@@ -4,7 +4,7 @@
 
 import frappe
 from frappe.utils.nestedset import NestedSet, get_root_of
-
+from frappe.utils import cint
 from erpnext.utilities.transaction_base import delete_events
 
 
@@ -17,6 +17,7 @@ class Department(NestedSet):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		approver: DF.Link | None
 		company: DF.Link
 		department_name: DF.Data
 		disabled: DF.Check
@@ -99,3 +100,56 @@ def add_node():
 		args.parent_department = None
 
 	frappe.get_doc(args).insert()
+@frappe.whitelist()
+def get_employee_count(department_name):
+    dep = frappe.get_doc("Department", department_name)
+
+    # Type flags
+    is_department = cint(dep.is_department)
+    is_division   = cint(dep.is_division)
+    is_section    = cint(dep.is_section)
+    is_unit       = cint(dep.is_unit)
+
+    # Recursive function to get all child nodes
+    def get_all_child_departments(parent):
+        children = frappe.get_all("Department", filters={"parent_department": parent}, pluck="name")
+        all_children = []
+        for c in children:
+            all_children.append(c)
+            all_children += get_all_child_departments(c)
+        return all_children
+
+    # Include node itself + all child nodes
+    all_nodes = [dep.name] + get_all_child_departments(dep.name)
+
+    # Build SQL condition based on node type
+    conditions = []
+    if is_division:
+        conditions.append('division in ({})'.format(','.join(['"%s"' % d for d in all_nodes])))
+    if is_department:
+        conditions.append('department in ({})'.format(','.join(['"%s"' % d for d in all_nodes])))
+    if is_section:
+        conditions.append('section in ({})'.format(','.join(['"%s"' % d for d in all_nodes])))
+    if is_unit:
+        conditions.append('unit in ({})'.format(','.join(['"%s"' % d for d in all_nodes])))
+
+    cond = " or ".join(conditions)
+    if cond:
+        cond = "and (" + cond + ")"
+
+    # Count active employees
+    res = frappe.db.sql("""
+        select count(*) from `tabEmployee`
+        where status = "Active" {}
+    """.format(cond))
+
+    employee_count = res[0][0] if res else 0
+
+    return {
+        "is_department": is_department,
+        "is_division": is_division,
+        "is_section": is_section,
+        "is_unit": is_unit,
+        "employee_count": employee_count,
+        "approver": dep.approver
+    }
