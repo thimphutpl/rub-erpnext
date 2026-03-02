@@ -61,6 +61,34 @@ frappe.ui.form.on('Asset Movement', {
 				}
 			};
 		});
+		frm.set_query('to_employee', 'assets', function(doc, cdt, cdn) {
+			if (!frm.doc.company) {
+				return {
+					filters: {
+						company: ["=", "Please Select Company/College"]
+					}
+				};
+			}
+			if (frm.doc.inter_company_transfer && !frm.doc.to_company){
+				return {
+					filters: {
+						company: ["=", "Please Select To Company/College"]
+					}
+				};
+			}
+			if (frm.doc.to_company) {
+				return {
+					filters: {
+						company: frm.doc.to_company
+					}
+				};
+			}
+			return {
+				filters: {
+					company: frm.doc.company
+				}
+			};
+		});
 		frm.set_query('from_employee', function(doc, cdt, cdn) {
 			if (!frm.doc.company) {
 				return {
