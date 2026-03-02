@@ -203,7 +203,7 @@ class AssetMovement(Document):
 				custodian_type = frappe.db.get_value("Asset", d.asset, "is_hostel_asset")
 				if custodian_type == "Hostel Room":
 					current_custodian = frappe.db.get_value("Asset", d.asset, "hostel")
-				elif custodian_type == "Room/Building":
+				elif custodian_type == "Room":
 					current_custodian = frappe.db.get_value("Asset", d.asset, "roombuilding")
 				else:
 					current_custodian = frappe.db.get_value("Asset", d.asset, "custodian")
@@ -462,10 +462,18 @@ class AssetMovement(Document):
 				if d.to_custodian_type == "Employee":
 					frappe.db.set_value("Asset", d.asset, "custodian", d.to_employee, update_modified=False)
 					frappe.db.set_value("Asset", d.asset, "custodian_name", frappe.db.get_value("Employee", d.to_employee, "employee_name"), update_modified=False)
+ 					frappe.db.set_value("Asset", d.asset, "roombuilding", None)
+					frappe.db.set_value("Asset", d.asset, "hostel", None)
 				elif d.to_custodian_type == "Hostel Room":
 					frappe.db.set_value("Asset", d.asset, "hostel", d.to_employee if not cancel else d.from_employee, update_modified=False)
+ 					frappe.db.set_value("Asset", d.asset, "roombuilding", None)
+					frappe.db.set_value("Asset", d.asset, "custodian", None)
+					frappe.db.set_value("Asset", d.asset, "custodian_name", None)
 				elif d.to_custodian_type == "Room":
 					frappe.db.set_value("Asset", d.asset, "roombuilding", d.to_employee if not cancel else d.from_employee, update_modified=False)
+					frappe.db.set_value("Asset", d.asset, "hostel", None)
+					frappe.db.set_value("Asset", d.asset, "custodian", None)
+					frappe.db.set_value("Asset", d.asset, "custodian_name", None)
 			equipment = frappe.db.get_value("Equipment", {"asset_code": d.asset}, "name")
 			if equipment:
 				equip = frappe.get_doc("Equipment", equipment)
