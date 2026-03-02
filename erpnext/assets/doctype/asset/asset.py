@@ -209,11 +209,12 @@ class Asset(AccountsController):
 	def on_cancel(self):
 		self.validate_cancellation()
 		self.cancel_movement_entries()
+		self.cancel_adjustement_entries()
 		self.cancel_capitalization()
 		self.delete_depreciation_entries()
 		cancel_asset_depr_schedules(self)
 		self.set_status()
-		self.ignore_linked_doctypes = ("Stock Ledger Entry")
+		self.ignore_linked_doctypes = ("Stock Ledger Entry", "GL Entry")
 		make_reverse_gl_entries(voucher_type="Asset", voucher_no=self.name)
 		self.db_set("booked_fixed_asset", 0)
 		add_asset_activity(self.name, _("Asset cancelled"))
@@ -649,6 +650,20 @@ class Asset(AccountsController):
 		for movement in movements:
 			movement = frappe.get_doc("Asset Movement", movement.get("name"))
 			movement.cancel()
+
+	def cancel_adjustment_entries(self):
+		movements = frappe.db.sql(
+			"""SELECT ava.name
+			FROM `tabAsset Value Adjust` ava
+			WHERE ava.asset=%s and ava.docstatus=1""",
+			self.name,
+			as_dict=1,
+		)
+
+		for movement in movements:
+			movement = frappe.get_doc("Asset Movement", movement.get("name"))
+			movement.cancel()
+	
 
 	def cancel_capitalization(self):
 		asset_capitalization = frappe.db.get_value(
