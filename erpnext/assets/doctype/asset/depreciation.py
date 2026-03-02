@@ -1522,6 +1522,7 @@ def get_gl_entries_on_asset_disposal(
 				"credit_in_account_currency": asset.gross_purchase_amount,
 				"credit": asset.gross_purchase_amount,
 				"posting_date": date,
+				"cost_center": asset.cost_center,
 			},
 			item=asset,
 		),
