@@ -29,7 +29,16 @@ class FiveYearPlanProposal(Document):
 	pass
 
 	def validate(self):
+		self.check_college()
 		self.calculate_proposed_amount()
+
+	def check_college(self):
+		proposal = frappe.db.sql('''
+			SELECT name FROM `tabFive Year Plan Proposal` 
+			WHERE colleges = %s and from_year = %s and to_year = %s and docstatus = 1
+		''',(self.colleges, self.from_year, self.to_year), as_dict=True)
+		if proposal:
+			frappe.throw("Five Year Plan Proposal exist for college: {0} from year {1} to {2}".format(self.colleges, self.from_year, self.to_year))
 
 	def calculate_proposed_amount(self):
 		self.total_proposed_budget = 0

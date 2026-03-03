@@ -28,7 +28,16 @@ class FiveYearPlan(Document):
 	pass
 
 	def validate(self):
+		self.check_fyp_year()
 		self.validate_approved_budget()
+
+	def check_fyp_year(self):
+		fyp = frappe.db.sql('''
+			SELECT name FROM `tabFive Year Plan` 
+			WHERE from_year = %s and to_year = %s and docstatus = 1
+		''',(self.from_year, self.to_year), as_dict=True)
+		if fyp:
+			frappe.throw("Five Year Plan from year {0} to {1}".format(self.from_year, self.to_year))
 
 	def validate_approved_budget(self):
 		for row in self.items:
@@ -65,7 +74,7 @@ def fetch_budgetplan(from_year, to_year):
 		INNER JOIN `tabPlanning Activities` pa ON pa.project = pp.name 
 		INNER JOIN `tabFYP Detail` fypi ON fypi.activity_link = pa.name
 		INNER JOIN `tabFive Year Plan Proposal` fypp ON fypi.parent = fypp.name
-		WHERE fypp.from_year = %s and fypp.to_year = %s
+		WHERE fypp.from_year = %s and fypp.to_year = %s and fypp.docstatus = 1
 
 		GROUP BY 
 			po.serial_number,

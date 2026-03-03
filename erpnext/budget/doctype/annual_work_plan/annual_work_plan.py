@@ -28,7 +28,7 @@ class AnnualWorkPlan(Document):
 	pass
 
 	def validate(self):
-		# self.validate_college()
+		self.validate_college()
 		self.validate_budget()
 
 	def validate_college(self):
