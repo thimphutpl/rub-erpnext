@@ -25,10 +25,9 @@ class OutputIndicator(Document):
 		self.check_output()
 		
 	def check_output(self):
-		college = frappe.get_value("Output Indicator", {"college": self.college, "fiscal_year": self.fiscal_year, "docstatus": 1}, "name")
+		college = frappe.get_value("Output Indicator", {"fiscal_year": self.fiscal_year, "docstatus": 1}, "name")
 		if college:
-			frappe.throw("Output Indicator exist for college: {0} for the year: {1}".format(self.college, self.fiscal_year))
-
+			frappe.throw("Output Indicator exist for the year: {0}".format(self.fiscal_year))
 
 @frappe.whitelist()
 def fetch_budgetplan(fiscal_year):
