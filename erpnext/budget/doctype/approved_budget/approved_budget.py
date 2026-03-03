@@ -27,8 +27,8 @@ class ApprovedBudget(Document):
 	def check_approved_budget(self):
 		fyp = frappe.db.sql('''
 			SELECT name FROM `tabApproved Budget` 
-			WHERE fiscal_year = %s and docstatus = 1
-		''',(self.fiscal_year), as_dict=True)
+			WHERE fiscal_year = %s and college = %s and docstatus = 1
+		''',(self.fiscal_year, self.college), as_dict=True)
 		if fyp:
 			frappe.throw("Approved Budget exists for year {0}".format(self.fiscal_year))
 
