@@ -116,7 +116,7 @@ def get_data(filters):
 			budgets = frappe.db.sql('''
 			select abi.approved_budget,abi.reappropiation_received,
 			abi.reappropiation_sent,abi.supplementary_received,
-			abi.activity_link from `tabApproved Budget Item` abi 
+			abi.activity_link,abi.initial_approved_budget from `tabApproved Budget Item` abi 
 			inner join `tabApproved Budget` ab on abi.parent=ab.name 
 			where ab.college=%s 
 			and fiscal_year=%s
@@ -137,14 +137,16 @@ def get_data(filters):
 				reappropiation_sent = row[2] or 0
 				supplementary_received = row[3] or 0
 				activity_link = row[4]
+				initial_approved_budget = row[5]
 			else:
 				approved_budget = 0
 				reappropiation_received = 0
 				reappropiation_sent = 0
 				supplementary_received = 0
 				activity_link = None
+				initial_approved_budget = 0
 
-			current = flt(approved_budget) + flt(reappropiation_received)- flt(reappropiation_sent) + flt(supplementary_received)
+			current = flt(initial_approved_budget) + flt(reappropiation_received)- flt(reappropiation_sent) + flt(supplementary_received)
 
 			from_date = f"{fiscal_year}-01-01"
 			to_date = f"{fiscal_year}-12-31"
@@ -180,7 +182,7 @@ def get_data(filters):
 
 			available = flt(current) - consumed
 
-			i['initial'] = approved_budget
+			i['initial'] = initial_approved_budget
 			i['reappropiation_received'] = reappropiation_received
 			i['reappropiation_sent'] = reappropiation_sent
 			i['supplementary_received'] = supplementary_received
