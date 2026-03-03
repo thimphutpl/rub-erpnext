@@ -21,6 +21,7 @@ class AssetMovementItem(Document):
 		company: DF.Link | None
 		from_employee: DF.DynamicLink | None
 		from_employee_name: DF.Data | None
+		old_asset_id: DF.Data | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
