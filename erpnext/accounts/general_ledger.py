@@ -397,6 +397,8 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 				cc_doc = frappe.get_doc("Cost Center", args.cost_center)
 				# budget_cost_center = cc_doc.budget_cost_center if cc_doc.use_budget_from_parent else args.cost_center
 				budget_cost_center = args.cost_center
+				ex_amount = 0
+				ex_amount = flt(args.credit_in_account_currency) if flt(args.credit_in_account_currency) > 0 else flt(args.debit_in_account_currency)
 				# frappe.throw(frappe.as_json(args))
 				if not args.is_cancelled:
 					#Commit Budget
@@ -409,7 +411,7 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 						"reference_type": args.voucher_type,
 						"reference_no": args.voucher_no,
 						"reference_date": args.posting_date,
-						"amount": flt(args.credit_in_account_currency),
+						"amount": flt(ex_amount),
 						"company": args.company,
 						"closed": 1,
 						"business_activity": args.activity,
@@ -427,7 +429,7 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 						"reference_type": args.voucher_type,
 						"reference_no": args.voucher_no,
 						"reference_date": args.posting_date,
-						"amount": flt(args.credit_in_account_currency),
+						"amount": flt(ex_amount),
 						"company": args.company,
 						"com_ref": bud_obj.name,
 						"business_activity": args.activity,
