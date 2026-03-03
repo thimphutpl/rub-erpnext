@@ -51,7 +51,7 @@ class BudgetReappropiations(Document):
 		if not self.approved_budget_list:
 			frappe.throw(
 				_("No budget found for year {0} in Approved Budget")
-				.format(self.year)
+				.format(self.fiscal_year)
 			)
 		if self.appropiation_amount:
 			# frappe.throw("{0}, {1}".format(flt(self.appropiation_amount), flt(str(self.approved_budget_list[0].approved_budget))))
