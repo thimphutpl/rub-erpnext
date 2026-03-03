@@ -32,7 +32,7 @@ class AnnualWorkPlan(Document):
 	def validate(self):
 		self.validate_college()
 		self.validate_budget()
-		self.validate_approved_budget()
+		# self.validate_approved_budget()
 		self.calculate_proposed_budget()
 		self.calculate_approved_budget()
 	
