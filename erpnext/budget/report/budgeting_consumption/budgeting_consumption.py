@@ -121,6 +121,7 @@ def get_data(filters):
 			where ab.college=%s 
 			and fiscal_year=%s
 			and activity_link = %s
+			and ab.docstatus=1
 			''',(college, fiscal_year, i.activities))
 			# frappe.throw(str(budgets))
 			# approved_budget = budgets[0][0]
@@ -137,7 +138,7 @@ def get_data(filters):
 				reappropiation_sent = row[2] or 0
 				supplementary_received = row[3] or 0
 				activity_link = row[4]
-				initial_approved_budget = row[5]
+				initial_approved_budget = row[5] 
 			else:
 				approved_budget = 0
 				reappropiation_received = 0
