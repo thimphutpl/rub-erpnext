@@ -25,7 +25,7 @@
    "fieldname": "unit",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Unit"
+   "label": "Grade"
   },
   {
    "fieldname": "raw_rating",
@@ -55,7 +55,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-03 20:39:29.379600",
+ "modified": "2026-03-04 00:23:15.772907",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Outcome Indicator Item",

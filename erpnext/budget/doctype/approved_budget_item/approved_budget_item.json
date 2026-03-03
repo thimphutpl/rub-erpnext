@@ -109,6 +109,7 @@
   },
   {
    "columns": 2,
+   "default": "0",
    "fieldname": "initial_approved_budget",
    "fieldtype": "Currency",
    "label": "Initial Approved Budget",
@@ -119,7 +120,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-04 00:19:15.510819",
+ "modified": "2026-03-04 00:23:46.250432",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Approved Budget Item",
