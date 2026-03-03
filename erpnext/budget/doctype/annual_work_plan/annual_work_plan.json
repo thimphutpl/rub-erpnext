@@ -16,6 +16,11 @@
   "section_break_lcfb",
   "get_planning_info",
   "apa_details",
+  "section_break_vscl",
+  "total_proposed_budget",
+  "column_break_joae",
+  "total_approved_budget",
+  "section_break_nkdq",
   "amended_from"
  ],
  "fields": [
@@ -86,13 +91,37 @@
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_vscl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_proposed_budget",
+   "fieldtype": "Currency",
+   "label": "Total Proposed Budget",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_joae",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_approved_budget",
+   "fieldtype": "Currency",
+   "label": "Total Approved Budget",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_nkdq",
+   "fieldtype": "Section Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-03 23:06:52.727400",
+ "modified": "2026-03-03 23:55:22.925512",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Annual Work Plan",

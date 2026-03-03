@@ -4,7 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe.utils import now_datetime
-
+from frappe.utils import flt
 
 class FiveYearPlan(Document):
 	# begin: auto-generated types
@@ -24,12 +24,15 @@ class FiveYearPlan(Document):
 		rub_strategic_plan: DF.Link | None
 		to_year: DF.Link
 		total_approved_budget: DF.Currency
+		total_proposed_budget: DF.Currency
 	# end: auto-generated types
 	pass
 
 	def validate(self):
 		self.check_fyp_year()
 		self.validate_approved_budget()
+		self.calculate_proposed_budget()
+		self.calculate_approved_budget()
 
 	def check_fyp_year(self):
 		fyp = frappe.db.sql('''
@@ -43,6 +46,18 @@ class FiveYearPlan(Document):
 		for row in self.items:
 			if not row.approved_budget or row.approved_budget <= 0:
 				frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
+
+	def calculate_proposed_budget(self):
+		total_proposed_budget = 0
+		for row in self.items:
+			total_proposed_budget += flt(row.proposed_budget)
+		self.total_proposed_budget = total_proposed_budget
+
+	def calculate_approved_budget(self):
+		total_approved_budget = 0
+		for row in self.items:
+			total_approved_budget += flt(row.approved_budget)
+		self.total_approved_budget = total_approved_budget
 
 @frappe.whitelist()
 def get_fyp_proposal(rub_strategic_plan, from_year, to_year):
@@ -136,7 +151,7 @@ def create_awp_for_subsidiaries(fyp_name):
         # prevent duplicate FYP per college
         if frappe.db.exists("Annual Work Plan", {
             "colleges": college["name"],
-            "fyp": fyp.name
+            "fyp": fyp.name,
             "fiscal_year": now_datetime().year
 			# "apa_details": fyp.items
         }):

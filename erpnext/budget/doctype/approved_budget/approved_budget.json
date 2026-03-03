@@ -12,7 +12,9 @@
   "column_break_izcg",
   "fiscal_year",
   "section_break_yjvz",
-  "items"
+  "items",
+  "section_break_wlla",
+  "total_approved_budget"
  ],
  "fields": [
   {
@@ -57,13 +59,23 @@
    "fieldname": "items",
    "fieldtype": "Table",
    "options": "Approved Budget Item"
+  },
+  {
+   "fieldname": "section_break_wlla",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_approved_budget",
+   "fieldtype": "Currency",
+   "label": "Total Approved Budget",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-20 14:36:04.705092",
+ "modified": "2026-03-03 23:58:35.560542",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Approved Budget",

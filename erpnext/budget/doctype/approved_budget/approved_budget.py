@@ -19,10 +19,18 @@ class ApprovedBudget(Document):
 		college: DF.Link
 		fiscal_year: DF.Link
 		items: DF.Table[ApprovedBudgetItem]
+		total_approved_budget: DF.Currency
 	# end: auto-generated types
 	
 	def validate(self):
 		self.check_approved_budget()
+		self.calculate_approved_budget()
+
+	def calculate_approved_budget(self):
+		total_approved_budget = 0
+		for row in self.items:
+			total_approved_budget += flt(row.approved_budget)
+		self.total_approved_budget = total_approved_budget
 
 	def check_approved_budget(self):
 		fyp = frappe.db.sql('''

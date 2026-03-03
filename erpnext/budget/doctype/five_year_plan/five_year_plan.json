@@ -15,6 +15,9 @@
   "remarks",
   "section_break_tebi",
   "items",
+  "section_break_clrs",
+  "total_proposed_budget",
+  "column_break_cixu",
   "total_approved_budget",
   "section_break_1kvy",
   "amended_from"
@@ -93,14 +96,27 @@
    "fieldtype": "Currency",
    "label": "Total Approved Budget",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_clrs",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_proposed_budget",
+   "fieldtype": "Currency",
+   "label": "Total Proposed Budget"
+  },
+  {
+   "fieldname": "column_break_cixu",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-25 17:54:57.111566",
- "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "modified": "2026-03-03 23:53:59.988080",
+ "modified_by": "Administrator",
  "module": "Budget",
  "name": "Five Year Plan",
  "naming_rule": "Expression",

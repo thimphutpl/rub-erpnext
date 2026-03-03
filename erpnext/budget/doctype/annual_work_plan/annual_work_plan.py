@@ -23,6 +23,8 @@ class AnnualWorkPlan(Document):
 		colleges: DF.Link
 		fyp: DF.Link
 		remarks: DF.SmallText | None
+		total_approved_budget: DF.Currency
+		total_proposed_budget: DF.Currency
 		year: DF.Link
 	# end: auto-generated types
 	pass
@@ -31,11 +33,25 @@ class AnnualWorkPlan(Document):
 		self.validate_college()
 		self.validate_budget()
 		self.validate_approved_budget()
-
+		self.calculate_proposed_budget()
+		self.calculate_approved_budget()
+	
 	def validate_approved_budget(self):
-		for row in self.apa_details:
+		for row in self.items:
 			if not row.approved_budget or row.approved_budget <= 0:
 				frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
+
+	def calculate_proposed_budget(self):
+		total_proposed_budget = 0
+		for row in self.items:
+			total_proposed_budget += flt(row.proposed_budget)
+		self.total_proposed_budget = total_proposed_budget
+
+	def calculate_approved_budget(self):
+		total_approved_budget = 0
+		for row in self.items:
+			total_approved_budget += flt(row.approved_budget)
+		self.total_approved_budget = total_approved_budget
 
 	def validate_college(self):
 		proposal_list = frappe.db.sql(""" 
