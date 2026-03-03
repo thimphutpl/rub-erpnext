@@ -37,19 +37,19 @@ class AnnualWorkPlan(Document):
 		self.calculate_approved_budget()
 	
 	def validate_approved_budget(self):
-		for row in self.items:
+		for row in self.apa_details:
 			if not row.approved_budget or row.approved_budget <= 0:
 				frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
 
 	def calculate_proposed_budget(self):
 		total_proposed_budget = 0
-		for row in self.items:
+		for row in self.apa_details:
 			total_proposed_budget += flt(row.proposed_budget)
 		self.total_proposed_budget = total_proposed_budget
 
 	def calculate_approved_budget(self):
 		total_approved_budget = 0
-		for row in self.items:
+		for row in self.apa_details:
 			total_approved_budget += flt(row.approved_budget)
 		self.total_approved_budget = total_approved_budget
 
