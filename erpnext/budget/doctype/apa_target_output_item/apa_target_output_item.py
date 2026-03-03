@@ -26,7 +26,7 @@ class APATargetOutputItem(Document):
 		project: DF.SmallText | None
 		project_no: DF.Int
 		target: DF.Data | None
-		unit: DF.Data | None
+		unit: DF.Link | None
 		weightage: DF.Percent
 	# end: auto-generated types
 	pass

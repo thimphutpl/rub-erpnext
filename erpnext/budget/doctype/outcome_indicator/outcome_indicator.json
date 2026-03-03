@@ -34,8 +34,9 @@
   },
   {
    "fieldname": "unit",
-   "fieldtype": "Data",
-   "label": "Unit"
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "APA Unit"
   },
   {
    "fieldname": "weightage",
@@ -90,8 +91,8 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-27 16:44:45.183913",
- "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "modified": "2026-03-03 22:33:56.339156",
+ "modified_by": "Administrator",
  "module": "Budget",
  "name": "Outcome Indicator",
  "naming_rule": "By fieldname",

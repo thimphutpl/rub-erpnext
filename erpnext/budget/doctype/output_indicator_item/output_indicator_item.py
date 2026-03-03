@@ -29,7 +29,7 @@ class OutputIndicatorItem(Document):
 		project: DF.SmallText | None
 		project_no: DF.Int
 		remarks: DF.SmallText | None
-		unit: DF.Data | None
+		unit: DF.Link | None
 		weightage: DF.Data | None
 	# end: auto-generated types
 	pass

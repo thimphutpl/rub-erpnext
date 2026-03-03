@@ -12,7 +12,7 @@ class OutcomeIndicator(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from frappe.model.document import Document
+		from erpnext.budget.doctype.outcome_indicator_item.outcome_indicator_item import OutcomeIndicatorItem
 		from frappe.types import DF
 
 		category: DF.Data | None
@@ -20,10 +20,10 @@ class OutcomeIndicator(Document):
 		data_source: DF.Data | None
 		definition: DF.SmallText | None
 		disabled: DF.Check
-		items: DF.Table[Document]
+		items: DF.Table[OutcomeIndicatorItem]
 		outcome: DF.Data | None
 		remarks: DF.SmallText | None
-		unit: DF.Data | None
+		unit: DF.Link | None
 		weightage: DF.Data | None
 	# end: auto-generated types
 	pass

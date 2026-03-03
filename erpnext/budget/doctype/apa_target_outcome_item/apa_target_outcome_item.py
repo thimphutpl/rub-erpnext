@@ -20,7 +20,7 @@ class APATargetOutcomeItem(Document):
 		parentfield: DF.Data
 		parenttype: DF.Data
 		target: DF.Data | None
-		unit: DF.Data | None
+		unit: DF.Link | None
 		weightage: DF.Percent
 	# end: auto-generated types
 	pass
