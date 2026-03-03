@@ -25,8 +25,8 @@ class OutputIndicator(Document):
 		self.check_output()
 		
 	def check_output(self):
-		college = frappe.get_value("Output Indicator", {"fiscal_year": self.fiscal_year, "docstatus": 1}, "name")
-		if college:
+		output_indicator = frappe.get_value("Output Indicator", {"fiscal_year": self.fiscal_year, "docstatus": 1}, "name")
+		if output_indicator:
 			frappe.throw("Output Indicator exist for the year: {0}".format(self.fiscal_year))
 
 @frappe.whitelist()
@@ -51,7 +51,7 @@ def fetch_budgetplan(fiscal_year):
 			project,
 			activities
 		FROM `tabApproved Budget Item`
-		WHERE parent = %s
+		WHERE parent = %s ORDER BY idx ASC
 	''',(approved_budget[0].name), as_dict=True)
 
 	if not approved_budget_items:
