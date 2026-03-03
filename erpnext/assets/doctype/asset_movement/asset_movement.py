@@ -296,8 +296,9 @@ class AssetMovement(Document):
 				frappe.db.sql("update `tabAsset Movement Item` set old_asset_id = '{}' where name = '{}'".format(asset.asset, asset.name))
 				asset_sub_category_code = frappe.get_value("Asset Sub Category", frappe.db.get_value("Asset", asset.asset, "asset_sub_category"), "asset_sub_category_code")
 				company_abbr = frappe.get_value("Company", self.to_company, "abbr")
+				abbr = frappe.get_value("Asset Category", frappe.db.get_value("Asset", asset.asset, "asset_category"), "abbr")
 				year = getdate(self.transaction_date).year
-				new_name = make_autoname("RUB-"+company_abbr+"/"+str(year)+"/"+self.abbr+"/"+asset_sub_category_code+"/.#####")
+				new_name = make_autoname("RUB-"+company_abbr+"/"+str(year)+"/"+abbr+"/"+asset_sub_category_code+"/.#####")
 				rename_doc("Asset", asset.asset, new_name)
 		else:
 			for asset in self.assets:
