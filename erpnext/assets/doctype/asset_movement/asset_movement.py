@@ -5,6 +5,8 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_link_to_form, flt, cint
+from frappe.model.rename_doc import rename_doc
+from frappe.model.naming import make_autoname
 import erpnext
 from erpnext.accounts.general_ledger import (
 	make_reverse_gl_entries,
@@ -269,9 +271,11 @@ class AssetMovement(Document):
 
 	
 	def on_submit(self):
-		self.set_latest_location_and_custodian_in_asset()
 		if self.inter_company_transfer == 1:
+			self.rename_asset()
 			self.make_asset_je()
+		self.set_latest_location_and_custodian_in_asset()
+
 
 	def on_cancel(self):
 		self.ignore_linked_doctypes = (
@@ -283,10 +287,22 @@ class AssetMovement(Document):
 				doc = frappe.get_doc("Journal Entry", jea.parent)
 				doc.delete()
 		make_reverse_gl_entries(voucher_type=self.doctype, voucher_no=self.name)
-
+		self.rename_asset(cancel=True)
 		self.set_latest_location_and_custodian_in_asset(cancel=1)
 
-
+	def rename_asset(self, cancel=False):
+		if not cancel:
+			for asset in self.assets:
+				frappe.db.sql("update `tabAsset Movement Item` set old_asset_id = '{}' where name = '{}'".format(asset.asset, asset.name))
+				asset_sub_category_code = frappe.get_value("Asset Sub Category", frape.db.get_value("Asset", asset.asset, "asset_sub_category"), "asset_sub_category_code")
+				company_abbr = frappe.get_value("Company", self.to_company, "abbr")
+				year = getdate(self.transaction_date).year
+				new_name = make_autoname("RUB-"+company_abbr+"/"+str(year)+"/"+self.abbr+"/"+asset_sub_category_code+"/.#####")
+				rename_doc("Asset", asset.asset, new_name)
+		else:
+			for asset in self.assets:
+				if asset.old_asset_id:
+					rename_doc("Asset", asset.asset, asset.old_asset_id)
 
 	def make_asset_je(self):
 		from erpnext.accounts.general_ledger import merge_similar_entries
@@ -363,6 +379,7 @@ class AssetMovement(Document):
 					}
 			)
 			je_from.insert()
+			je_from.submit()
 			je_to = frappe.new_doc("Journal Entry")
 			je_to.voucher_type = "Journal Entry"
 			je_to.naming_series = "Journal Voucher"
@@ -411,6 +428,7 @@ class AssetMovement(Document):
 					}
 			)
 			je_to.insert()
+			je_to.submit()
 
 	def set_latest_location_and_custodian_in_asset(self, cancel=0):
 		current_cost_center, current_employee, current_employee_name, current_hostel, current_roombuilding = "", "", "", "", ""
