@@ -287,8 +287,8 @@ class AssetMovement(Document):
 				doc = frappe.get_doc("Journal Entry", jea.parent)
 				doc.delete()
 		make_reverse_gl_entries(voucher_type=self.doctype, voucher_no=self.name)
-		self.rename_asset(cancel=True)
 		self.set_latest_location_and_custodian_in_asset(cancel=1)
+		self.rename_asset(cancel=True)
 
 	def rename_asset(self, cancel=False):
 		if not cancel:
