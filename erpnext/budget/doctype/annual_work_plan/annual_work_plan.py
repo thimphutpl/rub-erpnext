@@ -230,10 +230,9 @@ def make_approved_budget(source_name, target_doc=None):
             },
             "APA Detail": {
                 "doctype": "Approved Budget Item",
-                # "field_map": {
-                #     "activity_link": "activity_link",
-                #     "approved_budget": "approved_budget"
-                # }
+                "field_map": {
+                    "initial_approved_budget": "approved_budget"
+                }
             }
         },
         target_doc,
