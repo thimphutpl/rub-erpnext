@@ -90,7 +90,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-03 13:41:00.788632",
+ "modified": "2026-03-03 23:44:49.122657",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Planning Activities",
@@ -111,6 +111,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "search_fields": "activities",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
