@@ -272,8 +272,8 @@ class AssetMovement(Document):
 	
 	def on_submit(self):
 		if self.inter_company_transfer == 1:
-			self.rename_asset()
 			self.make_asset_je()
+			self.rename_asset()
 		self.set_latest_location_and_custodian_in_asset()
 
 
@@ -323,7 +323,7 @@ class AssetMovement(Document):
 			je_from.company = self.company
 			je_from.branch = frappe.db.get_value("Branch", {"cost_center": a.source_cost_center}, "name")
 			je_from.posting_date = self.transaction_date
-			je_from.remark = f"Depreciation Entry against asset {a.asset}"
+			je_from.remark = f"Asset Movement Entry against asset {a.asset}"
 			asset_category = frappe.db.get_value("Asset", a.asset, "asset_category")
 			if not asset_category:
 				frappe.throw("Asset Category is not set for Asset {}".format(a.asset))
@@ -387,7 +387,7 @@ class AssetMovement(Document):
 			je_to.company = self.to_company
 			je_to.branch = frappe.db.get_value("Branch", {"cost_center": a.target_cost_center}, "name")
 			je_to.posting_date = self.transaction_date
-			je_to.remark = f"Depreciation Entry against asset {a.asset}"
+			je_to.remark = f"Asset Movement Entry against asset {a.asset}"
 			je_to.append(
 				"accounts",
 					{
