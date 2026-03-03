@@ -31,7 +31,7 @@
   {
    "fieldname": "approved_budget",
    "fieldtype": "Currency",
-   "in_list_view": 1,
+   "hidden": 1,
    "label": "Approved Budget"
   },
   {
@@ -85,7 +85,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-12-20 16:32:26.794407",
+ "modified": "2026-02-08 16:31:10.352539",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "FYP Detail",

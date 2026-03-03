@@ -1,0 +1,156 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:BR/{fiscal_year}/{#}",
+ "creation": "2026-02-17 11:05:12.770209",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_kyrh",
+  "appropriation_date",
+  "from_activity",
+  "fiscal_year",
+  "appropiation_amount",
+  "column_break_prmd",
+  "college",
+  "to_activity",
+  "remarks",
+  "approval_details_section",
+  "approver",
+  "approver_designation",
+  "column_break_bihf",
+  "approver_name",
+  "section_break_qdzs",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_kyrh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Budget Reappropiations",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "appropriation_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Appropriation Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_prmd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "college",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "from_activity",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "From Activity",
+   "options": "Planning Activities",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Fiscal Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_activity",
+   "fieldtype": "Link",
+   "label": "To Activity",
+   "options": "Planning Activities",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_qdzs",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "approval_details_section",
+   "fieldtype": "Section Break",
+   "label": "Approval Details"
+  },
+  {
+   "fieldname": "approver",
+   "fieldtype": "Link",
+   "label": "Approver",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approver_designation",
+   "fieldtype": "Data",
+   "label": "Approver Designation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_bihf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "approver_name",
+   "fieldtype": "Data",
+   "label": "Approver Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "appropiation_amount",
+   "fieldtype": "Currency",
+   "label": "Appropiation Amount",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-02-20 14:42:35.916070",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "Budget Reappropiations",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

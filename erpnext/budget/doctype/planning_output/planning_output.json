@@ -7,8 +7,13 @@
  "engine": "InnoDB",
  "field_order": [
   "serial_number",
+  "output",
   "column_break_jhlp",
-  "output"
+  "from_date",
+  "to_date",
+  "references_section",
+  "rub_strategic_plan",
+  "amended_from"
  ],
  "fields": [
   {
@@ -16,7 +21,7 @@
    "fieldtype": "Int",
    "label": "Serial Number",
    "non_negative": 1,
-   "unique": 1
+   "read_only": 1
   },
   {
    "fieldname": "column_break_jhlp",
@@ -26,12 +31,47 @@
    "fieldname": "output",
    "fieldtype": "Small Text",
    "label": "Output"
+  },
+  {
+   "fieldname": "references_section",
+   "fieldtype": "Section Break",
+   "label": "References"
+  },
+  {
+   "fieldname": "rub_strategic_plan",
+   "fieldtype": "Link",
+   "label": "Rub Strategic Plan",
+   "options": "RUB Strategic Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Planning Output",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2025-11-25 18:22:24.159422",
+ "modified": "2026-02-20 12:11:24.163950",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Planning Output",
@@ -54,5 +94,6 @@
  "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }

@@ -1,0 +1,353 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"Pfs9YKjGJr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Budget Dashboard\",\"col\":3}},{\"id\":\"B39LiLyS4q\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Budget Management</span>\",\"col\":12}},{\"id\":\"AX57UKwmU1\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters and Settings\",\"col\":4}},{\"id\":\"An30Mopj0x\",\"type\":\"card\",\"data\":{\"card_name\":\"Transactions\",\"col\":4}},{\"id\":\"HEBjk2-vEZ\",\"type\":\"card\",\"data\":{\"card_name\":\"Budget\",\"col\":4}},{\"id\":\"gaSKoGthts\",\"type\":\"card\",\"data\":{\"card_name\":\"Annual Performance Assessment\",\"col\":4}},{\"id\":\"RhQiW1eeE0\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "creation": "2024-09-03 09:56:52.454684",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "money-coins-1",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "Planning & Budget",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Masters and Settings",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "RUB Strategic Plan",
+   "link_count": 0,
+   "link_to": "RUB Strategic Plan",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Planning Output",
+   "link_count": 0,
+   "link_to": "Planning Output",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Planning Project",
+   "link_count": 0,
+   "link_to": "Planning Project",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Planning Activities",
+   "link_count": 0,
+   "link_to": "Planning Activities",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Budget",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Approved Budget",
+   "link_count": 0,
+   "link_to": "Approved Budget",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Budget Reappropiations",
+   "link_count": 0,
+   "link_to": "Budget Reappropiations",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Supplementary Budgets",
+   "link_count": 0,
+   "link_to": "Supplementary Budgets",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 6,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Budget Consumption Report",
+   "link_count": 0,
+   "link_to": "Budget Consumption Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Detailed Budget Consumption Report",
+   "link_count": 0,
+   "link_to": "Detailed Budget Consumption Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Supplementary Budget Report",
+   "link_count": 0,
+   "link_to": "Supplementary Budget Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Committed Budget Report",
+   "link_count": 0,
+   "link_to": "Committed Budget Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Budget Reappropriation Report",
+   "link_count": 0,
+   "link_to": "Budget Reappropriation Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Budget Variance Report",
+   "link_count": 0,
+   "link_to": "Budget Variance Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Transactions",
+   "link_count": 6,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Five Year Plan Proposal",
+   "link_count": 0,
+   "link_to": "Five Year Plan Proposal",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Five Year Plan",
+   "link_count": 0,
+   "link_to": "Five Year Plan",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Annual Work Plan",
+   "link_count": 0,
+   "link_to": "Annual Work Plan",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "APA Calender",
+   "link_count": 0,
+   "link_to": "APA Calender",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "APA Settings",
+   "link_count": 0,
+   "link_to": "APA Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "APA Target Setup",
+   "link_count": 0,
+   "link_to": "APA Target Setup",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Annual Performance Assessment",
+   "link_count": 8,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "APA Calender",
+   "link_count": 0,
+   "link_to": "APA Calender",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "APA Unit",
+   "link_count": 0,
+   "link_to": "APA Unit",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "APA Category",
+   "link_count": 0,
+   "link_to": "APA Category",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "APA Settings",
+   "link_count": 0,
+   "link_to": "APA Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Outcome Indicator",
+   "link_count": 0,
+   "link_to": "Outcome Indicator",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Output Indicator",
+   "link_count": 0,
+   "link_to": "Output Indicator",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "APA Target Setup",
+   "link_count": 0,
+   "link_to": "APA Target Setup",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Annual Performance Assessment",
+   "link_count": 0,
+   "link_to": "Annual Performance Assessment",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-03-02 19:53:24.115201",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "module": "Budget",
+ "name": "Planning & Budget",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 35.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Budget Dashboard",
+   "link_to": "Budget Dashboard",
+   "type": "Dashboard"
+  }
+ ],
+ "title": "Planning & Budget"
+}

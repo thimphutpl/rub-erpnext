@@ -1,0 +1,117 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:outcome",
+ "creation": "2026-02-19 14:36:33.394828",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_8ger",
+  "outcome",
+  "category",
+  "unit",
+  "weightage",
+  "data_collection_method",
+  "data_source",
+  "column_break_hoay",
+  "disabled",
+  "definition",
+  "remarks",
+  "section_break_lekw",
+  "items"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_8ger",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "outcome",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Outcome",
+   "unique": 1
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Data",
+   "label": "Unit"
+  },
+  {
+   "fieldname": "weightage",
+   "fieldtype": "Data",
+   "label": "Weightage"
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
+  },
+  {
+   "fieldname": "column_break_hoay",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "definition",
+   "fieldtype": "Small Text",
+   "label": "Definition"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Data",
+   "label": "Category"
+  },
+  {
+   "fieldname": "data_collection_method",
+   "fieldtype": "Data",
+   "label": "Data Collection Method"
+  },
+  {
+   "fieldname": "data_source",
+   "fieldtype": "Data",
+   "label": "Data Source"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_lekw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "options": "Outcome Indicator Item"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-27 16:44:45.183913",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "module": "Budget",
+ "name": "Outcome Indicator",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

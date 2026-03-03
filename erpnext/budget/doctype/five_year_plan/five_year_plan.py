@@ -1,8 +1,9 @@
-# Copyright (c) 2025, Frappe Technologies Pvt. Ltd. and contributors
+# Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils import now_datetime
 
 
 class FiveYearPlan(Document):
@@ -12,126 +13,148 @@ class FiveYearPlan(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from erpnext.budget.doctype.fyp_detail.fyp_detail import FYPDetail
+		from erpnext.budget.doctype.five_year_plan_items.five_year_plan_items import FiveYearPlanItems
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
-		colleges: DF.Link
 		from_year: DF.Link
 		fyp_copies: DF.Check
-		fyp_details: DF.Table[FYPDetail]
-		rub_strategic_plan: DF.Link
+		items: DF.Table[FiveYearPlanItems]
+		remarks: DF.SmallText | None
+		rub_strategic_plan: DF.Link | None
 		to_year: DF.Link
+		total_approved_budget: DF.Currency
 	# end: auto-generated types
 	pass
 
-# @frappe.whitelist()
-# def fetch_budgetplan():
-# 	planning = frappe.db.sql('''
-#         SELECT    o.serial_number as output_sino,  o.output,    
-# 		pp.serial_number as project_sino, pp.project, pa.serial_number as activity_sino,    
-# 		pa.activities FROM `tabOutput` o INNER JOIN `tabPlanning Project` pp      
-# 		ON o.name = pp.output INNER JOIN
-# 		`tabPlanning Activities` pa     
-# 		ON pa.project = pp.name ;
-#     ''',  as_dict=True)
+	def validate(self):
+		self.validate_approved_budget()
 
-# 	planning_update = {}
-
-# 	for i in planning:
-# 		output_si_no = 0
-# 		if i['output_sino'] == output_si_no:
-# 			i['output_sino'] = ''
-# 			i['output'] = ''
-# 		else:
-# 			output_si_no = i['output_si_no']
-# 		planning_update.append(i)
-		
-		
-
-# 	frappe.throw(str(planning))
-
-# 	return planning
+	def validate_approved_budget(self):
+		for row in self.items:
+			if not row.approved_budget or row.approved_budget <= 0:
+				frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
 
 @frappe.whitelist()
-def fetch_budgetplan():
-	planning = frappe.db.sql('''
-		SELECT  po.serial_number as output_si_no, 
-		po.output, pp.serial_number as project_si_no, 
-		pp.project, pa.activities, pa.name as activity_link FROM `tabPlanning Output` po 
-		INNER JOIN `tabPlanning Project` pp ON po.name = pp.output 
-		INNER JOIN `tabPlanning Activities` pa ON pa.project = pp.name 
-		ORDER BY po.serial_number, pp.serial_number;
-	''', as_dict=True)
+def get_fyp_proposal(rub_strategic_plan, from_year, to_year):
+	if not from_year or not to_year or not rub_strategic_plan:
+		frappe.throw(_("From Year, To Year and RUB Strategic Plan are required"))
 
+	fyp_proposals = frappe.db.sql("""SELECT 
+			FROM `tabFive Year Plan Proposal` t1
+			JOIN `tabFYP Detail` t2 ON t1.name = t2.parent
+			WHERE from_year = %s and to_year = %s and 
+			rub_strategic_plan = %s""", (from_year, to_year, rub_strategic_plan), as_dict=True)
+
+	return fyp_proposals
+
+
+@frappe.whitelist()
+def fetch_budgetplan(from_year, to_year):
+	planning = frappe.db.sql('''
+		SELECT  
+			po.serial_number as output_si_no, 
+			SUM(fypi.proposed_budget) as amount,
+			po.output, 
+			pp.serial_number as project_si_no, 
+			pp.project, 
+			pa.activities, 
+			pa.name as activity_link
+		FROM `tabPlanning Output` po 
+		INNER JOIN `tabPlanning Project` pp ON po.name = pp.planning_output 
+		INNER JOIN `tabPlanning Activities` pa ON pa.project = pp.name 
+		INNER JOIN `tabFYP Detail` fypi ON fypi.activity_link = pa.name
+		INNER JOIN `tabFive Year Plan Proposal` fypp ON fypi.parent = fypp.name
+		WHERE fypp.from_year = %s and fypp.to_year = %s
+
+		GROUP BY 
+			po.serial_number,
+			po.output,
+			pp.serial_number,
+			pp.project,
+			pa.activities,
+			pa.name
+
+		ORDER BY 
+			po.serial_number, 
+			pp.serial_number;
+
+	''',(from_year, to_year), as_dict=True)
+	# frappe.throw(frappe.as_json(str(planning)))
 	# Should be list
 	planning_update = []
 
 	# Track last seen serial numbers
 	last_output_no = None
 	# last_project_no = None
+	if planning:
+		for row in planning:
+			# Hide repeated output
+			if row["output_si_no"] == last_output_no:
+				# row["output_si_no"] = ""
+				row["output"] = ""
+			else:
+				last_output_no = row["output_si_no"]
 
-	for row in planning:
-		# Hide repeated output
-		if row["output_si_no"] == last_output_no:
-			# row["output_si_no"] = ""
-			row["output"] = ""
-		else:
-			last_output_no = row["output_si_no"]
+			# Hide repeated project
+			# if row["project_si_no"] == last_project_no:
+			# 	# row["project_si_no"] = ""
+			# 	row["project"] = ""
+			# else:
+			# 	last_project_no = row["project_si_no"]
 
-		# Hide repeated project
-		# if row["project_si_no"] == last_project_no:
-		# 	# row["project_si_no"] = ""
-		# 	row["project"] = ""
-		# else:
-		# 	last_project_no = row["project_si_no"]
-
-		planning_update.append(row)
+			planning_update.append(row)
+	else:
+		frappe.throw("No FYP Proposal found for the year {0} to {1}".format(from_year, to_year))
 
 	# frappe.throw(str(planning_update))
 
 	return planning_update
 
+
 @frappe.whitelist()
-def create_fyp_for_subsidiaries(fyp_name):
+def create_awp_for_subsidiaries(fyp_name):
     colleges = frappe.db.sql("""
         SELECT name
         FROM `tabCompany`
-        WHERE IFNULL(is_overseeing_company, 0) != 1
+        WHERE IFNULL(is_group, 0) != 1
     """, as_dict=True)
 
-    parent_fyp = frappe.get_doc("Five Year Plan", fyp_name)
+    fyp = frappe.get_doc("Five Year Plan", fyp_name)
     created = []
 
     for college in colleges:
         # prevent duplicate FYP per college
-        if frappe.db.exists("Five Year Plan", {
+        if frappe.db.exists("Annual Work Plan", {
             "colleges": college["name"],
-            "parent_fyp": parent_fyp.name
+            "fyp": fyp.name
+			# "apa_details": fyp.items
         }):
             continue
 
-        fyp_copy = frappe.new_doc("Five Year Plan")
+        awp = frappe.new_doc("Annual Work Plan")
 
         # copy all fields safely
-        fyp_copy.update({
+        awp.update({
             key: value
-            for key, value in parent_fyp.as_dict().items()
+            for key, value in fyp.as_dict().items()
             if key not in (
                 "name", "doctype", "owner", "creation", "modified",
-                "modified_by", "docstatus"
+                "modified_by", "docstatus", "amended_from"
             )
         })
 
-        fyp_copy.colleges = college["name"]
-        fyp_copy.parent_fyp = parent_fyp.name  # recommended tracking
+        awp.colleges = college["name"]
+        awp.year = now_datetime().year
+        awp.fyp = fyp.name  # recommended tracking
+        awp.workflow_state = "Draft"
 
-        fyp_copy.insert(ignore_permissions=True)
-        created.append(fyp_copy.name)
+        awp.insert(ignore_permissions=True)
+        created.append(awp.name)
 
     # mark parent only if copies created
-    if created:
-        parent_fyp.db_set("fyp_copies", 1)
+    # if created:
+    #     fyp.db_set("fyp_copies", 1)
 
     return {
         "status": "success",

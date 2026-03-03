@@ -1,0 +1,101 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-02-20 08:47:49.204030",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "outcome",
+  "unit",
+  "weightage",
+  "target",
+  "raw_rating",
+  "means_of_verification",
+  "irt_rating",
+  "column_break_omja",
+  "self_rating",
+  "justification",
+  "category"
+ ],
+ "fields": [
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Unit",
+   "options": "APA Unit",
+   "read_only": 1
+  },
+  {
+   "fieldname": "weightage",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Weightage",
+   "read_only": 1
+  },
+  {
+   "fieldname": "outcome",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Outcome",
+   "options": "Outcome Indicator",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_omja",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "self_rating",
+   "fieldtype": "Data",
+   "label": "Self Rating"
+  },
+  {
+   "fieldname": "raw_rating",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Raw Rating"
+  },
+  {
+   "fieldname": "means_of_verification",
+   "fieldtype": "Data",
+   "label": "Means Of Verification"
+  },
+  {
+   "fieldname": "justification",
+   "fieldtype": "Small Text",
+   "label": "Justification"
+  },
+  {
+   "fieldname": "irt_rating",
+   "fieldtype": "Percent",
+   "label": "IRT Rating"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Data",
+   "label": "Category"
+  },
+  {
+   "fieldname": "target",
+   "fieldtype": "Data",
+   "label": "Target",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-03 16:22:18.557100",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "APA Outcome Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

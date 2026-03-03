@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestAnnualPerformanceAgreement(FrappeTestCase):
+class TestFiveYearPlanProposal(FrappeTestCase):
 	pass

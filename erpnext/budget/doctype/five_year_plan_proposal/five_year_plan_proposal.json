@@ -1,0 +1,140 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:FYPP/{from_year}-{to_year}/{#}",
+ "creation": "2025-11-25 12:30:48.698719",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "from_year",
+  "rub_strategic_plan",
+  "get_planning_info",
+  "fyp_copies",
+  "column_break_teau",
+  "to_year",
+  "colleges",
+  "remarks",
+  "section_break_lcfb",
+  "fyp_details",
+  "section_break_pbbp",
+  "total_proposed_budget",
+  "section_break_utwy",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_utwy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Five Year Plan Proposal",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "rub_strategic_plan",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "RUB Strategic Plan",
+   "options": "RUB Strategic Plan",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_teau",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_lcfb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "get_planning_info",
+   "fieldtype": "Button",
+   "label": "Get Planning Info"
+  },
+  {
+   "fieldname": "fyp_details",
+   "fieldtype": "Table",
+   "options": "FYP Detail"
+  },
+  {
+   "fieldname": "from_year",
+   "fieldtype": "Link",
+   "label": "From Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_year",
+   "fieldtype": "Link",
+   "label": "To Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "colleges",
+   "fieldtype": "Link",
+   "label": "Colleges",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "fyp_copies",
+   "fieldtype": "Check",
+   "label": "FYP Copies Successfully Created",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_pbbp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_proposed_budget",
+   "fieldtype": "Currency",
+   "label": "Total Proposed Budget",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-02-25 17:51:32.692673",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "module": "Budget",
+ "name": "Five Year Plan Proposal",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

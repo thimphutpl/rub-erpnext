@@ -6,16 +6,25 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "project",
+  "activities",
   "column_break_jhsc",
-  "activities"
+  "from_date",
+  "to_date",
+  "is_capital",
+  "is_current",
+  "section_break_upwi",
+  "items",
+  "references_section",
+  "project",
+  "amended_from"
  ],
  "fields": [
   {
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
-   "options": "Planning Project"
+   "options": "Planning Project",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_jhsc",
@@ -25,12 +34,63 @@
    "fieldname": "activities",
    "fieldtype": "Small Text",
    "label": "Activities"
+  },
+  {
+   "fieldname": "references_section",
+   "fieldtype": "Section Break",
+   "label": "References"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Planning Activities",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "From Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "To Date",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_capital",
+   "fieldtype": "Check",
+   "label": "Is Capital"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_current",
+   "fieldtype": "Check",
+   "label": "is Current"
+  },
+  {
+   "fieldname": "section_break_upwi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "options": "Output Category Item"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2025-11-25 18:49:14.586770",
+ "modified": "2026-03-03 13:41:00.788632",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Planning Activities",
@@ -53,5 +113,6 @@
  "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }

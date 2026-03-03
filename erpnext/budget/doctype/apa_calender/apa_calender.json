@@ -1,0 +1,145 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:fiscal_year",
+ "creation": "2026-02-26 15:39:28.950660",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "fiscal_year",
+  "target_setup_section",
+  "target_setup_start_date",
+  "column_break_hkhg",
+  "target_setup_end_date",
+  "review_section",
+  "review_start_date",
+  "column_break_ilnr",
+  "review_end_date",
+  "evaluation_section",
+  "evaluation_start_date",
+  "column_break_ksvl",
+  "evaluation_end_date",
+  "section_break_eb3v",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_eb3v",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "APA Calender",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Fiscal Year",
+   "options": "Fiscal Year",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "target_setup_section",
+   "fieldtype": "Section Break",
+   "label": "Target Setup"
+  },
+  {
+   "fieldname": "target_setup_start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Target Setup Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_hkhg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "target_setup_end_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Target Setup End Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "review_section",
+   "fieldtype": "Section Break",
+   "label": "Review"
+  },
+  {
+   "fieldname": "review_start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Review Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ilnr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "review_end_date",
+   "fieldtype": "Date",
+   "label": "Review End Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "evaluation_section",
+   "fieldtype": "Section Break",
+   "label": "Evaluation"
+  },
+  {
+   "fieldname": "evaluation_start_date",
+   "fieldtype": "Date",
+   "label": "Evaluation Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ksvl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "evaluation_end_date",
+   "fieldtype": "Date",
+   "label": "Evaluation End Date",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-02-26 15:46:54.767757",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "APA Calender",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

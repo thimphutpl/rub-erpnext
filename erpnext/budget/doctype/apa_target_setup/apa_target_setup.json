@@ -1,0 +1,104 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "TS-.YY-.##",
+ "creation": "2026-02-26 15:44:16.679499",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "fiscal_year",
+  "column_break_unjg",
+  "college",
+  "apa_outcome_details_section",
+  "outcome_items",
+  "apa_output_details_section",
+  "output_items",
+  "section_break_kcgx",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_kcgx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Annual Performance Assessment",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "college",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_unjg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Fiscal Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "apa_output_details_section",
+   "fieldtype": "Section Break",
+   "label": "APA Output Details (Section 2B)"
+  },
+  {
+   "fieldname": "output_items",
+   "fieldtype": "Table",
+   "options": "APA Target Output Item"
+  },
+  {
+   "fieldname": "apa_outcome_details_section",
+   "fieldtype": "Section Break",
+   "label": "APA Outcome Details (Section 2A)"
+  },
+  {
+   "fieldname": "outcome_items",
+   "fieldtype": "Table",
+   "options": "APA Target Outcome Item"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-02-27 14:55:09.224937",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "APA Target Setup",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

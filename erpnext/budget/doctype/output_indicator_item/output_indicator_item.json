@@ -1,0 +1,128 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-02-19 13:42:35.534205",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "output_no",
+  "project_no",
+  "activities_no",
+  "activity_link",
+  "unit",
+  "weightage",
+  "definition",
+  "column_break_faex",
+  "output",
+  "project",
+  "activities",
+  "category",
+  "data_collection_method",
+  "data_source",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "column_break_faex",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "output_no",
+   "fieldtype": "Int",
+   "label": "Output No",
+   "options": "Planning Output"
+  },
+  {
+   "fieldname": "activities_no",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Activities No",
+   "options": "Planning Activities"
+  },
+  {
+   "fieldname": "project_no",
+   "fieldtype": "Int",
+   "label": "Project No",
+   "options": "Planning Project"
+  },
+  {
+   "fieldname": "output",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Output",
+   "read_only": 1
+  },
+  {
+   "fieldname": "activities",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Activity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Project",
+   "read_only": 1
+  },
+  {
+   "fieldname": "activity_link",
+   "fieldtype": "Link",
+   "label": "Activity Link",
+   "options": "Planning Activities"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Unit"
+  },
+  {
+   "fieldname": "weightage",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Weightage"
+  },
+  {
+   "fieldname": "definition",
+   "fieldtype": "Small Text",
+   "label": "Definition"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Data",
+   "label": "Category"
+  },
+  {
+   "fieldname": "data_collection_method",
+   "fieldtype": "Data",
+   "label": "Data Collection Method"
+  },
+  {
+   "fieldname": "data_source",
+   "fieldtype": "Data",
+   "label": "Data Source"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-02-25 17:30:04.408699",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "module": "Budget",
+ "name": "Output Indicator Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,175 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "APA-.YY-.##",
+ "creation": "2026-02-20 08:40:55.500202",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "fiscal_year",
+  "column_break_unjg",
+  "college",
+  "apa_outcome_details_section",
+  "outcome_items",
+  "apa_output_details_section",
+  "output_items",
+  "section_break_vnzx",
+  "outcome_rating",
+  "outcome_calculation",
+  "outcome_value",
+  "overall_rating",
+  "column_break_lahr",
+  "output_rating",
+  "output_calculation",
+  "output_value",
+  "performance",
+  "section_break_kcgx",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_kcgx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Annual Performance Assessment",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "college",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_unjg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Fiscal Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "apa_output_details_section",
+   "fieldtype": "Section Break",
+   "label": "APA Output Details (Section 2B)"
+  },
+  {
+   "fieldname": "output_items",
+   "fieldtype": "Table",
+   "options": "APA Output Item"
+  },
+  {
+   "fieldname": "apa_outcome_details_section",
+   "fieldtype": "Section Break",
+   "label": "APA Outcome Details (Section 2A)"
+  },
+  {
+   "fieldname": "outcome_items",
+   "fieldtype": "Table",
+   "options": "APA Outcome Item"
+  },
+  {
+   "fieldname": "section_break_vnzx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "overall_rating",
+   "fieldtype": "Percent",
+   "label": "Overall Rating",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_lahr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "performance",
+   "fieldtype": "Data",
+   "label": "Performance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "output_rating",
+   "fieldtype": "Percent",
+   "label": "Output Rating (100%)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "outcome_rating",
+   "fieldtype": "Percent",
+   "label": "Outcome Rating (100%)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "output_calculation",
+   "fieldtype": "Percent",
+   "label": "Output Calculation (%)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "outcome_calculation",
+   "fieldtype": "Percent",
+   "label": "Outcome Calculation (%)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "outcome_value",
+   "fieldtype": "Percent",
+   "label": "Outcome Value",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "output_value",
+   "fieldtype": "Percent",
+   "label": "Output Value",
+   "precision": "2",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-03-03 16:32:39.013834",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "Annual Performance Assessment",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

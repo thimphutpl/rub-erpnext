@@ -1,38 +1,26 @@
 // Copyright (c) 2025, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("Annual Performance Agreement", {
+frappe.ui.form.on("Annual Work Plan", {
 	refresh(frm) {
-        if (!frm.is_new() && !frm.doc.fyp_copies) {
-            frm.add_custom_button(
-                __('Apply APA to Other Colleges'),
-                function () {
-                    frappe.call({
-                        method: "erpnext.budget.doctype.annual_performance_agreement.annual_performance_agreement.create_apa_for_subsidiaries",
-                        args: {
-                            apa_name: frm.doc.name
-                        },
-                        freeze: true,
-                        freeze_message: __('Creating APA copies...'),
-                        callback: function (r) {
-                            if (r.message && r.message.status === "success") {
-                                frappe.msgprint(
-                                    `${r.message.created_apa_count} APA copies successfully created`
-                                );
-                                frm.reload_doc();
-                            }
-                        }
-                    });
-                },
-                __('Actions')
-            );
-        }
-    
-
+        if (frm.doc.docstatus == 1) {
+			cur_frm.add_custom_button(__("Make Approved Budget"),
+				function () {
+					frm.events.make_approved_budget(frm);
+				}
+			)
+		}
+        frm.set_query('fyp', function(doc, cdt, cdn) {
+			return {
+				filters: {
+					docstatus: 1
+				}
+			};
+		});
 	},
     get_planning_info: function(frm){
         frappe.call({
-            method:"erpnext.budget.doctype.five_year_plan.five_year_plan.fetch_budgetplan",
+            method:"erpnext.budget.doctype.five_year_plan_proposal.five_year_plan_proposal.fetch_budgetplan",
             
             args: {
                     fyp: frm.doc.fyp
@@ -64,5 +52,11 @@ frappe.ui.form.on("Annual Performance Agreement", {
                     }
                 }
         })
-    }
+    },
+    make_approved_budget: function (frm) {
+        frappe.model.open_mapped_doc({
+            method: "erpnext.budget.doctype.annual_work_plan.annual_work_plan.make_approved_budget",
+            frm: cur_frm
+        });
+	},
 });
