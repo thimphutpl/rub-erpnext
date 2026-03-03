@@ -1,0 +1,68 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-02-27 15:34:52.455606",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "category",
+  "apa_max",
+  "apa_min",
+  "column_break_lgtd",
+  "pms_max",
+  "pms_min"
+ ],
+ "fields": [
+  {
+   "fieldname": "category",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Category",
+   "options": "APA Category",
+   "read_only": 1
+  },
+  {
+   "fieldname": "apa_max",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "APA MAX"
+  },
+  {
+   "fieldname": "apa_min",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "APA MIN"
+  },
+  {
+   "fieldname": "column_break_lgtd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pms_max",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "PMS MAX"
+  },
+  {
+   "fieldname": "pms_min",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "PMS MIN"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-03 20:34:15.426839",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "Interpolation Formula",
+ "owner": "sonam.bomjan@thimphutechpark.bt",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

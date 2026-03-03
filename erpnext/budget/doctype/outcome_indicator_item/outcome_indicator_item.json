@@ -1,0 +1,68 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-02-27 16:38:05.003263",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "category",
+  "unit",
+  "raw_rating",
+  "column_break_aaue",
+  "max",
+  "min"
+ ],
+ "fields": [
+  {
+   "fieldname": "category",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Category",
+   "options": "APA Category"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Unit"
+  },
+  {
+   "fieldname": "raw_rating",
+   "fieldtype": "Data",
+   "label": "Raw Rating"
+  },
+  {
+   "fieldname": "column_break_aaue",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "max",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Max"
+  },
+  {
+   "default": "0",
+   "fieldname": "min",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Min"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-03 20:39:29.379600",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "Outcome Indicator Item",
+ "owner": "sonam.bomjan@thimphutechpark.bt",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
