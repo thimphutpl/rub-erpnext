@@ -19,8 +19,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Category",
-   "options": "APA Category",
-   "read_only": 1
+   "options": "APA Category"
   },
   {
    "fieldname": "apa_max",
@@ -55,7 +54,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-03 20:34:15.426839",
+ "modified": "2026-03-03 20:45:19.335706",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Interpolation Formula",
