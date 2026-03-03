@@ -22,20 +22,22 @@
    "fieldname": "max",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Max"
+   "label": "Max",
+   "precision": "2"
   },
   {
    "fieldname": "min",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Min"
+   "label": "Min",
+   "precision": "2"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-03 09:59:58.708196",
+ "modified": "2026-03-04 01:15:09.898125",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Interpolation Category",
