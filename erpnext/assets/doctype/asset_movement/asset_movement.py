@@ -274,7 +274,7 @@ class AssetMovement(Document):
 		self.set_latest_location_and_custodian_in_asset()
 		if self.inter_company_transfer == 1:
 			self.make_asset_je()
-			# self.rename_asset()
+			self.rename_asset()
 
 
 	def on_cancel(self):
