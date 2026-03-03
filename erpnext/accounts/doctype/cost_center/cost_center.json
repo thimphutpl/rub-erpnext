@@ -18,6 +18,7 @@
   "is_group",
   "disabled",
   "branch_created",
+  "use_budget_from_parent",
   "lft",
   "rgt",
   "old_parent"
@@ -134,14 +135,20 @@
    "fieldtype": "Link",
    "label": "Warehouse",
    "options": "Warehouse"
+  },
+  {
+   "default": "0",
+   "fieldname": "use_budget_from_parent",
+   "fieldtype": "Check",
+   "label": "Use Budget from Parent Cost Centers"
   }
  ],
  "icon": "fa fa-money",
  "idx": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2025-08-13 16:01:09.811866",
- "modified_by": "sangay.choden@thimphutechpark.bt",
+ "modified": "2026-02-23 17:01:47.309229",
+ "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Cost Center",
  "nsm_parent_field": "parent_cost_center",

@@ -56,8 +56,8 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-19 17:27:48.022333",
- "modified_by": "Administrator",
+ "modified": "2026-03-01 15:37:57.811529",
+ "modified_by": "03230133.gcbs@rub.edu.bt",
  "module": "Accounts",
  "name": "Journal Entry Series",
  "naming_rule": "By fieldname",
@@ -76,6 +76,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "description",
  "sort_field": "modified",
  "sort_order": "DESC",

@@ -15,7 +15,6 @@ class PlanningOutput(Document):
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
-		fiscal_year: DF.Link
 		from_date: DF.Date | None
 		output: DF.SmallText | None
 		rub_strategic_plan: DF.Link | None

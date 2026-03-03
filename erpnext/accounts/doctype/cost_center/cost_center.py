@@ -29,6 +29,7 @@ class CostCenter(NestedSet):
 		old_parent: DF.Link | None
 		parent_cost_center: DF.Link
 		rgt: DF.Int
+		use_budget_from_parent: DF.Check
 		warehouse: DF.Link | None
 	# end: auto-generated types
 

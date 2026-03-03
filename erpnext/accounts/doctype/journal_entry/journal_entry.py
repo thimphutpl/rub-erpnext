@@ -201,7 +201,7 @@ class JournalEntry(AccountsController):
 	def validate_activity(self):
 		mandatory = 1
 		for a in self.accounts:
-			if "Asset" in a.reference_type:
+			if a.reference_type and "Asset" in a.reference_type:
 				mandatory = 0
 			else:
 				return	

@@ -397,6 +397,7 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 				cc_doc = frappe.get_doc("Cost Center", args.cost_center)
 				# budget_cost_center = cc_doc.budget_cost_center if cc_doc.use_budget_from_parent else args.cost_center
 				budget_cost_center = args.cost_center
+				# frappe.throw(frappe.as_json(args))
 				if not args.is_cancelled:
 					#Commit Budget
 					bud_obj = frappe.get_doc({
@@ -408,7 +409,7 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 						"reference_type": args.voucher_type,
 						"reference_no": args.voucher_no,
 						"reference_date": args.posting_date,
-						"amount": flt(args.debit_in_account_currency),
+						"amount": flt(args.credit_in_account_currency),
 						"company": args.company,
 						"closed": 1,
 						"business_activity": args.activity,
@@ -426,7 +427,7 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 						"reference_type": args.voucher_type,
 						"reference_no": args.voucher_no,
 						"reference_date": args.posting_date,
-						"amount": flt(args.debit_in_account_currency),
+						"amount": flt(args.credit_in_account_currency),
 						"company": args.company,
 						"com_ref": bud_obj.name,
 						"business_activity": args.activity,
@@ -809,25 +810,42 @@ def validate_against_planning_activities(args):
 	# args.actual_expense, args.requested_amount, args.ordered_amount = get_actual_expense(args), 0, 0
 	total_expense = flt(total_budget_consumed) + flt(args.debit)
 	# frappe.throw(str(total_expense))
+	if not budget_amount or  flt(budget_amount) == 0:
+		frappe.throw("Budget not set for Activity")
 
 	if total_expense > budget_amount and args.against_voucher_type not in ("Asset Movement", "Asset Value Adjustment"):
 		frappe.throw("Expense exceeded the allocated Budget")
+
 def get_budget_amount(self):
 	posting_date = self.posting_date
 	posting_year =getdate(posting_date).year 
+	# result = frappe.db.sql(
+	# 	"""
+	# 	SELECT apa.approved_budget
+	# 	FROM `tabAPA Detail` apa
+	# 	INNER JOIN `tabAnnual Performance Agreement` apa_parent
+	# 		ON apa.parent = apa_parent.name
+	# 	WHERE apa.activity_link = %s
+	# 	  AND apa_parent.docstatus = 1
+	# 	  AND apa_parent.colleges = %s
+	# 	  AND apa_parent.year = %s
+	# 	""",
+	# 	(self.activity, self.company, posting_year),
+	# )
+	# frappe.throw(str(self.activity))
 	result = frappe.db.sql(
 		"""
-		SELECT apa.approved_budget
-		FROM `tabAPA Detail` apa
-		INNER JOIN `tabAnnual Performance Agreement` apa_parent
-			ON apa.parent = apa_parent.name
-		WHERE apa.activity_link = %s
-		  AND apa_parent.docstatus = 1
-		  AND apa_parent.colleges = %s
-		  AND apa_parent.year = %s
+		select api.approved_budget from 
+		`tabApproved Budget` ab inner join 
+		`tabApproved Budget Item` api on ab.name=api.parent
+		WHERE api.activity_link = %s
+		  AND ab.docstatus = 1
+		  AND ab.college = %s
+		  AND ab.fiscal_year = %s
 		""",
 		(self.activity, self.company, posting_year),
 	)
+	# frappe.throw(str(result))
 
 	return flt(result[0][0]) if result and result[0][0] else 0
 
