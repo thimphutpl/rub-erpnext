@@ -18,6 +18,7 @@ class HostelAttendanceDetails(Document):
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
+		remarks: DF.SmallText | None
 		room_number: DF.Data | None
 		student_code: DF.Link | None
 		student_name: DF.Data | None

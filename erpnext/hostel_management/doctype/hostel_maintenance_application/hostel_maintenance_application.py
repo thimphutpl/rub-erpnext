@@ -19,10 +19,12 @@ class HostelMaintenanceApplication(Document):
 		amended_from: DF.Link | None
 		applied_by: DF.Link | None
 		assets: DF.Table[HostelAssetMaintenance]
+		attach_picture: DF.AttachImage | None
 		available_time: DF.Time | None
 		branch: DF.Link | None
 		college: DF.Link | None
 		cost_center: DF.Link | None
+		damage_type: DF.Literal["Vandalism", "Loss or Misuse of Property", "Damage to Shared Facilities"]
 		description_of_maintenance: DF.SmallText | None
 		first_name: DF.Data | None
 		full_name: DF.Data | None
@@ -30,6 +32,7 @@ class HostelMaintenanceApplication(Document):
 		hostel_room: DF.Link | None
 		hostel_type: DF.Data | None
 		last_name: DF.Data | None
+		maintenance_focal: DF.Link | None
 		maintenance_required_on: DF.Date | None
 		maintenance_type: DF.Literal["Repair", "Replacement"]
 		phone_number: DF.Data | None
@@ -71,6 +74,7 @@ def make_maintenance_application(source_name, target_doc=None):
 					"college": "company",
 					"applied_by": "student_code",
 					"full_name": "full_name",
+					"name": "hostel_maintenance_application"
 				},
 				"postprocess": update_date,
 				"validation": {"docstatus": ["=", 1]}

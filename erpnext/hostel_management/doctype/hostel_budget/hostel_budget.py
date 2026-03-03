@@ -20,7 +20,7 @@ class HostelBudget(Document):
 		college: DF.Link
 		expense_type: DF.Link | None
 		expenses_amount: DF.Table[HostelBudgetItem]
-		hostel_block: DF.Data
+		hostel_block: DF.Link
 		hostel_councilor: DF.Link
 		hostel_councilor_name: DF.Data | None
 		posting_date: DF.Date

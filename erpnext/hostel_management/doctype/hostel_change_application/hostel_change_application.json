@@ -19,6 +19,7 @@
   "column_break_grdp",
   "operation_type",
   "requested_room",
+  "available_room",
   "hostel_type_req",
   "student_code",
   "room",
@@ -194,13 +195,19 @@
    "mandatory_depends_on": "eval:doc.operation_type == 'Room Swap' && doc.docstatus == 1;",
    "options": "Hostel Room",
    "read_only": 1
+  },
+  {
+   "fieldname": "available_room",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Available Room"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-12-29 12:02:07.533874",
+ "modified": "2026-02-17 10:10:13.669237",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Change Application",

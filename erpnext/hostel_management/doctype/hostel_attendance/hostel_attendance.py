@@ -89,6 +89,8 @@ from frappe.model.document import Document
 
 class HostelAttendance(Document):
     # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
@@ -97,7 +99,7 @@ class HostelAttendance(Document):
 
         amended_from: DF.Link | None
         company: DF.Link
-        fiscal_year: DF.Link
+        fiscal_year: DF.Link | None
         hostel_block: DF.Link
         posting_date: DF.Date
         table_tulk: DF.Table[HostelAttendanceDetails]

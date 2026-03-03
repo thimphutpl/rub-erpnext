@@ -19,5 +19,12 @@ frappe.ui.form.on("Hostel Room", {
 				}
 			}
 		}); 
+		frm.set_query('hostel_type', function(doc) {
+			return {
+				filters: {
+					"company": doc.company
+				}
+			}
+		}); 
 	}
 });

@@ -18,6 +18,7 @@ class HostelCounsellor(Document):
 		amended_from: DF.Link | None
 		company: DF.Link
 		hostel_block: DF.Data
+		hostel_councellor: DF.Link | None
 		hostel_type: DF.TableMultiSelect[BlockCounsellorDetails]
 		table_lbtp: DF.Table[BlockCounsellorDetails]
 	# end: auto-generated types

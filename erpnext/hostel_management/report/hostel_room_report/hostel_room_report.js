@@ -22,6 +22,11 @@ frappe.query_reports["Hostel Room Report"] = {
             "options": "Hostel Type"
         },
         {
+            "fieldname": "name",
+            "label": "Hostel Room",
+            "fieldtype": "Data",
+        },
+        {
             "fieldname": "asset_code",
             "label": "Asset Code",
             "fieldtype": "Link",

@@ -7,9 +7,10 @@
  "engine": "InnoDB",
  "field_order": [
   "company",
-  "hostel_block",
+  "hostel_councellor",
   "column_break_ykut",
   "hostel_type",
+  "hostel_block",
   "section_break_nvyi",
   "table_lbtp",
   "amended_from"
@@ -59,12 +60,18 @@
    "label": "College",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "hostel_councellor",
+   "fieldtype": "Link",
+   "label": "Hostel Councellor",
+   "options": "Student"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-02 20:20:40.476742",
+ "modified": "2026-02-27 16:01:35.528034",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Counsellor",

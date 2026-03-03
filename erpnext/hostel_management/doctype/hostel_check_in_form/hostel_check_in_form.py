@@ -68,6 +68,12 @@ def make_checkout_form(source_name, target_doc=None):
 			},
 			"Check-In Asset Items": {
 				"doctype": "Check-Out Asset Items",
+				"field_map": {
+					"asset_code": "asset_code",
+					"asset_name": "asset_name",
+					"asset_condition": "asset_condition_check_in",
+					"remarks": "remarks_check_in",
+				},
 				"postprocess": transfer_currency,
 			},
 		}, target_doc, adjust_last_date)

@@ -22,14 +22,18 @@
   "maintenance_type",
   "maintenance_required_on",
   "available_time",
+  "maintenance_focal",
   "column_break_gyul",
+  "damage_type",
   "description_of_maintenance",
   "section_break_cpso",
   "get_asset_list",
   "assets",
   "hostel_maintenance_report",
   "section_break_dmm1",
-  "amended_from"
+  "amended_from",
+  "section_break_jozn",
+  "attach_picture"
  ],
  "fields": [
   {
@@ -131,19 +135,18 @@
   {
    "fieldname": "section_break_cpso",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Asset Details"
   },
   {
    "fieldname": "assets",
    "fieldtype": "Table",
-   "hidden": 1,
    "label": "Assets",
    "options": "Hostel Asset Maintenance"
   },
   {
    "fieldname": "get_asset_list",
    "fieldtype": "Button",
-   "hidden": 1,
    "label": "Get Asset List"
   },
   {
@@ -182,13 +185,35 @@
    "fieldtype": "Time",
    "in_list_view": 1,
    "label": "Maintenance Available Time"
+  },
+  {
+   "fieldname": "damage_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Damage Type",
+   "options": "Vandalism\nLoss or Misuse of Property\nDamage to Shared Facilities"
+  },
+  {
+   "fieldname": "maintenance_focal",
+   "fieldtype": "Link",
+   "label": "Maintenance Focal",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "section_break_jozn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "attach_picture",
+   "fieldtype": "Attach Image",
+   "label": "Attach Picture"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-12-10 16:23:18.233138",
+ "modified": "2026-02-17 11:44:45.428175",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Maintenance Application",

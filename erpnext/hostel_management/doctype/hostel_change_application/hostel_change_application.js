@@ -39,6 +39,23 @@ frappe.ui.form.on("Hostel Change Application", {
             };
         });
 	},
+    requested_room: function(frm) {
+        if (frm.doc.requested_room) {
+
+            frappe.db.get_doc('Hostel Room', frm.doc.requested_room)
+                .then(room => {
+
+                    let capacity = room.capacity || 0;
+                    let occupied = room.student_list ? room.student_list.length : 0;
+
+                    let available = capacity - occupied;
+
+                    frm.set_value('available_room', available);
+                });
+        } else {
+            frm.set_value('available_room', 0);
+        }
+    },
     applied_by: function(frm) {
         if (frm.doc.applied_by) {
             fetch_student_details(frm);

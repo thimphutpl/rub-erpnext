@@ -28,10 +28,12 @@ class HostelMaintenanceReport(BuyingController, StockController):
 
 		amended_from: DF.Link | None
 		branch: DF.Link | None
+		budget: DF.Link | None
 		company: DF.Link | None
 		cost_center: DF.Link | None
 		damage_type: DF.Literal["", "Vandalism", "Loss or Misuse of Property", "Damage to Shared Facilities"]
 		description_of_maintenance: DF.SmallText | None
+		evidence: DF.Attach | None
 		expenses_borne_by: DF.Literal["", "Student", "College"]
 		first_name: DF.Data | None
 		full_name: DF.Data | None
@@ -64,17 +66,19 @@ class HostelMaintenanceReport(BuyingController, StockController):
 		if (self.expenses_borne_by == "College" or self.expenses_borne_by == ""):
 			# return
 			self.update_stock_ledger()
-			self.make_gl_entries()
+			# self.make_gl_entries()
 			self.repost_future_sle_and_gle()
-		else:
-			# return
-			# self.post_journal_entry()
-			self.make_gl_entries()
+			self.post_journal_entry()
+		# else:
+		# 	# return
+		# 	# self.post_journal_entry()
+		# 	self.make_gl_entries()
 
 		if self.expenses_borne_by == "Student":
 			make_payment_entry(self.name)
 		else:
 			make_stock_entry(self.name)	
+			self.post_journal_entry()
 	
 	def link_maintenance_application_to_maintenance_report(self):
 		# find the related Hostel Maintenance Application
@@ -155,12 +159,12 @@ class HostelMaintenanceReport(BuyingController, StockController):
 	def post_journal_entry(self):
 		#expense_bank_account = frappe.db.get_value("Branch", self.branch, "expense_bank_account")
 		# expense_bank_account = frappe.db.get_value("Company", frappe.defaults.get_user_default("Company"), "expenses_included_in_asset_valuation")
-		expense_bank_account = frappe.db.get_value("Company", self.college, "income_account")
+		expense_bank_account = frappe.db.get_value("Company", self.company, "income_account")
 		if not expense_bank_account:
 			frappe.throw("No Default Payable Account set in Company")
 
 		# maintenance_account = frappe.db.get_value("Company", frappe.defaults.get_user_default("Company"), "asset_received_but_not_billed")
-		maintenance_account = frappe.db.get_value("Company", self.college, "receivable_account")
+		maintenance_account = frappe.db.get_value("Company", self.company, "default_income_account")
 		if not maintenance_account:
 			frappe.throw("No Default Payable Account set in Company")	
 
@@ -173,12 +177,14 @@ class HostelMaintenanceReport(BuyingController, StockController):
 			je.remark = 'Payment against : ' + self.name
 			je.posting_date = self.maintenance_required_on
 			je.branch = self.branch
-			je.company = self.college
+			je.company = self.company
+			je.activity = self.activity
 
 			je.append("accounts", {
 					"account": maintenance_account,
 					"cost_center": self.cost_center,
-					"party_type": self.expenses_borne_by,
+					# "party_type": self.expenses_borne_by,
+					"party_type": "Student",
 					"party": self.student_code,
 					"reference_type": "Hostel Maintenance Report",
 					"reference_name": self.name,
@@ -189,8 +195,8 @@ class HostelMaintenanceReport(BuyingController, StockController):
 			je.append("accounts", {
 					"account": expense_bank_account,
 					"cost_center": self.cost_center,
-					# "party_type": "Supplier",
-					"party_type": self.expenses_borne_by,
+					# "party_type": self.expenses_borne_by,
+					"party_type": "Student",
 					"party": self.student_code,
 					"credit_in_account_currency": flt(self.total_expenses_incurred),
 					"credit": flt(self.total_expenses_incurred),

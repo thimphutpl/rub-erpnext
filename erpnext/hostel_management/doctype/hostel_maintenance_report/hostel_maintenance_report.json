@@ -34,10 +34,13 @@
   "expenses_section",
   "items",
   "total_expenses_incurred",
+  "section_break_wehm",
+  "evidence",
   "section_break_pxnf",
   "jv",
   "amended_from",
-  "hostel_maintenance_application"
+  "hostel_maintenance_application",
+  "activity"
  ],
  "fields": [
   {
@@ -231,13 +234,29 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Full Name"
+  },
+  {
+   "fieldname": "section_break_wehm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "evidence",
+   "fieldtype": "Attach",
+   "label": "Evidence"
+  },
+  {
+   "fieldname": "activity",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Planning Activities",
+   "options": "Planning Activities"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-12-10 16:21:59.167982",
+ "modified": "2026-02-27 10:16:03.132250",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Maintenance Report",
