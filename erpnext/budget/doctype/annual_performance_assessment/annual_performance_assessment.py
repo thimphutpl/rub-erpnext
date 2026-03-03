@@ -57,21 +57,21 @@ class AnnualPerformanceAssessment(Document):
 		output_calc = 0
 		output_total_val = 0
 		for item in self.get("output_items"):
-			output_calc += flt(item.weighted_score)
-			output_total_val += flt(item.weightage)
+			output_calc += flt(item.weighted_score, 2)
+			output_total_val += flt(item.weightage, 2)
 
 		self.output_rating = output_calc/output_total_val * 100
 
 	def calculate_outcome_rating(self):
 		outcome_calc = 0
 		for item in self.get("outcome_items"):
-			outcome_calc += flt(item.irt_rating)
+			outcome_calc += flt(item.irt_rating, 2)
 
-		self.outcome_rating = outcome_calc/flt(len(self.outcome_items))
+		self.outcome_rating = outcome_calc/flt(len(self.outcome_items), 2)
 
 	def calculate_overall_rating(self):
-		self.output_value = flt(self.output_rating) * flt(self.output_calculation)/100
-		self.outcome_value = flt(self.outcome_rating) * flt(self.outcome_calculation)/100
+		self.output_value = flt(self.output_rating, 2) * flt(self.output_calculation, 2)/100
+		self.outcome_value = flt(self.outcome_rating, 2) * flt(self.outcome_calculation, 2)/100
 		self.overall_rating = self.output_value + self.outcome_value
 		category = frappe.db.sql("""
 			SELECT category
@@ -130,6 +130,7 @@ def fetch_output_and_outcome(fiscal_year, college):
 
 @frappe.whitelist()
 def calculate_outcome_irt_rating(raw_rating, outcome, unit):
+	# frappe.throw("{0}, {1}, {2}".format(raw_rating, outcome, unit))
 	outcome_category = None
 	if unit == "Percent":
 		outcome_category = frappe.db.sql('''
@@ -155,7 +156,6 @@ def calculate_outcome_irt_rating(raw_rating, outcome, unit):
 			INNER JOIN `tabOutcome Indicator Item` oii ON oi.name = oii.parent
 			WHERE oi.name = %s AND oii.unit = %s
 		''',(outcome, raw_rating), as_dict=True)
-	
 	if not outcome_category:
 		frappe.throw("Category not found in Outcome Indicator")
 
@@ -179,12 +179,23 @@ def calculate_outcome_irt_rating(raw_rating, outcome, unit):
 			FROM `tabOutcome Indicator Item`
 			WHERE parent = %s
 		""", outcome, pluck=True)
-		new_raw_rating = flt(raw_rating)/flt(max_value[0])*100
+		new_raw_rating = flt(raw_rating, 2)/flt(max_value[0])*100, 2
 	elif unit == "Accreditation":
 		new_raw_rating = outcome_category[0].raw_rating
 
-	irt_rating = ((flt(new_raw_rating) - flt(interpolation_categories[0].apa_min)) / (flt(interpolation_categories[0].apa_max) - flt(interpolation_categories[0].apa_min))) * (flt(interpolation_categories[0].pms_max) - flt(interpolation_categories[0].pms_min)) + flt(interpolation_categories[0].pms_min)
+	# frappe.throw("{0}, {1}, {2}, {3}".format(interpolation_categories[0].apa_max, interpolation_categories[0].apa_min, interpolation_categories[0].pms_max, interpolation_categories[0].pms_min))
 
+
+	# irt_rating = ((flt(new_raw_rating, 2) - flt(interpolation_categories[0].apa_min, 2)) / (flt(interpolation_categories[0].apa_max, 2) - flt(interpolation_categories[0].apa_min, 2))) * (flt(interpolation_categories[0].pms_max, 2) - flt(interpolation_categories[0].pms_min, 2)) + flt(interpolation_categories[0].pms_min, 2)
+
+	val1 = flt(new_raw_rating, 2) - flt(interpolation_categories[0].apa_min, 2)
+	val2 = flt(interpolation_categories[0].apa_max, 2) - flt(interpolation_categories[0].apa_min, 2)
+	val3 = flt(interpolation_categories[0].pms_max, 2) - flt(interpolation_categories[0].pms_min, 2)
+	val4 = val1/val2
+	val5 = val4*val3
+	# frappe.throw("{0}, {1}, {2}, {3}, {4}".format(val1, val2, val3, val4, val5))
+
+	irt_rating =  val5 + flt(interpolation_categories[0].pms_min, 2)
 	return irt_rating
 
 @frappe.whitelist()
@@ -238,13 +249,13 @@ def calculate_output_irt_rating(raw_rating, activity_link, unit, weightage):
 			FROM `tabOutput Category Item`
 			WHERE parent = %s
 		""", activity_link, pluck=True)
-		new_raw_rating = flt(raw_rating)/flt(max_value[0])*100
+		new_raw_rating = flt(raw_rating, 2)/flt(max_value[0])*100, 2
 	elif unit == "Accreditation":
 		new_raw_rating = output_category[0].raw_rating
 
-	irt_rating = ((flt(new_raw_rating) - flt(interpolation_categories[0].apa_min)) / (flt(interpolation_categories[0].apa_max) - flt(interpolation_categories[0].apa_min))) * (flt(interpolation_categories[0].pms_max) - flt(interpolation_categories[0].pms_min)) + flt(interpolation_categories[0].pms_min)
+	irt_rating = ((flt(new_raw_rating, 2) - flt(interpolation_categories[0].apa_min, 2)) / (flt(interpolation_categories[0].apa_max, 2) - flt(interpolation_categories[0].apa_min, 2))) * (flt(interpolation_categories[0].pms_max, 2) - flt(interpolation_categories[0].pms_min, 2)) + flt(interpolation_categories[0].pms_min, 2)
 	
-	weighted_score = irt_rating/100*flt(weightage)
+	weighted_score = irt_rating/100*flt(weightage, 2)
 
 	return {
 		"irt_rating": irt_rating,
@@ -261,5 +272,5 @@ def get_category_for_irt_rating(irt_rating):
 		AND %s BETWEEN min AND max
 	""", (irt_rating), as_dict=True)
 
-	# irt_rating = ((flt(raw_rating) - flt(interpolation_categories[0].apa_min)) / (flt(interpolation_categories[0].apa_max) - flt(interpolation_categories[0].apa_min))) * (flt(interpolation_categories[0].pms_max) - flt(interpolation_categories[0].pms_min)) + flt(interpolation_categories[0].pms_min)
+	# irt_rating = ((flt(raw_rating, 2) - flt(interpolation_categories[0].apa_min, 2)) / (flt(interpolation_categories[0].apa_max, 2) - flt(interpolation_categories[0].apa_min, 2))) * (flt(interpolation_categories[0].pms_max, 2) - flt(interpolation_categories[0].pms_min, 2)) + flt(interpolation_categories[0].pms_min, 2)
 	return category[0].category
