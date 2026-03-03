@@ -806,15 +806,17 @@ def validate_against_planning_activities(args):
 	total_budget_consumed=get_actual_expense(args)
 	budget_amount=get_budget_amount(args)
 	# frappe.throw(str(budget_amount))
+	# frappe.throw(str(args))
 	
 	# args.actual_expense, args.requested_amount, args.ordered_amount = get_actual_expense(args), 0, 0
 	total_expense = flt(total_budget_consumed) + flt(args.debit)
 	# frappe.throw(str(total_expense))
-	if not budget_amount or  flt(budget_amount) == 0:
-		frappe.throw("Budget not set for Activity")
+	if args.activity:
+		if not budget_amount or  flt(budget_amount) == 0:
+			frappe.throw("Budget not set for Activity")
 
-	if total_expense > budget_amount and args.against_voucher_type not in ("Asset Movement", "Asset Value Adjustment"):
-		frappe.throw("Expense exceeded the allocated Budget")
+		if total_expense > budget_amount and args.against_voucher_type not in ("Asset Movement", "Asset Value Adjustment"):
+			frappe.throw("Expense exceeded the allocated Budget")
 
 def get_budget_amount(self):
 	posting_date = self.posting_date
