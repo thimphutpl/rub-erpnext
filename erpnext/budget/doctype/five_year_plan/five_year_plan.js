@@ -16,9 +16,16 @@ frappe.ui.form.on("Five Year Plan", {
                         freeze_message: __('Creating AWP copies...'),
                         callback: function (r) {
                             if (r.message && r.message.status === "success") {
-                                frappe.msgprint(
-                                    `${r.message.created_fyp_count} AWP copies successfully created`
-                                );
+                                if (r.message.created_fyp_count == 0){
+                                    frappe.msgprint(
+                                        `Annual Work Plan already created for all colleges`
+                                    );
+                                }
+                                else{
+                                    frappe.msgprint(
+                                        `${r.message.created_fyp_count} AWP copies successfully created`
+                                    );
+                                }
                                 frm.reload_doc();
                             }
                         }

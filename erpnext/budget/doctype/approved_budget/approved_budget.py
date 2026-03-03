@@ -20,4 +20,15 @@ class ApprovedBudget(Document):
 		fiscal_year: DF.Link
 		items: DF.Table[ApprovedBudgetItem]
 	# end: auto-generated types
-	pass
+	
+	def validate(self):
+		self.check_approved_budget()
+
+	def check_approved_budget(self):
+		fyp = frappe.db.sql('''
+			SELECT name FROM `tabApproved Budget` 
+			WHERE fiscal_year = %s and docstatus = 1
+		''',(self.fiscal_year), as_dict=True)
+		if fyp:
+			frappe.throw("Approved Budget exists for year {0}".format(self.fiscal_year))
+

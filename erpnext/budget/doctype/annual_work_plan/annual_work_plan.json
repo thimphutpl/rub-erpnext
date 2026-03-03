@@ -55,6 +55,7 @@
    "default": "0",
    "fieldname": "apa_copies",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "APA Copies Successfully Created",
    "read_only": 1
   },
@@ -91,8 +92,8 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-26 10:11:29.209506",
- "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "modified": "2026-03-03 23:06:52.727400",
+ "modified_by": "Administrator",
  "module": "Budget",
  "name": "Annual Work Plan",
  "naming_rule": "Expression",

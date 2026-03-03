@@ -137,6 +137,7 @@ def create_awp_for_subsidiaries(fyp_name):
         if frappe.db.exists("Annual Work Plan", {
             "colleges": college["name"],
             "fyp": fyp.name
+            "fiscal_year": now_datetime().year
 			# "apa_details": fyp.items
         }):
             continue
