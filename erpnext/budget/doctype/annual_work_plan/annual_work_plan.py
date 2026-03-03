@@ -30,6 +30,12 @@ class AnnualWorkPlan(Document):
 	def validate(self):
 		self.validate_college()
 		self.validate_budget()
+		self.validate_approved_budget()
+
+	def validate_approved_budget(self):
+		for row in self.apa_details:
+			if not row.approved_budget or row.approved_budget <= 0:
+				frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
 
 	def validate_college(self):
 		proposal_list = frappe.db.sql(""" 
@@ -72,11 +78,6 @@ class AnnualWorkPlan(Document):
 		""", (self.year,), as_dict=True)
 
 		approved_budget_map = {}
-		# Convert Five Year Plan budget to dictionary
-		# approved_budget_map = {
-		# 	d.activity_link: flt(d.approved_budget)
-			
-		# }
 		for d in approved_budget_list:
 			approved_budget_map[d.activity_link] = (
 				approved_budget_map.get(d.activity_link, 0)
