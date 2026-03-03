@@ -40,6 +40,7 @@ frappe.ui.form.on("Annual Performance Assessment", {
                             child.activities_no = row.activities_no
                             child.unit = row.unit
                             child.weightage = row.weightage
+                            child.target = row.target
                         });
     
                         frm.refresh_field("output_items");
@@ -53,6 +54,7 @@ frappe.ui.form.on("Annual Performance Assessment", {
                             child.outcome = row.outcome
                             child.unit= row.unit
                             child.weightage = row.weightage
+                            child.target = row.target
                         });
     
                         frm.refresh_field("outcome_items");
