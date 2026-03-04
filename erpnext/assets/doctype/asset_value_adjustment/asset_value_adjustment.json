@@ -52,6 +52,7 @@
    "label": "Asset Category"
   },
   {
+   "default": "RUB",
    "fieldname": "finance_book",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -180,7 +181,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-02 23:49:06.491932",
+ "modified": "2026-03-04 12:11:14.684937",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset Value Adjustment",
