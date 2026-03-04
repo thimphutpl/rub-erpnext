@@ -79,7 +79,7 @@ class AssetValueAdjustment(Document):
 		# 		get_link_to_form("Asset Value Adjustment", self.name)
 		# 	),
 		# )
-		# self.change_value(self.new_asset_value)
+		self.change_value(self.new_asset_value)
 		self.update_asset(self.new_asset_value)
 
 	def on_cancel(self):
