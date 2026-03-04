@@ -128,113 +128,157 @@
 
 			
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import nowdate, getdate  # Add getdate import
 
 
 class ClubMembershipApplication(Document):
-    # begin: auto-generated types
-    # ... (keep your auto-generated types)
-    # end: auto-generated types
+	# begin: auto-generated types
+	# ... (keep your auto-generated types)
+	# end: auto-generated types
 
-    def validate(self):
-        if not self.from_date:  # Only set if not provided
-            self.from_date = self.posting_date
+	def validate(self):
+		
+		
+		if not self.from_date:  # Only set if not provided
+			self.from_date = self.posting_date
 
-    def on_submit(self):
-        # Convert dates properly
-        current_from_date = getdate(self.from_date) if self.from_date else None
-        
-        # Check if this is an update to existing record
-        is_update = self._check_existing_activity(current_from_date)
-        
-        if not is_update:
-            self._check_active_clubs_limit()
-        
-        self._update_club_membership(current_from_date, is_update)
+	def on_update_after_submit(self):
+		self.update_status()
 
-    def _check_existing_activity(self, current_from_date):
-        """Check if this is updating an existing activity"""
-        parent_doc = frappe.get_doc("Student", self.student_code)
-        
-        for row in parent_doc.extra_curricular_activities_details:
-            row_from_date = getdate(row.from_date) if row.from_date else None
-            if (row_from_date == current_from_date and 
-                row.club_name == self.applying_for_club):
-                return True
-        return False
+	def update_status(self):
+		try:
+			if self.status=="In Active":
+				updated = frappe.db.sql("""
+					UPDATE `tabExtra Curricular Activities Details` 
+					SET status = %s,to_date=CURDATE() 
+					WHERE parent = %s AND club_name = %s
+				""", (self.status, self.student_code, self.applying_for_club))
+				
+				
+				if frappe.db.sql("SELECT ROW_COUNT()")[0][0] > 0:
+					frappe.msgprint(_("Student status updated successfully"))
+					frappe.db.commit()  # Commit the transaction
+				else:
+					frappe.msgprint(_("No records were updated. Please check the student code and club name."), 
+								indicator="orange")
+			else:
+				updated = frappe.db.sql("""
+					UPDATE `tabExtra Curricular Activities Details` 
+					SET status = %s,to_date=NULL
+					WHERE parent = %s AND club_name = %s
+				""", (self.status, self.student_code, self.applying_for_club))
+				
+				
+				if frappe.db.sql("SELECT ROW_COUNT()")[0][0] > 0:
+					frappe.msgprint(_("Student status updated successfully"))
+					frappe.db.commit()  # Commit the transaction
+				else:
+					frappe.msgprint(_("No records were updated. Please check the student code and club name."), 
+								indicator="orange")
+		except Exception as e:
+			frappe.db.rollback()  # Rollback in case of error
+			frappe.msgprint(_("Error updating status: {0}").format(str(e)), 
+						indicator="red")
+			frappe.log_error(f"Status update error: {str(e)}", "Extra Curricular Activities")
 
-    def _check_active_clubs_limit(self):
-        """Check if student hasn't exceeded club limit"""
-        parent_doc = frappe.get_doc("Student", self.student_code)
-        active_activities = 0
-        today = getdate(nowdate())
-        
-        for row in parent_doc.extra_curricular_activities_details:
-            if not row.to_date or getdate(row.to_date) >= today:
-                active_activities += 1
-        
-        if active_activities >= 2:
-            frappe.throw(
-                "Student can join only two clubs at a time. "
-                "Please complete or end an existing club activity before joining a new one.",
-                title="Club Limit Exceeded"
-            )
+	def on_submit(self):
+		# Convert dates properly
+		current_from_date = getdate(self.from_date) if self.from_date else None
+		
+		# Check if this is an update to existing record
+		is_update = self._check_existing_activity(current_from_date)
+		
+		if not is_update:
+			self._check_active_clubs_limit()
+		
+		self._update_club_membership(current_from_date, is_update)
 
-    def _update_club_membership(self, current_from_date, is_update):
-        """Update club membership and student record"""
-        # Check club capacity
-        club_doc = frappe.get_doc("Club", self.applying_for_club)
-        count = frappe.db.count('Club Membership Application', {
-            'docstatus': 1,
-            'applying_for_club': self.applying_for_club,
-            'name': ['!=', self.name]
-        })
-        
-        if count >= club_doc.club_capacity:
-            frappe.throw(
-                f"Club '{self.applying_for_club}' has reached its maximum capacity of {club_doc.club_capacity} members.",
-                title="Club Capacity Exceeded"
-            )
-        
-        # Update student record
-        parent_doc = frappe.get_doc("Student", self.student_code)
-        record_updated = False
-        
-        for row in parent_doc.extra_curricular_activities_details:
-            row_from_date = getdate(row.from_date) if row.from_date else None
-            if (row_from_date == current_from_date and 
-                row.club_name == self.applying_for_club):
-                row.to_date = self.to
-                record_updated = True
-                frappe.msgprint("Updated to_date for existing activity")
-                break
-        
-        if not record_updated:
-            parent_doc.append("extra_curricular_activities_details", {
-                "from_date": self.from_date,
-                "to_date": self.to,
-                "club_name": self.applying_for_club
-            })
-            frappe.msgprint("Added new activity record")
-        
-        parent_doc.save()
+	def _check_existing_activity(self, current_from_date):
+		"""Check if this is updating an existing activity"""
+		parent_doc = frappe.get_doc("Student", self.student_code)
+		
+		for row in parent_doc.extra_curricular_activities_details:
+			row_from_date = getdate(row.from_date) if row.from_date else None
+			if (row_from_date == current_from_date and 
+				row.club_name == self.applying_for_club):
+				return True
+		return False
 
-    def on_cancel(self):
-        """Handle cancellation of membership application"""
-        student_doc = frappe.get_doc("Student", self.student_code)
-        current_from_date = getdate(self.from_date) if self.from_date else None
-        club_to_remove = self.applying_for_club
-        
-        rows_to_keep = []
-        for row in student_doc.extra_curricular_activities_details:
-            row_from_date = getdate(row.from_date) if row.from_date else None
-            
-            # Keep all rows except the one matching this club + from_date
-            if not (row.club_name == club_to_remove and 
-                    row_from_date == current_from_date):
-                rows_to_keep.append(row)
-        
-        student_doc.set("extra_curricular_activities_details", rows_to_keep)
-        student_doc.save(ignore_permissions=True)
-        frappe.msgprint("Club activity removed from Student record.")
+	def _check_active_clubs_limit(self):
+		"""Check if student hasn't exceeded club limit"""
+		parent_doc = frappe.get_doc("Student", self.student_code)
+		active_activities = 0
+		today = getdate(nowdate())
+		
+		for row in parent_doc.extra_curricular_activities_details:
+			if row.status=='Active':
+				active_activities += 1
+		
+		if active_activities >= 2:
+			frappe.throw(
+				"Student can join only two clubs at a time. "
+				"Please complete or end an existing club activity before joining a new one.",
+				title="Club Limit Exceeded"
+			)
+
+	def _update_club_membership(self, current_from_date, is_update):
+		"""Update club membership and student record"""
+		# Check club capacity
+		club_doc = frappe.get_doc("Club", self.applying_for_club)
+		count = frappe.db.count('Club Membership Application', {
+			'docstatus': 1,
+			'applying_for_club': self.applying_for_club,
+			'name': ['!=', self.name]
+		})
+		
+		if count >= club_doc.club_capacity:
+			frappe.throw(
+				f"Club '{self.applying_for_club}' has reached its maximum capacity of {club_doc.club_capacity} members.",
+				title="Club Capacity Exceeded"
+			)
+		
+		# Update student record
+		parent_doc = frappe.get_doc("Student", self.student_code)
+		record_updated = False
+	   # frappe.throw("hi1")        
+		for row in parent_doc.extra_curricular_activities_details:
+			row_from_date = getdate(row.from_date) if row.from_date else None
+			if (row_from_date == current_from_date and 
+				row.club_name == self.applying_for_club):
+				row.to_date = self.to
+				record_updated = True
+				frappe.msgprint("Updated to_date for existing activity")
+				break
+		
+		if not record_updated:
+			parent_doc.append("extra_curricular_activities_details", {
+				"from_date": self.from_date,
+				"to_date": self.to,
+				"club_name": self.applying_for_club,
+				"status":self.status
+			})
+			frappe.msgprint("Added new activity record")
+		
+		parent_doc.save()
+
+	def on_cancel(self):
+		"""Handle cancellation of membership application"""
+		
+		student_doc = frappe.get_doc("Student", self.student_code)
+		current_from_date = getdate(self.from_date) if self.from_date else None
+		club_to_remove = self.applying_for_club
+		
+		rows_to_keep = []
+		for row in student_doc.extra_curricular_activities_details:
+			row_from_date = getdate(row.from_date) if row.from_date else None
+			
+			# Keep all rows except the one matching this club + from_date
+			if not (row.club_name == club_to_remove and 
+					row_from_date == current_from_date):
+				rows_to_keep.append(row)
+		
+		student_doc.set("extra_curricular_activities_details", rows_to_keep)
+		student_doc.save(ignore_permissions=True)
+		frappe.msgprint("Club activity removed from Student record.")

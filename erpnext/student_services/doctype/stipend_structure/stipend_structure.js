@@ -40,9 +40,9 @@ frappe.ui.form.on('Stipend Details', {
         let child_row = locals[cdt][cdn];
         
         // Only update earnings if stipend component changes in earnings table
-        if (child_row.stipend_component === 'Stipend') {
-            update_earnings_only(frm);
-        }
+        // if (child_row.stipend_component === 'Stipend') {
+        //     update_earnings_only(frm);
+        // }
     }
 });
 
