@@ -7,7 +7,7 @@ frappe.ui.form.on("Credit Clearance Record", {
              return {
 
                 "filters": {
-					"company": frm.doc.company
+					"company": frm.doc.college
 				
 				}
 
