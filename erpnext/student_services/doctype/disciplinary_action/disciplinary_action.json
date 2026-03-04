@@ -32,6 +32,7 @@
   "designation",
   "column_break_ddqn",
   "date_of_the_issue",
+  "decision",
   "investigators_statement_section",
   "small_text_xble",
   "attachments_investigator",
@@ -242,14 +243,20 @@
    "fieldtype": "Link",
    "label": "Hostel",
    "options": "Hostel Room"
+  },
+  {
+   "fieldname": "decision",
+   "fieldtype": "Select",
+   "label": "Decision",
+   "options": "\nTerminate"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-21 09:48:00.715766",
- "modified_by": "Administrator",
+ "modified": "2026-03-02 15:57:45.899121",
+ "modified_by": "sonam.zangmo@thimphutechpark.bt",
  "module": "Student Services",
  "name": "Disciplinary Action",
  "naming_rule": "Expression",

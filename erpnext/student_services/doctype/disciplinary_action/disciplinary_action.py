@@ -22,6 +22,7 @@ class DisciplinaryAction(Document):
 		company: DF.Link
 		contact_number: DF.Data | None
 		date_of_the_issue: DF.Date
+		decision: DF.Literal["", "Terminate"]
 		designation: DF.Data | None
 		disciplinary_issue_type: DF.Link
 		hostel: DF.Link | None
