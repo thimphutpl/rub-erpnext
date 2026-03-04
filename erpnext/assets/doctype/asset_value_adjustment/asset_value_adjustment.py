@@ -278,6 +278,7 @@ class AssetValueAdjustment(Document):
 		je.flags.ignore_permissions = 1
 		# je.activity = self.activity
 		branch = asset.branch
+		cost_center = asset.cost_center
 		if not branch:
 			if asset.cost_center:
 				branch = frappe.db.get_value("Branch", {"cost_center": asset.cost_center}, "name")
@@ -289,6 +290,15 @@ class AssetValueAdjustment(Document):
 			else:
 				doc = asset.roombuilding
 			branch = frappe.db.get_value("Branch", {"cost_center": frappe.db.get_value(asset.is_hostel_asset, doc, "cost_center")}, "name")
+		if not cost_center:
+			if asset.is_hostel_asset == "Employee":
+				doc = asset.custodian
+			elif asset.is_hostel_asset == "Hostel Room":
+				doc = asset.hostel
+			else:
+				doc = asset.roombuilding
+			cost_center = frappe.db.get_value(asset.is_hostel_asset, doc, "cost_center")
+		cost_ceter
 		je.update({
 			"voucher_type": "Journal Entry",
 			"company": asset.company,
@@ -312,7 +322,7 @@ class AssetValueAdjustment(Document):
 			"credit_in_account_currency": flt(value),
 			"reference_type": "Asset Value Adjustment",
 			"reference_name": self.name,
-			"cost_center": asset.cost_center,
+			"cost_center": cost_center,
 			# "business_activity": asset.business_activity,
 			})
 
@@ -322,7 +332,7 @@ class AssetValueAdjustment(Document):
 			"debit_in_account_currency": flt(value),
 			"reference_type": "Asset Value Adjustment",
 			"reference_name": self.name,
-			"cost_center": asset.cost_center,
+			"cost_center": cost_center,
 			# "business_activity": asset.business_activity,
 			})
 		je.flags.ignore_permissions=1
