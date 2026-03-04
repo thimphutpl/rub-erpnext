@@ -10,6 +10,7 @@
   "hostel_block",
   "column_break_wpzc",
   "posting_date",
+  "hostel_councellor",
   "fiscal_year",
   "section_break_lxei",
   "table_tulk",
@@ -74,14 +75,22 @@
    "in_list_view": 1,
    "label": "Fiscal Year",
    "options": "Fiscal Year"
+  },
+  {
+   "fetch_from": "hostel_block.hostel_councellor",
+   "fieldname": "hostel_councellor",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Hostel Councellor",
+   "options": "Student"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-27 15:58:17.247161",
- "modified_by": "Administrator",
+ "modified": "2026-03-03 22:50:24.481906",
+ "modified_by": "mon.chhetri@thimphutechpark.bt",
  "module": "Hostel Management",
  "name": "Hostel Attendance",
  "naming_rule": "Expression",

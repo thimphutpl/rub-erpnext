@@ -101,6 +101,7 @@ class HostelAttendance(Document):
         company: DF.Link
         fiscal_year: DF.Link | None
         hostel_block: DF.Link
+        hostel_councellor: DF.Link | None
         posting_date: DF.Date
         table_tulk: DF.Table[HostelAttendanceDetails]
     # end: auto-generated types

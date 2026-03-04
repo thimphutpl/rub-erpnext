@@ -10,6 +10,7 @@
   "posting_date",
   "column_break_uvpt",
   "company",
+  "re_allocate_hostel_room",
   "section_break_bqtw",
   "table_caon",
   "amended_from"
@@ -62,14 +63,20 @@
    "label": "Year",
    "options": "Fiscal Year",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "re_allocate_hostel_room",
+   "fieldtype": "Check",
+   "label": "Re Allocate Hostel Room"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-12 16:16:37.674643",
- "modified_by": "Administrator",
+ "modified": "2026-03-03 23:06:59.744466",
+ "modified_by": "mon.chhetri@thimphutechpark.bt",
  "module": "Hostel Management",
  "name": "Hostel Allocation Bulk Upload",
  "naming_rule": "Expression",

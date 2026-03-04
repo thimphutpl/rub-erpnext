@@ -747,6 +747,8 @@ class HostelChangeApplication(Document):
         original_rooms: DF.Link | None  
 
     def validate(self):
+        capacity = 0
+        occupied = 0
         """Validate the room change based on frontend operation_type"""
         if self.operation_type == "Room Transfer":
             if not self.requested_room:
