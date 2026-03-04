@@ -100,7 +100,7 @@ def execute(filters=None):
     columns = [
         {"label": "College", "fieldname": "company", "fieldtype": "Link", "options": "Company", "width": 200},
         {"label": "Hostel Type", "fieldname": "hostel_type", "fieldtype": "Link", "options": "Hostel Type", "width": 140},
-        {"label": "Room Number", "fieldname": "name", "fieldtype": "Data", "width": 120},
+        {"label": "Room Number", "fieldname": "name", "fieldtype": "Link", "options": "Hostel Room", "width": 120},
         {"label": "Capacity", "fieldname": "capacity", "fieldtype": "Int", "width": 100},
         {"label": "Available", "fieldname": "available_left", "fieldtype": "Int", "width": 120},
         {"label": "Cost Center", "fieldname": "cost_center", "fieldtype": "Data", "width": 160},

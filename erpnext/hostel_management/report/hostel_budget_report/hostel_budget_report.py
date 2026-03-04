@@ -8,6 +8,7 @@ def execute(filters=None):
         filters = {}
 
     columns = [
+        {"label": "Hostel Budget", "fieldname": "name", "fieldtype": "Link", "options": "Hostel Budget", "width": 200},
         {"label": "College", "fieldname": "college", "fieldtype": "Link", "options": "Company", "width": 200},
         {"label": "Posting Date", "fieldname": "posting_date", "fieldtype": "Date", "width": 120},
         {"label": "Hostel Councilor", "fieldname": "hostel_councilor", "fieldtype": "Link", "options": "Employee", "width": 150},
@@ -15,7 +16,7 @@ def execute(filters=None):
         {"label": "Hostel Block", "fieldname": "hostel_block", "fieldtype": "Data", "width": 120},
         {"label": "Expense Type", "fieldname": "expense_type", "fieldtype": "Data", "width": 120},
         {"label": "Total Budget Collection", "fieldname": "total_budget_collection", "fieldtype": "Float", "width": 150},
-        {"label": "Amount", "fieldname": "amount", "fieldtype": "Float", "width": 120},
+        {"label": "Expense Amount", "fieldname": "amount", "fieldtype": "Float", "width": 120},
         {"label": "Description", "fieldname": "description", "fieldtype": "Data", "width": 200},
         {"label": "Balance Amount", "fieldname": "balance_amount", "fieldtype": "Float", "width": 120},
     ]
@@ -37,6 +38,7 @@ def execute(filters=None):
 
     query = f"""
         SELECT
+            hb.name,
             hb.college,
             hb.posting_date,
             hb.hostel_councilor,

@@ -10,6 +10,7 @@ def execute(filters=None):
 
 def get_columns():
     return [
+        {"label": "Hostel Bulk Upload", "fieldname": "name", "fieldtype": "Link", "options":"Hostel Allocation Bulk Upload", "width": 150},
         {"label": "College", "fieldname": "company", "fieldtype": "Data", "width": 150},
         {"label": "Posting Date", "fieldname": "posting_date", "fieldtype": "Date", "width": 100},
         {"label": "Student Code", "fieldname": "student_code", "fieldtype": "Data", "width": 120},
@@ -38,6 +39,7 @@ def get_data(filters=None):
 
     query = f"""
         SELECT 
+            habu.name,
             hai.student_code,
             hai.first_name,
             hai.last_name,

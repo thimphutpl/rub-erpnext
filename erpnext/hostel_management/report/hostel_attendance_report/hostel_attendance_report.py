@@ -6,6 +6,7 @@ def execute(filters=None):
         filters = {}
 
     columns = [
+        {"label": "Hostel Attendance", "fieldname":"name", "fieldtype":"Link", "options":"Hostel Attendance", "width":180},
         {"label": "College", "fieldname":"college", "fieldtype":"Link", "options":"Company", "width":180},
         {"label": "Student Code", "fieldname":"student_code", "fieldtype":"Link", "options":"Student", "width":140},
         {"label": "Student Name", "fieldname":"student_name", "fieldtype":"Data", "width":180},
@@ -41,6 +42,7 @@ def execute(filters=None):
 
     hostel_attendance = frappe.db.sql(f"""
         SELECT
+            ha.name,
             had.student_code,
             had.student_name,
             ha.hostel_block,

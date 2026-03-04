@@ -26,6 +26,7 @@ def get_data(filters=None):
 
     query = f"""
         SELECT
+            hca.name,
             hca.company,
             hca.applied_by,
             s1.first_name as applied_by_first_name,
@@ -51,6 +52,7 @@ def get_data(filters=None):
 
 def get_columns():    
     return [
+        {"label": "Hostel Change Application", "fieldname": "name", "fieldtype": "Link", "options": "Hostel Change Application", "width": 200},
         {"label": "College", "fieldname": "company", "fieldtype": "Link", "options": "Company", "width": 200},
         {"label": "Applied By", "fieldname": "applied_by", "fieldtype": "Link", "options": "Student", "width": 150},
         {"label": "Applied By First Name", "fieldname": "applied_by_first_name", "fieldtype": "Data", "width": 150},
