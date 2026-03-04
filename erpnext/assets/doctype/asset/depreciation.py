@@ -1286,6 +1286,27 @@ def scrap_asset(asset_name,scrap_date=None):
 	asset.reload()
 
 	depreciation_series = frappe.get_cached_value("Company", asset.company, "series_for_depreciation_entry")
+	branch = asset.branch
+	cost_center = asset.cost_center
+	if not branch:
+		if asset.cost_center:
+			branch = frappe.db.get_value("Branch", {"cost_center": asset.cost_center}, "name")
+	if not branch:
+		if asset.is_hostel_asset == "Employee":
+			doc = asset.custodian
+		elif asset.is_hostel_asset == "Hostel Room":
+			doc = asset.hostel
+		else:
+			doc = asset.roombuilding
+		branch = frappe.db.get_value("Branch", {"cost_center": frappe.db.get_value(asset.is_hostel_asset, doc, "cost_center")}, "name")
+	if not cost_center:
+		if asset.is_hostel_asset == "Employee":
+			doc = asset.custodian
+		elif asset.is_hostel_asset == "Hostel Room":
+			doc = asset.hostel
+		else:
+			doc = asset.roombuilding
+		cost_center = frappe.db.get_value(asset.is_hostel_asset, doc, "cost_center")
 	# frappe.throw(str(depreciation_series))
 	je = frappe.new_doc("Journal Entry")
 	je.voucher_type = "Journal Entry"
@@ -1293,7 +1314,7 @@ def scrap_asset(asset_name,scrap_date=None):
 	je.posting_date = scrap_date if scrap_date else nowdate()
 	je.company = asset.company
 	je.remark = f"Scrap Entry for asset {asset_name}"
-	je.branch = asset.branch
+	je.branch = branch
 	for entry in get_gl_entries_on_asset_disposal(asset, date):
 		entry.update({"reference_type": "Asset", "reference_name": asset_name})
 		je.append("accounts", entry)
