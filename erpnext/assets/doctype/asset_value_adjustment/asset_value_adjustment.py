@@ -288,7 +288,7 @@ class AssetValueAdjustment(Document):
 				doc = asset.hostel
 			else:
 				doc = asset.roombuilding
-			branch = frpape.db.get_value("Branch", {"cost_center": frappe.db.get_value(asset.is_hostel_asset, doc, "cost_center")}, "name")
+			branch = frappe.db.get_value("Branch", {"cost_center": frappe.db.get_value(asset.is_hostel_asset, doc, "cost_center")}, "name")
 		je.update({
 			"voucher_type": "Journal Entry",
 			"company": asset.company,
