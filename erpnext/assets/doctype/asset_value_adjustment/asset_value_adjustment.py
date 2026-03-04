@@ -87,8 +87,9 @@ class AssetValueAdjustment(Document):
 		if self.journal_entry:
 			doc = frappe.get_doc("Journal Entry", self.journal_entry)
 			doc.cancel()
+		self.change_value(self.new_asset_value)
 		self.update_asset(self.current_asset_value)
-		self.remove_adjustment_value()
+		# self.remove_adjustment_value()
 		add_asset_activity(
 			self.asset,
 			_("Asset's value adjusted after cancellation of Asset Value Adjustment {0}").format(
@@ -96,9 +97,9 @@ class AssetValueAdjustment(Document):
 			),
 		)
 
-	def remove_adjustment_value(self):
-		doc = frappe.get_doc("Asset", self.asset)
-		doc.db_set("additional_value", doc.additional_value - self.difference_amount)
+	# def remove_adjustment_value(self):
+	# 	doc = frappe.get_doc("Asset", self.asset)
+	# 	doc.db_set("additional_value", doc.additional_value - self.difference_amount)
 	
 	def validate_date(self):
 		asset_purchase_date = frappe.db.get_value("Asset", self.asset, "purchase_date")
@@ -201,7 +202,6 @@ class AssetValueAdjustment(Document):
 		
 		if(asset and value and getdate(start_date) <= getdate(nowdate())):   
 			asset_obj = frappe.get_doc("Asset", asset)
-			asset_obj.db_set("additional_value", self.difference_amount)
 			if asset_obj and asset_obj.docstatus == 1:
 				value = -1*flt(value) if self.docstatus == 2 else flt(value)
 				#Make GL Entries for additional values and update gross_amount (rate)
