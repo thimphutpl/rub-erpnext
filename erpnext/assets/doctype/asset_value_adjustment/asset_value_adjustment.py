@@ -280,7 +280,7 @@ class AssetValueAdjustment(Document):
 		branch = asset.branch
 		if not branch:
 			if asset.cost_center:
-				branch = frpape.db.get_value("Branch", {"cost_center": asset.cost_center}, "name")
+				branch = frappe.db.get_value("Branch", {"cost_center": asset.cost_center}, "name")
 		if not branch:
 			if asset.is_hostel_asset == "Employee":
 				doc = asset.custodian
