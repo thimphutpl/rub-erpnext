@@ -80,7 +80,7 @@ class AssetValueAdjustment(Document):
 		# 	),
 		# )
 		self.change_value(self.new_asset_value)
-		self.update_asset()
+		self.update_asset(self.new_asset_value)
 
 	def on_cancel(self):
 		self.ignore_linked_doctypes = ("Stock Ledger Entry", "GL Entry")
@@ -201,7 +201,7 @@ class AssetValueAdjustment(Document):
 		
 		if(asset and value and getdate(start_date) <= getdate(nowdate())):   
 			asset_obj = frappe.get_doc("Asset", asset)
-
+			asset_obj.db_set("additional_value", self.difference_amount)
 			if asset_obj and asset_obj.docstatus == 1:
 				value = -1*flt(value) if self.docstatus == 2 else flt(value)
 				#Make GL Entries for additional values and update gross_amount (rate)
