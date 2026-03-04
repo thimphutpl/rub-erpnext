@@ -25,15 +25,7 @@ class ClubActionPlan(Document):
 		company: DF.Link
 	# end: auto-generated types
 	def validate(self):
-		self.check_dublicate()
+		pass
+		#self.check_dublicate()
 
-	def check_dublicate(self):
-		exists=frappe.db.exists("Club Action Plan",
-								{"company":self.company,
-								"club_name":self.club_name,
-								"academic_term":self.academic_term
-
-								}
-								)
-		if exists:
-			frappe.throw("Club Action Plan is already exists for " + str(self.academic_term))
+	
