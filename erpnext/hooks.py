@@ -300,6 +300,10 @@ has_website_permission = {
 	"Project": "erpnext.controllers.website_list_for_contact.has_website_permission",
 }
 
+permission_query_conditions = {
+	"Employee": "erpnext.hr.doctype.employee.employee.get_permission_query_conditions",
+}
+
 before_tests = "erpnext.setup.utils.before_tests"
 
 
