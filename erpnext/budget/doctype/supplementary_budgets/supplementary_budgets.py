@@ -50,7 +50,7 @@ class SupplementaryBudgets(Document):
 		if not self.approved_budget_list:
 			frappe.throw(
 				_("No budget found for year {0} in Approved Budget")
-				.format(self.year)
+				.format(self.fiscal_year)
 			)
 
 	def on_submit(self):
