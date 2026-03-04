@@ -592,7 +592,10 @@ class AssetMovement(Document):
 				condition_statement = f"roombuilding = '{self.from_roombuilding}'"
 			elif self.cost_center:
 				condition_statement = f"cost_center = '{self.cost_center}'"
-			condition_statement += f" and company = '{self.company}'"
+			if condition_statement != '':
+				condition_statement += f" and company = '{self.company}'"
+			else:
+				condition_statement += f" company = '{self.company}'"
 			asset_list = frappe.db.sql("""
 				select name, custodian_name, custodian, cost_center, is_hostel_asset, hostel, roombuilding
 				from `tabAsset` 
