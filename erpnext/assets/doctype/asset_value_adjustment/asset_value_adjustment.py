@@ -277,13 +277,25 @@ class AssetValueAdjustment(Document):
 		je = frappe.new_doc("Journal Entry")
 		je.flags.ignore_permissions = 1
 		# je.activity = self.activity
+		branch = asset.branch
+		if not branch:
+			if asset.cost_center:
+				branch = frpape.db.get_value("Branch", {"cost_center": asset.cost_center}, "name")
+		if not branch:
+			if asset.is_hostel_asset == "Employee":
+				doc = asset.custodian
+			elif asset.is_hostel_asset == "Hostel Room":
+				doc = asset.hostel
+			else:
+				doc = asset.roombuilding
+			branch = frpape.db.get_value("Branch", {"cost_center": frappe.db.get_value(asset.is_hostel_asset, doc, "cost_center")}, "name")
 		je.update({
 			"voucher_type": "Journal Entry",
 			"company": asset.company,
 			"remark": "Value (" + str(value) +" ) added to " + asset.name + " (" + asset.asset_name + ") ",
 			"user_remark": "Value (" + str(value) +" ) added to " + asset.name + " (" + asset.asset_name + ") ",
 			"posting_date": start_date,
-			"branch": asset.branch,
+			"branch": branch,
 			"naming_series":'Journal Voucher'
 			})
 
