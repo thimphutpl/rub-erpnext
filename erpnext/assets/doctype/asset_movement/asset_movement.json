@@ -221,6 +221,7 @@
    "depends_on": "eval:doc.inter_company_transfer == 1;",
    "fieldname": "to_company",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "To Company/College",
    "options": "Company"
   }
@@ -228,7 +229,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-07 15:25:32.683849",
+ "modified": "2026-03-04 11:25:27.716842",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset Movement",
