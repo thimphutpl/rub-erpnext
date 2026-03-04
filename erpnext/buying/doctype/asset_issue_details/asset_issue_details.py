@@ -131,7 +131,7 @@ class AssetIssueDetails(Document):
                     "cost_center": frappe.db.get_value("Branch", self.branch, "cost_center"),
                     "company": self.company,
                     "purchase_date": pr_date,
-                    "calculate_depreciation": 0,
+                    "calculate_depreciation": 1,
                     "asset_rate": self.asset_rate,
                     "purchase_amount": self.asset_rate,
                     "gross_purchase_amount": flt(self.asset_rate) * flt(qty),
