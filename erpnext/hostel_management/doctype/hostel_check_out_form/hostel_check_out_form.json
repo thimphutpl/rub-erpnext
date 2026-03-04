@@ -17,7 +17,8 @@
   "aseet_details_section",
   "table_snes",
   "section_break_cvd6",
-  "amended_from"
+  "amended_from",
+  "hostel_check_in_link"
  ],
  "fields": [
   {
@@ -92,13 +93,20 @@
    "label": "Fiscal Year",
    "options": "Fiscal Year",
    "reqd": 1
+  },
+  {
+   "fieldname": "hostel_check_in_link",
+   "fieldtype": "Data",
+   "label": "Hostel Check-In Link",
+   "read_only": 1,
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-04 12:41:09.544351",
+ "modified": "2026-03-04 16:36:31.709248",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Check-Out Form",

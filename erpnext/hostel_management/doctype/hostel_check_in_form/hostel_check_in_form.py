@@ -59,6 +59,7 @@ def make_checkout_form(source_name, target_doc=None):
 					"hostel_room": "hostel_room",
 					"hostel_type": "hostel_type",
 					"fiscal_year": "fiscal_year",
+					"name":"hostel_check_in_link",
 				},
 				"postprocess": update_date,
 				"validation": {"docstatus": ["=", 1]}

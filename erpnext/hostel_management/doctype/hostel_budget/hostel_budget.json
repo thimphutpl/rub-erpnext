@@ -8,11 +8,11 @@
  "field_order": [
   "section_break_mqo3",
   "college",
-  "hostel_councilor",
-  "hostel_councilor_name",
+  "hostel_block",
   "column_break_hmrj",
   "posting_date",
-  "hostel_block",
+  "hostel_councilor",
+  "hostel_councilor_name",
   "section_break_hpza",
   "expense_type",
   "total_budget_collection",
@@ -45,6 +45,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "hostel_block.hostel_councellor",
    "fieldname": "hostel_councilor",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -117,8 +118,8 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-12 15:51:10.882084",
- "modified_by": "sonam.zangmo@thimphutechpark.bt",
+ "modified": "2026-03-04 15:18:50.707775",
+ "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Budget",
  "naming_rule": "Expression (old style)",
