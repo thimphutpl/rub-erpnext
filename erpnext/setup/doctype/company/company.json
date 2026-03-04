@@ -39,6 +39,8 @@
   "lft",
   "rgt",
   "old_parent",
+  "section_break_fdwn",
+  "qr_gen_url",
   "accounts_tab",
   "section_break_28",
   "create_chart_of_accounts_based_on",
@@ -125,6 +127,7 @@
   "hr_approver",
   "column_break_pnnz",
   "hr_manager_name",
+  "hr_approver_name",
   "salary_structure_section",
   "deduct_sal_tax_on_percent",
   "salary_tax_percent",
@@ -151,7 +154,18 @@
   "research_account_tab",
   "receivable_accounts",
   "column_break_lqhk",
-  "income_accounts"
+  "income_accounts",
+  "tab_9_tab",
+  "sb_student_settings",
+  "college_code",
+  "sb_student_approver",
+  "student_service_officer",
+  "column_break_imif",
+  "sso_name",
+  "email_templates_section",
+  "student_leave_application_status_notification_template",
+  "column_break_onzw",
+  "student_leave_application_approval_notification_template"
  ],
  "fields": [
   {
@@ -1048,7 +1062,7 @@
   {
    "fieldname": "hr_approver",
    "fieldtype": "Link",
-   "label": "Hr Approver",
+   "label": "HR Approver",
    "options": "Employee"
   },
   {
@@ -1060,6 +1074,82 @@
    "fieldname": "hr_manager_name",
    "fieldtype": "Data",
    "label": "HR Manager Name"
+  },
+  {
+   "fieldname": "section_break_fdwn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "qr_gen_url",
+   "fieldtype": "Data",
+   "label": "Asset QR Generation URL"
+  },
+  {
+   "depends_on": "eval:doc.name != \"Office of Vice Chancellor\" && doc.name != \"Royal University of Bhutan\";",
+   "fieldname": "tab_9_tab",
+   "fieldtype": "Tab Break",
+   "label": "Student Settings"
+  },
+  {
+   "fieldname": "sb_student_settings",
+   "fieldtype": "Section Break",
+   "label": "Student Settings"
+  },
+  {
+   "description": "<i>*Note: This will be used for Student ID Generation<i></i></i>",
+   "fieldname": "college_code",
+   "fieldtype": "Data",
+   "label": "College Code"
+  },
+  {
+   "fieldname": "student_service_officer",
+   "fieldtype": "Link",
+   "label": "Student Service Officer",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "hr_approver.employee_name",
+   "fieldname": "hr_approver_name",
+   "fieldtype": "Data",
+   "label": "HR Approver Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "student_service_officer.employee_name",
+   "fieldname": "sso_name",
+   "fieldtype": "Data",
+   "label": "SSO Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_student_approver",
+   "fieldtype": "Section Break",
+   "label": "Approver Settings"
+  },
+  {
+   "fieldname": "column_break_imif",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "email_templates_section",
+   "fieldtype": "Section Break",
+   "label": "Email Templates"
+  },
+  {
+   "fieldname": "student_leave_application_status_notification_template",
+   "fieldtype": "Link",
+   "label": "Student Leave Application Status Notification Template",
+   "options": "Email Template"
+  },
+  {
+   "fieldname": "column_break_onzw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "student_leave_application_approval_notification_template",
+   "fieldtype": "Link",
+   "label": "Student Leave Application Approval Notification Template",
+   "options": "Email Template"
   }
  ],
  "icon": "fa fa-building",
@@ -1067,7 +1157,7 @@
  "image_field": "company_logo",
  "is_tree": 1,
  "links": [],
- "modified": "2026-02-25 17:29:19.226603",
+ "modified": "2026-03-04 16:15:07.865780",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",

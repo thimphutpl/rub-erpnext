@@ -18,8 +18,9 @@ class CustomWorkflow:
 		self.field_map 		= get_field_map()
 		self.doc_approver	= self.field_map[self.doc.doctype]
 		self.field_list		= ["user_id", "employee_name", "designation", "name"]
+		self.student_field_list = ["user", "student_name", "name"]
 
-		if self.doc.doctype in ("Travel Authorization", "Travel Advance", "Travel Adjustment", "Travel Claim", "Employee Advance", "Leave Encashment","Overtime Application","Events","Leave Application") and self.doc.doctype != "Annual Programme Monitoring Report":
+		if self.doc.doctype in ("Travel Authorization", "Travel Advance", "Travel Adjustment", "Travel Claim", "Employee Advance", "Leave Encashment","Overtime Application","Events","Leave Application") and self.doc.doctype not in ("Annual Programme Monitoring Report", "Student Leave Application"):
 			self.employee		= frappe.db.get_value("Employee", self.doc.employee, self.field_list)
 			self.reports_to 	= frappe.db.get_value("Employee", {"name":frappe.db.get_value("Employee", self.doc.employee, "reports_to")}, self.field_list)
 			# if not self.reports_to:
@@ -37,7 +38,7 @@ class CustomWorkflow:
 					frappe.throw("Please set HR Approver in Company Settings")
 		### =============== *** =============== *** === NYUTHYUE === *** =============== *** =============== ###
 
-		elif self.doc.doctype != "Material Request" and self.doc.doctype not in ("Asset Issue Details", "Compile Budget","POL Expense","Vehicle Request", "Repair And Services", "Asset Movement", "Budget Reappropiation", "Annual Programme Monitoring Report"):
+		elif self.doc.doctype != "Material Request" and self.doc.doctype not in ("Asset Issue Details", "Compile Budget","POL Expense","Vehicle Request", "Repair And Services", "Asset Movement", "Budget Reappropiation", "Annual Programme Monitoring Report", "Student Leave Application"):
 			self.employee		= frappe.db.get_value("Employee", self.doc.employee, self.field_list)
 			self.reports_to = frappe.db.get_value("Employee", {"name":frappe.db.get_value("Employee", self.doc.employee, "reports_to")}, self.field_list)
 				
@@ -76,7 +77,11 @@ class CustomWorkflow:
 					self.asset_verifier = frappe.get_value("Department", department, "approver")
 			else:
 				self.asset_verifier = frappe.db.get_value("Employee", frappe.db.get_value("Employee", {"designation": "Chief Executive Officer", "status": "Active"},"name"), self.field_list)
-		
+		if self.doc.doctype == "Student Leave Application":
+			self.student = frappe.db.get_value("Student", self.doc.student, self.student_field_list)
+			self.sso = frappe.db.get_value("Employee", frappe.db.get_value("Company", self.doc.college, "student_service_officer"), self.field_list)
+			if not self.sso:
+				frappe.throw("Student Service Officer is not set in Company Settings for {}".format(self.doc.college))
 		if self.doc.doctype in ("POL Expense"):
 			department = frappe.db.get_value("Employee", {"user_id":self.doc.owner},"department")
 			section = frappe.db.get_value("Employee", {"user_id":self.doc.owner},"section")
@@ -137,7 +142,7 @@ class CustomWorkflow:
 
 		self.login_user		= frappe.db.get_value("Employee", {"user_id": frappe.session.user}, self.field_list)
 
-		if not self.login_user and frappe.session.user not in ("Administrator", "sonam.zangmo@thimphutechpark.bt", "sonam.norbu@thimphutechpark.bt"):
+		if not self.login_user and frappe.session.user not in ("Administrator", "sonam.zangmo@thimphutechpark.bt", "sonam.norbu@thimphutechpark.bt", "mon.chhetri@thimphutechpark.bt"):
 			if "PERC Member" in frappe.get_roles(frappe.session.user):
 				return
 			frappe.throw("{0} is not added as the employee".format(frappe.session.user))
@@ -208,6 +213,8 @@ class CustomWorkflow:
 			self.pms_appeal()
 		elif self.doc.doctype == "Annual Programme Monitoring Report":
 			self.apmr()
+		elif self.doc.doctype == "Student Leave Application":
+			self.student_leave_application()
 		else:
 			frappe.throw(_("Workflow not defined for {}").format(self.doc.doctype))
 
@@ -432,6 +439,13 @@ class CustomWorkflow:
 			vars(self.doc)[self.doc_approver[0]] = officiating[0] if officiating else self.budget_reappropiation_approver[0]
 			vars(self.doc)[self.doc_approver[1]] = officiating[1] if officiating else self.budget_reappropiation_approver[1]
 			vars(self.doc)[self.doc_approver[2]] = officiating[2] if officiating else self.budget_reappropiation_approver[2]
+		elif approver_type == "SSO":
+			officiating = get_officiating_employee(self.sso[3])
+			if officiating:
+				officiating = frappe.db.get_value("Employee", officiating[0].officiating_employee, self.field_list)
+			vars(self.doc)[self.doc_approver[0]] = officiating[0] if officiating else self.sso[0]
+			vars(self.doc)[self.doc_approver[1]] = officiating[1] if officiating else self.sso[1]
+			vars(self.doc)[self.doc_approver[2]] = officiating[2] if officiating else self.sso[2]
 		else:
 			frappe.throw(_("Invalid approver type for Workflow"))
 
@@ -709,7 +723,7 @@ class CustomWorkflow:
 			if not self.doc.permitted_users:
 				frappe.throw("Please select atleast one PQC Member")
 			permitted_users = []
-			for pu in self.doc.cross_college_team:
+			for pu in self.doc.permitted_users:
 				permitted_users.append(frappe.db.get_value("Employee", pu.tutor, "user_id"))
 			if frappe.session.user not in permitted_users:
 				if "Administrator" not in frappe.get_roles(frappe.session.user):
@@ -752,6 +766,27 @@ class CustomWorkflow:
 				if "Administrator" not in frappe.get_roles(frappe.session.user):
 					frappe.throw("Not Allowed to Approve this Document.<br>Allowed Users: <br> {}".format(self.doc.owner))
 		else:
+			frappe.throw(_("Invalid Workflow State {}").format(self.doc.workflow_state))
+
+	def student_leave_application(self):
+		if self.new_state.lower() in ("Waiting for Approval".lower()) and self.old_state.lower() in ("Draft".lower()):
+			if frappe.session.user != self.doc.owner:
+				frappe.throw("Only <b>{}</b> can apply for this Leave Application".format(self.doc.owner))
+			self.set_approver("SSO")
+		elif self.new_state.lower() in ("Draft".lower()):
+			self.set_approver("SSO")
+		elif self.new_state.lower() in ("Waiting for Approval".lower()):
+			if frappe.session.user != self.doc.approver:
+				frappe.throw("Only <b>{}</b> can edit this Leave Application".format(self.doc.approver))
+		elif self.new_state.lower() in ("Approved".lower()) and self.old_state.lower() in ("Waiting for Approval".lower()):
+			if frappe.session.user != self.doc.approver:
+				if "Administrator" != frappe.session.user and frappe.session.user != "mon.chhetri@thimphutechpark.bt":
+					frappe.throw("Only <b>{}</b> can approve this Leave Application ".format(self.doc.approver))
+		elif self.new_state.lower() in ("Approved".lower()):
+			if frappe.session.user != self.doc.approver:
+				if "Administrator" != frappe.session.user:
+					frappe.throw("Only <b>{}</b> can edit this Leave Application ".format(self.doc.approver))
+		else:
 			frappe.throw(_("Invalid Workflow State {}").format(self.doc.workflow_state))		
 
 
@@ -765,8 +800,11 @@ class NotifyCustomWorkflow:
 		self.field_map 		= get_field_map()
 		self.doc_approver	= self.field_map[self.doc.doctype]
 		self.field_list		= ["user_id","employee_name","designation","name"]
-		if self.doc.doctype not in ("Material Request","Asset Issue Details", "Project Capitalization", "POL Expense"):
+		self.student_field_list = ["user", "student_name", "name"]
+		if self.doc.doctype not in ("Material Request","Asset Issue Details", "Project Capitalization", "POL Expense", "Student Leave Application"):
 			self.employee   = frappe.db.get_value("Employee", self.doc.employee, self.field_list)
+		elif self.doc.doctype in ("Student Leave Application"):
+			self.student = frappe.db.get_value("Student",  self.doc.student, self.student_field_list)
 		else:
 			self.employee = frappe.db.get_value("Employee", {"user_id":self.doc.owner}, self.field_list)
 
@@ -994,6 +1032,11 @@ class NotifyCustomWorkflow:
 				if not template:
 					frappe.msgprint(_("Please set default template for Asset Approval Notification in Asset Settings."))
 					return
+			elif self.doc.doctype == "Student Leave Application":
+				template = frappe.db.get_value('Company', self.doc.college, 'student_leave_application_approval_notification_template')
+				if not template:
+					frappe.msgprint(_("Please set default template for Student Leave Approval Notification in <b>Company under Student Settings</b>."))
+					return
 			else:
 				template = ""
 
@@ -1008,6 +1051,37 @@ class NotifyCustomWorkflow:
 				"message_to": self.doc.get(self.doc_approver[0]),
 				# for email
 				"subject": email_template.subject
+			})
+
+	def notify_student(self):
+		student = frappe.get_doc("Student", self.doc.student)
+		if not student.user:
+			return
+
+		parent_doc = frappe.get_doc(self.doc.doctype, self.doc.name)
+		args = parent_doc.as_dict()
+
+		if self.doc.doctype == "Student Leave Application":
+			template = frappe.db.get_value('Company', self.doc.college, 'student_leave_application_status_notification_template')
+			if not template:
+				frappe.msgprint(_("Please set default template for Leave Status Notification in <b>Company under Student Settings</b>."))
+				return
+		else:
+			template = ""
+
+		if not template:
+			frappe.msgprint(_("Please set default Email Template for {}.").format(self.doc.doctype))
+			return
+		email_template = frappe.get_doc("Email Template", template)
+		message = frappe.render_template(email_template.response, args)
+		if student:
+			self.notify({
+				# for post in messages
+				"message": message,
+				"message_to": student.user,
+				# for email
+				"subject": email_template.subject,
+				"notify": "employee"
 			})
 
 	def notify_verifier(self):
@@ -1296,7 +1370,7 @@ class NotifyCustomWorkflow:
 			elif wf_state == "Approved by CEO":
 				self.notify_employee()
 				return	
-				
+		
 		if self.doc.doctype == "Employee Advance":
 			wf_state = self.new_state
 			if wf_state == "Waiting for Finance Verification":
@@ -1318,6 +1392,19 @@ class NotifyCustomWorkflow:
 				return
 			elif wf_state == "Rejected":
 				self.notify_employee()
+				return
+		if self.doc.doctype == "Student Leave Application":
+			wf_state = self.new_state
+			if wf_state == "Waiting for Approval":
+				self.notify_approver()
+			elif wf_state == "Approved":
+				self.notify_student()
+				return
+			elif wf_state == "Rejected":
+				self.notify_student()
+				return
+			else:
+				frappe.msgprint(_("Email notifications not configured for workflow state {}").format(self.new_state))
 				return
 		if (self.doc.doctype not in self.field_map) or not frappe.db.exists("Workflow", {"document_type": self.doc.doctype, "is_active": 1}):
 			return
@@ -1374,6 +1461,7 @@ def get_field_map():
 		"PMS Appeal": ["approver","approver_name","approver_designation"],
 		"Asset Issue Details": [],
 		"Annual Programme Monitoring Report": [],
+		'Student Leave Application': ["approver", "approver_name", "approver_designation"],
 	}
 
 def validate_workflow_states(doc):
