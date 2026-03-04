@@ -301,7 +301,7 @@ has_website_permission = {
 }
 
 permission_query_conditions = {
-	"Employee": "erpnext.hr.doctype.employee.employee.get_permission_query_conditions",
+	"Employee": "erpnext.setup.doctype.employee.employee.get_permission_query_conditions",
 }
 
 before_tests = "erpnext.setup.utils.before_tests"
