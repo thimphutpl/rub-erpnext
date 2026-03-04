@@ -287,6 +287,7 @@ class Asset(AccountsController):
 			)
 			file_doc.insert(ignore_permissions=True)
 			self.qr_code_link = file_doc.file_url
+			self.image = file_doc.file_url
 			self.db_update()
 		else:
 			self.qr_code_link = None
