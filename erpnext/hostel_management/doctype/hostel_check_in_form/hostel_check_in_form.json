@@ -11,6 +11,7 @@
   "hostel_room",
   "hostel_type",
   "column_break_xdbt",
+  "fiscal_year",
   "posting_date",
   "student_details_section",
   "get_students",
@@ -104,13 +105,20 @@
    "fieldname": "assets",
    "fieldtype": "Table",
    "options": "Check-In Asset Items"
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "label": "Fiscal Year",
+   "options": "Fiscal Year",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-12-14 12:33:16.047107",
+ "modified": "2026-03-04 12:40:25.043726",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Check-In Form",

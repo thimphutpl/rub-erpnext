@@ -26,9 +26,9 @@ class HostelMaintenanceReport(BuyingController, StockController):
 		from erpnext.hostel_management.doctype.hostel_maintenance_report_item.hostel_maintenance_report_item import HostelMaintenanceReportItem
 		from frappe.types import DF
 
+		activity: DF.Link | None
 		amended_from: DF.Link | None
 		branch: DF.Link | None
-		budget: DF.Link | None
 		company: DF.Link | None
 		cost_center: DF.Link | None
 		damage_type: DF.Literal["", "Vandalism", "Loss or Misuse of Property", "Damage to Shared Facilities"]

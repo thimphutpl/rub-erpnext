@@ -248,7 +248,7 @@ class HostelAllocationBulkUpload(Document):
 
             all_active = all(s["status"] == "Active" for s in prev_students)
             if all_active and not self.re_allocate_hostel_room:
-                frappe.throw(_("Room {0} has already reached its maximum capacity {1}, and the student is still active.").format(row.hostel_room, row.capacity))
+                frappe.throw(_("Room {0} has already reached its maximum capacity, or the student is still active.").format(row.hostel_room))
                 
 
     # def update_hostel_room_students(self):

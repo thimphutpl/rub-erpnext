@@ -53,6 +53,7 @@ def fetch_budgetplan():
 		pp.project, pa.activities, pa.name as activity_link FROM `tabPlanning Output` po 
 		INNER JOIN `tabPlanning Project` pp ON po.name = pp.planning_output 
 		INNER JOIN `tabPlanning Activities` pa ON pa.project = pp.name 
+		WHERE pa.docstatus = 1
 		ORDER BY po.serial_number, pp.serial_number;
 	''', as_dict=True)
 
