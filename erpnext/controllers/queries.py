@@ -184,6 +184,296 @@ def filter_college_programmes(doctype, txt, searchfield, start, page_len, filter
 		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
 	)
 
+#Following added by Kinley Dorji 2026/02/27
+# searches for module in a programmee in a college
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def filter_college_programme_modules(doctype, txt, searchfield, start, page_len, filters):
+	# fields = get_fields(doctype, ["fb.name", "fb.company"])
+	searchfields = frappe.get_meta(doctype).get_search_fields()
+	searchfields = " or ".join("m."+field + " like %(txt)s" for field in searchfields)
+	if not filters.get("college"):
+		frappe.throw("Please select College")
+	if not filters.get("programme"):
+		frappe.throw("Please select Programme")
+	if not filters.get("academic_session"):
+		frappe.throw("Please select Academic Term")
+	semesters = []
+	for a in frappe.get_all("Semester", {"session": filters.get("academic_session")}):
+		semesters.append(a.name)
+	return frappe.db.sql(
+		"""select m.name, m.module_code from `tabModule` m, `tabModule College` c
+		where
+			c.parent = m.name
+			and c.college = '{company}'
+			and c.programme = '{programme}'
+			and c.module_semester in ({semesters})
+			and (m.{key} like %(txt)s
+				or m.name like %(txt)s
+				or c.college like %(txt)s
+				or c.programme like %(txt)s
+				or {scond})
+		order by
+			c.idx desc,
+			m.name, c.college
+		limit %(page_len)s offset %(start)s""".format(
+			company = filters.get("college"),
+			programme = filters.get("programme"),
+			semesters = ", ".join("'"+m+"'" for m in semesters),
+			**{
+				"key": searchfield,
+				"scond": searchfields,
+			}
+		),
+		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	)
+
+#Following added by Kinley Dorji 2026/01/12
+# searches for programmee in a college according to from and to date
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def filter_datewise_college_programmes(doctype, txt, searchfield, start, page_len, filters):
+	# fields = get_fields(doctype, ["fb.name", "fb.company"])
+	searchfields = frappe.get_meta(doctype).get_search_fields()
+	searchfields = " or ".join("p."+field + " like %(txt)s" for field in searchfields)
+	if not filters.get("college"):
+		frappe.throw("Please select College")
+	if not filters.get("academic_term"):
+		frappe.throw("Please select Academic Term first")
+	from_date = frappe.db.get_value("Academic Term", "term_start_date")
+	to_date = frappe.db.get_value("Academic Term", "term_start_date")
+	return frappe.db.sql(
+		"""select p.name, c.company from `tabProgramme` p, `tabColleges` c
+		where
+			c.parent = p.name
+			and c.company = '{company}'
+			and (p.{key} like %(txt)s
+				or p.name like %(txt)s
+				or c.company like %(txt)s
+				or {scond})
+		order by
+			c.idx desc,
+			p.name, c.company
+		limit %(page_len)s offset %(start)s""".format(
+			company = filters.get("college"),
+			**{
+				"key": searchfield,
+				"scond": searchfields,
+			}
+		),
+		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	)
+
+#Following added by Kinley Dorji 2026/02/27
+# searches for tutors of a module in college
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def filter_module_tutors(doctype, txt, searchfield, start, page_len, filters):
+	# fields = get_fields(doctype, ["fb.name", "fb.company"])
+	searchfields = frappe.get_meta(doctype).get_search_fields()
+	# searchfields = " or ".join("m."+field + " like %(txt)s" for field in searchfields)
+	if not filters.get("college"):
+		frappe.throw("Please select College")
+	if not filters.get("programme"):
+		frappe.throw("Please select Programme")
+	if not filters.get("module"):
+		frappe.throw("Please select Module")
+	return frappe.db.sql(
+		"""select c.tutor, c.tutor_name from `tabModule` m, `tabModule Tutor Item` c
+		where
+			c.parent = m.name
+			and c.parent = '{module}'
+			and (
+				m.name like %(txt)s
+				or c.tutor like %(txt)s
+				or c.tutor_name like %(txt)s
+				)
+
+		order by
+			c.idx desc,
+			m.name
+		limit %(page_len)s offset %(start)s""".format(
+			module = filters.get("module"),
+			**{
+				"key": searchfield,
+				"scond": searchfields,
+			}
+		),
+		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	)
+
+#Following added by Kinley Dorji 2026/02/27
+# searches for tutors of a module in college
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def filter_batch_section_students(doctype, txt, searchfield, start, page_len, filters):
+	# fields = get_fields(doctype, ["fb.name", "fb.company"])
+	searchfields = frappe.get_meta(doctype).get_search_fields()
+	if frappe.db.exists("Student", {"user": filters.get("student")}):
+		student_condition = " and sss.student = '{}' ".format(frappe.db.get_value("Student", {"user": filters.get("student")}))
+	else:
+		student_condition = ""
+	# searchfields = " or ".join("m."+field + " like %(txt)s" for field in searchfields)
+	return frappe.db.sql(
+		"""select sss.student, sss.student_name, sss.group_roll_number from `tabStudent Section` ss, `tabStudent Section Student` sss
+		where
+			sss.parent = ss.name
+			and ss.name = '{section}'
+			and ss.batch = '{batch}'
+			{student_condition}
+			and (
+				ss.name like %(txt)s
+				or ss.academic_term like %(txt)s
+				or ss.program like %(txt)s
+				)
+		order by
+			sss.group_roll_number asc
+		limit %(page_len)s offset %(start)s""".format(
+			section = filters.get("section"),
+			batch = filters.get("batch"),
+			student_condition = student_condition,
+			**{
+				"key": searchfield,
+				"scond": searchfields,
+			}
+		),
+		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	)
+
+#Following added by Kinley Dorji 2026/02/27
+# searches for tutors of a module in college
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def filter_module_enrolment_key(doctype, txt, searchfield, start, page_len, filters):
+	# fields = get_fields(doctype, ["fb.name", "fb.company"])
+	# if not frappe.db.exists("Student", {"user": filters.get("student_id")}):
+	# 	frappe.throw("Only Students are allowed to submit Module Enrolment Documents.", title="Not Permitted")
+
+	student_batch = frappe.db.get_value("Student", {"user": filters.get("student_id")}, "student_batch")
+	# current_academic_term = frappe.db.get_value("Academic Term", {"term_start_date": ["<=", filters.get("enrollment_date")], "term_end_date": [">=", filters.get("enrollment_date")]})
+	current_academic_term = frappe.db.sql("select name from `tabAcademic Term` where '{0}' >= term_start_date and '{0}' <= term_end_date".format(filters.get("enrollment_date")),as_dict=1)
+	if len(current_academic_term) > 0:
+		current_academic_term = current_academic_term[0].name
+	searchfields = frappe.get_meta(doctype).get_search_fields()
+	# searchfields = " or ".join("m."+field + " like %(txt)s" for field in searchfields)
+	return frappe.db.sql(
+		"""select mek.name, mek.module from `tabModule Enrolment Key` mek
+		where
+			mek.student_batch = '{batch}'
+			and mek.academic_term = '{academic_term}'
+		order by
+			mek.module asc
+		limit %(page_len)s offset %(start)s""".format(
+			batch = student_batch,
+			academic_term = current_academic_term,
+			**{
+				"key": searchfield,
+				"scond": searchfields,
+			}
+		),
+		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	)
+
+#Following added by Kinley Dorji 2026/02/27
+# searches for tutors of a module in college
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def filter_college_programme_module_tutors(doctype, txt, searchfield, start, page_len, filters):
+	# fields = get_fields(doctype, ["fb.name", "fb.company"])
+	searchfields = frappe.get_meta(doctype).get_search_fields()
+	# searchfields = " or ".join("m."+field + " like %(txt)s" for field in searchfields)
+	if not filters.get("college"):
+		frappe.throw("College table is empty")
+	college_condition = ", ".join("'"+c+"'" for c in filters.get("college"))
+	return frappe.db.sql(
+		"""select e.name, e.employee_name, e.company from `tabEmployee` e
+		where
+			e.company in ({college})
+			and (
+				e.name like %(txt)s
+				or e.name like %(txt)s
+				or e.employee_name like %(txt)s
+				or e.company like %(txt)s
+				)
+			order by
+			e.idx desc,
+			e.name
+		limit %(page_len)s offset %(start)s""".format(
+			college = college_condition,
+			**{
+				"key": searchfield,
+				"scond": searchfields,
+			}
+		),
+		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	)
+
+#Following added by Kinley Dorji 2026/03/02
+# searches for assessment components of a module
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def filter_assessment_component(doctype, txt, searchfield, start, page_len, filters):
+	# fields = get_fields(doctype, ["fb.name", "fb.company"])
+	searchfields = frappe.get_meta(doctype).get_search_fields()
+	# searchfields = " or ".join("m."+field + " like %(txt)s" for field in searchfields)
+	if not filters.get("college"):
+		frappe.throw("Please Select College")
+	if not filters.get("programme"):
+		frappe.throw("Please Select Programme")
+	if not filters.get("module"):
+		frappe.throw("Please Select Module")
+	if not filters.get("academic_term"):
+		frappe.throw("Please Select Academic Term")
+	if not filters.get("tutor"):
+		frappe.throw("Please Select Tutor")
+	return frappe.db.sql("""
+	select mai.assessment_name from `tabModule Assessment Criteria` mac,
+	`tabModule Assessment Item` mai, `tabAssessment Component` ac
+	where mac.name = mai.parent
+	and ac.name = mai.assessment_name
+	and ac.examination_assesment = 0
+	and college = '{}'
+	and mac.tutor = '{}'
+	and mac.docstatus = 1
+	and mac.academic_term = '{}'
+	and mac.module = '{}'
+	and programme = '{}'
+	""".format(filters.get("college"), filters.get("tutor"), filters.get("academic_term"), filters.get("module"), filters.get("programme")))
+	# frappe.throw(filters.get("college")+" "+filters.get("programme")+" "+filters.get("module")+" "+filters.get("academic_term")+" "+filters.get("tutor"))
+	
+	# return frappe.db.sql(
+	# 	"""select mai.assessment_name, mai.weightage, mai.assessment_component_type from `tabModule Assessment Criteria` mac, `tabModule Assessment Item` mai
+	# 	where
+	# 		mac.name = mai.parent
+	# 		and mac.college = '{college}'
+	# 		and mac.programme = '{programme}'
+	# 		and mac.module = '{module}'
+	# 		and mac.academic_term = '{academic_term}'
+	# 		and mac.tutor = '{programme}'
+	# 		and (
+	# 			mai.assessment_name like %(txt)s
+	# 			or mai.weightage like %(txt)s
+	# 			or mai.assessment_component_type like %(txt)s
+	# 			or mac.college like %(txt)s
+	# 			)
+	# 		order by
+	# 		mai.idx desc,
+	# 		mai.name
+	# 	limit %(page_len)s offset %(start)s""".format(
+	# 		college = filters.get("college"),
+	# 		programme = filters.get("programme"),
+	# 		module = filters.get("module"),
+	# 		academic_term = filters.get("academic_term"),
+	# 		tutor = filters.get("tutor"),
+	# 		**{
+	# 			"key": searchfield,
+	# 			"scond": searchfields,
+	# 		}
+	# 	),
+	# 	{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	# )
+
+
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def tax_account_query(doctype, txt, searchfield, start, page_len, filters):
