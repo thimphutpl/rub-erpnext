@@ -6,4 +6,23 @@ from frappe.model.document import Document
 
 
 class CreditClearanceDetails(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amount: DF.Data | None
+		full_name: DF.Data | None
+		parent: DF.Data
+		parentfield: DF.Data
+		parenttype: DF.Data
+		programme: DF.Data | None
+		semester: DF.Data | None
+		status: DF.Literal["", "Paid", "Unpaid"]
+		student_code: DF.Link
+		year: DF.Data | None
+	# end: auto-generated types
 	pass

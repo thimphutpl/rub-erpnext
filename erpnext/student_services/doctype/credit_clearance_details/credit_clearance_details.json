@@ -25,6 +25,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "student_code.student_name",
    "fieldname": "full_name",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -76,7 +77,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-08 15:30:27.661331",
+ "modified": "2026-03-03 14:33:37.385014",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Credit Clearance Details",

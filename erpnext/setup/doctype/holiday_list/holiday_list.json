@@ -91,6 +91,7 @@
    "label": "Holidays"
   },
   {
+   "allow_bulk_edit": 1,
    "fieldname": "holidays",
    "fieldtype": "Table",
    "label": "Holidays",
@@ -149,7 +150,7 @@
  "icon": "fa fa-calendar",
  "idx": 1,
  "links": [],
- "modified": "2025-09-09 12:47:51.155073",
+ "modified": "2026-01-18 10:42:15.870339",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Holiday List",

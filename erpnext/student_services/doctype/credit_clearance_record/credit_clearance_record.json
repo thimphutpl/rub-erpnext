@@ -12,6 +12,7 @@
   "posting_date",
   "student_record_ref",
   "section_break_ibao",
+  "get_students",
   "student_details",
   "section_break_maqp",
   "amended_from"
@@ -70,15 +71,21 @@
    "fieldname": "student_record_ref",
    "fieldtype": "Link",
    "label": "Student Record Ref",
-   "options": "Student Credit Record"
+   "options": "Student Credit Record",
+   "reqd": 1
+  },
+  {
+   "fieldname": "get_students",
+   "fieldtype": "Button",
+   "label": "Get Student Credit Details"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-23 11:58:49.293026",
- "modified_by": "sonam.choki@thimphutechpark.bt",
+ "modified": "2026-03-04 10:23:54.000376",
+ "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Credit Clearance Record",
  "naming_rule": "Expression",
