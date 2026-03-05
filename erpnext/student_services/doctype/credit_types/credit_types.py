@@ -16,5 +16,6 @@ class CreditTypes(Document):
 		from frappe.types import DF
 
 		college: DF.Table[CreditType]
+		credit_type: DF.Data | None
 	# end: auto-generated types
 	pass
