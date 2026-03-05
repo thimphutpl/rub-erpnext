@@ -13,6 +13,7 @@ from frappe.query_builder import Criterion, CustomFunction
 from frappe.query_builder.functions import Concat, Locate, Sum
 from frappe.utils import cint, nowdate, today, unique
 from pypika import Order
+from frappe import _
 
 import erpnext
 from erpnext.stock.get_item_details import _get_item_tax_template
@@ -618,6 +619,28 @@ def item_query(doctype, txt, searchfield, start, page_len, filters, as_dict=Fals
 		as_dict=as_dict,
 	)
 
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_college_programme(doctype, txt, searchfield, start, page_len, filters):
+	if not filters.get("college"):
+		frappe.msgprint(_("Please select College first."))
+		return []
+
+	return frappe.db.sql(
+		"""select m.name, m.abbreviation, mc.company as college from `tabProgramme` m, `tabColleges` mc
+        where  m.name = mc.parent and mc.company = %(college)s and m.name like %(txt)s
+        order by
+            if(locate(%(_txt)s, m.name), locate(%(_txt)s, m.name), 99999),
+            m.name asc
+        limit {start}, {page_len}""".format(
+			start=start, page_len=page_len
+		),
+		{
+			"txt": "%{0}%".format(txt),
+			"_txt": txt.replace("%", ""),
+			"college": filters.get("college"),
+		},
+	)
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
