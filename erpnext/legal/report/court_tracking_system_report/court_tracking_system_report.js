@@ -8,7 +8,7 @@ frappe.query_reports["Court Tracking System Report"] = {
 			"fieldname": "case_type",
 			"label": __("Case Type"),
 			"fieldtype": "Select",
-			"options": "\nNPL Recovery Cases\nCounter Litigation\nCriminal & ACC Cases",
+			"options": "\nHR Cases\nDisciplinary Cases\nCivil Litigation\nCriminal & ACC Cases\nOthers",
 			"width": "80"
 		},
 		{

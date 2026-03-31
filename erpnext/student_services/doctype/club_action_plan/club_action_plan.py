@@ -20,7 +20,7 @@ class ClubActionPlan(Document):
 		academic_year: DF.Data | None
 		amended_from: DF.Link | None
 		club_action_plan_details: DF.Table[ClubActionPlanDetails]
-		club_action_plan_name: DF.Data
+		club_action_plan_name: DF.Data | None
 		club_name: DF.Link
 		company: DF.Link
 	# end: auto-generated types

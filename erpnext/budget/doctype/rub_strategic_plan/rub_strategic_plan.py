@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-
+from frappe.utils import getdate
 
 class RUBStrategicPlan(Document):
 	# begin: auto-generated types
@@ -21,6 +21,11 @@ class RUBStrategicPlan(Document):
 		to_date: DF.Date
 	# end: auto-generated types
 	pass
+
+	def autoname(self):
+		from_year = getdate(self.from_date).year
+		to_year = getdate(self.to_date).year
+		self.name = " - ".join([self.name1, str(from_year), str(to_year)])
 
 	# def validate(self):
 	# 	self.check_serial_number()
@@ -42,12 +47,12 @@ class RUBStrategicPlan(Document):
 def make_planning_output(name, from_date, to_date):
 	po = frappe.new_doc("Planning Output")
 	po.rub_strategic_plan = name
-	po.from_date = from_date
-	po.to_date = to_date
-	max_serial = frappe.db.sql(
-		"""SELECT MAX(serial_number) FROM `tabPlanning Output` where from_date >= %s and to_date <= %s and docstatus = 1""", (from_date, to_date),
-		as_dict=False
-	)[0][0]
-	po.serial_number = (max_serial if max_serial else 0) + 1
+	# po.from_date = from_date
+	# po.to_date = to_date
+	# max_serial = frappe.db.sql(
+	# 	"""SELECT MAX(serial_number) FROM `tabPlanning Output` where from_date >= %s and to_date <= %s and docstatus = 1""", (from_date, to_date),
+	# 	as_dict=False
+	# )[0][0]
+	# po.serial_number = (max_serial if max_serial else 0) + 1
 	return po
 

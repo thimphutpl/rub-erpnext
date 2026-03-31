@@ -15,6 +15,16 @@ frappe.query_reports["Budgeting Consumption"] = {
             fieldtype: "Link",
             options: "Fiscal Year"
         },
+        {
+            fieldname: "from_date",
+            label: __("From Date"),
+            fieldtype: "Date",
+        },
+        {
+            fieldname: "to_date",
+            label: __("From Date"),
+            fieldtype: "Date",
+        },
 
 	]
 };

@@ -90,6 +90,7 @@
   {
    "fieldname": "fiscal_year",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Fiscal Year",
    "options": "Fiscal Year",
    "reqd": 1
@@ -106,7 +107,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-04 16:36:31.709248",
+ "modified": "2026-03-22 22:38:21.238216",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Check-Out Form",

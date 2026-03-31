@@ -98,7 +98,8 @@
    "default": "0",
    "fieldname": "total_proposed_budget",
    "fieldtype": "Currency",
-   "label": "Total Proposed Budget",
+   "label": "Total Proposed Budget (In Million)",
+   "precision": "3",
    "read_only": 1
   },
   {
@@ -111,8 +112,8 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-25 17:51:32.692673",
- "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "modified": "2026-03-25 18:49:22.281388",
+ "modified_by": "Administrator",
  "module": "Budget",
  "name": "Five Year Plan Proposal",
  "naming_rule": "Expression",

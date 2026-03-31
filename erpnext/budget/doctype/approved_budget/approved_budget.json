@@ -1,20 +1,24 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:AB/{fiscal_year}/{#}",
+ "autoname": "format:AB/{from_year}-{to_year}/{#}",
  "creation": "2026-02-17 10:00:39.565176",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_fcey",
+  "from_year",
   "college",
-  "amended_from",
   "column_break_izcg",
-  "fiscal_year",
+  "to_year",
   "section_break_yjvz",
   "items",
+  "section_break_irvz",
+  "ab_extra_item",
   "section_break_wlla",
-  "total_approved_budget"
+  "total_approved_budget",
+  "column_break_nyqa",
+  "amended_from"
  ],
  "fields": [
   {
@@ -35,20 +39,13 @@
    "fieldname": "college",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
+   "label": "College",
    "options": "Company",
    "reqd": 1
   },
   {
    "fieldname": "column_break_izcg",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "fiscal_year",
-   "fieldtype": "Link",
-   "label": "Fiscal Year",
-   "options": "Fiscal Year",
-   "reqd": 1
   },
   {
    "fieldname": "section_break_yjvz",
@@ -67,15 +64,43 @@
   {
    "fieldname": "total_approved_budget",
    "fieldtype": "Currency",
-   "label": "Total Approved Budget",
+   "label": "Total Approved Budget (In Million)",
    "read_only": 1
+  },
+  {
+   "fieldname": "from_year",
+   "fieldtype": "Link",
+   "label": "From Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_year",
+   "fieldtype": "Link",
+   "label": "To Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_nyqa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_irvz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "ab_extra_item",
+   "fieldtype": "Table",
+   "label": "Additional Activities",
+   "options": "Approved Budget Extra Item"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-03 23:58:35.560542",
+ "modified": "2026-03-26 17:10:10.035128",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Approved Budget",

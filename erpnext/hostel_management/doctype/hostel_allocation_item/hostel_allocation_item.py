@@ -16,6 +16,8 @@ class HostelAllocationItem(Document):
 
 		amended_from: DF.Link | None
 		capacity: DF.Data | None
+		catering_type: DF.Literal["", "Mess", "Self-catering"]
+		cid_number: DF.Int
 		first_name: DF.Data | None
 		gender: DF.Data | None
 		hostel_room: DF.Link
@@ -26,7 +28,7 @@ class HostelAllocationItem(Document):
 		parentfield: DF.Data
 		parenttype: DF.Data
 		status: DF.Data | None
-		student_code: DF.Link
+		student_code: DF.Link | None
 		year: DF.Data | None
 	# end: auto-generated types
 	pass

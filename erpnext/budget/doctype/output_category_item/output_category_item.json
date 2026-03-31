@@ -24,13 +24,11 @@
   {
    "fieldname": "unit",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Grade"
   },
   {
    "fieldname": "raw_rating",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Raw Rating"
   },
   {
@@ -40,13 +38,11 @@
   {
    "fieldname": "max",
    "fieldtype": "Float",
-   "in_list_view": 1,
    "label": "Max"
   },
   {
    "fieldname": "min",
    "fieldtype": "Float",
-   "in_list_view": 1,
    "label": "Min"
   }
  ],
@@ -54,7 +50,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-04 00:23:36.047571",
+ "modified": "2026-03-26 12:47:34.020472",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Output Category Item",

@@ -127,35 +127,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Master",
-   "link_count": 2,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Case Status",
-   "link_count": 0,
-   "link_to": "Case Status",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Case Description",
-   "link_count": 0,
-   "link_to": "Case Description",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Reports",
    "link_count": 1,
    "link_type": "DocType",
@@ -176,6 +147,25 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Master",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Case Status",
+   "link_count": 0,
+   "link_to": "Case Status",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Transactions",
    "link_count": 1,
    "link_type": "DocType",
@@ -186,7 +176,7 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Legal Transactions",
+   "label": "Case Tracking System",
    "link_count": 0,
    "link_to": "Court Tracking System",
    "link_type": "DocType",
@@ -194,7 +184,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-11-25 18:25:11.829657",
+ "modified": "2026-03-26 09:40:24.801417",
  "modified_by": "Administrator",
  "module": "Legal",
  "name": "Legal Management Module",

@@ -3,32 +3,17 @@
 
 frappe.ui.form.on("Five Year Plan Proposal", {
 	refresh(frm) {
-        // if (!frm.is_new() && !frm.doc.fyp_copies) {
-        //     frm.add_custom_button(
-        //         __('Apply FYP to Other Colleges'),
-        //         function () {
-        //             frappe.call({
-        //                 method: "erpnext.budget.doctype.five_year_plan_proposal.five_year_plan_proposal.create_fyp_for_subsidiaries",
-        //                 args: {
-        //                     fyp_name: frm.doc.name
-        //                 },
-        //                 freeze: true,
-        //                 freeze_message: __('Creating FYP copies...'),
-        //                 callback: function (r) {
-        //                     if (r.message && r.message.status === "success") {
-        //                         frappe.msgprint(
-        //                             `${r.message.created_fyp_count} FYP copies successfully created`
-        //                         );
-        //                         frm.reload_doc();
-        //                     }
-        //                 }
-        //             });
-        //         },
-        //         __('Actions')
-        //     );
-        // }
+        
 	},
-
+    setup(frm) {
+        frm.set_query("colleges", function () {
+            return {
+                filters: {
+                    is_group: 0,
+                },
+            };
+        });
+    },
     get_planning_info: function(frm){
         frappe.call({
             method:"erpnext.budget.doctype.five_year_plan_proposal.five_year_plan_proposal.fetch_budgetplan",
@@ -49,10 +34,11 @@ frappe.ui.form.on("Five Year Plan Proposal", {
                             child.output = row.output
                             child.activities= row.activities
                             child.project = row.project
-
                             child.output_no = row.output_si_no
                             child.project_no = row.project_si_no
                             child.activity_link = row.activity_link
+                            child.is_current = row.is_current
+                            child.is_capital = row.is_capital
                             // child.competency = row.competency_item;
                             // child.description = row.description;
                         });

@@ -5,6 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import flt
 from frappe import _
+from frappe.model.naming import make_autoname
 
 class BudgetReappropiations(Document):
 	# begin: auto-generated types
@@ -22,19 +23,30 @@ class BudgetReappropiations(Document):
 		approver_designation: DF.Data | None
 		approver_name: DF.Data | None
 		college: DF.Link
-		fiscal_year: DF.Link
 		from_activity: DF.Link
+		from_budget_type: DF.Literal["", "Current", "Capital"]
+		from_output: DF.Link
+		from_project: DF.Link
+		from_year: DF.Link
 		remarks: DF.SmallText | None
 		to_activity: DF.Link
+		to_budget_type: DF.Literal["", "Current", "Capital"]
+		to_output: DF.Link
+		to_project: DF.Link
+		to_year: DF.Link
 	# end: auto-generated types
 
+	def autoname(self):
+		self.name = make_autoname(
+			f"BR/{self.from_year}-{self.to_year}/.##"
+		)	
 	def validate(self):
 		self.validate_budget()
 
 	def validate_budget(self):
-		if not self.fiscal_year or not self.college or not self.from_activity:
+		if not self.from_year or not self.to_year or not self.college or not self.from_activity:
 			frappe.throw(
-				_("Select College, From Activity and Fiscal Year First")
+				_("Select College, From Activity, From and To Year First")
 			)
 		self.approved_budget_list = frappe.db.sql("""
 			SELECT abi.approved_budget, ab.name
@@ -42,16 +54,17 @@ class BudgetReappropiations(Document):
 			INNER JOIN `tabApproved Budget Item` abi 
 				ON ab.name = abi.parent
 			WHERE ab.college = %s
-			AND ab.fiscal_year = %s
+			AND ab.from_year = %s
+			AND ab.to_year = %s
 			AND ab.docstatus = 1
 			AND abi.activity_link = %s
 			ORDER BY abi.idx
-		""", (self.college, self.fiscal_year, self.from_activity), as_dict=True)
+		""", (self.college, self.from_year, self.to_year, self.from_activity), as_dict=True)
 
 		if not self.approved_budget_list:
 			frappe.throw(
-				_("No budget found for year {0} in Approved Budget")
-				.format(self.fiscal_year)
+				_("No budget found from year {0} to {1} in Approved Budget")
+				.format(self.from_year, self.to_year)
 			)
 		if self.appropiation_amount:
 			# frappe.throw("{0}, {1}".format(flt(self.appropiation_amount), flt(str(self.approved_budget_list[0].approved_budget))))
@@ -68,19 +81,12 @@ class BudgetReappropiations(Document):
 		self.update_budget(cancel=True)
 
 	def update_budget(self, cancel = False):
-		# ab = frappe.get_doc("Approved Budget", {"college": self.college, "fiscal_year": self.fiscal_year, "docstatus": 1})
-		# from_activity = frappe.get_doc("Approved Budget Item", {"parent": ab.name, "activity_link": self.from_activity})
-		# to_activity = frappe.get_doc("Approved Budget Item", {"parent": ab.name, "activity_link": self.to_activity})
-		# from_activity.approved_budget = from_activity.approved_budget - self.appropiation_amount
-		# to_activity.approved_budget = to_activity.approved_budget + self.appropiation_amount
-		# from_activity.save(ignore_permissions=True)
-		# to_activity.save(ignore_permissions=True)
-		
 		ab_name = frappe.db.get_value(
 			"Approved Budget",
 			{
 				"college": self.college,
-				"fiscal_year": self.fiscal_year,
+				"from_year": self.from_year,
+				"to_year": self.to_year,
 				"docstatus": 1
 			},
 		)
@@ -117,7 +123,7 @@ class BudgetReappropiations(Document):
 
 		else:
 			if to_row.approved_budget < amount:
-				frappe.throw(_("Insufficient budget in source activity"))
+				frappe.throw(_("Insufficient budget in target activity"))
 
 			from_row.approved_budget += amount
 			from_row.reappropiation_sent -= amount

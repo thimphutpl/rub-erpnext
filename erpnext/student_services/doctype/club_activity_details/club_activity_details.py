@@ -14,7 +14,7 @@ class ClubActivityDetails(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		activity: DF.Data | None
+		description: DF.Data | None
 		from_time: DF.Time | None
 		parent: DF.Data
 		parentfield: DF.Data

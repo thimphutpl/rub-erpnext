@@ -1021,6 +1021,28 @@ def get_hostel_change_details(student_code):
 
     return result[0] if result else {}
 
+@frappe.whitelist()
+def get_hostel_change_details_using_cid(student_code):
+    """Get student's current room and occupancy info"""
+    result = frappe.db.sql("""
+        SELECT 
+            si.student_code,
+            si.first_name,
+            si.last_name,
+            si.parent AS current_room,
+            hr.hostel_type,
+            hr.capacity,
+            (SELECT COUNT(*) 
+             FROM `tabStudent List Item`
+             WHERE parent = si.parent) AS current_occupancy
+        FROM `tabStudent List Item` si
+        LEFT JOIN `tabHostel Room` hr ON si.parent = hr.name
+        WHERE si.student_code = %s
+        LIMIT 1
+    """, (student_code,), as_dict=True)
+
+    return result[0] if result else {}    
+
 
 @frappe.whitelist()
 def get_change_request_room(student_code):
@@ -1040,3 +1062,56 @@ def get_change_request_room(student_code):
     """, (student_code,), as_dict=True)
 
     return res[0] if res else {}
+
+
+@frappe.whitelist()
+def get_available_hostel_rooms(doctype, txt, searchfield, start, page_len, filters):
+    return frappe.db.sql("""
+        SELECT hr.name
+        FROM `tabHostel Room` hr
+        WHERE hr.company = %(company)s
+        AND hr.name LIKE %(txt)s
+        AND (
+            SELECT COUNT(*)
+            FROM `tabStudent List Item` sli
+            WHERE sli.parent = hr.name
+        ) < IFNULL(hr.capacity, 0)
+        ORDER BY hr.name
+        LIMIT %(start)s, %(page_len)s
+    """, {
+        "company": filters.get("company"),
+        "txt": f"%{txt}%",
+        "start": start,
+        "page_len": page_len
+    })
+
+@frappe.whitelist()
+def get_hostel_checkin_form(applied_by, fiscal_year):
+    result = frappe.db.sql("""
+        SELECT hci.name
+        FROM `tabHostel Check-In Form` hci
+        INNER JOIN `tabCheck-In Students Items` cisi
+            ON cisi.parent = hci.name
+        WHERE cisi.student_code = %s
+        AND hci.fiscal_year = %s
+        AND hci.docstatus = 1
+        LIMIT 1
+    """, (applied_by, fiscal_year), as_dict=True)
+
+    return result[0].name if result else None    
+
+
+@frappe.whitelist()
+def get_hostel_checkout_form(applied_by, fiscal_year):
+    result = frappe.db.sql("""
+        SELECT hci.name
+        FROM `tabHostel Check-Out Form` hci
+        INNER JOIN `tabCheck-Out Student Details` cisi
+            ON cisi.parent = hci.name
+        WHERE cisi.student_code = %s
+        AND hci.fiscal_year = %s
+        AND hci.docstatus = 1
+        LIMIT 1
+    """, (applied_by, fiscal_year), as_dict=True)
+
+    return result[0].name if result else None        

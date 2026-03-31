@@ -19,6 +19,7 @@
   {
    "fieldname": "issue_severity",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Issue Severity",
    "options": "Major Issue\nMinor Issue"
   }
@@ -26,7 +27,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-22 22:01:17.910060",
+ "modified": "2026-03-19 10:15:48.167773",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Disciplinary Issue Type",

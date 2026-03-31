@@ -30,7 +30,11 @@ class FiveYearPlanProposal(Document):
 
 	def validate(self):
 		self.check_college()
+		self.validate_proposed_budget()
 		self.calculate_proposed_amount()
+	
+	def on_cancel(self):
+		self.check_five_year_plan()
 
 	def check_college(self):
 		proposal = frappe.db.sql('''
@@ -38,19 +42,33 @@ class FiveYearPlanProposal(Document):
 			WHERE colleges = %s and from_year = %s and to_year = %s and docstatus = 1
 		''',(self.colleges, self.from_year, self.to_year), as_dict=True)
 		if proposal:
-			frappe.throw("Five Year Plan Proposal exist for college: {0} from year {1} to {2}".format(self.colleges, self.from_year, self.to_year))
+			frappe.throw("Five Year Plan Proposal exists for college: {0} from year {1} to {2}".format(self.colleges, self.from_year, self.to_year))
+			
+	def validate_proposed_budget(self):
+		for row in self.fyp_details:
+			if not row.proposed_budget or row.proposed_budget <= 0:
+				frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
 
 	def calculate_proposed_amount(self):
 		self.total_proposed_budget = 0
 		for item in self.get("fyp_details"):
 			self.total_proposed_budget += flt(item.proposed_budget)
 
+	def check_five_year_plan(self):
+		fyp = frappe.db.sql('''
+			SELECT name FROM `tabFive Year Plan`
+			WHERE from_year = %s and to_year = %s and docstatus = 1 and workflow_state = "Approved"
+		''',(self.from_year, self.to_year), as_dict=True)
+
+		if fyp:
+			frappe.throw("Five Year Plan from year <b>{0}</b> to <b>{1}</b> is approved".format(self.from_year, self.to_year))
+
 @frappe.whitelist()
 def fetch_budgetplan():
 	planning = frappe.db.sql('''
 		SELECT po.serial_number as output_si_no, 
 		po.output, pp.serial_number as project_si_no, 
-		pp.project, pa.activities, pa.name as activity_link FROM `tabPlanning Output` po 
+		pp.project, pa.activities, pa.name as activity_link, pa.is_current, pa.is_capital FROM `tabPlanning Output` po 
 		INNER JOIN `tabPlanning Project` pp ON po.name = pp.planning_output 
 		INNER JOIN `tabPlanning Activities` pa ON pa.project = pp.name 
 		WHERE pa.docstatus = 1

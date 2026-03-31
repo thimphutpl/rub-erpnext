@@ -313,9 +313,10 @@ class HostelAllocationBulkUpload(Document):
         room_allocations = {}
 
         for row in self.table_caon:
-            if row.hostel_room and row.student_code:
+            if row.hostel_room and row.student_code or row.cid_number:
                 room_allocations.setdefault(row.hostel_room, []).append({
                     "student_code": row.student_code,
+                    "cid_number": row.cid_number,
                     "first_name": row.first_name,
                     "last_name": row.last_name,
                     "year": self.year,
@@ -343,7 +344,7 @@ class HostelAllocationBulkUpload(Document):
                 else:
                     # ➕ NORMAL MODE (keep previous active students)
                     existing_students = frappe.db.sql("""
-                        SELECT hai.student_code, hai.first_name, hai.last_name, 
+                        SELECT hai.student_code, hai.cid_number, hai.first_name, hai.last_name, 
                             habu.year, hai.status
                         FROM `tabHostel Allocation Item` hai
                         JOIN `tabHostel Allocation Bulk Upload` habu 

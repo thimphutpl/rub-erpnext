@@ -5,62 +5,92 @@ frappe.ui.form.on("Annual Performance Assessment", {
 	// refresh(frm) {
         
 	// },
-    
-    fiscal_year: function(frm) {
-        if(frm.doc.fiscal_year && frm.doc.college){
-            frm.trigger("fetch_output_and_outcome");
-        }
+    setup(frm) {
+        frm.set_query("college", function () {
+            return {
+                filters: {
+                    is_group: 0,
+                },
+            };
+        });
+    },
+    from_year: function(frm) {
+        frm.trigger("fetch_output_and_outcome");
+    },
+    to_year: function(frm) {
+        frm.trigger("fetch_output_and_outcome");
     },
     college: function(frm) {
-        if(frm.doc.fiscal_year && frm.doc.college){
-            frm.trigger("fetch_output_and_outcome");
-        }
+        frm.trigger("fetch_output_and_outcome");
     },
     fetch_output_and_outcome: function(frm){
-        frappe.call({
-            method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.fetch_output_and_outcome",
-            args: {
-                    fiscal_year: frm.doc.fiscal_year,
-                    college: frm.doc.college
-                },
-                callback: function(r) {
-                    if (r.message.output) {
-                        console.log(r.message.output)
-                        frm.clear_table("output_items");
+        if(frm.doc.from_year && frm.doc.to_year && frm.doc.college){
+            frappe.call({
+                method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.fetch_output_and_outcome",
+                args: {
+                        from_year: frm.doc.from_year,
+                        to_year: frm.doc.to_year,
+                        college: frm.doc.college
+                    },
+                    callback: function(r) {
+                        if (r.message.output) {
+                            console.log(r.message.output)
+                            frm.clear_table("output_items");
 
-                        r.message.output.forEach(function(row) {
-                            let child = frm.add_child("output_items");
-                            child.output = row.output
-                            child.activities= row.activities
-                            child.project = row.project
+                            r.message.output.forEach(function(row) {
+                                let child = frm.add_child("output_items");
+                                child.output = row.output
+                                child.activities= row.activities
+                                child.project = row.project
+                                child.output_no = row.output_no
+                                child.project_no = row.project_no
+                                child.activity_link = row.activity_link
+                                child.activities_no = row.activities_no
+                                child.unit = row.unit
+                                child.weightage = row.weightage
+                                child.target = row.target
+                                child.sub_activity_no = row.sub_activity_no
+                                child.sub_activity = row.sub_activity
+                            });
+        
+                            frm.refresh_field("output_items");
+                        }
+                        if (r.message.output_extra) {
+                            console.log(r.message.output_extra)
+                            frm.clear_table("output_extra_items");
 
-                            child.output_no = row.output_no
-                            child.project_no = row.project_no
-                            child.activity_link = row.activity_link
-                            child.activities_no = row.activities_no
-                            child.unit = row.unit
-                            child.weightage = row.weightage
-                            child.target = row.target
-                        });
-    
-                        frm.refresh_field("output_items");
+                            r.message.output_extra.forEach(function(row) {
+                                let child = frm.add_child("output_extra_items");
+                                child.output = row.output
+                                child.activities= row.activities
+                                child.project = row.project
+                                child.output_no = row.output_no
+                                child.project_no = row.project_no
+                                child.unit = row.unit
+                                child.weightage = row.weightage
+                                child.target = row.target
+                                child.sub_activity = row.sub_activity
+                            });
+        
+                            frm.refresh_field("output_extra_items");
+                        }
+                        if (r.message.outcome) {
+                            console.log(r.message.outcome)
+                            frm.clear_table("outcome_items");
+                            
+                            r.message.outcome.forEach(function(row) {
+                                let child = frm.add_child("outcome_items");
+                                child.outcome = row.outcome
+                                child.unit= row.unit
+                                child.weightage = row.weightage
+                                child.target = row.target
+                            });
+        
+                            frm.refresh_field("outcome_items");
+                        }
                     }
-                    if (r.message.outcome) {
-                        console.log(r.message.outcome)
-                        frm.clear_table("outcome_items");
-                        
-                        r.message.outcome.forEach(function(row) {
-                            let child = frm.add_child("outcome_items");
-                            child.outcome = row.outcome
-                            child.unit= row.unit
-                            child.weightage = row.weightage
-                            child.target = row.target
-                        });
-    
-                        frm.refresh_field("outcome_items");
-                    }
-                }
-        })
+            })
+        }
     }
 });
 
@@ -120,6 +150,7 @@ frappe.ui.form.on("APA Output Item", {
                         activity_link: row.activity_link,
                         unit: row.unit,
                         weightage: row.weightage,
+                        sub_activity_no: row.sub_activity_no,
                     },
                     callback: function(r) {
                         if (r.message) {

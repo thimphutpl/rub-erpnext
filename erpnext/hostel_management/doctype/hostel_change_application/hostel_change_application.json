@@ -9,8 +9,12 @@
   "applied_by_section",
   "company",
   "applied_by",
+  "cid_number",
   "first_name",
   "last_name",
+  "column_break_whpb",
+  "posting_date",
+  "fiscal_year",
   "change_details_section",
   "current_room",
   "hostel_type",
@@ -29,6 +33,10 @@
   "reason_for_change_for_student",
   "column_break_ispe",
   "comments_approver",
+  "hostel_check_in_and_out_form_section",
+  "hostel_check_in_form",
+  "column_break_enaj",
+  "hostel_check_out_form",
   "section_break_h0ro",
   "amended_from"
  ],
@@ -68,7 +76,7 @@
   {
    "fieldname": "current_room",
    "fieldtype": "Link",
-   "label": "Changed Room",
+   "label": "Current Room",
    "options": "Hostel Room",
    "read_only": 1
   },
@@ -87,7 +95,7 @@
    "depends_on": "eval:doc.operation_type == \"Room Transfer\";",
    "fieldname": "requested_room",
    "fieldtype": "Link",
-   "label": "Requested Room",
+   "label": "Applied For (Room)",
    "options": "Hostel Room"
   },
   {
@@ -197,17 +205,64 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval:doc.operation_type == \"Room Transfer\";",
    "fieldname": "available_room",
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Available Room"
+  },
+  {
+   "fieldname": "hostel_check_in_and_out_form_section",
+   "fieldtype": "Section Break",
+   "label": "Hostel Check In And Out Form"
+  },
+  {
+   "fieldname": "hostel_check_in_form",
+   "fieldtype": "Link",
+   "label": "Hostel Check-In Form",
+   "options": "Hostel Check-In Form",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_enaj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hostel_check_out_form",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Hostel Check-Out Form",
+   "options": "Hostel Check-Out Form"
+  },
+  {
+   "fieldname": "column_break_whpb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "label": "Fiscal Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cid_number",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "CID Number"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-17 10:10:13.669237",
+ "modified": "2026-03-30 11:00:55.333146",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Change Application",

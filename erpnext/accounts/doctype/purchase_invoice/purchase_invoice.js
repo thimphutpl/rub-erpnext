@@ -243,17 +243,46 @@ erpnext.accounts.PurchaseInvoice = class PurchaseInvoice extends erpnext.buying.
 		this.frm.set_df_property("tax_withholding_category", "hidden", doc.apply_tds ? 0 : 1);
 		erpnext.accounts.unreconcile_payment.add_unreconcile_btn(me.frm);
 	}
-	ld_days(frm) {
-		console.log("here " + String(cur_frm.doc.ld_days))
-		if (cur_frm.doc.ld_days && flt(cur_frm.doc.ld_days) > 0) {
-			if (flt(cur_frm.doc.ld_days) < 100) {
-				cur_frm.set_value("write_off_amount", flt((flt(cur_frm.doc.ld_days) / 100) * 0.1 * flt(cur_frm.doc.grand_total), 2))
+	calculate_write_off_from_ld() {
+		if (this.frm.doc.ld_days && flt(this.frm.doc.ld_days) > 0) {
+			if (flt(this.frm.doc.ld_days) < 100) {
+				this.frm.set_value("write_off_amount",
+					flt(
+						(flt(this.frm.doc.ld_days)) *
+						(flt(this.frm.doc.ld_percentage)) *
+						flt(this.frm.doc.grand_total),
+						2
+					)
+				);
+			} else {
+				this.frm.set_value("write_off_amount",
+					flt(
+						(flt(this.frm.doc.ld_percentage)) *
+						flt(this.frm.doc.grand_total),
+						2
+					)
+				);
 			}
-			else {
-				cur_frm.set_value("write_off_amount", flt((0.1) * flt(cur_frm.doc.grand_total), 2))
-			}
+			this.frm.refresh_field("write_off_amount");
 		}
 	}
+
+	ld_days(frm) {
+		this.calculate_write_off_from_ld()
+
+		// if (cur_frm.doc.ld_days && flt(cur_frm.doc.ld_days) > 0) {
+		// 	if (flt(cur_frm.doc.ld_days) < 100) {
+		// 		cur_frm.set_value("write_off_amount", flt((flt(cur_frm.doc.ld_days) / 100) * (cur_frm.doc.ld_percentage / 100) * flt(cur_frm.doc.grand_total), 2))
+		// 	}
+		// 	else {
+		// 		cur_frm.set_value("write_off_amount", (cur_frm.doc.ld_percentage / 100) * flt(cur_frm.doc.grand_total), 2)
+		// 	}
+		// }
+	}
+	ld_percentage(frm) {
+		this.calculate_write_off_from_ld()
+	}
+
 	unblock_invoice() {
 		const me = this;
 		frappe.call({

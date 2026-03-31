@@ -39,8 +39,13 @@ class StipendStructure(Document):
         self.name = make_autoname(f"{self.student_code}/.SPST/.#####")
     
     def validate(self):
+        
         self.check_duplicate()
         self.calculate_totals()
+        if self.eligible_for_rent==0:
+            return
+        if self.eligible_for_mess_fees==0:
+            return
         self.update_stipend_structure()
     
     def on_submit(self):

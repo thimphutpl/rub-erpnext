@@ -25,6 +25,7 @@ class ClubActivity(Document):
 		attachments_if_any: DF.Attach | None
 		club_action_plan: DF.Link | None
 		club_attendance_details: DF.Table[ClubAttendanceDetails]
+		club_budget: DF.Data | None
 		club_coordinator_details: DF.Table[ClubCoordinatorDetails]
 		club_name: DF.Link
 		company: DF.Link

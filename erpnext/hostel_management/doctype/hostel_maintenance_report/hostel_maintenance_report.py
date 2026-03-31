@@ -356,3 +356,19 @@ def get_warehouse_by_cost_center(cost_center):
 	warehouse = frappe.db.get_value("Cost Center", cost_center, "warehouse")
 	# frappe.throw(str(warehouse))
 	return warehouse	
+
+
+@frappe.whitelist()
+def get_hostel_checkin_form(student_code, fiscal_year):
+    result = frappe.db.sql("""
+        SELECT hci.name
+        FROM `tabHostel Check-In Form` hci
+        INNER JOIN `tabCheck-In Students Items` cisi
+            ON cisi.parent = hci.name
+        WHERE cisi.student_code = %s 
+        AND hci.fiscal_year = %s
+        AND hci.docstatus = 1
+        LIMIT 1
+    """, (student_code, fiscal_year), as_dict=True)
+
+    return result[0].name if result else None 

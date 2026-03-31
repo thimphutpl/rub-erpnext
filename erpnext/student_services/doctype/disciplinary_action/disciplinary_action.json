@@ -33,6 +33,7 @@
   "column_break_ddqn",
   "date_of_the_issue",
   "decision",
+  "issue_severity",
   "investigators_statement_section",
   "small_text_xble",
   "attachments_investigator",
@@ -246,17 +247,23 @@
   },
   {
    "fieldname": "decision",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "label": "Decision",
-   "options": "\nTerminate"
+   "options": "Decision Types"
+  },
+  {
+   "fieldname": "issue_severity",
+   "fieldtype": "Select",
+   "label": "Issue Severity",
+   "options": "Major Issue\nMinor Issue"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-02 15:57:45.899121",
- "modified_by": "sonam.zangmo@thimphutechpark.bt",
+ "modified": "2026-03-23 13:26:12.973412",
+ "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Disciplinary Action",
  "naming_rule": "Expression",

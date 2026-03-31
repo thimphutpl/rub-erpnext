@@ -15,16 +15,26 @@ class PlanningOutput(Document):
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
-		from_date: DF.Date | None
+		from_date: DF.Date
 		output: DF.SmallText | None
 		rub_strategic_plan: DF.Link | None
 		serial_number: DF.Int
-		to_date: DF.Date | None
+		to_date: DF.Date
 	# end: auto-generated types
 	pass
 
+	def autoname(self):
+		self.name = "Output "+str(self.serial_number_generation())
+
 	def validate(self):
-		self.check_serial_number()
+		# self.check_serial_number()
+		self.serial_number = self.serial_number_generation()
+
+	def serial_number_generation(self):
+		max_serial = frappe.db.get_value("Planning Output", {"from_date": self.from_date, "to_date": self.to_date, "docstatus": 1}, "serial_number", as_dict=True)
+		serial_number = (int(max_serial.serial_number) if max_serial else 0) + 1
+
+		return serial_number
 
 	def check_serial_number(self):
 		serials = frappe.get_all(

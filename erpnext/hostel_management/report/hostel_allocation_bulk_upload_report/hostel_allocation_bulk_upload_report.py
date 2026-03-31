@@ -21,7 +21,9 @@ def get_columns():
         {"label": "Hostel Type", "fieldname": "hostel_type", "fieldtype": "Data", "width": 100},
         {"label": "Year", "fieldname": "year", "fieldtype": "Data", "width": 60},
         {"label": "Capacity", "fieldname": "capacity", "fieldtype": "Int", "width": 80},
+        {"label": "Catering Type", "fieldname": "catering_type", "fieldtype": "Select", "width": 80},
         {"label": "Status", "fieldname": "status", "fieldtype": "Data", "width": 80},
+        {"label": "Available Beds", "fieldname": "available", "fieldtype": "Int", "width": 100},
     ]
 
 def get_data(filters=None):
@@ -37,6 +39,27 @@ def get_data(filters=None):
     if conditions:
         condition_str = " AND " + " AND ".join(conditions)
 
+    # query = f"""
+    #     SELECT 
+    #         habu.name,
+    #         hai.student_code,
+    #         hai.first_name,
+    #         hai.last_name,
+    #         hai.hostel_room,
+    #         hai.gender,
+    #         hai.hostel_type,
+    #         hai.year,
+    #         hai.capacity,
+    #         hai.catering_type,
+    #         hai.status,
+    #         habu.posting_date,
+    #         habu.company
+    #     FROM `tabHostel Allocation Item` AS hai
+    #     INNER JOIN `tabHostel Allocation Bulk Upload` AS habu
+    #     ON hai.parent = habu.name
+    #     WHERE habu.docstatus = 1 {condition_str}
+    # """
+
     query = f"""
         SELECT 
             habu.name,
@@ -48,12 +71,32 @@ def get_data(filters=None):
             hai.hostel_type,
             hai.year,
             hai.capacity,
+            hai.catering_type,
             hai.status,
             habu.posting_date,
-            habu.company
+            habu.company,
+
+            hr.capacity AS room_capacity,
+
+            (
+                SELECT COUNT(*)
+                FROM `tabStudent List Item` sli
+                WHERE sli.parent = hai.hostel_room
+            ) AS occupied,
+
+            (IFNULL(hr.capacity, 0) - (
+                SELECT COUNT(*)
+                FROM `tabStudent List Item` sli
+                WHERE sli.parent = hai.hostel_room
+            )) AS available
+
         FROM `tabHostel Allocation Item` AS hai
         INNER JOIN `tabHostel Allocation Bulk Upload` AS habu
-        ON hai.parent = habu.name
+            ON hai.parent = habu.name
+
+        LEFT JOIN `tabHostel Room` hr
+            ON hr.name = hai.hostel_room
+
         WHERE habu.docstatus = 1 {condition_str}
     """
 

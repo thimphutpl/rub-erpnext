@@ -1,19 +1,26 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:BR/{fiscal_year}/{#}",
+ "autoname": "format:BR/{from_year}-{to_year}/{#}",
  "creation": "2026-02-17 11:05:12.770209",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_kyrh",
   "appropriation_date",
+  "from_output",
+  "from_project",
+  "from_budget_type",
   "from_activity",
-  "fiscal_year",
+  "from_year",
   "appropiation_amount",
   "column_break_prmd",
   "college",
+  "to_output",
+  "to_project",
+  "to_budget_type",
   "to_activity",
+  "to_year",
   "remarks",
   "approval_details_section",
   "approver",
@@ -66,14 +73,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "fiscal_year",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Fiscal Year",
-   "options": "Fiscal Year",
-   "reqd": 1
-  },
-  {
    "fieldname": "to_activity",
    "fieldtype": "Link",
    "label": "To Activity",
@@ -120,7 +119,63 @@
   {
    "fieldname": "appropiation_amount",
    "fieldtype": "Currency",
-   "label": "Appropiation Amount",
+   "label": "Appropiation Amount (In Million)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "from_budget_type",
+   "fieldtype": "Select",
+   "label": "From Budget Type",
+   "options": "\nCurrent\nCapital"
+  },
+  {
+   "fieldname": "to_budget_type",
+   "fieldtype": "Select",
+   "label": "To Budget Type",
+   "options": "\nCurrent\nCapital"
+  },
+  {
+   "fieldname": "from_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "From Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "To Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "from_output",
+   "fieldtype": "Link",
+   "label": "From Output",
+   "options": "Planning Output",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_output",
+   "fieldtype": "Link",
+   "label": "To Output",
+   "options": "Planning Output",
+   "reqd": 1
+  },
+  {
+   "fieldname": "from_project",
+   "fieldtype": "Link",
+   "label": "From Project",
+   "options": "Planning Project",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_project",
+   "fieldtype": "Link",
+   "label": "To Project",
+   "options": "Planning Project",
    "reqd": 1
   }
  ],
@@ -128,7 +183,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-20 14:42:35.916070",
+ "modified": "2026-03-25 20:39:49.135450",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Budget Reappropiations",

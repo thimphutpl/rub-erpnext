@@ -21,6 +21,7 @@
   "attendance_list_section",
   "get_attendance",
   "club_attendance_details",
+  "club_budget",
   "expenses_details_section",
   "items",
   "total_expenses",
@@ -147,13 +148,18 @@
    "fieldtype": "Data",
    "label": "Activity",
    "read_only": 1
+  },
+  {
+   "fieldname": "club_budget",
+   "fieldtype": "Data",
+   "label": "Club Budget"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-09 12:25:05.507924",
+ "modified": "2026-03-18 10:34:17.831982",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Club Activity",

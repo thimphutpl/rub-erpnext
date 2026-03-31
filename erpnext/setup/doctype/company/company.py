@@ -39,6 +39,7 @@ class Company(NestedSet):
 		book_advance_payments_in_separate_party_account: DF.Check
 		capital_work_in_progress_account: DF.Link | None
 		chart_of_accounts: DF.Literal[None]
+		college_code: DF.Data | None
 		company_description: DF.TextEditor | None
 		company_logo: DF.AttachImage | None
 		company_name: DF.Data
@@ -65,6 +66,7 @@ class Company(NestedSet):
 		default_holiday_list: DF.Link | None
 		default_in_transit_warehouse: DF.Link | None
 		default_income_account: DF.Link | None
+		default_income_hall: DF.Link | None
 		default_inventory_account: DF.Link | None
 		default_letter_head: DF.Link | None
 		default_operating_cost_account: DF.Link | None
@@ -93,6 +95,7 @@ class Company(NestedSet):
 		fax: DF.Data | None
 		hostel_branch: DF.Link | None
 		hr_approver: DF.Link | None
+		hr_approver_name: DF.Data | None
 		hr_manager: DF.Link | None
 		hr_manager_name: DF.Data | None
 		income_account: DF.Link | None
@@ -100,11 +103,13 @@ class Company(NestedSet):
 		is_group: DF.Check
 		is_overseeing_company: DF.Check
 		lft: DF.Int
+		logo: DF.Attach | None
 		monthly_sales_target: DF.Currency
 		old_parent: DF.Data | None
 		parent_company: DF.Link | None
 		payment_terms: DF.Link | None
 		phone_no: DF.Data | None
+		qr_gen_url: DF.Data | None
 		receivable_account: DF.Link | None
 		receivable_accounts: DF.Link | None
 		reconcile_on_advance_payment_date: DF.Check
@@ -117,8 +122,12 @@ class Company(NestedSet):
 		salary_tax_percent: DF.Percent
 		sales_monthly_history: DF.SmallText | None
 		series_for_depreciation_entry: DF.Data | None
+		sso_name: DF.Data | None
 		stock_adjustment_account: DF.Link | None
 		stock_received_but_not_billed: DF.Link | None
+		student_leave_application_approval_notification_template: DF.Link | None
+		student_leave_application_status_notification_template: DF.Link | None
+		student_service_officer: DF.Link | None
 		submit_err_jv: DF.Check
 		tax_id: DF.Data | None
 		total_monthly_sales: DF.Currency

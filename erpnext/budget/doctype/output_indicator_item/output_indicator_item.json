@@ -7,18 +7,20 @@
  "engine": "InnoDB",
  "field_order": [
   "output_no",
+  "output",
   "project_no",
+  "activities",
   "activities_no",
   "activity_link",
+  "project",
   "definition",
   "data_source",
   "data_collection_method",
   "category",
   "remarks",
   "column_break_faex",
-  "output",
-  "project",
-  "activities",
+  "sub_activity_no",
+  "sub_activity",
   "unit",
   "weightage"
  ],
@@ -74,6 +76,8 @@
    "options": "Planning Activities"
   },
   {
+   "fetch_from": "sub_activity_no.unit",
+   "fetch_if_empty": 1,
    "fieldname": "unit",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -110,13 +114,26 @@
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "label": "Remarks"
+  },
+  {
+   "fieldname": "sub_activity",
+   "fieldtype": "Small Text",
+   "label": "Sub Activity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sub_activity_no",
+   "fieldtype": "Link",
+   "label": "Sub Activity No",
+   "options": "APA Sub Activities",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-04 00:38:01.780323",
+ "modified": "2026-03-30 12:42:33.622830",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Output Indicator Item",

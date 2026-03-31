@@ -159,7 +159,6 @@ def get_payment_entries_for_bank_clearance(
 		{"account": account, "from": from_date, "to": to_date},
 		as_dict=1,
 	)
-
 	if bank_account:
 		condition += "and bank_account = %(bank_account)s"
 

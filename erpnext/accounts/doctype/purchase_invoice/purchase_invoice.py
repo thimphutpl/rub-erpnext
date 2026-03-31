@@ -114,7 +114,9 @@ class PurchaseInvoice(BuyingController):
 		disable_rounded_total: DF.Check
 		discount: DF.Currency
 		discount_amount: DF.Currency
+		dispatch: DF.Data | None
 		due_date: DF.Date | None
+		for_project: DF.Check
 		freight_and_insurance_charges: DF.Currency
 		from_date: DF.Date | None
 		grand_total: DF.Currency
@@ -133,11 +135,14 @@ class PurchaseInvoice(BuyingController):
 		is_subcontracted: DF.Check
 		items: DF.Table[PurchaseInvoiceItem]
 		language: DF.Data | None
+		ld_days: DF.Data | None
+		ld_percentage: DF.Literal["", "0.001", "0.0005"]
 		letter_head: DF.Link | None
 		material_request: DF.Link | None
 		material_request_date: DF.Date | None
 		mode_of_payment: DF.Link | None
-		naming_series: DF.Literal["", "None", "Consumables", "Fixed Asset", "Sales Product", "Spare Parts", "Services Miscellaneous", "Services Works", "Labour Contract", "Hiring Charge", "ACC-PINV-.YYYY.-", "ACC-PINV-RET-.YYYY.-"]
+		n_series: DF.Literal["", "Consumables", "Fixed Asset", "Sales Product", "Spare Parts", "Services Miscellaneous", "Services Works"]
+		naming_series: DF.Literal["ACC-PINV-.YYYY.-", "ACC-PINV-RET-.YYYY.-"]
 		net_total: DF.Currency
 		on_hold: DF.Check
 		only_include_allocated_payments: DF.Check
@@ -185,7 +190,6 @@ class PurchaseInvoice(BuyingController):
 		supplier_name: DF.Data | None
 		supplier_warehouse: DF.Link | None
 		tax: DF.Currency
-		tax_category: DF.Link | None
 		tax_id: DF.ReadOnly | None
 		tax_withheld_vouchers: DF.Table[TaxWithheldVouchers]
 		tax_withholding_category: DF.Link | None
@@ -195,9 +199,8 @@ class PurchaseInvoice(BuyingController):
 		taxes_and_charges_added: DF.Currency
 		taxes_and_charges_deducted: DF.Currency
 		tc_name: DF.Link | None
-		tds_amount: DF.Currency
 		terms: DF.TextEditor | None
-		title: DF.Data | None
+		title: DF.Data
 		to_date: DF.Date | None
 		total: DF.Currency
 		total_add_ded: DF.Currency
@@ -1958,6 +1961,7 @@ class PurchaseInvoice(BuyingController):
 		for tax in advance_taxes:
 			allocated_amount = 0
 			pending_amount = flt(tax.tax_amount - tax.allocated_amount)
+			
 			if flt(tax_withholding_details.get("tax_amount")) >= pending_amount:
 				tax_withholding_details["tax_amount"] -= pending_amount
 				allocated_amount = pending_amount

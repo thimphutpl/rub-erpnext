@@ -1,0 +1,125 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-30 09:31:27.080263",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "activity",
+  "sub_activity",
+  "college",
+  "column_break_lkvk",
+  "from_year",
+  "to_year",
+  "unit",
+  "include_in_apa",
+  "section_break_kuxe",
+  "items",
+  "section_break_htio",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_htio",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Additional Sub Activities",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "activity",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Activity",
+   "options": "Additional Activities",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sub_activity",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Sub Activity",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_lkvk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "college",
+   "fieldtype": "Link",
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "from_year",
+   "fieldtype": "Link",
+   "label": "From Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_year",
+   "fieldtype": "Link",
+   "label": "To Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_kuxe",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "options": "Output Category Item"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "APA Unit",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "include_in_apa",
+   "fieldtype": "Check",
+   "label": "Include in APA"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-03-30 16:28:14.021759",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "Additional Sub Activities",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

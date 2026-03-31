@@ -37,9 +37,9 @@
    "fetch_from": "club_name.club_name",
    "fieldname": "club_action_plan_name",
    "fieldtype": "Data",
+   "hidden": 1,
    "in_list_view": 1,
-   "label": "Club Action Plan Name",
-   "reqd": 1
+   "label": "Club Action Plan Name"
   },
   {
    "fieldname": "academic_term",
@@ -97,7 +97,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-11 15:36:01.244253",
+ "modified": "2026-03-18 10:11:09.115264",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Club Action Plan",

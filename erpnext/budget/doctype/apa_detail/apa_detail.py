@@ -15,9 +15,11 @@ class APADetail(Document):
 		from frappe.types import DF
 
 		activities: DF.SmallText | None
-		activities_no: DF.Link | None
+		activities_no: DF.Int
 		activity_link: DF.Link | None
 		approved_budget: DF.Currency
+		is_capital: DF.Check
+		is_current: DF.Check
 		output: DF.SmallText | None
 		output_no: DF.Int
 		parent: DF.Data

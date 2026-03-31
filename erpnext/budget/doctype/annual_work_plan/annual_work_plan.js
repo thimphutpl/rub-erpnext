@@ -17,7 +17,42 @@ frappe.ui.form.on("Annual Work Plan", {
 				}
 			};
 		});
+        if(frm.doc.is_capital){
+            frm.set_value("is_current", 0)
+        }
+        if(frm.doc.is_current){
+            frm.set_value("is_capital", 0)
+            frm.set_value("funding_source", "")
+        }
 	},
+    setup: function(frm) {
+        frm.fields_dict["apa_extra_details"].grid.get_field("project_no").get_query = function(doc, cdt, cdn) {
+            let row = locals[cdt][cdn];
+
+            return {
+                filters: {
+                    planning_output: row.output_no || ""
+                }
+            };
+        };
+        frm.fields_dict["apa_extra_details"].grid.get_field("activity_link").get_query = function(doc, cdt, cdn) {
+            let row = locals[cdt][cdn];
+
+            return {
+                filters: {
+                    project: row.project_no || "",
+                    college: frm.doc.colleges || ""
+                }
+            };
+        };
+        frm.set_query("colleges", function () {
+            return {
+                filters: {
+                    is_group: 0,
+                },
+            };
+        });
+    },
     get_planning_info: function(frm){
         frappe.call({
             method:"erpnext.budget.doctype.five_year_plan_proposal.five_year_plan_proposal.fetch_budgetplan",
@@ -40,9 +75,10 @@ frappe.ui.form.on("Annual Work Plan", {
                             child.activities= row.activities
                             child.project = row.project
                             child.activity_link = row.activity_link
-
                             child.output_no = row.output_si_no
                             child.project_no = row.project_si_no
+                            child.is_current = row.is_current
+                            child.is_capital = row.is_capital
                             // child.competency = row.competency_item;
                             // child.description = row.description;
                         });
@@ -59,4 +95,27 @@ frappe.ui.form.on("Annual Work Plan", {
             frm: cur_frm
         });
 	},
+});
+
+frappe.ui.form.on("APA Detail Extra", {
+    output_no: function(frm, cdt, cdn) {
+        frm.refresh_field("apa_extra_details");
+    },
+    
+    is_current: function(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+
+        if (row.is_current) {
+            frappe.model.set_value(cdt, cdn, "is_capital", 0);
+            frappe.model.set_value(cdt, cdn, "funding_source", "");
+        }
+    },
+
+    is_capital: function(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+
+        if (row.is_capital) {
+            frappe.model.set_value(cdt, cdn, "is_current", 0);
+        }
+    }
 });

@@ -17,11 +17,13 @@ class PlanningActivities(Document):
 
 		activities: DF.SmallText | None
 		amended_from: DF.Link | None
-		from_date: DF.Date | None
+		from_date: DF.Date
+		funding_source: DF.Link | None
 		is_capital: DF.Check
 		is_current: DF.Check
 		items: DF.Table[OutputCategoryItem]
 		project: DF.Link | None
-		to_date: DF.Date | None
+		to_date: DF.Date
+		unit: DF.Link
 	# end: auto-generated types
 	pass

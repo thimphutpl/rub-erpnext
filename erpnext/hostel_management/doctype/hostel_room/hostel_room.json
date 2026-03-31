@@ -14,6 +14,8 @@
   "company",
   "college_abbreviation",
   "cost_center",
+  "catering_type",
+  "hostel_room_sub_category",
   "hostel_asset_items_section",
   "hostel_room_item",
   "student_list_section",
@@ -102,12 +104,24 @@
    "fieldname": "room_description",
    "fieldtype": "Text",
    "label": "Room Description"
+  },
+  {
+   "fieldname": "catering_type",
+   "fieldtype": "Select",
+   "label": "Catering Type",
+   "options": "\nMess\nSelf-catering"
+  },
+  {
+   "fieldname": "hostel_room_sub_category",
+   "fieldtype": "Link",
+   "label": "Hostel Room Sub Category",
+   "options": "Hostel Room Sub Category"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-28 11:41:26.787921",
+ "modified": "2026-03-19 14:53:07.557389",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Room",

@@ -16,10 +16,12 @@ class HostelRoom(Document):
 
 		amended_from: DF.Link | None
 		capacity: DF.Int
+		catering_type: DF.Literal["", "Mess", "Self-catering"]
 		college_abbreviation: DF.Data | None
 		company: DF.Link
 		cost_center: DF.Link
 		hostel_room_item: DF.Table[Document]
+		hostel_room_sub_category: DF.Link | None
 		hostel_type: DF.Link | None
 		room_description: DF.Text | None
 		room_number: DF.Data | None

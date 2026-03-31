@@ -10,7 +10,7 @@ def execute(filters=None):
 
 def get_column(filters):
     columns = [
-		("Case") + ":Link/Court Tracking System:150",
+		("Case") + ":Link/Case Tracking System:150",
 		("Case Type") + ":Data:200",
         ("Date") + ":Date:120",
         ("Branch") + ":Data:200",
@@ -83,8 +83,8 @@ def get_data(filters):
             current_status          
 			
 			
-		FROM `tabCourt Tracking System` 
-        WHERE docstatus = 1 {condition}
+		FROM `tabCase Tracking System` 
+        WHERE docstatus = 0 {condition}
 	""".format(condition=cond))
 
 # WHERE docstatus = 1 {condition}

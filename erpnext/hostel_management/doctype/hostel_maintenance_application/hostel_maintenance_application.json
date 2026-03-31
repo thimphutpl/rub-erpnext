@@ -18,6 +18,7 @@
   "phone_number",
   "branch",
   "cost_center",
+  "fiscal_year",
   "hostel_maintenance_request_section",
   "maintenance_type",
   "maintenance_required_on",
@@ -26,6 +27,12 @@
   "column_break_gyul",
   "damage_type",
   "description_of_maintenance",
+  "check_in_and_out_link_section",
+  "hostel_check_in_form",
+  "column_break_jerm",
+  "hostel_check_out_form",
+  "section_break_gcld",
+  "check_out_list",
   "section_break_cpso",
   "get_asset_list",
   "assets",
@@ -207,13 +214,54 @@
    "fieldname": "attach_picture",
    "fieldtype": "Attach Image",
    "label": "Attach Picture"
+  },
+  {
+   "fieldname": "check_in_and_out_link_section",
+   "fieldtype": "Section Break",
+   "label": "Check In and Out Link."
+  },
+  {
+   "fieldname": "hostel_check_in_form",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Hostel Check In Form",
+   "options": "Hostel Check-In Form"
+  },
+  {
+   "fieldname": "column_break_jerm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hostel_check_out_form",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Hostel Check Out Form",
+   "options": "Hostel Check-Out Form"
+  },
+  {
+   "fieldname": "section_break_gcld",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "check_out_list",
+   "fieldtype": "Table",
+   "label": "Check Out List",
+   "options": "Hostel Check Out Item"
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "label": "Fiscal Year",
+   "options": "Fiscal Year",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-17 11:44:45.428175",
+ "modified": "2026-03-30 10:55:43.550861",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Maintenance Application",

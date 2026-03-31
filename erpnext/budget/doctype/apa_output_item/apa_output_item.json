@@ -10,6 +10,7 @@
   "project_no",
   "activities_no",
   "activity_link",
+  "sub_activity_no",
   "unit",
   "weightage",
   "target",
@@ -21,6 +22,7 @@
   "output",
   "project",
   "activities",
+  "sub_activity",
   "justification",
   "self_rating",
   "category"
@@ -139,13 +141,27 @@
    "fieldtype": "Float",
    "label": "Weighted Score",
    "read_only": 1
+  },
+  {
+   "fieldname": "sub_activity_no",
+   "fieldtype": "Link",
+   "label": "Sub Activity No",
+   "options": "APA Sub Activities",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sub_activity",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Sub Activity",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-03 16:13:52.227580",
+ "modified": "2026-03-30 20:50:15.409419",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "APA Output Item",

@@ -22,5 +22,6 @@ class Club(Document):
 		club_management: DF.Table[ClubManagementDetails]
 		club_name: DF.Data
 		company: DF.Link
+		minimum_year_required_for_certification: DF.Data | None
 	# end: auto-generated types
 	pass

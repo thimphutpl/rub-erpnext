@@ -126,7 +126,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Payment Type",
+   "label": "Payment Type/ Receipt Type",
    "options": "Receive\nPay\nInternal Transfer",
    "print_hide": 1,
    "reqd": 1
@@ -147,7 +147,7 @@
   {
    "fieldname": "company",
    "fieldtype": "Link",
-   "label": "Company",
+   "label": "College",
    "options": "Company",
    "print_hide": 1,
    "remember_last_selected_value": 1,
@@ -828,8 +828,8 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2025-10-28 10:10:21.093555",
- "modified_by": "Administrator",
+ "modified": "2026-03-26 16:45:46.193942",
+ "modified_by": "sangay.choden@thimphutechpark.bt",
  "module": "Accounts",
  "name": "Payment Entry",
  "naming_rule": "By \"Naming Series\" field",

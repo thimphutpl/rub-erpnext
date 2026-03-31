@@ -18,9 +18,13 @@ class BudgetSettings(Document):
 		allow_budget_deviation: DF.Check
 		allowed_account_types: DF.Table[BudgetSettingsAccountTypes]
 		allowed_transactions: DF.Table[BudgetTransaction]
+		awp_from_date: DF.Date | None
+		awp_to_date: DF.Date | None
 		budget_against: DF.Literal["Cost Center", "Project"]
 		budget_commit_on: DF.Literal["Purchase Order", "Material Request"]
 		deviation: DF.Percent
+		fypp_from_date: DF.Date | None
+		fypp_to_date: DF.Date | None
 		monthly_budget_check: DF.Check
 	# end: auto-generated types
 	pass

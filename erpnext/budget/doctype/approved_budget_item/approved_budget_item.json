@@ -8,18 +8,21 @@
  "field_order": [
   "column_break_encl",
   "output_no",
+  "output",
   "project_no",
-  "activities_no",
-  "activity_link",
+  "project",
   "reappropiation_received",
   "reappropiation_sent",
   "supplementary_received",
-  "initial_approved_budget",
+  "withdrawal_amount",
   "column_break_orjw",
-  "output",
-  "project",
+  "activities_no",
+  "activity_link",
   "activities",
-  "approved_budget"
+  "initial_approved_budget",
+  "approved_budget",
+  "is_current",
+  "is_capital"
  ],
  "fields": [
   {
@@ -31,7 +34,8 @@
    "fieldname": "approved_budget",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Approved Budget"
+   "label": "Approved Budget (In Million)",
+   "read_only": 1
   },
   {
    "fieldname": "output_no",
@@ -90,21 +94,21 @@
    "default": "0",
    "fieldname": "reappropiation_received",
    "fieldtype": "Currency",
-   "label": "Reappropiation Received",
+   "label": "Reappropiation Received (In Million)",
    "read_only": 1
   },
   {
    "default": "0",
    "fieldname": "reappropiation_sent",
    "fieldtype": "Currency",
-   "label": "Reappropiation Sent",
+   "label": "Reappropiation Sent (In Million)",
    "read_only": 1
   },
   {
    "default": "0",
    "fieldname": "supplementary_received",
    "fieldtype": "Currency",
-   "label": "Supplementary Received",
+   "label": "Supplementary Received (In Million)",
    "read_only": 1
   },
   {
@@ -112,7 +116,27 @@
    "default": "0",
    "fieldname": "initial_approved_budget",
    "fieldtype": "Currency",
-   "label": "Initial Approved Budget",
+   "label": "Initial Approved Budget (In Million)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_current",
+   "fieldtype": "Check",
+   "label": "Is Current",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_capital",
+   "fieldtype": "Check",
+   "label": "Is Capital",
+   "read_only": 1
+  },
+  {
+   "fieldname": "withdrawal_amount",
+   "fieldtype": "Currency",
+   "label": "Withdrawal Amount (In Million)",
    "read_only": 1
   }
  ],
@@ -120,7 +144,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-04 00:23:46.250432",
+ "modified": "2026-03-26 17:05:20.388924",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Approved Budget Item",

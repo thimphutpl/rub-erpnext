@@ -69,6 +69,7 @@ frappe.ui.form.on("Hostel Maintenance Application", {
 		})
 	},
 	applied_by: function (frm) {
+		fetch_checkin_form(frm);
 		// frappe.throw("hh")
 		if (frm.doc.applied_by) {
 			frappe.call({
@@ -87,8 +88,40 @@ frappe.ui.form.on("Hostel Maintenance Application", {
 			});
 		}
 		
-	}
+	},
+	fiscal_year: function(frm) {
+        fetch_checkin_form(frm);
+        fetch_checkout_form(frm);
+    }
 });
+
+function fetch_checkin_form(frm) {
+    console.log("Student:", frm.doc.applied_by);
+    console.log("Fiscal Year:", frm.doc.fiscal_year);
+
+    if (!frm.doc.applied_by || !frm.doc.fiscal_year) {
+        console.log("Missing values");
+        return;
+    }
+
+    frappe.call({
+        method: "erpnext.hostel_management.doctype.hostel_maintenance_application.hostel_maintenance_application.get_hostel_checkin_form",
+        args: {
+            applied_by: frm.doc.applied_by,
+            fiscal_year: frm.doc.fiscal_year
+        },
+        callback: function(r) {
+            console.log("Response:", r);
+
+            if (r.message) {
+                frm.set_value("hostel_check_in_form", r.message);
+            } else {
+                console.log("No data found");
+                frm.set_value("hostel_check_in_form", "");
+            }
+        }
+    });
+}
 
 frappe.ui.form.on('Hostel Asset Maintenance', {
 	asset: function(frm, cdt, cdn) {

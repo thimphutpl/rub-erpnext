@@ -15,42 +15,80 @@ class AnnualWorkPlan(Document):
 
 	if TYPE_CHECKING:
 		from erpnext.budget.doctype.apa_detail.apa_detail import APADetail
+		from erpnext.budget.doctype.apa_detail_extra.apa_detail_extra import APADetailExtra
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
 		apa_copies: DF.Check
 		apa_details: DF.Table[APADetail]
+		apa_extra_details: DF.Table[APADetailExtra]
 		colleges: DF.Link
+		from_year: DF.Link
 		fyp: DF.Link
 		remarks: DF.SmallText | None
+		to_year: DF.Link
 		total_approved_budget: DF.Currency
 		total_proposed_budget: DF.Currency
-		year: DF.Link
 	# end: auto-generated types
 	pass
+
+	def autoname(self):
+		abbr = frappe.db.get_value("Company", self.colleges, "abbr")
+		self.name = "AWP/"+"/"+self.from_year+"/"+self.to_year+"/"+abbr
 
 	def validate(self):
 		self.validate_college()
 		self.validate_budget()
-		# self.validate_approved_budget()
-		self.calculate_proposed_budget()
-		self.calculate_approved_budget()
-	
-	def validate_approved_budget(self):
-		for row in self.apa_details:
-			if not row.approved_budget or row.approved_budget <= 0:
-				frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
+		self.validate_proposed_and_approved_budget()
+		self.calculate_proposed_and_approved_budget()
+		self.apply_proposed_to_approved()
 
-	def calculate_proposed_budget(self):
+	def apply_proposed_to_approved(self):
+		actions = get_apply_reapply_actions("Annual Work Plan", self.name)
+		# frappe.throw(str(actions))
+		if frappe.form_dict.get("action") == "Apply":
+			if self.apa_details:
+				for row in self.apa_details:
+					row.approved_budget = row.proposed_budget
+
+			if self.apa_extra_details:
+				for row in self.apa_extra_details:
+					row.approved_budget = row.proposed_budget
+
+	def validate_proposed_and_approved_budget(self):
+		if self.apa_details:
+			for row in self.apa_details:
+				if not row.proposed_budget or row.proposed_budget <= 0:
+					frappe.throw("Proposed budget not set or is zero for row: {0}".format(row.idx))
+
+				if frappe.form_dict.get("action") != "Apply" and self.workflow_state != "Draft":
+					if not row.approved_budget or row.approved_budget <= 0:
+						frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
+
+		if self.apa_extra_details:
+			for row in self.apa_extra_details:
+				# if not row.proposed_budget or row.proposed_budget <= 0:
+				# 	frappe.throw("Proposed budget not set or is zero for row: {0} in additional activities".format(row.idx))
+
+				if frappe.form_dict.get("action") != "Apply" and self.workflow_state != "Draft":
+					if not row.approved_budget or row.approved_budget <= 0:
+						frappe.throw("Approved budget not set or is zero for row: {0} in additional activities".format(row.idx))
+
+	def calculate_proposed_and_approved_budget(self):
 		total_proposed_budget = 0
-		for row in self.apa_details:
-			total_proposed_budget += flt(row.proposed_budget)
-		self.total_proposed_budget = total_proposed_budget
-
-	def calculate_approved_budget(self):
 		total_approved_budget = 0
-		for row in self.apa_details:
-			total_approved_budget += flt(row.approved_budget)
+
+		if self.apa_details:
+			for row in self.apa_details:
+				total_approved_budget += flt(row.approved_budget)
+				total_proposed_budget += flt(row.proposed_budget)
+				
+		if self.apa_extra_details:
+			for row in self.apa_extra_details:
+				total_approved_budget += flt(row.approved_budget)
+				total_proposed_budget += flt(row.proposed_budget)
+
+		self.total_proposed_budget = total_proposed_budget
 		self.total_approved_budget = total_approved_budget
 
 	def validate_college(self):
@@ -59,8 +97,9 @@ class AnnualWorkPlan(Document):
 			FROM `tabFive Year Plan Proposal`
 			WHERE colleges = %s 
 			AND %s BETWEEN from_year AND to_year
+			AND %s BETWEEN from_year AND to_year
 			AND docstatus = 1
-		""", (self.colleges, self.year), as_dict=True)
+		""", (self.colleges, self.from_year, self.to_year), as_dict=True)
 		if len(proposal_list) <= 0:
 			frappe.throw(_("No proposed budget found for college: {0} in the five year plan proposal".format(self.colleges)))
 
@@ -73,14 +112,15 @@ class AnnualWorkPlan(Document):
 				ON fyp.name = fypi.parent
 			WHERE fyp.name = %s 
 			AND %s BETWEEN fyp.from_year AND fyp.to_year
+			AND %s BETWEEN fyp.from_year AND fyp.to_year
 			AND fyp.docstatus = 1
 			ORDER BY fypi.idx
-		""", (self.fyp, self.year), as_dict=True)
+		""", (self.fyp, self.from_year, self.to_year), as_dict=True)
 
 		if not approved_budget_list:
 			frappe.throw(
-				_("No budget found for year {0} in Five Year Plan")
-				.format(self.year)
+				_("No budget found for year {0} - {1} in Five Year Plan")
+				.format(self.from_year, self.to_year)
 			)
 
 		# Get Already Approved Budget from Annual Work Plan
@@ -89,9 +129,9 @@ class AnnualWorkPlan(Document):
 			FROM `tabAnnual Work Plan` awp
 			INNER JOIN `tabAPA Detail` awpi 
 				ON awp.name = awpi.parent
-			WHERE awp.year = %s and awp.docstatus = 1
+			WHERE awp.from_year = %s and awp.to_year = %s and awp.docstatus = 1
 			ORDER BY awpi.idx
-		""", (self.year,), as_dict=True)
+		""", (self.from_year, self.to_year), as_dict=True)
 
 		approved_budget_map = {}
 		for d in approved_budget_list:
@@ -116,8 +156,8 @@ class AnnualWorkPlan(Document):
 
 			if not available_budget:
 				frappe.throw(
-					_("No approved budget found for Activity: {0}")
-					.format(row.activity_link)
+					_("No approved budget found for Activity: <b>{0}</>")
+					.format(row.activities)
 				)
 
 			total_budget = (
@@ -127,8 +167,8 @@ class AnnualWorkPlan(Document):
 
 			if total_budget > available_budget:
 				frappe.throw(
-					_("Approved budget for Activity {0} exceeds available budget ({1})")
-					.format(row.activity_link, available_budget)
+					_("Approved budget for Activity <b>{0}<b/> exceeds available budget <b>({1})</b>")
+					.format(row.activities, available_budget)
 				)
 
 @frappe.whitelist()
@@ -219,7 +259,7 @@ def create_apa_for_subsidiaries(apa_name):
 def make_approved_budget(source_name, target_doc=None):
     def set_missing_values(source, target):
         target.college = source.colleges
-        target.fiscal_year = source.year
+        # target.from_year = source.year
 
     doc = get_mapped_doc(
         "Annual Work Plan",   # Source DocType
@@ -233,6 +273,11 @@ def make_approved_budget(source_name, target_doc=None):
                 "field_map": {
                     "approved_budget": "initial_approved_budget"
                 }
+            },
+            "APA Detail Extra": {
+                "doctype": "Approved Budget Extra Item",
+                "field_map": {
+                }
             }
         },
         target_doc,
@@ -240,3 +285,37 @@ def make_approved_budget(source_name, target_doc=None):
     )
 
     return doc
+
+def get_apply_reapply_actions(doctype, docname=None):
+	"""
+	Returns workflow actions 'Apply' and 'Re-Apply' available for a doc or doctype.
+	"""
+	actions = []
+
+	# Get workflow assigned to this doctype
+	workflow_name = frappe.db.get_value("Workflow", {"document_type": doctype}, "name")
+	if not workflow_name:
+		return actions  # No workflow defined
+	# Get transitions for this workflow
+	transitions = frappe.get_all(
+		"Workflow Transition",
+		filters={"parent": workflow_name},
+		fields=["action", "state", "next_state"]
+	)
+
+	# If a docname is given, get current workflow state
+	current_state = None
+	if docname:
+		current_state = frappe.db.get_value(doctype, docname, "workflow_state")
+
+	# Filter actions
+	for t in transitions:
+		if t["action"] in ["Apply", "Re-Apply"]:
+			# If docname given, only include actions valid for current state
+			if current_state:
+				if t["state"] == current_state:
+					actions.append(t["action"])
+			else:
+				actions.append(t["action"])
+
+	return actions

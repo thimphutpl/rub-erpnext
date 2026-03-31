@@ -19,6 +19,8 @@ class ApprovedBudgetItem(Document):
 		activity_link: DF.Link | None
 		approved_budget: DF.Currency
 		initial_approved_budget: DF.Currency
+		is_capital: DF.Check
+		is_current: DF.Check
 		output: DF.SmallText | None
 		output_no: DF.Int
 		parent: DF.Data
@@ -29,5 +31,6 @@ class ApprovedBudgetItem(Document):
 		reappropiation_received: DF.Currency
 		reappropiation_sent: DF.Currency
 		supplementary_received: DF.Currency
+		withdrawal_amount: DF.Currency
 	# end: auto-generated types
 	pass

@@ -3415,7 +3415,8 @@ def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_curre
 		for i in doc.items:
 			dis_acc += flt(i.amount_discount)
 		# frappe.throw(str(discount_amount))
-		outstanding_amount = doc.total-doc.taxes_and_charges_deducted-doc.write_off_amount-doc.total_advance-dis_acc
+		# outstanding_amount = doc.total-doc.taxes_and_charges_deducted-doc.write_off_amount-doc.total_advance-dis_acc
+		outstanding_amount = doc.grand_total
 		# frappe.throw(str(outstanding_amount))
 		
 	elif dt == "Dunning":

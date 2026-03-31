@@ -90,7 +90,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Hostel Block",
-   "options": "Hostel Counsellor",
+   "options": "Hostel Councillor",
    "reqd": 1
   },
   {
@@ -118,7 +118,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-04 15:18:50.707775",
+ "modified": "2026-03-22 09:36:21.633271",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Budget",

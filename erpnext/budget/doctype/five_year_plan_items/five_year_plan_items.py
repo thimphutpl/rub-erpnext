@@ -18,6 +18,8 @@ class FiveYearPlanItems(Document):
 		activities_no: DF.Link | None
 		activity_link: DF.Link | None
 		approved_budget: DF.Currency
+		is_capital: DF.Check
+		is_current: DF.Check
 		output: DF.SmallText | None
 		output_no: DF.Int
 		parent: DF.Data

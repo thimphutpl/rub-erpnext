@@ -1,0 +1,146 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-17 14:55:50.589106",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "column_break_faex",
+  "output_no",
+  "output",
+  "project_no",
+  "project",
+  "activity_link",
+  "activities",
+  "column_break_orjw",
+  "sub_activity_link",
+  "sub_activity",
+  "proposed_budget",
+  "approved_budget",
+  "is_capital",
+  "is_current",
+  "funding_source"
+ ],
+ "fields": [
+  {
+   "fieldname": "column_break_faex",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 2,
+   "fieldname": "proposed_budget",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Proposed Budget (In Million)",
+   "precision": "3"
+  },
+  {
+   "columns": 2,
+   "fieldname": "approved_budget",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Approved Budget (In Million)",
+   "precision": "3"
+  },
+  {
+   "fieldname": "output_no",
+   "fieldtype": "Link",
+   "label": "Output No",
+   "options": "Planning Output"
+  },
+  {
+   "fieldname": "project_no",
+   "fieldtype": "Link",
+   "label": "Project No",
+   "options": "Planning Project"
+  },
+  {
+   "columns": 2,
+   "fetch_from": "output_no.output",
+   "fieldname": "output",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Output",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fetch_from": "activity_link.activities",
+   "fieldname": "activities",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Activity",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fetch_from": "project_no.project",
+   "fieldname": "project",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Project",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_orjw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_capital",
+   "fieldtype": "Check",
+   "label": "Is Capital"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_current",
+   "fieldtype": "Check",
+   "label": "Is Current"
+  },
+  {
+   "depends_on": "eval:doc.is_capital == 1",
+   "fieldname": "funding_source",
+   "fieldtype": "Link",
+   "label": "Funding Source",
+   "mandatory_depends_on": "eval:doc.is_capital == 1",
+   "options": "Funding Source"
+  },
+  {
+   "columns": 2,
+   "fieldname": "activity_link",
+   "fieldtype": "Link",
+   "label": "Activity Link",
+   "options": "Additional Activities"
+  },
+  {
+   "columns": 2,
+   "fieldname": "sub_activity_link",
+   "fieldtype": "Link",
+   "label": "Sub Activity Link",
+   "options": "Additional Sub Activities"
+  },
+  {
+   "columns": 2,
+   "fetch_from": "sub_activity_link.sub_activity",
+   "fieldname": "sub_activity",
+   "fieldtype": "Small Text",
+   "label": "Sub Activity",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-30 11:15:16.330897",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "APA Detail Extra",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

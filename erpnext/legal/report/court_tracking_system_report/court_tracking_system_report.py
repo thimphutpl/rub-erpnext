@@ -13,9 +13,9 @@ def get_columns(filters):
 	column = [
 		{
 			"fieldname": "court_tracking_id",
-			"label": "Court Tracking System",
+			"label": "Case Tracking System",
 			"fieldtype": "Link",
-			"options": "Court Tracking System",
+			"options": "Case Tracking System",
 			"width": 170
 		},
 		{
@@ -25,15 +25,33 @@ def get_columns(filters):
 			"width": 100
 		},
 		{
+			"fieldname": "referring_agency",
+			"label": "Referring Agency",
+			"fieldtype": "Data",
+			"width": 250
+		},
+		{
 			"fieldname": "branch",
 			"label": "Branch",
 			"fieldtype": "Data",
-			"width": 100
+			"width": 200
 		},
 		{
 			"fieldname": "date",
 			"label": "Date of Registration/Filing/Complaint",
 			"fieldtype": "Date",
+			"width": 150
+		},
+		{
+			"fieldname": "status",
+			"label": "Case Status",
+			"fieldtype": "Data",
+			"width": 150
+		},
+			{
+			"fieldname": "date",
+			"label": "Date of Registration/Filing/Complaint",
+			"fieldtype": "Data",
 			"width": 150
 		},
 		
@@ -93,27 +111,27 @@ def get_columns(filters):
 				"width": 130
 			}
 		])
-	elif filters.get('case_type') == 'Counter Litigation':
-		column.extend([
-			{
-				"fieldname": "court_venue",
-				"label": "Court Venue",
-				"fieldtype": "Data",
-				"width": 100
-			},
-			{
-				"fieldname": "borrower_filed_by",
-				"label": "Borrower/Filed By Name",
-				"fieldtype": "Data",
-				"width": 130
-			},
-			{
-				"fieldname": "cid_license_number",
-				"label": "CID/License Number",
-				"fieldtype": "Data",
-				"width": 130
-			},
-		])
+	# elif filters.get('case_type') == 'Civil Litigation':
+	# 	column.extend([
+	# 		{
+	# 			"fieldname": "court_venue",
+	# 			"label": "Court Venue",
+	# 			"fieldtype": "Data",
+	# 			"width": 100
+	# 		},
+	# 		{
+	# 			"fieldname": "borrower_filed_by",
+	# 			"label": "Borrower/Filed By Name",
+	# 			"fieldtype": "Data",
+	# 			"width": 130
+	# 		},
+	# 		{
+	# 			"fieldname": "cid_license_number",
+	# 			"label": "CID/License Number",
+	# 			"fieldtype": "Data",
+	# 			"width": 130
+	# 		},
+	# 	])
 
 	return column
 
@@ -133,7 +151,7 @@ def get_data(filters):
 				a.case_type,
 				a.investigation,
 				a.date
-			FROM `tabCourt Tracking System` a
+			FROM `tabCase Tracking System` a
 			WHERE a.docstatus = 1
 			AND a.date BETWEEN '{from_date}' AND '{to_date}'
 			{cond}
@@ -149,26 +167,12 @@ def get_data(filters):
 			a.case_type,
 			a.court_venue,
 			a.date,
-			a.borrower_filed_by,
-			a.loan_account_no,
-			a.cid_license_number,
-			b.case_status,
-			b.case_description,
-			b.date AS case_date
-		FROM `tabCourt Tracking System` a
-		JOIN (
-			SELECT b1.*
-			FROM `tabCourt Status` b1
-			INNER JOIN (
-				SELECT parent, MAX(date) AS max_date
-				FROM `tabCourt Status`
-				WHERE date BETWEEN '{from_date}' AND '{to_date}'
-				GROUP BY parent
-			) b2 ON b1.parent = b2.parent AND b1.date = b2.max_date
-		) b ON b.parent = a.name
-		WHERE a.docstatus = 1
+			a.referring_agency,
+			a.status
+		FROM `tabCase Tracking System` a
+		WHERE a.docstatus = 0
 		{cond}
-		ORDER BY b.date DESC
+		ORDER BY a.date DESC
 		""".format(cond=condition, from_date=filters.get('from_date'), to_date=filters.get('to_date'))
 	
 	result = frappe.db.sql(query, as_dict=1)

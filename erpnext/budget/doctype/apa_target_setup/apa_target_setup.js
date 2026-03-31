@@ -5,14 +5,32 @@ frappe.ui.form.on("APA Target Setup", {
 	refresh(frm) {
 
 	},
-    fiscal_year: function(frm) {
+    setup(frm) {
+        frm.set_query("college", function () {
+            return {
+                filters: {
+                    is_group: 0,
+                },
+            };
+        });
+    },
+    from_year: function(frm) {
+        frm.trigger("get_proposal_details");
+    },
+    to_year: function(frm) {
+        frm.trigger("get_proposal_details");
+    },
+    college: function(frm) {
         frm.trigger("get_proposal_details");
     },
     get_proposal_details: function(frm){
-        frappe.call({
-            method:"erpnext.budget.doctype.apa_target_setup.apa_target_setup.fetch_output_and_outcome",
-            args: {
-                    fiscal_year: frm.doc.fiscal_year
+        if(frm.doc.from_year && frm.doc.to_year && frm.doc.college){
+            frappe.call({
+                method:"erpnext.budget.doctype.apa_target_setup.apa_target_setup.fetch_output_and_outcome",
+                args: {
+                    from_year: frm.doc.from_year,
+                    to_year: frm.doc.to_year,
+                    college: frm.doc.college
                 },
                 callback: function(r) {
                     if (r.message.output) {
@@ -31,9 +49,30 @@ frappe.ui.form.on("APA Target Setup", {
                             child.activities_no = row.activities_no
                             child.unit = row.unit
                             child.weightage = row.weightage
+                            child.sub_activity_no = row.sub_activity_no
+                            child.sub_activity = row.sub_activity
                         });
     
                         frm.refresh_field("output_items");
+                    }
+                    if (r.message.output_extra) {
+                        console.log(r.message.output_extra)
+                        frm.clear_table("output_extra_items");
+
+                        r.message.output_extra.forEach(function(row) {
+                            let child = frm.add_child("output_extra_items");
+                            child.output = row.output
+                            child.activities= row.activities
+                            child.project = row.project
+
+                            child.output_no = row.output_no
+                            child.project_no = row.project_no
+                            child.unit = row.unit
+                            child.weightage = row.weightage
+                            child.sub_activity = row.sub_activity
+                        });
+    
+                        frm.refresh_field("output_extra_items");
                     }
                     if (r.message.outcome) {
                         console.log(r.message.outcome)
@@ -49,6 +88,7 @@ frappe.ui.form.on("APA Target Setup", {
                         frm.refresh_field("outcome_items");
                     }
                 }
-        })
+            })
+        }
     }
 });

@@ -6,10 +6,15 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "fiscal_year",
+  "from_year",
+  "college",
+  "column_break_guvh",
+  "to_year",
   "output_details_section",
   "get_planning_info",
   "items",
+  "section_break_sgph",
+  "additional_activities",
   "section_break_hpax",
   "amended_from"
  ],
@@ -29,14 +34,6 @@
    "search_index": 1
   },
   {
-   "fieldname": "fiscal_year",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Fiscal Year",
-   "options": "Fiscal Year",
-   "reqd": 1
-  },
-  {
    "fieldname": "output_details_section",
    "fieldtype": "Section Break",
    "label": "Output Details"
@@ -50,13 +47,49 @@
    "fieldname": "get_planning_info",
    "fieldtype": "Button",
    "label": "Get Planning Info"
+  },
+  {
+   "fieldname": "from_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "From Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "college",
+   "fieldtype": "Link",
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_guvh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "to_year",
+   "fieldtype": "Link",
+   "label": "To Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_sgph",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "additional_activities",
+   "fieldtype": "Table",
+   "label": "Additional Activities",
+   "options": "Output Extra Item"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-25 17:26:39.109308",
- "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "modified": "2026-03-28 16:17:49.579069",
+ "modified_by": "Administrator",
  "module": "Budget",
  "name": "Output Indicator",
  "naming_rule": "Expression (old style)",

@@ -110,6 +110,8 @@ def get_data(filters):
 
 	college = filters.get("college")
 	fiscal_year = filters.get("fiscal_year")
+	from_date = filters.get("from_date")
+	end_date = filters.get("to_date")
 
 	if college and fiscal_year:
 		for i in data:
@@ -119,10 +121,10 @@ def get_data(filters):
 			abi.activity_link,abi.initial_approved_budget from `tabApproved Budget Item` abi 
 			inner join `tabApproved Budget` ab on abi.parent=ab.name 
 			where ab.college=%s 
-			and fiscal_year=%s
+			and %s >= from_year and %s <= to_year
 			and activity_link = %s
 			and ab.docstatus=1
-			''',(college, fiscal_year, i.activities))
+			''',(college, fiscal_year,fiscal_year, i.activities))
 			# frappe.throw(str(budgets))
 			# approved_budget = budgets[0][0]
 			# approved_budget = budgets[0][0] if budgets and budgets[0][0] else 0
@@ -183,7 +185,7 @@ def get_data(filters):
 
 			available = flt(current) - consumed
 
-			i['initial'] = initial_approved_budget
+			i['initial'] = flt(initial_approved_budget)
 			i['reappropiation_received'] = reappropiation_received
 			i['reappropiation_sent'] = reappropiation_sent
 			i['supplementary_received'] = supplementary_received

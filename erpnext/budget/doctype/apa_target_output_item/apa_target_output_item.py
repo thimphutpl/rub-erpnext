@@ -25,6 +25,8 @@ class APATargetOutputItem(Document):
 		parenttype: DF.Data
 		project: DF.SmallText | None
 		project_no: DF.Int
+		sub_activity: DF.SmallText | None
+		sub_activity_no: DF.Link | None
 		target: DF.Data | None
 		unit: DF.Link | None
 		weightage: DF.Percent

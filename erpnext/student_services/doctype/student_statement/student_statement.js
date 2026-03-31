@@ -16,11 +16,11 @@ frappe.ui.form.on("Student Statement", {
         
         });
         frm.call("has_disciplinary_action").then((r) => {
-			if (!r.message.has_travel_claim) {
+			if (!r.message.has_disciplinary_action) {
 				
 
 				if (
-					frm.doc.docstatus === 1 && frm.doc.disciplinary_issue_type=='Major Issue' &&
+					frm.doc.docstatus === 1 &&
 					frappe.model.can_create("Disciplinary Action")
 				) {
 				

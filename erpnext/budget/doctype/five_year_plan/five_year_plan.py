@@ -30,9 +30,8 @@ class FiveYearPlan(Document):
 
 	def validate(self):
 		self.check_fyp_year()
-		self.validate_approved_budget()
-		self.calculate_proposed_budget()
-		self.calculate_approved_budget()
+		self.validate_proposed_and_approved_budget()
+		self.calculate_proposed_and_approved_budget()
 
 	def check_fyp_year(self):
 		fyp = frappe.db.sql('''
@@ -42,21 +41,22 @@ class FiveYearPlan(Document):
 		if fyp:
 			frappe.throw("Five Year Plan from year {0} to {1}".format(self.from_year, self.to_year))
 
-	def validate_approved_budget(self):
+	def validate_proposed_and_approved_budget(self):
 		for row in self.items:
+			if not row.proposed_budget or row.proposed_budget <= 0:
+				frappe.throw("Proposed budget not set or is zero for row: {0}".format(row.idx))
+
 			if not row.approved_budget or row.approved_budget <= 0:
 				frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
 
-	def calculate_proposed_budget(self):
+	def calculate_proposed_and_approved_budget(self):
 		total_proposed_budget = 0
-		for row in self.items:
-			total_proposed_budget += flt(row.proposed_budget)
-		self.total_proposed_budget = total_proposed_budget
-
-	def calculate_approved_budget(self):
 		total_approved_budget = 0
+
 		for row in self.items:
 			total_approved_budget += flt(row.approved_budget)
+			total_proposed_budget += flt(row.proposed_budget)
+		self.total_proposed_budget = total_proposed_budget
 		self.total_approved_budget = total_approved_budget
 
 @frappe.whitelist()
@@ -83,7 +83,9 @@ def fetch_budgetplan(from_year, to_year):
 			pp.serial_number as project_si_no, 
 			pp.project, 
 			pa.activities, 
-			pa.name as activity_link
+			pa.name as activity_link,
+			pa.is_current,
+			pa.is_capital
 		FROM `tabPlanning Output` po 
 		INNER JOIN `tabPlanning Project` pp ON po.name = pp.planning_output 
 		INNER JOIN `tabPlanning Activities` pa ON pa.project = pp.name 
@@ -149,13 +151,13 @@ def create_awp_for_subsidiaries(fyp_name):
 
     for college in colleges:
         # prevent duplicate FYP per college
-        if frappe.db.exists("Annual Work Plan", {
-            "colleges": college["name"],
-            "fyp": fyp.name,
-            "fiscal_year": now_datetime().year
-			# "apa_details": fyp.items
-        }):
-            continue
+        # if frappe.db.exists("Annual Work Plan", {
+        #     "colleges": college["name"],
+        #     "fyp": fyp.name,
+        #     "from_year": fyp.from_year
+		# 	# "apa_details": fyp.items
+        # }):
+        #     continue
 
         awp = frappe.new_doc("Annual Work Plan")
 
@@ -165,13 +167,14 @@ def create_awp_for_subsidiaries(fyp_name):
             for key, value in fyp.as_dict().items()
             if key not in (
                 "name", "doctype", "owner", "creation", "modified",
-                "modified_by", "docstatus", "amended_from"
+                "modified_by", "docstatus", "amended_from", "from_year", "to_year"
             )
         })
 
         awp.colleges = college["name"]
-        awp.year = now_datetime().year
-        awp.fyp = fyp.name  # recommended tracking
+        awp.from_year = now_datetime().year
+        awp.to_year = now_datetime().year + 1
+        awp.fyp = fyp.name 
         awp.workflow_state = "Draft"
 
         awp.insert(ignore_permissions=True)

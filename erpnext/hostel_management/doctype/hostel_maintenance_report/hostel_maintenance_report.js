@@ -92,7 +92,7 @@ frappe.ui.form.on("Hostel Maintenance Report", {
 				}
 			});
 		}
-	}
+	},
 });
 
 function update_child_table_columns(frm) {

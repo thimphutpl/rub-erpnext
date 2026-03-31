@@ -1,0 +1,23 @@
+{
+ "content": null,
+ "creation": "2026-03-16 12:49:52.998662",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2026-03-16 12:55:33.542381",
+ "modified_by": "Administrator",
+ "module": "Student Services",
+ "name": "feedback-student",
+ "owner": "Administrator",
+ "page_name": "feedback-student",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "Feedback From Students"
+}

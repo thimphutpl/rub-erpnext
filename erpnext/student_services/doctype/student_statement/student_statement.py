@@ -48,8 +48,8 @@ class StudentStatement(Document):
 	@frappe.whitelist()
 	def has_disciplinary_action(self) -> dict[str, bool]:
 		da = frappe.qb.DocType("Disciplinary Action")
-
-		travel_claim = (
+		
+		dis_action= (
 			frappe.qb.from_(da)
 			.select(da.name)
 			.where(
@@ -59,7 +59,7 @@ class StudentStatement(Document):
 		).run(as_dict=True)
 
 		return {
-			"has_disciplinary_action": bool(travel_claim)
+			"has_disciplinary_action": bool(dis_action)
 		}
 
 

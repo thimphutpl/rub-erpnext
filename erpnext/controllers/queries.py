@@ -193,22 +193,30 @@ def filter_college_programme_modules(doctype, txt, searchfield, start, page_len,
 	# fields = get_fields(doctype, ["fb.name", "fb.company"])
 	searchfields = frappe.get_meta(doctype).get_search_fields()
 	searchfields = " or ".join("m."+field + " like %(txt)s" for field in searchfields)
+	tutor_cond = ""
 	if not filters.get("college"):
 		frappe.throw("Please select College")
 	if not filters.get("programme"):
 		frappe.throw("Please select Programme")
 	if not filters.get("academic_session"):
 		frappe.throw("Please select Academic Term")
+	if filters.get("check_tutor") == 1:
+		if frappe.db.exists("Employee", {"user_id": filters.get("user")}):
+			tutor_cond = " and mti.tutor = '{}'".format(frappe.db.get_value("Employee", {"user_id": filters.get("user")}, "name"))
+		else:
+			tutor_cond = " and mti.tutor = '{}'".format(frappe.session.user)
 	semesters = []
 	for a in frappe.get_all("Semester", {"session": filters.get("academic_session")}):
 		semesters.append(a.name)
 	return frappe.db.sql(
-		"""select m.name, m.module_code from `tabModule` m, `tabModule College` c
+		"""select m.name, m.module_code from `tabModule` m, `tabModule College` c, `tabModule Tutor Item` mti
 		where
 			c.parent = m.name
+			and mti.parent = m.name
 			and c.college = '{company}'
 			and c.programme = '{programme}'
 			and c.module_semester in ({semesters})
+			{tutor_cond}
 			and (m.{key} like %(txt)s
 				or m.name like %(txt)s
 				or c.college like %(txt)s
@@ -221,12 +229,44 @@ def filter_college_programme_modules(doctype, txt, searchfield, start, page_len,
 			company = filters.get("college"),
 			programme = filters.get("programme"),
 			semesters = ", ".join("'"+m+"'" for m in semesters),
+			tutor_cond = tutor_cond,
 			**{
 				"key": searchfield,
 				"scond": searchfields,
 			}
 		),
 		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	)
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_programme(doctype, txt, searchfield, start, page_len, filters):
+	if not filters.get("date"):
+		frappe.msgprint(_("Please set <strong>Enrollment Date</strong> or <strong>Posting Date</strong> first."))
+		return []
+	if filters.get("validate") == 1:
+		if not filters.get("college"):
+			frappe.msgprint(_("Please select College first."))
+			return []
+
+
+	doctype = "Programme"
+	return frappe.db.sql(
+		"""select m.name, m.abbreviation, mc.company as college from `tabProgramme` m, `tabColleges` mc
+        where  m.name = mc.parent and mc.company = %(college)s and m.name like %(txt)s
+		and %(date)s >= mc.from_date and %(date)s <= mc.to_date
+        order by
+            if(locate(%(_txt)s, m.name), locate(%(_txt)s, m.name), 99999),
+            m.name asc
+        limit {start}, {page_len}""".format(
+			start=start, page_len=page_len
+		),
+		{
+			"txt": "%{0}%".format(txt),
+			"_txt": txt.replace("%", ""),
+			"college": filters.get("college"),
+			"date": filters.get("date"),
+		},
 	)
 
 #Following added by Kinley Dorji 2026/01/12
@@ -351,17 +391,35 @@ def filter_module_enrolment_key(doctype, txt, searchfield, start, page_len, filt
 	# 	frappe.throw("Only Students are allowed to submit Module Enrolment Documents.", title="Not Permitted")
 
 	student_batch = frappe.db.get_value("Student", {"user": filters.get("student_id")}, "student_batch")
+	# frappe.log_error(str(filters.get("student_id")))
 	# current_academic_term = frappe.db.get_value("Academic Term", {"term_start_date": ["<=", filters.get("enrollment_date")], "term_end_date": [">=", filters.get("enrollment_date")]})
 	current_academic_term = frappe.db.sql("select name from `tabAcademic Term` where '{0}' >= term_start_date and '{0}' <= term_end_date".format(filters.get("enrollment_date")),as_dict=1)
 	if len(current_academic_term) > 0:
 		current_academic_term = current_academic_term[0].name
 	searchfields = frappe.get_meta(doctype).get_search_fields()
 	# searchfields = " or ".join("m."+field + " like %(txt)s" for field in searchfields)
+	# return frappe.db.sql(
+	# 	"""select mek.name, mek.module from `tabModule Enrolment Key` mek
+	# 	where
+	# 		mek.student_batch = '{batch}'
+	# 		and mek.academic_term = '{academic_term}'
+	# 	order by
+	# 		mek.module asc
+	# 	limit %(page_len)s offset %(start)s""".format(
+	# 		batch = student_batch,
+	# 		academic_term = current_academic_term,
+	# 		**{
+	# 			"key": searchfield,
+	# 			"scond": searchfields,
+	# 		}
+	# 	),
+	# 	{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	# )
 	return frappe.db.sql(
 		"""select mek.name, mek.module from `tabModule Enrolment Key` mek
 		where
 			mek.student_batch = '{batch}'
-			and mek.academic_term = '{academic_term}'
+			and mek.docstatus = 1
 		order by
 			mek.module asc
 		limit %(page_len)s offset %(start)s""".format(
@@ -374,6 +432,7 @@ def filter_module_enrolment_key(doctype, txt, searchfield, start, page_len, filt
 		),
 		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
 	)
+
 
 #Following added by Kinley Dorji 2026/02/27
 # searches for tutors of a module in college

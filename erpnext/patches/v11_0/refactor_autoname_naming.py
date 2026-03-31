@@ -55,7 +55,7 @@ doctype_series_map = {
 	"Plant Analysis": "AG-PLA-.YYYY.-.#####",
 	"POS Closing Entry": "POS-CLO-.YYYY.-.#####",
 	"Prepared Report": "SYS-PREP-.YYYY.-.#####",
-	"Program Enrollment": "EDU-ENR-.YYYY.-.#####",
+	"Program Enrolment": "EDU-ENR-.YYYY.-.#####",
 	"Quotation Item": "",
 	"Restaurant Reservation": "RES-RES-.YYYY.-.#####",
 	"Retention Bonus": "HR-RTB-.YYYY.-.#####",

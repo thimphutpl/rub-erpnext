@@ -5,6 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import flt
 from frappe import _
+from frappe.model.naming import make_autoname
 
 class SupplementaryBudgets(Document):
 	# begin: auto-generated types
@@ -20,18 +21,26 @@ class SupplementaryBudgets(Document):
 		approver_designation: DF.Data | None
 		approver_name: DF.Data | None
 		budget_activity: DF.Link
+		budget_output: DF.Link
+		budget_project: DF.Link
+		budget_type: DF.Literal["", "Current", "Capital"]
 		college: DF.Link
-		fiscal_year: DF.Link
+		from_year: DF.Link
 		posting_date: DF.Date
 		remarks: DF.SmallText | None
 		supplement_amount: DF.Currency
+		to_year: DF.Link
 	# end: auto-generated types
-	
+
+	def autoname(self):
+		self.name = make_autoname(
+			f"SB/{self.from_year}-{self.to_year}/.##"
+		)	
 	def validate(self):
 		self.validate_budget()
 
 	def validate_budget(self):
-		if not self.fiscal_year or not self.college or not self.budget_activity:
+		if not self.from_year or not self.to_year or not self.college or not self.budget_activity:
 			frappe.throw(
 				_("Select College, From Activity and Fiscal Year First")
 			)
@@ -41,16 +50,17 @@ class SupplementaryBudgets(Document):
 			INNER JOIN `tabApproved Budget Item` abi 
 				ON ab.name = abi.parent
 			WHERE ab.college = %s
-			AND ab.fiscal_year = %s
+			AND ab.from_year = %s
+			AND ab.to_year = %s
 			AND ab.docstatus = 1
 			AND abi.activity_link = %s
 			ORDER BY abi.idx
-		""", (self.college, self.fiscal_year, self.budget_activity), as_dict=True)
+		""", (self.college, self.from_year, self.to_year, self.budget_activity), as_dict=True)
 
 		if not self.approved_budget_list:
 			frappe.throw(
-				_("No budget found for year {0} in Approved Budget")
-				.format(self.fiscal_year)
+				_("No budget or activity found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b> in Approved Budget")
+				.format(self.from_year, self.to_year, self.college)
 			)
 
 	def on_submit(self):
@@ -64,7 +74,8 @@ class SupplementaryBudgets(Document):
 			"Approved Budget",
 			{
 				"college": self.college,
-				"fiscal_year": self.fiscal_year,
+				"from_year": self.from_year,
+				"to_year": self.to_year,
 				"docstatus": 1
 			},
 		)

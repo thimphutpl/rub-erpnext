@@ -12,6 +12,8 @@
   "posting_date",
   "hostel_councellor",
   "fiscal_year",
+  "section_break_ugky",
+  "hostel_councillor",
   "section_break_lxei",
   "table_tulk",
   "section_break_zkj9",
@@ -57,7 +59,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Hostel Block",
-   "options": "Hostel Counsellor",
+   "options": "Hostel Councillor",
    "reqd": 1
   },
   {
@@ -80,17 +82,28 @@
    "fetch_from": "hostel_block.hostel_councellor",
    "fieldname": "hostel_councellor",
    "fieldtype": "Link",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Hostel Councellor",
    "options": "Student"
+  },
+  {
+   "fieldname": "section_break_ugky",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "hostel_councillor",
+   "fieldtype": "Table",
+   "label": "Hostel Councillor",
+   "options": "Hostel Councillor Item"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-03 22:50:24.481906",
- "modified_by": "mon.chhetri@thimphutechpark.bt",
+ "modified": "2026-03-23 10:58:18.707395",
+ "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Attendance",
  "naming_rule": "Expression",

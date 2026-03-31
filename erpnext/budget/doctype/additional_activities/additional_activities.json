@@ -1,0 +1,148 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-30 09:31:03.529756",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "college",
+  "activities",
+  "unit",
+  "column_break_jhsc",
+  "from_year",
+  "to_year",
+  "is_capital",
+  "is_current",
+  "funding_source",
+  "applicable_in_apa",
+  "section_break_upwi",
+  "items",
+  "references_section",
+  "project",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Planning Project",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_jhsc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "activities",
+   "fieldtype": "Small Text",
+   "label": "Activities"
+  },
+  {
+   "fieldname": "references_section",
+   "fieldtype": "Section Break",
+   "label": "References"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Additional Activities",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_capital",
+   "fieldtype": "Check",
+   "label": "Is Capital"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_current",
+   "fieldtype": "Check",
+   "label": "is Current"
+  },
+  {
+   "fieldname": "section_break_upwi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "options": "Output Category Item"
+  },
+  {
+   "depends_on": "eval:doc.is_capital == 1",
+   "fieldname": "funding_source",
+   "fieldtype": "Link",
+   "label": "Funding Source",
+   "mandatory_depends_on": "eval:doc.is_capital == 1",
+   "options": "Funding Source"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "APA Unit",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "applicable_in_apa",
+   "fieldtype": "Check",
+   "label": "Applicable in APA"
+  },
+  {
+   "fieldname": "college",
+   "fieldtype": "Link",
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "from_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "From Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "To Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-03-30 11:19:07.169948",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "Additional Activities",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

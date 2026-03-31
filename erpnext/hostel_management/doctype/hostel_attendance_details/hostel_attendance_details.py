@@ -14,7 +14,7 @@ class HostelAttendanceDetails(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		attendance: DF.Literal["Present", "Absent"]
+		attendance: DF.Literal["Present", "Absent", "Leave"]
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data

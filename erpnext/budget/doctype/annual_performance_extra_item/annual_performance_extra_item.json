@@ -1,0 +1,181 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-28 18:02:39.251193",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "output_no",
+  "output",
+  "project_no",
+  "project",
+  "activity_no",
+  "activity_link",
+  "activities",
+  "unit",
+  "weightage",
+  "target",
+  "raw_rating",
+  "means_of_verification",
+  "irt_rating",
+  "weighted_score",
+  "column_break_faex",
+  "sub_activity_link",
+  "sub_activity",
+  "justification",
+  "self_rating",
+  "category",
+  "activities_no"
+ ],
+ "fields": [
+  {
+   "fieldname": "column_break_faex",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "output_no",
+   "fieldtype": "Int",
+   "label": "Output No",
+   "options": "Planning Output",
+   "read_only": 1
+  },
+  {
+   "fieldname": "activities_no",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Activities No",
+   "options": "Planning Activities",
+   "read_only": 1
+  },
+  {
+   "fieldname": "project_no",
+   "fieldtype": "Int",
+   "label": "Project No",
+   "options": "Planning Project",
+   "read_only": 1
+  },
+  {
+   "fieldname": "output",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Output",
+   "read_only": 1
+  },
+  {
+   "fieldname": "activities",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Activity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Project",
+   "read_only": 1
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Unit",
+   "options": "APA Unit",
+   "read_only": 1
+  },
+  {
+   "fieldname": "weightage",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Weightage",
+   "read_only": 1
+  },
+  {
+   "fieldname": "self_rating",
+   "fieldtype": "Data",
+   "label": "Self Rating"
+  },
+  {
+   "fieldname": "raw_rating",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Raw Rating"
+  },
+  {
+   "fieldname": "justification",
+   "fieldtype": "Small Text",
+   "label": "Justification"
+  },
+  {
+   "fieldname": "means_of_verification",
+   "fieldtype": "Data",
+   "label": "Means Of Verification"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Data",
+   "label": "Category",
+   "read_only": 1
+  },
+  {
+   "fieldname": "target",
+   "fieldtype": "Data",
+   "label": "Target",
+   "read_only": 1
+  },
+  {
+   "fieldname": "irt_rating",
+   "fieldtype": "Data",
+   "label": "IRT Rating",
+   "read_only": 1
+  },
+  {
+   "fieldname": "weighted_score",
+   "fieldtype": "Float",
+   "label": "Weighted Score",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sub_activity",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Sub Activity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "activity_no",
+   "fieldtype": "Int",
+   "label": "Activity No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "activity_link",
+   "fieldtype": "Link",
+   "label": "Activity Link",
+   "options": "Additional Activities",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sub_activity_link",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Sub Activity Link",
+   "options": "Additional Sub Activities"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-30 10:37:23.290994",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "Annual Performance Extra Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

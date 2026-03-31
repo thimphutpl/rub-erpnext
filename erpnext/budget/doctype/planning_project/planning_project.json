@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "PP.#####",
+ "autoname": "format:Project {serial_number}",
  "creation": "2025-11-25 14:01:05.237189",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -57,26 +57,24 @@
    "fieldname": "from_date",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "From Date",
-   "read_only": 1
+   "label": "From Date"
   },
   {
    "fieldname": "to_date",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "To Date",
-   "read_only": 1
+   "label": "To Date"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-03 20:14:50.662468",
+ "modified": "2026-03-25 19:38:34.503995",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Planning Project",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
@@ -97,5 +95,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
+ "title_field": "project",
  "track_changes": 1
 }

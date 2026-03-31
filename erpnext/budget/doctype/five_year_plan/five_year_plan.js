@@ -60,6 +60,9 @@ frappe.ui.form.on("Five Year Plan", {
                             child.project_no = row.project_si_no
                             child.activity_link = row.activity_link
                             child.proposed_budget = row.amount
+                            child.approved_budget = row.amount
+                            child.is_current = row.is_current
+                            child.is_capital = row.is_capital
                             // child.competency = row.competency_item;
                             // child.description = row.description;
                         });

@@ -94,7 +94,7 @@
   {
    "fieldname": "total_approved_budget",
    "fieldtype": "Currency",
-   "label": "Total Approved Budget",
+   "label": "Total Approved Budget (In Million)",
    "read_only": 1
   },
   {
@@ -104,7 +104,9 @@
   {
    "fieldname": "total_proposed_budget",
    "fieldtype": "Currency",
-   "label": "Total Proposed Budget"
+   "label": "Total Proposed Budget (In Million)",
+   "precision": "3",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_cixu",
@@ -115,7 +117,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-03 23:53:59.988080",
+ "modified": "2026-03-31 15:08:33.478245",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Five Year Plan",
@@ -131,6 +133,52 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Budget Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Budget User",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Budget Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Budget User",
    "share": 1,
    "submit": 1,
    "write": 1

@@ -180,7 +180,19 @@
   "lft",
   "rgt",
   "old_parent",
-  "old_employee_id"
+  "old_employee_id",
+  "employee_research_tab",
+  "research_articles",
+  "section_break_dvmp",
+  "journals",
+  "section_break_zsbg",
+  "conference_seminar_paper",
+  "section_break_tnyk",
+  "book_chapters",
+  "section_break_ymfq",
+  "knowledge_transfer_and_community_service",
+  "section_break_yugd",
+  "research_event_organized"
  ],
  "fields": [
   {
@@ -232,7 +244,9 @@
   {
    "fieldname": "company",
    "fieldtype": "Link",
-   "label": "Company",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "College",
    "options": "Company",
    "print_hide": 1,
    "remember_last_selected_value": 1
@@ -1231,6 +1245,67 @@
    "fieldtype": "Data",
    "label": "Selected Doc",
    "read_only": 1
+  },
+  {
+   "fieldname": "employee_research_tab",
+   "fieldtype": "Tab Break",
+   "label": "Employee Research"
+  },
+  {
+   "fieldname": "research_articles",
+   "fieldtype": "Table",
+   "label": "Research Articles",
+   "options": "Employee Research Item"
+  },
+  {
+   "fieldname": "section_break_dvmp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "journals",
+   "fieldtype": "Table",
+   "label": "Journals ",
+   "options": "Journals Item"
+  },
+  {
+   "fieldname": "section_break_zsbg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "conference_seminar_paper",
+   "fieldtype": "Table",
+   "label": "Conference Seminar Paper",
+   "options": "Conference Seminar Paper Item"
+  },
+  {
+   "fieldname": "section_break_tnyk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "book_chapters",
+   "fieldtype": "Table",
+   "label": "Book Chapters",
+   "options": "Book Chapters Item"
+  },
+  {
+   "fieldname": "section_break_ymfq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "knowledge_transfer_and_community_service",
+   "fieldtype": "Table",
+   "label": "Knowledge Transfer and Community Service",
+   "options": "Knowledge Transfer and Community Service"
+  },
+  {
+   "fieldname": "section_break_yugd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "research_event_organized",
+   "fieldtype": "Table",
+   "label": "Research Event Organized",
+   "options": "Research Event Organized Item"
   }
  ],
  "icon": "fa fa-user",
@@ -1238,8 +1313,8 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2026-02-23 23:27:29.921291",
- "modified_by": "sonam.zangmo@thimphutechpark.bt",
+ "modified": "2026-03-31 08:59:25.749910",
+ "modified_by": "Administrator",
  "module": "Setup",
  "name": "Employee",
  "naming_rule": "By \"Naming Series\" field",

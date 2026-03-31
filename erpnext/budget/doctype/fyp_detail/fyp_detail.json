@@ -7,15 +7,17 @@
  "engine": "InnoDB",
  "field_order": [
   "output_no",
+  "output",
   "project_no",
+  "project",
   "activities_no",
-  "proposed_budget",
   "activity_link",
   "column_break_faex",
-  "output",
-  "project",
   "activities",
-  "approved_budget"
+  "proposed_budget",
+  "approved_budget",
+  "is_current",
+  "is_capital"
  ],
  "fields": [
   {
@@ -26,13 +28,15 @@
    "fieldname": "proposed_budget",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Proposed Budget"
+   "label": "Proposed Budget (In Million)",
+   "precision": "3"
   },
   {
    "fieldname": "approved_budget",
    "fieldtype": "Currency",
    "hidden": 1,
-   "label": "Approved Budget"
+   "label": "Approved Budget (In Million)",
+   "precision": "3"
   },
   {
    "fieldname": "output_no",
@@ -79,13 +83,27 @@
    "fieldtype": "Link",
    "label": "Activity Link",
    "options": "Planning Activities"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_current",
+   "fieldtype": "Check",
+   "label": "Is Current",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_capital",
+   "fieldtype": "Check",
+   "label": "Is Capital",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-08 16:31:10.352539",
+ "modified": "2026-03-25 18:56:34.690572",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "FYP Detail",

@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"woGTogBK9d\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Epayment</span>\",\"col\":12}},{\"id\":\"aJjsXZQq80\",\"type\":\"card\",\"data\":{\"card_name\":\"Epayment Setting\",\"col\":4}}]",
+ "content": "[{\"id\":\"woGTogBK9d\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Epayment</span>\",\"col\":12}}]",
  "creation": "2024-11-23 12:03:55.730002",
  "custom_blocks": [],
  "docstatus": 0,
@@ -17,25 +17,6 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Bank Payment Settings",
-   "link_count": 1,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Bank Payment Settings",
-   "link_count": 0,
-   "link_to": "Bank Payment Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Bank Payment Settings",
    "link_count": 0,
    "link_to": "Bank Payment Settings",
    "link_type": "DocType",
@@ -43,7 +24,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-11-25 18:25:12.011260",
+ "modified": "2026-03-02 12:54:29.457563",
  "modified_by": "Administrator",
  "module": "ePayment",
  "name": "ePayment",

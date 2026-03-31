@@ -6,13 +6,16 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "fiscal_year",
-  "column_break_unjg",
+  "from_year",
   "college",
+  "column_break_unjg",
+  "to_year",
   "apa_outcome_details_section",
   "outcome_items",
   "apa_output_details_section",
   "output_items",
+  "apa_output_additional_details_section_2b_section",
+  "output_extra_items",
   "section_break_vnzx",
   "outcome_rating",
   "outcome_calculation",
@@ -52,14 +55,6 @@
   {
    "fieldname": "column_break_unjg",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "fiscal_year",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Fiscal Year",
-   "options": "Fiscal Year",
-   "reqd": 1
   },
   {
    "fieldname": "apa_output_details_section",
@@ -141,13 +136,39 @@
    "label": "Output Value",
    "precision": "2",
    "read_only": 1
+  },
+  {
+   "fieldname": "from_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "From Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "To Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "apa_output_additional_details_section_2b_section",
+   "fieldtype": "Section Break",
+   "label": "APA Output Additional Details (Section 2B)"
+  },
+  {
+   "fieldname": "output_extra_items",
+   "fieldtype": "Table",
+   "options": "Annual Performance Extra Item"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-03 16:32:39.013834",
+ "modified": "2026-03-28 18:06:55.201303",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Annual Performance Assessment",

@@ -17,10 +17,20 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Masters and Settings",
-   "link_count": 4,
+   "link_count": 5,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Budget Settings",
+   "link_count": 0,
+   "link_to": "Budget Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   },
   {
    "hidden": 0,
@@ -65,8 +75,57 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Budgeting Consumption Report",
+   "link_count": 0,
+   "link_to": "Budgeting Consumption",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Supplementary Budget Report",
+   "link_count": 0,
+   "link_to": "Supplementary Budget Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Budget Reappropriation Report",
+   "link_count": 0,
+   "link_to": "Budget Reappropriation Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Budget Variance Report",
+   "link_count": 0,
+   "link_to": "Budget Variance Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Budget",
-   "link_count": 3,
+   "link_count": 4,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -104,137 +163,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Reports",
-   "link_count": 6,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Budget Consumption Report",
+   "label": "Budget Withdrawal",
    "link_count": 0,
-   "link_to": "Budget Consumption Report",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Detailed Budget Consumption Report",
-   "link_count": 0,
-   "link_to": "Detailed Budget Consumption Report",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Supplementary Budget Report",
-   "link_count": 0,
-   "link_to": "Supplementary Budget Report",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Committed Budget Report",
-   "link_count": 0,
-   "link_to": "Committed Budget Report",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Budget Reappropriation Report",
-   "link_count": 0,
-   "link_to": "Budget Reappropriation Report",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Budget Variance Report",
-   "link_count": 0,
-   "link_to": "Budget Variance Report",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Transactions",
-   "link_count": 6,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Five Year Plan Proposal",
-   "link_count": 0,
-   "link_to": "Five Year Plan Proposal",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Five Year Plan",
-   "link_count": 0,
-   "link_to": "Five Year Plan",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Annual Work Plan",
-   "link_count": 0,
-   "link_to": "Annual Work Plan",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "APA Calender",
-   "link_count": 0,
-   "link_to": "APA Calender",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "APA Settings",
-   "link_count": 0,
-   "link_to": "APA Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "APA Target Setup",
-   "link_count": 0,
-   "link_to": "APA Target Setup",
+   "link_to": "Budget Withdrawal",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -243,7 +174,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Annual Performance Assessment",
-   "link_count": 8,
+   "link_count": 10,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -301,6 +232,16 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "APA Sub Activities",
+   "link_count": 0,
+   "link_to": "APA Sub Activities",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Output Indicator",
    "link_count": 0,
    "link_to": "Output Indicator",
@@ -321,15 +262,74 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "APA Mid Term Review",
+   "link_count": 0,
+   "link_to": "APA Mid Term Review",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Annual Performance Assessment",
    "link_count": 0,
    "link_to": "Annual Performance Assessment",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Transactions",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Five Year Plan Proposal",
+   "link_count": 0,
+   "link_to": "Five Year Plan Proposal",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Five Year Plan",
+   "link_count": 0,
+   "link_to": "Five Year Plan",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Additional Activities",
+   "link_count": 0,
+   "link_to": "Additional Activities",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Annual Work Plan",
+   "link_count": 0,
+   "link_to": "Annual Work Plan",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-03-02 19:53:24.115201",
+ "modified": "2026-03-31 14:28:17.434649",
  "modified_by": "sonam.bomjan@thimphutechpark.bt",
  "module": "Budget",
  "name": "Planning & Budget",

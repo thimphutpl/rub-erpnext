@@ -23,6 +23,7 @@
   "domain",
   "date_of_establishment",
   "parent_company",
+  "logo",
   "company_info",
   "company_logo",
   "date_of_incorporation",
@@ -63,6 +64,7 @@
   "payment_terms",
   "cost_center",
   "default_finance_book",
+  "default_income_hall",
   "exchange_gain__loss_section",
   "exchange_gain_loss_account",
   "column_break_sttp",
@@ -1150,6 +1152,17 @@
    "fieldtype": "Link",
    "label": "Student Leave Application Approval Notification Template",
    "options": "Email Template"
+  },
+  {
+   "fieldname": "logo",
+   "fieldtype": "Attach",
+   "label": "Logo"
+  },
+  {
+   "fieldname": "default_income_hall",
+   "fieldtype": "Link",
+   "label": "Default Income Hall",
+   "options": "Account"
   }
  ],
  "icon": "fa fa-building",
@@ -1157,7 +1170,7 @@
  "image_field": "company_logo",
  "is_tree": 1,
  "links": [],
- "modified": "2026-03-04 16:15:07.865780",
+ "modified": "2026-03-20 11:56:51.757022",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",

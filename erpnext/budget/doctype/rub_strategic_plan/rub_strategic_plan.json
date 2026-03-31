@@ -1,7 +1,6 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:name1",
  "creation": "2025-11-25 12:16:54.744474",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -67,11 +66,10 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-25 12:38:48.858486",
+ "modified": "2026-03-22 13:26:50.977736",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "RUB Strategic Plan",
- "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

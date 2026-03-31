@@ -13,6 +13,7 @@
   "club_capacity",
   "column_break_zmxl",
   "abbr",
+  "minimum_year_required_for_certification",
   "club_mangement_section",
   "club_management",
   "club_activities_section",
@@ -78,13 +79,18 @@
    "fieldname": "club_management",
    "fieldtype": "Table",
    "options": "Club Management Details"
+  },
+  {
+   "fieldname": "minimum_year_required_for_certification",
+   "fieldtype": "Data",
+   "label": "Minimum Year Required for Certification "
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-15 12:20:01.767565",
- "modified_by": "kalden.dorji@thimphutechpark.bt",
+ "modified": "2026-03-18 10:23:40.947329",
+ "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Club",
  "naming_rule": "Expression",

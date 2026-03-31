@@ -14,6 +14,7 @@ class HostelMaintenanceApplication(Document):
 
 	if TYPE_CHECKING:
 		from erpnext.hostel_management.doctype.hostel_asset_maintenance.hostel_asset_maintenance import HostelAssetMaintenance
+		from erpnext.hostel_management.doctype.hostel_check_out_item.hostel_check_out_item import HostelCheckOutItem
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
@@ -22,12 +23,16 @@ class HostelMaintenanceApplication(Document):
 		attach_picture: DF.AttachImage | None
 		available_time: DF.Time | None
 		branch: DF.Link | None
+		check_out_list: DF.Table[HostelCheckOutItem]
 		college: DF.Link | None
 		cost_center: DF.Link | None
 		damage_type: DF.Literal["Vandalism", "Loss or Misuse of Property", "Damage to Shared Facilities"]
 		description_of_maintenance: DF.SmallText | None
 		first_name: DF.Data | None
+		fiscal_year: DF.Link
 		full_name: DF.Data | None
+		hostel_check_in_form: DF.Link | None
+		hostel_check_out_form: DF.Link | None
 		hostel_maintenance_report: DF.Data | None
 		hostel_room: DF.Link | None
 		hostel_type: DF.Data | None
@@ -102,4 +107,19 @@ def get_hostel_room_by_student(applied_by):
 		LIMIT 1
 	""", applied_by)
 	return room[0][0] if room else None
+
+@frappe.whitelist()
+def get_hostel_checkin_form(applied_by, fiscal_year):
+    result = frappe.db.sql("""
+        SELECT hci.name
+        FROM `tabHostel Check-In Form` hci
+        INNER JOIN `tabCheck-In Students Items` cisi
+            ON cisi.parent = hci.name
+        WHERE cisi.student_code = %s
+        AND hci.fiscal_year = %s
+        AND hci.docstatus = 1
+        LIMIT 1
+    """, (applied_by, fiscal_year), as_dict=True)
+
+    return result[0].name if result else None 	
 	

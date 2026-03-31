@@ -12,19 +12,28 @@ class ApprovedBudget(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
+		from erpnext.budget.doctype.approved_budget_extra_item.approved_budget_extra_item import ApprovedBudgetExtraItem
 		from erpnext.budget.doctype.approved_budget_item.approved_budget_item import ApprovedBudgetItem
 		from frappe.types import DF
 
+		ab_extra_item: DF.Table[ApprovedBudgetExtraItem]
 		amended_from: DF.Link | None
 		college: DF.Link
-		fiscal_year: DF.Link
+		from_year: DF.Link
 		items: DF.Table[ApprovedBudgetItem]
+		to_year: DF.Link
 		total_approved_budget: DF.Currency
 	# end: auto-generated types
 	
 	def validate(self):
 		self.check_approved_budget()
+		self.validate_approved_budget()
 		self.calculate_approved_budget()
+
+	def validate_approved_budget(self):
+		for row in self.items:
+			if not row.approved_budget or row.approved_budget <= 0:
+				frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
 
 	def calculate_approved_budget(self):
 		total_approved_budget = 0
@@ -35,8 +44,8 @@ class ApprovedBudget(Document):
 	def check_approved_budget(self):
 		fyp = frappe.db.sql('''
 			SELECT name FROM `tabApproved Budget` 
-			WHERE fiscal_year = %s and college = %s and docstatus = 1
-		''',(self.fiscal_year, self.college), as_dict=True)
+			WHERE from_year = %s and to_year = %s and college = %s and docstatus = 1
+		''',(self.from_year, self.to_year, self.college), as_dict=True)
 		if fyp:
-			frappe.throw("Approved Budget exists for year {0}".format(self.fiscal_year))
+			frappe.throw("Approved Budget exists for year {0}".format(self.from_year))
 
