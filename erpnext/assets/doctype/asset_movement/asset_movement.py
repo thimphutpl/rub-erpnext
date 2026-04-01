@@ -366,19 +366,20 @@ class AssetMovement(Document):
 						"company": self.company,
 					}
 			)
-			je_from.append(
-					"accounts",
-					{
-						"account": ad_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.company,"abbr")),
-						"against": fa_account,
-						"debit": flt(accumulated_dep,2),
-						"debit_in_account_currency": flt(accumulated_dep,2),
-						"reference_name": self.name,
-						"reference_type": self.doctype,
-						"cost_center": a.source_cost_center,
-						"company": self.company
-					}
-			)
+			if flt(accumulated_dep) > 0: 
+				je_from.append(
+						"accounts",
+						{
+							"account": ad_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.company,"abbr")),
+							"against": fa_account,
+							"debit": flt(accumulated_dep,2),
+							"debit_in_account_currency": flt(accumulated_dep,2),
+							"reference_name": self.name,
+							"reference_type": self.doctype,
+							"cost_center": a.source_cost_center,
+							"company": self.company
+						}
+				)
 			je_from.insert()
 			je_from.submit()
 			je_to = frappe.new_doc("Journal Entry")
@@ -415,19 +416,20 @@ class AssetMovement(Document):
 						"company": self.to_company
 					}
 			)
-			je_to.append(
-				"accounts",
-					{
-						"account": ad_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.to_company,"abbr")),
-						"against": fa_account,
-						"credit": flt(accumulated_dep,2),
-						"credit_in_account_currency": flt(accumulated_dep,2),
-						"reference_name": self.name,
-						"reference_type": self.doctype,
-						"cost_center": a.target_cost_center,
-						"company": self.to_company
-					}
-			)
+			if flt(accumulated_dep) > 0:
+				je_to.append(
+					"accounts",
+						{
+							"account": ad_account.replace(" - RUB", " - "+frappe.db.get_value("Company",self.to_company,"abbr")),
+							"against": fa_account,
+							"credit": flt(accumulated_dep,2),
+							"credit_in_account_currency": flt(accumulated_dep,2),
+							"reference_name": self.name,
+							"reference_type": self.doctype,
+							"cost_center": a.target_cost_center,
+							"company": self.to_company
+						}
+				)
 			je_to.insert()
 			je_to.submit()
 
