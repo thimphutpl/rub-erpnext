@@ -196,6 +196,13 @@ def get_data(filters):
 
     if filters.asset_code:
         query +=" and a.name in %(asset_code)s "
+    if filters.custodian_type and filters.custodian:
+        if filters.custodian_type == "Employee":
+            query += " and a.custodian = '{}'".format(filters.custodian)
+        elif filters.custodian_type == "Room":
+            query += " and a.roombuilding = '{}'".format(filters.custodian)
+        elif filters.custodian_type == "Hostel Room":
+            query += " and a.hostel = '{}'".format(filters.custodian)
 
     asset_data = frappe.db.sql(query, filters, as_dict=True)
     depreciation_details, depreciation_details_two = get_depreciation_details(filters)

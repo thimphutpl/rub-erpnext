@@ -93,7 +93,32 @@ frappe.query_reports["Asset Register"] = {
 				return frappe.db.get_link_options('Asset', txt);
 			}
 		},
-
+		{
+			"fieldname": "custodian_type",
+			"label": __("Custodian Type"),
+			"fieldtype": "Select",
+			"options": ["", "Employee", "Room", "Hostel Room"],
+		},
+		{
+			"fieldname": "custodian",
+			"label": __("Custodian"),
+			"fieldtype": "Dynamic Link",
+			get_options: function () {
+				var custodian_type = frappe.query_report.get_filter_value("custodian_type");
+				var custodian = frappe.query_report.get_filter_value("custodian");
+				if (custodian && !custodian_type) {
+					frappe.throw(__("Please select Custodian Type first"));
+				}
+				return custodian_type;
+			},
+			get_query: function () {
+				return {
+				  filters: {
+					company: frappe.query_report.get_filter_value('company'),
+				  },
+				}
+			  },
+		},
 	]
 }
 
