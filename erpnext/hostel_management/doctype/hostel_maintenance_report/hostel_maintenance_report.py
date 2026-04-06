@@ -36,6 +36,7 @@ class HostelMaintenanceReport(BuyingController, StockController):
 		evidence: DF.Attach | None
 		expenses_borne_by: DF.Literal["", "Student", "College"]
 		first_name: DF.Data | None
+		fiscal_year: DF.Link
 		full_name: DF.Data | None
 		hostel_maintenance_application: DF.Data | None
 		hostel_room: DF.Link | None
@@ -61,6 +62,7 @@ class HostelMaintenanceReport(BuyingController, StockController):
 		# self.check_budget()
 		# self.update_stock_ledger()
 		self.link_maintenance_application_to_maintenance_report()
+		self.email_notification()
 
 		""" ++++++++++ Ver 2.0.190509 Begins ++++++++++ """
 		if (self.expenses_borne_by == "College" or self.expenses_borne_by == ""):
@@ -79,6 +81,35 @@ class HostelMaintenanceReport(BuyingController, StockController):
 		else:
 			make_stock_entry(self.name)	
 			self.post_journal_entry()
+
+	def email_notification(self):
+		# ===== Send Email to Maintenance Focal =====
+		if self.maintenance_focal:
+			employee = frappe.get_doc("Employee", self.maintenance_focal)
+
+			if employee.user_id:
+				user = frappe.get_doc("User", employee.user_id)
+
+				frappe.sendmail(
+					recipients=[user.email],
+					subject=f"Hostel Maintenance Report Submitted: {self.name}",
+					message=f"""
+					Dear {employee.employee_name},
+
+					A Hostel Maintenance Report has been submitted.
+
+					<b>Report ID:</b> {self.name}<br>
+					<b>Student:</b> {self.full_name}<br>
+					<b>Room:</b> {self.hostel_room}<br>
+					<b>Maintenance Type:</b> {self.maintenance_type}<br>
+
+					Please review it in the system.
+
+					Regards,<br>
+					ERP System
+					""",
+				)
+		# ==========================================		
 	
 	def link_maintenance_application_to_maintenance_report(self):
 		# find the related Hostel Maintenance Application
@@ -159,12 +190,13 @@ class HostelMaintenanceReport(BuyingController, StockController):
 	def post_journal_entry(self):
 		#expense_bank_account = frappe.db.get_value("Branch", self.branch, "expense_bank_account")
 		# expense_bank_account = frappe.db.get_value("Company", frappe.defaults.get_user_default("Company"), "expenses_included_in_asset_valuation")
-		expense_bank_account = frappe.db.get_value("Company", self.company, "income_account")
+		expense_bank_account = frappe.db.get_value("Company", self.company, "income_accounts")
 		if not expense_bank_account:
 			frappe.throw("No Default Payable Account set in Company")
 
 		# maintenance_account = frappe.db.get_value("Company", frappe.defaults.get_user_default("Company"), "asset_received_but_not_billed")
-		maintenance_account = frappe.db.get_value("Company", self.company, "default_income_account")
+		# maintenance_account = frappe.db.get_value("Company", self.company, "default_income_account")
+		maintenance_account = frappe.db.get_value("Company", self.company, "receivable_accounts")
 		if not maintenance_account:
 			frappe.throw("No Default Payable Account set in Company")	
 

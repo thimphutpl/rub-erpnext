@@ -1,13 +1,14 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:student_code",
+ "autoname": "HA.YYYY.MM.DD.####",
  "creation": "2026-03-26 15:40:04.855591",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "company",
   "student_code",
+  "cid_number",
   "first_name",
   "middle_name",
   "last_name",
@@ -66,29 +67,28 @@
    "fieldtype": "Link",
    "label": "Student Code",
    "options": "Student",
-   "reqd": 1,
    "unique": 1
   },
   {
    "fetch_from": "student_code.first_name",
    "fieldname": "first_name",
    "fieldtype": "Data",
-   "label": "First Name",
-   "read_only": 1
+   "in_list_view": 1,
+   "label": "First Name"
   },
   {
    "fetch_from": "student_code.middle_name",
    "fieldname": "middle_name",
    "fieldtype": "Data",
-   "label": "Middle Name",
-   "read_only": 1
+   "in_list_view": 1,
+   "label": "Middle Name"
   },
   {
    "fetch_from": "student_code.last_name",
    "fieldname": "last_name",
    "fieldtype": "Data",
-   "label": "Last Name",
-   "read_only": 1
+   "in_list_view": 1,
+   "label": "Last Name"
   },
   {
    "fieldname": "section_break_mfyf",
@@ -106,17 +106,23 @@
    "fieldname": "hostel_type",
    "fieldtype": "Data",
    "label": "Hostel Type"
+  },
+  {
+   "fieldname": "cid_number",
+   "fieldtype": "Int",
+   "label": "CID Number",
+   "length": 12
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-26 16:19:33.763266",
+ "modified": "2026-04-06 09:41:55.909447",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Apply",
- "naming_rule": "By fieldname",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

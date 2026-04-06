@@ -16,6 +16,7 @@ class HostelApply(Document):
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
+		cid_number: DF.Int
 		company: DF.Link
 		first_name: DF.Data | None
 		fiscal_year: DF.Link
@@ -24,7 +25,7 @@ class HostelApply(Document):
 		last_name: DF.Data | None
 		middle_name: DF.Data | None
 		posting_date: DF.Date
-		student_code: DF.Link
+		student_code: DF.Link | None
 	# end: auto-generated types
 
 	def validate(self):
@@ -59,9 +60,12 @@ class HostelApply(Document):
 		for row in room_doc.get("student_list", []):
 			if row.student_code == self.student_code:
 				frappe.throw(_("Student already assigned to this room"))
+			if row.cid_number == self.cid_number:
+				frappe.throw(_("Student already assigned to this room"))	
 
 		#Append student
 		room_doc.append("student_list", {
+			"cid_number": self.cid_number,
 			"student_code": self.student_code,
 			"first_name": self.first_name,
 			"last_name": self.last_name
@@ -87,6 +91,10 @@ class HostelApply(Document):
 				updated_list.append(row)
 			else:
 				removed = True
+			if row.cid_number != self.cid_number:
+				updated_list.append(row)
+			else:
+				removed = True	
 
 		if not removed:
 			frappe.msgprint(_("Student was not found in the room list"))
@@ -97,6 +105,7 @@ class HostelApply(Document):
 
 		for row in updated_list:
 			room_doc.append("student_list", {
+				"cid_number": row.cid_number,
 				"student_code": row.student_code,
 				"first_name": row.first_name,
 				"last_name": row.last_name
