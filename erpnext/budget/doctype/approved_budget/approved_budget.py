@@ -20,7 +20,7 @@ class ApprovedBudget(Document):
 		amended_from: DF.Link | None
 		college: DF.Link
 		from_year: DF.Link
-		items: DF.Table[ApprovedBudgetItem]
+		ab_extra_item: DF.Table[ApprovedBudgetItem]
 		to_year: DF.Link
 		total_approved_budget: DF.Currency
 	# end: auto-generated types
@@ -35,11 +35,20 @@ class ApprovedBudget(Document):
 			if not row.approved_budget or row.approved_budget <= 0:
 				frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
 
+		for row in self.ab_extra_item:
+			if not row.approved_budget or row.approved_budget <= 0:
+				frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
+
 	def calculate_approved_budget(self):
 		total_approved_budget = 0
 		for row in self.items:
 			total_approved_budget += flt(row.approved_budget)
+
+		for row in self.ab_extra_item:
+			total_approved_budget += flt(row.approved_budget)
+
 		self.total_approved_budget = total_approved_budget
+
 
 	def check_approved_budget(self):
 		fyp = frappe.db.sql('''

@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 
 
-class APACalender(Document):
+class APACalendar(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -22,6 +22,7 @@ class APACalender(Document):
 		review_start_date: DF.Date
 		target_setup_end_date: DF.Date
 		target_setup_start_date: DF.Date
+		to_year: DF.Link
 	# end: auto-generated types
 	
 	# def validate(self):

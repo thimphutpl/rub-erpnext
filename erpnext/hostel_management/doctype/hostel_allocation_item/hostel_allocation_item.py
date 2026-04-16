@@ -27,6 +27,7 @@ class HostelAllocationItem(Document):
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
+		scholarship_type: DF.Literal["", "Government Scholarship", "Self Funding"]
 		status: DF.Data | None
 		student_code: DF.Link | None
 		year: DF.Data | None

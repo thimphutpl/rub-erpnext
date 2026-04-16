@@ -34,23 +34,47 @@ frappe.ui.form.on("Supplementary Budgets", {
             };
 		});
     },
+    
+	budget_activity_type: function(frm){
+        frm.set_value("budget_activity", "")
+		if (frm.doc.budget_activity_type == "Additional Activities"){
+			frm.set_query("budget_activity", function() {
+                if (!frm.doc.college || !frm.doc.from_year || !frm.doc.to_year) {
+                    return {
+                        filters: {
+                            name: ["=", ""]  // Forces no results
+                        }
+                    };
+                }
+				return {
+					filters: {
+						college: frm.doc.college || '',
+						from_year: frm.doc.from_year || '',
+						to_year: frm.doc.to_year || '',
+					}
+				}
+			});
+		}
+	},
     budget_type(frm) {
-		frm.set_query("budget_activity", () => {
-            if (frm.doc.budget_type == "Current"){
-                return {
-                    filters: {
-                        is_current: 1,
-                    },
-                };
-            }else if (frm.doc.budget_type == "Capital"){
-                return {
-                    filters: {
-                        is_capital: 1,
-                    },
-                };
-            }else {
-                return { filters };
+        frm.set_value("budget_activity", "")
+        frm.set_query("budget_activity", () => {
+            let filters = {
+                disabled: 0,
+                project: frm.doc.budget_project || ''
+            };
+            if (frm.doc.budget_activity_type == "Additional Activities"){
+                filters.college = frm.doc.college || '';
+                filters.from_year = frm.doc.from_year || '';
+                filters.to_year = frm.doc.to_year || '';
             }
-		});
+            if (frm.doc.budget_type === "Current") {
+                filters.is_current = 1;
+            }else if (frm.doc.budget_type === "Capital") {
+                filters.is_capital = 1;
+            }
+
+            return { filters };
+        });
     },
 });

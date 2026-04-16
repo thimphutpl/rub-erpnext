@@ -87,6 +87,7 @@ class PurchaseOrder(BuyingController):
 		customer_contact_person: DF.Link | None
 		customer_name: DF.Data | None
 		description: DF.TextEditor | None
+		description_advance: DF.SmallText | None
 		disable_rounded_total: DF.Check
 		discount: DF.Currency
 		discount_amount: DF.Currency
@@ -110,6 +111,7 @@ class PurchaseOrder(BuyingController):
 		method_of_procurement: DF.Literal["", "Open Bidding", "Limited Bidding", "Limited Enquiry", "Work Order/Direct Contacting", "Spot Purchase"]
 		naming_series: DF.Literal["", "Consumables", "Fixed Asset", "Sales Product", "Spare Parts", "Services Miscellaneous", "Services Works", "Labour Contract"]
 		net_total: DF.Currency
+		notify_account: DF.Check
 		order_confirmation_date: DF.Date | None
 		order_confirmation_no: DF.Data | None
 		other_charges: DF.Currency
@@ -470,9 +472,12 @@ class PurchaseOrder(BuyingController):
 
 	def on_submit(self):
 		super().on_submit()
+		
 
 		if self.is_against_so():
 			self.update_status_updater()
+		if self.notify_account:
+			self.notify_account_notification()	
 
 		self.update_prevdoc_status()
 		# if not self.is_subcontracted or self.is_old_subcontracting_flow:
@@ -574,6 +579,68 @@ class PurchaseOrder(BuyingController):
 			so.update_delivery_status()
 			so.set_status(update=True)
 			so.notify_update()
+
+
+	def notify_account_notification(self):
+
+		base_company = self.company
+
+		template = frappe.db.get_single_value(
+			"HR Settings",
+			"account_notify_template"
+		)
+
+		email_template = None
+		message = None
+
+		if template:
+			email_template = frappe.get_doc("Email Template", template)
+
+		employees = frappe.get_all(
+			"Employee",
+			filters={"status": "Active"},
+			fields=["name", "user_id", "company"]
+		)
+
+		email_list = []
+		seen_users = set()
+
+		for emp in employees:
+			user = emp.user_id
+			emp_company = emp.company
+
+			if not user or user in seen_users:
+				continue
+
+			seen_users.add(user)
+
+			if emp_company != base_company:
+				continue
+
+			email = frappe.db.get_value("User", user, "email")
+			if email:
+				email_list.append(email)
+
+		# Render message
+		if email_template:
+			args = {"company": base_company,
+		     		"name": self.name,
+    				"description_advance": self.description_advance,}
+			message = frappe.render_template(email_template.response, args)
+
+		# SEND MAIL (THIS IS THE IMPORTANT PART)
+		if email_list:
+			frappe.sendmail(
+				recipients=email_list,
+				subject=email_template.subject if email_template else "Notification",
+				message=message or "Notification"
+			)
+			frappe.msgprint(
+            "Email sent successfully to:<br><br>" +
+            "<br>".join(email_list)
+        )
+        
+		return email_list
 
 	def has_drop_ship_item(self):
 		return any(d.delivered_by_supplier for d in self.items)

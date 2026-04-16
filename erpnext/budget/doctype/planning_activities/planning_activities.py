@@ -17,6 +17,7 @@ class PlanningActivities(Document):
 
 		activities: DF.SmallText | None
 		amended_from: DF.Link | None
+		disabled: DF.Check
 		from_date: DF.Date
 		funding_source: DF.Link | None
 		is_capital: DF.Check

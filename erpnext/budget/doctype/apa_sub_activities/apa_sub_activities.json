@@ -5,13 +5,14 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "activity",
-  "sub_activity",
-  "college",
-  "column_break_lkvk",
   "from_year",
+  "college",
+  "activity",
+  "column_break_lkvk",
   "to_year",
   "unit",
+  "sub_activity",
+  "disabled",
   "section_break_kuxe",
   "items",
   "section_break_htio",
@@ -87,13 +88,18 @@
    "label": "Unit",
    "options": "APA Unit",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2026-03-28 18:17:39.388043",
+ "modified": "2026-04-01 16:30:16.067898",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "APA Sub Activities",
@@ -109,7 +115,6 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   }
  ],

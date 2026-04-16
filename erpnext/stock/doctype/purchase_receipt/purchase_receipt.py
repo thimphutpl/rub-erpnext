@@ -1131,7 +1131,7 @@ class PurchaseReceipt(BuyingController):
 					custom_row.cost_center = cost_center
 					custom_row.reference_type = "Purchase Receipt"
 					custom_row.reference_name = source_name.name
-					total_charges += tax.base_tax_amount_after_discount_amount
+					total_charges += tax.base_tax_amount_after_discount_amountf
 				else:
 					
 					gst_amount += tax.base_tax_amount_after_discount_amount
@@ -1413,6 +1413,7 @@ def make_purchase_invoice(source_name, target_doc=None, args=None):
 				"field_map": {
 					"name": "pr_detail",
 					"parent": "purchase_receipt",
+					"purchase_order": "purchase_order",
 				},
 			},
 		},

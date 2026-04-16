@@ -6,19 +6,20 @@
  "engine": "InnoDB",
  "field_order": [
   "college",
+  "project",
   "activities",
   "unit",
   "column_break_jhsc",
+  "disabled",
   "from_year",
   "to_year",
   "is_capital",
   "is_current",
   "funding_source",
-  "applicable_in_apa",
+  "include_in_apa",
   "section_break_upwi",
   "items",
   "references_section",
-  "project",
   "amended_from"
  ],
  "fields": [
@@ -27,7 +28,7 @@
    "fieldtype": "Link",
    "label": "Project",
    "options": "Planning Project",
-   "read_only": 1
+   "reqd": 1
   },
   {
    "fieldname": "column_break_jhsc",
@@ -36,7 +37,8 @@
   {
    "fieldname": "activities",
    "fieldtype": "Small Text",
-   "label": "Activities"
+   "label": "Activities",
+   "reqd": 1
   },
   {
    "fieldname": "references_section",
@@ -90,12 +92,6 @@
    "reqd": 1
   },
   {
-   "default": "0",
-   "fieldname": "applicable_in_apa",
-   "fieldtype": "Check",
-   "label": "Applicable in APA"
-  },
-  {
    "fieldname": "college",
    "fieldtype": "Link",
    "label": "College",
@@ -117,12 +113,24 @@
    "label": "To Year",
    "options": "Fiscal Year",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "include_in_apa",
+   "fieldtype": "Check",
+   "label": "Include in APA"
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-30 11:19:07.169948",
+ "modified": "2026-04-06 12:24:19.793366",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Additional Activities",

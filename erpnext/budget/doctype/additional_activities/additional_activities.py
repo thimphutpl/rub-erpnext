@@ -15,16 +15,17 @@ class AdditionalActivities(Document):
 		from erpnext.budget.doctype.output_category_item.output_category_item import OutputCategoryItem
 		from frappe.types import DF
 
-		activities: DF.SmallText | None
+		activities: DF.SmallText
 		amended_from: DF.Link | None
-		applicable_in_apa: DF.Check
 		college: DF.Link
+		disabled: DF.Check
 		from_year: DF.Link
 		funding_source: DF.Link | None
+		include_in_apa: DF.Check
 		is_capital: DF.Check
 		is_current: DF.Check
 		items: DF.Table[OutputCategoryItem]
-		project: DF.Link | None
+		project: DF.Link
 		to_year: DF.Link
 		unit: DF.Link
 	# end: auto-generated types

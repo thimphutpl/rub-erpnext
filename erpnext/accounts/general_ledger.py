@@ -383,6 +383,8 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 	gle.flags.update_outstanding = update_outstanding or "Yes"
 	gle.flags.notify_update = False
 	gle.submit()
+
+	
 	
 	if not from_repost and gle.voucher_type != "Period Closing Voucher":
 		#Commit and Consume budget
@@ -399,9 +401,10 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 				budget_cost_center = args.cost_center
 				ex_amount = 0
 				ex_amount = flt(args.credit_in_account_currency) if flt(args.credit_in_account_currency) > 0 else flt(args.debit_in_account_currency)
-				# frappe.throw(frappe.as_json(args))
+			
 				if not args.is_cancelled:
 					#Commit Budget
+					frappe.throw(frappe.as_json(args))
 					bud_obj = frappe.get_doc({
 						"doctype": "Committed Budget",
 						"account": args.account,
@@ -420,6 +423,7 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 					bud_obj.submit()
 				
 					#Consume Budget
+					
 					con_obj = frappe.get_doc({
 						"doctype": "Consumed Budget",
 						"account": args.account,

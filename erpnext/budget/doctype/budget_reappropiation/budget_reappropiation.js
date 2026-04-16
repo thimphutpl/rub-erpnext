@@ -30,7 +30,7 @@ frappe.ui.form.on('Budget Reappropiation', {
 	},
 	budget_type:function(frm){
 		apply_account_filter(frm)
-	}
+	},
 });
 var apply_account_filter = function(frm){
 	console.log()

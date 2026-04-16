@@ -25,9 +25,10 @@ class BulkAssetDisposal(Document):
 		branch: DF.Link | None
 		company: DF.Link
 		customer: DF.Link | None
+		depreciation_backup: DF.JSON | None
 		item: DF.Table[BulkAssetDisposalItem]
 		journal_entry: DF.Data | None
-		refernece: DF.Data | None
+		reference: DF.Data | None
 		sales_invoice: DF.Data | None
 		scrap: DF.Literal["", "Scrap Asset", "Sale Asset"]
 		scrap_date: DF.Date

@@ -17,6 +17,7 @@
   "get_planning_info",
   "apa_details",
   "section_break_owse",
+  "get_additional_activities",
   "apa_extra_details",
   "section_break_vscl",
   "total_proposed_budget",
@@ -129,20 +130,25 @@
   },
   {
    "fieldname": "section_break_owse",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Additional Activities"
   },
   {
    "fieldname": "apa_extra_details",
    "fieldtype": "Table",
-   "label": "Additional Activities",
    "options": "APA Detail Extra"
+  },
+  {
+   "fieldname": "get_additional_activities",
+   "fieldtype": "Button",
+   "label": "Get Additional Activities"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-25 19:29:48.886356",
+ "modified": "2026-03-31 17:14:24.043258",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Annual Work Plan",

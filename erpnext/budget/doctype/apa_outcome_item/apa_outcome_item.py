@@ -23,6 +23,7 @@ class APAOutcomeItem(Document):
 		parentfield: DF.Data
 		parenttype: DF.Data
 		raw_rating: DF.Data | None
+		remarks: DF.SmallText | None
 		self_rating: DF.Data | None
 		target: DF.Data | None
 		unit: DF.Link | None

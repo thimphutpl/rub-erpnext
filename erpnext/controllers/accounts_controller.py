@@ -3203,6 +3203,7 @@ def get_advance_payment_entries(
 	payment_entry = frappe.qb.DocType("Payment Entry")
 
 	if order_list or against_all_orders:
+		# frappe.throw("hi1")
 		q = get_common_query(
 			party_type,
 			party,
@@ -3212,6 +3213,7 @@ def get_advance_payment_entries(
 			condition,
 		)
 		payment_ref = frappe.qb.DocType("Payment Entry Reference")
+		
 
 		q = q.inner_join(payment_ref).on(payment_entry.name == payment_ref.parent)
 		q = q.select(
@@ -3228,6 +3230,7 @@ def get_advance_payment_entries(
 		allocated = list(q.run(as_dict=True))
 		payment_entries += allocated
 	if include_unallocated:
+		
 		q = get_common_query(
 			party_type,
 			party,
@@ -3236,8 +3239,10 @@ def get_advance_payment_entries(
 			limit,
 			condition,
 		)
+		# frappe.throw(str(q.select((payment_entry.unallocated_amount).as_("amount"))))
 		q = q.select((payment_entry.unallocated_amount).as_("amount"))
 		q = q.where(payment_entry.unallocated_amount > 0)
+	
 
 		unallocated = list(q.run(as_dict=True))
 		payment_entries += unallocated

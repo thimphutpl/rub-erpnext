@@ -110,10 +110,10 @@ def get_data(filters):
 
 	college = filters.get("college")
 	fiscal_year = filters.get("fiscal_year")
-	from_date = filters.get("from_date")
-	end_date = filters.get("to_date")
+	from_year = filters.get("from_year")
+	end_year= filters.get("to_year")
 
-	if college and fiscal_year:
+	if college and from_year and end_year:
 		for i in data:
 			budgets = frappe.db.sql('''
 			select abi.approved_budget,abi.reappropiation_received,
@@ -124,7 +124,7 @@ def get_data(filters):
 			and %s >= from_year and %s <= to_year
 			and activity_link = %s
 			and ab.docstatus=1
-			''',(college, fiscal_year,fiscal_year, i.activities))
+			''',(college, from_year,end_year, i.activities))
 			# frappe.throw(str(budgets))
 			# approved_budget = budgets[0][0]
 			# approved_budget = budgets[0][0] if budgets and budgets[0][0] else 0
@@ -151,8 +151,8 @@ def get_data(filters):
 
 			current = flt(initial_approved_budget) + flt(reappropiation_received)- flt(reappropiation_sent) + flt(supplementary_received)
 
-			from_date = f"{fiscal_year}-01-01"
-			to_date = f"{fiscal_year}-12-31"
+			from_date = f"{from_year}-01-01"
+			to_date = f"{end_year}-12-31"
 			committed = frappe.db.sql("""
 				SELECT SUM(amount)
 				FROM `tabCommitted Budget`
@@ -167,6 +167,8 @@ def get_data(filters):
 			))[0][0]
 
 			committed = flt(committed)
+
+			# frappe.throw(str(i.activities))
 
 			consumed = frappe.db.sql("""
 				SELECT SUM(amount)

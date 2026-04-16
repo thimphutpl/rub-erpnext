@@ -20,7 +20,8 @@ class SupplementaryBudgets(Document):
 		approver: DF.Link | None
 		approver_designation: DF.Data | None
 		approver_name: DF.Data | None
-		budget_activity: DF.Link
+		budget_activity: DF.DynamicLink
+		budget_activity_type: DF.Literal["Planning Activities", "Additional Activities"]
 		budget_output: DF.Link
 		budget_project: DF.Link
 		budget_type: DF.Literal["", "Current", "Capital"]
@@ -44,24 +45,45 @@ class SupplementaryBudgets(Document):
 			frappe.throw(
 				_("Select College, From Activity and Fiscal Year First")
 			)
-		self.approved_budget_list = frappe.db.sql("""
-			SELECT abi.approved_budget, ab.name
-			FROM `tabApproved Budget` ab
-			INNER JOIN `tabApproved Budget Item` abi 
-				ON ab.name = abi.parent
-			WHERE ab.college = %s
-			AND ab.from_year = %s
-			AND ab.to_year = %s
-			AND ab.docstatus = 1
-			AND abi.activity_link = %s
-			ORDER BY abi.idx
-		""", (self.college, self.from_year, self.to_year, self.budget_activity), as_dict=True)
+		if self.budget_activity_type == "Planning Activities":
+			self.approved_budget_list = frappe.db.sql("""
+				SELECT abi.approved_budget, ab.name
+				FROM `tabApproved Budget` ab
+				INNER JOIN `tabApproved Budget Item` abi 
+					ON ab.name = abi.parent
+				WHERE ab.college = %s
+				AND ab.from_year = %s
+				AND ab.to_year = %s
+				AND ab.docstatus = 1
+				AND abi.activity_link = %s
+				ORDER BY abi.idx
+			""", (self.college, self.from_year, self.to_year, self.budget_activity), as_dict=True)
 
-		if not self.approved_budget_list:
-			frappe.throw(
-				_("No budget or activity found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b> in Approved Budget")
-				.format(self.from_year, self.to_year, self.college)
-			)
+			if not self.approved_budget_list:
+				frappe.throw(
+					_("No budget or activity found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b> in Approved Budget")
+					.format(self.from_year, self.to_year, self.college)
+				)
+
+		if self.budget_activity_type == "Additional Activities":
+			self.approved_budget_additional_list = frappe.db.sql("""
+				SELECT abi.approved_budget, ab.name
+				FROM `tabApproved Budget` ab
+				INNER JOIN `tabApproved Budget Extra Item` abi 
+					ON ab.name = abi.parent
+				WHERE ab.college = %s
+				AND ab.from_year = %s
+				AND ab.to_year = %s
+				AND ab.docstatus = 1
+				AND abi.activity_link = %s
+				ORDER BY abi.idx
+			""", (self.college, self.from_year, self.to_year, self.budget_activity), as_dict=True)
+
+			if not self.approved_budget_additional_list:
+				frappe.throw(
+					_("No additional activity found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b> in Approved Budget")
+					.format(self.from_year, self.to_year, self.college)
+				)
 
 	def on_submit(self):
 		self.update_budget()
@@ -87,8 +109,12 @@ class SupplementaryBudgets(Document):
 
 		budget_row = None
 
-		# frappe.throw(frappe.as_json(str(ab.items)))
-		for row in ab.items:   # use your child table fieldname
+		if ab.ab_extra_item:
+			for row in ab.ab_extra_item:
+				if row.activity_link == self.budget_activity:
+					budget_row = row
+
+		for row in ab.items:
 			if row.activity_link == self.budget_activity:
 				budget_row = row
 
@@ -108,13 +134,24 @@ class SupplementaryBudgets(Document):
 			budget_row.approved_budget -= amount
 			budget_row.supplementary_received -= amount
 
-		frappe.db.set_value(
-			"Approved Budget Item",
-			budget_row.name,
-			{
-				"approved_budget": budget_row.approved_budget,
-				"supplementary_received": budget_row.supplementary_received
-			},
-			update_modified=False
-		)
+		if self.budget_activity_type == "Additional Activities":
+			frappe.db.set_value(
+				"Approved Budget Extra Item",
+				budget_row.name,
+				{
+					"approved_budget": budget_row.approved_budget,
+					"supplementary_received": budget_row.supplementary_received
+				},
+				update_modified=False
+			)
+		else:
+			frappe.db.set_value(
+				"Approved Budget Item",
+				budget_row.name,
+				{
+					"approved_budget": budget_row.approved_budget,
+					"supplementary_received": budget_row.supplementary_received
+				},
+				update_modified=False
+			)
 		# budget_row.db_set("approved_budget", budget_row.approved_budget, update_modified=False)

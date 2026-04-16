@@ -6,7 +6,7 @@ frappe.query_reports["Asset Register"] = {
 	"filters": [
 		{
 			"fieldname": "company",
-			"label": __("Company"),
+			"label": __("Company/College"),
 			"fieldtype": "Link",
 			"options": "Company",
 			"default": frappe.defaults.get_user_default("Company"),
@@ -112,10 +112,15 @@ frappe.query_reports["Asset Register"] = {
 				return custodian_type;
 			},
 			get_query: function () {
-				return {
-				  filters: {
-					company: frappe.query_report.get_filter_value('company'),
-				  },
+				if(frappe.query_report.get_filter_value('company')){
+
+				}
+				else{
+					return {
+						filters: {
+						  company: "Please Select Company/College",
+						},
+					  }
 				}
 			  },
 		},

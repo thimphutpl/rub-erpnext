@@ -52,12 +52,12 @@ def get_target_setup_details(from_year, to_year, college):
 			atoi.justification
 		FROM `tabAPA Target Setup` ats
 		INNER JOIN `tabAPA Target Output Item` atoi ON ats.name = atoi.parent
-		WHERE ats.from_year = %s AND ats.to_year = %s AND atoi.parenttype = "APA Target Setup" AND ats.college = %s
-		ORDER BY atoi.idx desc
+		WHERE ats.from_year = %s AND ats.to_year = %s AND atoi.parenttype = "APA Target Setup" AND ats.college = %s AND ats.docstatus = 1
+		ORDER BY atoi.idx
 	''',(from_year, to_year, college), as_dict=True)
 
 	if not output:
-		frappe.throw("No Output Indicator found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))
+		frappe.throw("No Output Target Setup found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))
 
 	output_extra = frappe.db.sql('''
 		SELECT  
@@ -69,12 +69,14 @@ def get_target_setup_details(from_year, to_year, college):
 			atoi.output,
 			atoi.project,
 			atoi.activities,
+			atoi.activity_link,
+			atoi.sub_activity_link,
 			atoi.target,
 			atoi.justification
 		FROM `tabAPA Target Setup` ats
 		INNER JOIN `tabAPA Output Extra Item` atoi ON ats.name = atoi.parent
-		WHERE ats.from_year = %s and ats.to_year = %s AND atoi.parenttype = "APA Target Setup" AND ats.college = %s
-		ORDER BY atoi.idx desc
+		WHERE ats.from_year = %s and ats.to_year = %s AND atoi.parenttype = "APA Target Setup" AND ats.college = %s AND ats.docstatus = 1
+		ORDER BY atoi.idx
 	''',(from_year, to_year, college), as_dict=True)
 
 	outcome = frappe.db.sql('''
@@ -86,12 +88,12 @@ def get_target_setup_details(from_year, to_year, college):
 			atoi.justification
 		FROM `tabAPA Target Setup` ats
 		INNER JOIN `tabAPA Target Outcome Item` atoi ON ats.name = atoi.parent
-		WHERE ats.from_year = %s AND ats.to_year = %s AND atoi.parenttype = "APA Target Setup" AND ats.college = %s
+		WHERE ats.from_year = %s AND ats.to_year = %s AND atoi.parenttype = "APA Target Setup" AND ats.college = %s AND ats.docstatus = 1
 		ORDER BY atoi.idx
 	''',(from_year, to_year, college), as_dict=True)
 
 	if not outcome:
-		frappe.throw("No Outcome Indicator found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))
+		frappe.throw("No Outcome Target Setup found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))
 
 	return {
 		"output": output,

@@ -88,7 +88,7 @@ def fetch_budgetplan(from_year, to_year):
 			pa.is_capital
 		FROM `tabPlanning Output` po 
 		INNER JOIN `tabPlanning Project` pp ON po.name = pp.planning_output 
-		INNER JOIN `tabPlanning Activities` pa ON pa.project = pp.name 
+		INNER JOIN `tabPlanning Activities` pa ON pa.project = pp.name  AND pa.disabled = 0
 		INNER JOIN `tabFYP Detail` fypi ON fypi.activity_link = pa.name
 		INNER JOIN `tabFive Year Plan Proposal` fypp ON fypi.parent = fypp.name
 		WHERE fypp.from_year = %s and fypp.to_year = %s and fypp.docstatus = 1

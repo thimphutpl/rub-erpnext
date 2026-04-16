@@ -13,6 +13,8 @@ def get_feedback_type():
 
 @frappe.whitelist()
 def get_feedback_data(feedback_type, student):
+    
+    
     academic_year=frappe.db.sql("""SELECT name  FROM `tabAcademic Year`  WHERE CURDATE() BETWEEN year_start_date AND year_end_date and Month(year_start_date) <> 01 limit 1 """,as_dict=1)
     for aca in academic_year:
         year=aca.name
@@ -24,6 +26,12 @@ def get_feedback_data(feedback_type, student):
         'existing_feedback': None,
         'has_questions': False
     }
+    college=get_student_college(student)
+    doc=frappe.get_doc("Company",college)
+    if doc.enable==0:
+        result['has_questions'] = False
+        return result
+
     
     question_exists = frappe.db.sql("""
         SELECT name 
@@ -41,7 +49,7 @@ def get_feedback_data(feedback_type, student):
         SELECT mcq.question
         FROM `tabFeedback Question` fb 
         INNER JOIN `tabFeedback MCQ` mcq ON fb.name = mcq.parent 
-        WHERE fb.feedback_type = %s
+        WHERE fb.feedback_type = %s and mcq.status='Enable'
     """
     result['rating_questions'] = frappe.db.sql(rating_query, feedback_type, as_dict=1)
     
@@ -49,7 +57,7 @@ def get_feedback_data(feedback_type, student):
         SELECT oeq.question 
         FROM `tabFeedback Question` fb 
         INNER JOIN `tabFeedback OEQ` oeq ON fb.name = oeq.parent 
-        WHERE fb.feedback_type = %s
+        WHERE fb.feedback_type = %s and oeq.status='Enable'
     """
     result['oeq_questions'] = frappe.db.sql(oeq_query, feedback_type, as_dict=1)
     
@@ -61,6 +69,7 @@ def get_feedback_data(feedback_type, student):
     )
     
     if existing and existing.get('name'):
+        
         feedback_doc = frappe.get_doc("Student Feedback", existing['name'])
         
         rating_responses = []

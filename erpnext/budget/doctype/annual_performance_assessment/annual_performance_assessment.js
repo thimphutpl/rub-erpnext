@@ -70,6 +70,8 @@ frappe.ui.form.on("Annual Performance Assessment", {
                                 child.weightage = row.weightage
                                 child.target = row.target
                                 child.sub_activity = row.sub_activity
+                                child.sub_activity_link = row.sub_activity_link
+                                child.activity_link = row.activity_link
                             });
         
                             frm.refresh_field("output_extra_items");
@@ -108,16 +110,16 @@ frappe.ui.form.on("APA Outcome Item", {
                     callback: function(r) {
                         if (r.message) {
                             frappe.model.set_value(cdt, cdn, "irt_rating", r.message);        
-                            frm.refresh_field("irt_rating");
+                        }else{
+                            frappe.model.set_value(cdt, cdn, "irt_rating", "");         
                         }
                         if (row.irt_rating){
                             frappe.trigger("irt_rating")
                         }
+                        frm.refresh_field("irt_rating");
                     }
             })
-		} else {
-			// frm.script_manager.copy_from_first_row("items", row, ["delivery_date"]);
-		}
+		} 
 	},
     irt_rating: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
@@ -126,13 +128,15 @@ frappe.ui.form.on("APA Outcome Item", {
                 method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.get_category_for_irt_rating",
                 args: {
                         irt_rating: row.irt_rating,
-                        // outcome: row.outcome
+                        unit: row.unit
                     },
                     callback: function(r) {
                         if (r.message) {
                             frappe.model.set_value(cdt, cdn, "category", r.message);
-                            frm.refresh_field("category");
+                        }else{
+                            frappe.model.set_value(cdt, cdn, "irt_rating", "");   
                         }
+                        frm.refresh_field("category");
                     }
             })
 		}
@@ -152,26 +156,24 @@ frappe.ui.form.on("APA Output Item", {
                         weightage: row.weightage,
                         sub_activity_no: row.sub_activity_no,
                     },
-                    callback: function(r) {
+                callback: function(r) {
+                    if (r.message) {
                         if (r.message) {
-                            if (r.message) {
-                                frappe.model.set_value(cdt, cdn, "irt_rating", r.message.irt_rating);        
-                                frappe.model.set_value(cdt, cdn, "weighted_score", r.message.weighted_score);                                       
-                                frm.refresh_field("irt_rating");
-                                frm.refresh_field("weighted_score");
-                            }
-                            if (row.irt_rating){
-                                frappe.trigger("irt_rating")
-                            }
+                            frappe.model.set_value(cdt, cdn, "irt_rating", r.message.irt_rating);        
+                            frappe.model.set_value(cdt, cdn, "weighted_score", r.message.weighted_score);
+                        }else{
+                            frappe.model.set_value(cdt, cdn, "irt_rating", ""); 
+                            frappe.model.set_value(cdt, cdn, "weighted_score", "");                                               
                         }
                         if (row.irt_rating){
                             frappe.trigger("irt_rating")
-                        }
+                        }                                  
+                        frm.refresh_field("irt_rating");
+                        frm.refresh_field("weighted_score");
                     }
+                }
             })
-		} else {
-			// frm.script_manager.copy_from_first_row("items", row, ["delivery_date"]);
-		}
+		} 
 	},
     irt_rating: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
@@ -180,14 +182,68 @@ frappe.ui.form.on("APA Output Item", {
                 method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.get_category_for_irt_rating",
                 args: {
                         irt_rating: row.irt_rating,
-                        // outcome: row.outcome
+                        unit: row.unit
                     },
-                    callback: function(r) {
-                        if (r.message) {
-                            frappe.model.set_value(cdt, cdn, "category", r.message);
-                            frm.refresh_field("category");
-                        }
+                callback: function(r) {
+                    if (r.message) {
+                        frappe.model.set_value(cdt, cdn, "category", r.message);
+                    }else{
+                        frappe.model.set_value(cdt, cdn, "irt_rating", "");   
                     }
+                    frm.refresh_field("category");
+                }
+            })
+		}
+    }
+});
+
+frappe.ui.form.on("Annual Performance Extra Item", {
+    raw_rating: function (frm, cdt, cdn) {
+		var row = locals[cdt][cdn];
+		if (row.raw_rating) {
+			frappe.call({
+                method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.calculate_extra_output_irt_rating",
+                args: {
+                        raw_rating: row.raw_rating,
+                        activity_link: row.activity_link,
+                        unit: row.unit,
+                        weightage: row.weightage,
+                        sub_activity_link: row.sub_activity_link,
+                    },
+                callback: function(r) {
+                    if (r.message) {
+                        frappe.model.set_value(cdt, cdn, "irt_rating", r.message.irt_rating);        
+                        frappe.model.set_value(cdt, cdn, "weighted_score", r.message.weighted_score); 
+                    }else{
+                        frappe.model.set_value(cdt, cdn, "irt_rating", ""); 
+                        frappe.model.set_value(cdt, cdn, "weighted_score", "");                                               
+                    }
+                    if (row.irt_rating){
+                        frappe.trigger("irt_rating")
+                    }                                      
+                    frm.refresh_field("irt_rating");
+                    frm.refresh_field("weighted_score");
+                }
+            })
+		} 
+	},
+    irt_rating: function (frm, cdt, cdn) {
+		var row = locals[cdt][cdn];
+        if (row.irt_rating) {
+			frappe.call({
+                method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.get_category_for_irt_rating",
+                args: {
+                        irt_rating: row.irt_rating,
+                        unit: row.unit
+                    },
+                callback: function(r) {
+                    if (r.message) {
+                        frappe.model.set_value(cdt, cdn, "category", r.message);
+                    }else{
+                        frappe.model.set_value(cdt, cdn, "irt_rating", "");   
+                    }
+                    frm.refresh_field("category");
+                }
             })
 		}
     }

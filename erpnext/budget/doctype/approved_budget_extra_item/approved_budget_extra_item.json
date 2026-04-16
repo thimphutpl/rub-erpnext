@@ -11,9 +11,14 @@
   "output",
   "project_no",
   "project",
+  "reappropiation_received",
+  "reappropiation_sent",
+  "supplementary_received",
+  "withdrawal_amount",
   "column_break_orjw",
   "activity_link",
   "activities",
+  "initial_approved_budget",
   "approved_budget",
   "is_capital",
   "is_current",
@@ -80,6 +85,35 @@
   },
   {
    "default": "0",
+   "fieldname": "reappropiation_received",
+   "fieldtype": "Currency",
+   "label": "Reappropiation Received (In Million)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "reappropiation_sent",
+   "fieldtype": "Currency",
+   "label": "Reappropiation Sent (In Million)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "supplementary_received",
+   "fieldtype": "Currency",
+   "label": "Supplementary Received (In Million)",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "default": "0",
+   "fieldname": "initial_approved_budget",
+   "fieldtype": "Currency",
+   "label": "Initial Approved Budget (In Million)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
    "fieldname": "is_capital",
    "fieldtype": "Check",
    "label": "Is Capital"
@@ -104,6 +138,12 @@
    "fieldtype": "Link",
    "label": "Activity Link",
    "options": "Additional Activities",
+   "read_only": 1
+  },
+  {
+   "fieldname": "withdrawal_amount",
+   "fieldtype": "Currency",
+   "label": "Withdrawal Amount (In Million)",
    "read_only": 1
   }
  ],

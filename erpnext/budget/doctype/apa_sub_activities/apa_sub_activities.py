@@ -19,6 +19,7 @@ class APASubActivities(Document):
 		activity: DF.Link
 		amended_from: DF.Link | None
 		college: DF.Link
+		disabled: DF.Check
 		from_year: DF.Link
 		items: DF.Table[OutputCategoryItem]
 		sub_activity: DF.Data

@@ -29,6 +29,7 @@ class APAOutputItem(Document):
 		project: DF.SmallText | None
 		project_no: DF.Int
 		raw_rating: DF.Data | None
+		remarks: DF.SmallText | None
 		self_rating: DF.Data | None
 		sub_activity: DF.SmallText | None
 		sub_activity_no: DF.Link | None

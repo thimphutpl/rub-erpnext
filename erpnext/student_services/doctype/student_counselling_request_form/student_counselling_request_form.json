@@ -1,0 +1,286 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-04-08 15:12:42.234407",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_n7f8",
+  "amended_from",
+  "basic_information_section",
+  "student_id",
+  "programme",
+  "column_break_vpam",
+  "student_name",
+  "year_of_study",
+  "contact_details_section",
+  "phone_number",
+  "column_break_rilj",
+  "email_address",
+  "counselling_needs_section",
+  "what_would_you_like_help_with_column",
+  "academic_stress",
+  "anxiety_or_depression",
+  "relationship_issues",
+  "column_break_gtio",
+  "financial_concerns",
+  "substance_use",
+  "career_guidance",
+  "other",
+  "reason",
+  "section_break_sdil",
+  "please_briefly_describe_your_concern",
+  "column_break_plni",
+  "how_urgent_is_your_concern",
+  "appointment_preferences_section",
+  "preferred_mode_of_counselling",
+  "column_break_xazc",
+  "preferred_date",
+  "column_break_edwi",
+  "preferred_time",
+  "consent_section",
+  "do_you_consent_to_being_contacted_by_the_counsellor",
+  "help_resource",
+  "column_break_lkmj",
+  "cosent"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_n7f8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Student Counselling Request Form",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "basic_information_section",
+   "fieldtype": "Section Break",
+   "label": "Basic Information"
+  },
+  {
+   "fieldname": "student_id",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Student Id",
+   "options": "Student",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "student_id.programme",
+   "fieldname": "programme",
+   "fieldtype": "Data",
+   "label": "Programme",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_vpam",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "student_id.student_name",
+   "fieldname": "student_name",
+   "fieldtype": "Data",
+   "label": "Student Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "student_id.year",
+   "fieldname": "year_of_study",
+   "fieldtype": "Data",
+   "label": "Year of Study",
+   "read_only": 1
+  },
+  {
+   "fieldname": "contact_details_section",
+   "fieldtype": "Section Break",
+   "label": "Contact Details"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Date",
+   "label": "Phone Number"
+  },
+  {
+   "fieldname": "column_break_rilj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "email_address",
+   "fieldtype": "Data",
+   "label": "Email Address"
+  },
+  {
+   "fieldname": "counselling_needs_section",
+   "fieldtype": "Section Break",
+   "label": "Counselling Needs"
+  },
+  {
+   "fieldname": "what_would_you_like_help_with_column",
+   "fieldtype": "Column Break",
+   "label": "What would you like help with?"
+  },
+  {
+   "default": "0",
+   "fieldname": "academic_stress",
+   "fieldtype": "Check",
+   "label": "Academic stress"
+  },
+  {
+   "default": "0",
+   "fieldname": "relationship_issues",
+   "fieldtype": "Check",
+   "label": "Relationship issues"
+  },
+  {
+   "fieldname": "column_break_gtio",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "financial_concerns",
+   "fieldtype": "Check",
+   "label": "Financial concerns"
+  },
+  {
+   "default": "0",
+   "fieldname": "substance_use",
+   "fieldtype": "Check",
+   "label": "Substance use"
+  },
+  {
+   "default": "0",
+   "fieldname": "career_guidance",
+   "fieldtype": "Check",
+   "label": "Career guidance"
+  },
+  {
+   "default": "0",
+   "fieldname": "other",
+   "fieldtype": "Check",
+   "label": "Other"
+  },
+  {
+   "default": "0",
+   "fieldname": "anxiety_or_depression",
+   "fieldtype": "Check",
+   "label": "Anxiety or Depression"
+  },
+  {
+   "depends_on": "eval:doc.other==1",
+   "fieldname": "reason",
+   "fieldtype": "Data",
+   "label": "Reason"
+  },
+  {
+   "fieldname": "section_break_sdil",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "please_briefly_describe_your_concern",
+   "fieldtype": "Text",
+   "label": "Please briefly describe your concern"
+  },
+  {
+   "fieldname": "column_break_plni",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "how_urgent_is_your_concern",
+   "fieldtype": "Select",
+   "label": "How urgent is your concern",
+   "options": "Urgent\nModerate\nNot urgent"
+  },
+  {
+   "fieldname": "appointment_preferences_section",
+   "fieldtype": "Section Break",
+   "label": "Appointment Preferences"
+  },
+  {
+   "fieldname": "preferred_mode_of_counselling",
+   "fieldtype": "Select",
+   "label": "Preferred Mode of Counselling",
+   "options": "Face-to-face\nPhone call\nOnline"
+  },
+  {
+   "fieldname": "column_break_xazc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "preferred_date",
+   "fieldtype": "Date",
+   "label": "Preferred Date"
+  },
+  {
+   "fieldname": "column_break_edwi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "preferred_time",
+   "fieldtype": "Select",
+   "label": "Preferred Time",
+   "options": "Morning (9:00 AM \u2013 12:00 PM)\nAfternoon (1:00 PM \u2013 4:00 PM)"
+  },
+  {
+   "fieldname": "consent_section",
+   "fieldtype": "Section Break",
+   "label": "Consent"
+  },
+  {
+   "fieldname": "do_you_consent_to_being_contacted_by_the_counsellor",
+   "fieldtype": "Select",
+   "label": "Do you consent to being contacted by the counsellor",
+   "options": "Yes\nNo"
+  },
+  {
+   "default": "0",
+   "fieldname": "cosent",
+   "fieldtype": "Check",
+   "label": " I understand that the information provided will be used only for counselling purposes and will remain confidential"
+  },
+  {
+   "fieldname": "help_resource",
+   "fieldtype": "Select",
+   "label": "Would you like information on self-help resources",
+   "options": "Yes\nNo"
+  },
+  {
+   "fieldname": "column_break_lkmj",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-04-08 16:38:49.497775",
+ "modified_by": "Administrator",
+ "module": "Student Services",
+ "name": "Student Counselling Request Form",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

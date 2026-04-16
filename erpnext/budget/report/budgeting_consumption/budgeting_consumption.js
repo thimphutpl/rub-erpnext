@@ -10,21 +10,22 @@ frappe.query_reports["Budgeting Consumption"] = {
             options: "Company"
         },
 		{
-            fieldname: "fiscal_year",
-            label: __("Fiscal Year"),
+            fieldname: "from_year",
+            label: __("From Year"),
             fieldtype: "Link",
             options: "Fiscal Year"
         },
         {
-            fieldname: "from_date",
-            label: __("From Date"),
-            fieldtype: "Date",
+            fieldname: "to_year",
+            label: __("To Year"),
+            fieldtype: "Link",
+            options: "Fiscal Year"
         },
-        {
-            fieldname: "to_date",
-            label: __("From Date"),
-            fieldtype: "Date",
-        },
+        // {
+        //     fieldname: "to_year",
+        //     label: __("To Year"),
+        //     fieldtype: "Year",
+        // },
 
 	]
 };

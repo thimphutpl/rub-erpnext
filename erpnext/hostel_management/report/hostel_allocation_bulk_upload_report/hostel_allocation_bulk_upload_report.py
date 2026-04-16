@@ -22,6 +22,7 @@ def get_columns():
         {"label": "Year", "fieldname": "year", "fieldtype": "Data", "width": 60},
         {"label": "Capacity", "fieldname": "capacity", "fieldtype": "Int", "width": 80},
         {"label": "Catering Type", "fieldname": "catering_type", "fieldtype": "Select", "width": 80},
+        {"label": "Scholarship Type", "fieldname": "scholarship_type", "fieldtype": "Select", "width": 80},
         {"label": "Status", "fieldname": "status", "fieldtype": "Data", "width": 80},
         {"label": "Available Beds", "fieldname": "available", "fieldtype": "Int", "width": 100},
     ]
@@ -72,6 +73,7 @@ def get_data(filters=None):
             hai.year,
             hai.capacity,
             hai.catering_type,
+            hai.scholarship_type,
             hai.status,
             habu.posting_date,
             habu.company,

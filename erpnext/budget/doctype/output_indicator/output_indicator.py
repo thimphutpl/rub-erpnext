@@ -71,11 +71,13 @@ def fetch_budgetplan(from_year, to_year, college):
 		FROM `tabApproved Budget Item` abi
 		LEFT JOIN `tabPlanning Activities` pa
 			ON pa.name = abi.activity_link
+			AND pa.disabled = 0
 		LEFT JOIN `tabAPA Sub Activities` sa
 			ON sa.activity = abi.activity_link
 			AND sa.from_year = %s
 			AND sa.to_year = %s
 			AND sa.college = %s
+			AND sa.disabled = 0
 		WHERE abi.parent = %s
 		ORDER BY abi.idx ASC
 	""", (from_year, to_year, college, approved_budget[0].name), as_dict=True)
@@ -94,14 +96,16 @@ def fetch_budgetplan(from_year, to_year, college):
 			COALESCE(sa.unit, pa.unit) AS unit,
 			abei.funding_source
 		FROM `tabApproved Budget Extra Item` abei
-		LEFT JOIN `tabAdditional Activities` pa
+		INNER JOIN `tabAdditional Activities` pa
 			ON pa.name = abei.activity_link
+			AND pa.include_in_apa = 1
 		LEFT JOIN `tabAdditional Sub Activities` sa
 			ON sa.activity = abei.activity_link
 			AND sa.from_year = %s
 			AND sa.to_year = %s
 			AND sa.college = %s
-		WHERE parent = %s
+			AND sa.include_in_apa = 1
+		WHERE abei.parent = %s
 		ORDER BY abei.idx ASC
 	""", (from_year, to_year, college, approved_budget[0].name), as_dict=True)
 

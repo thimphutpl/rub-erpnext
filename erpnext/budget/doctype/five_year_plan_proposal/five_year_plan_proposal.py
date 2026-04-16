@@ -4,7 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe.utils import flt
-
+from frappe.utils import getdate, today
 
 class FiveYearPlanProposal(Document):
 	# begin: auto-generated types
@@ -29,12 +29,23 @@ class FiveYearPlanProposal(Document):
 	pass
 
 	def validate(self):
+		self.check_applicable_date()
 		self.check_college()
 		self.validate_proposed_budget()
 		self.calculate_proposed_amount()
 	
 	def on_cancel(self):
 		self.check_five_year_plan()
+	
+	def check_applicable_date(self):
+		current_date = getdate(today())
+		from_date = frappe.db.get_single_value("Budget Settings", "fypp_from_date")
+		to_date = frappe.db.get_single_value("Budget Settings", "fypp_to_date")
+		if not (getdate(today()) <= getdate(to_date)):
+			frappe.throw("Transaction not allowed after <b>{0}</b>".format(to_date))
+
+		if not (getdate(from_date) <= getdate(today())):
+			frappe.throw("Transaction not allowed before <b>{0}</b>".format(from_date))
 
 	def check_college(self):
 		proposal = frappe.db.sql('''
@@ -71,7 +82,7 @@ def fetch_budgetplan():
 		pp.project, pa.activities, pa.name as activity_link, pa.is_current, pa.is_capital FROM `tabPlanning Output` po 
 		INNER JOIN `tabPlanning Project` pp ON po.name = pp.planning_output 
 		INNER JOIN `tabPlanning Activities` pa ON pa.project = pp.name 
-		WHERE pa.docstatus = 1
+		WHERE pa.disabled = 0
 		ORDER BY po.serial_number, pp.serial_number;
 	''', as_dict=True)
 
@@ -105,48 +116,48 @@ def fetch_budgetplan():
 
 @frappe.whitelist()
 def create_fyp_for_subsidiaries(fyp_name):
-    colleges = frappe.db.sql("""
-        SELECT name
-        FROM `tabCompany`
-        WHERE IFNULL(is_overseeing_company, 0) != 1
-    """, as_dict=True)
+	colleges = frappe.db.sql("""
+		SELECT name
+		FROM `tabCompany`
+		WHERE IFNULL(is_overseeing_company, 0) != 1
+	""", as_dict=True)
 
-    parent_fyp = frappe.get_doc("Five Year Plan Proposal", fyp_name)
-    created = []
+	parent_fyp = frappe.get_doc("Five Year Plan Proposal", fyp_name)
+	created = []
 
-    for college in colleges:
-        # prevent duplicate FYP per college
-        if frappe.db.exists("Five Year Plan Proposal", {
-            "colleges": college["name"],
-            "parent_fyp": parent_fyp.name
-        }):
-            continue
+	for college in colleges:
+		# prevent duplicate FYP per college
+		if frappe.db.exists("Five Year Plan Proposal", {
+			"colleges": college["name"],
+			"parent_fyp": parent_fyp.name
+		}):
+			continue
 
-        fyp_copy = frappe.new_doc("Five Year Plan Proposal")
+		fyp_copy = frappe.new_doc("Five Year Plan Proposal")
 
-        # copy all fields safely
-        fyp_copy.update({
-            key: value
-            for key, value in parent_fyp.as_dict().items()
-            if key not in (
-                "name", "doctype", "owner", "creation", "modified",
-                "modified_by", "docstatus"
-            )
-        })
+		# copy all fields safely
+		fyp_copy.update({
+			key: value
+			for key, value in parent_fyp.as_dict().items()
+			if key not in (
+				"name", "doctype", "owner", "creation", "modified",
+				"modified_by", "docstatus"
+			)
+		})
 
-        fyp_copy.colleges = college["name"]
-        fyp_copy.parent_fyp = parent_fyp.name  # recommended tracking
+		fyp_copy.colleges = college["name"]
+		fyp_copy.parent_fyp = parent_fyp.name  # recommended tracking
 
-        fyp_copy.insert(ignore_permissions=True)
-        created.append(fyp_copy.name)
+		fyp_copy.insert(ignore_permissions=True)
+		created.append(fyp_copy.name)
 
-    # mark parent only if copies created
-    if created:
-        parent_fyp.db_set("fyp_copies", 1)
+	# mark parent only if copies created
+	if created:
+		parent_fyp.db_set("fyp_copies", 1)
 
-    return {
-        "status": "success",
-        "created_fyp_count": len(created),
-        "fyp_records": created
-    }
+	return {
+		"status": "success",
+		"created_fyp_count": len(created),
+		"fyp_records": created
+	}
 

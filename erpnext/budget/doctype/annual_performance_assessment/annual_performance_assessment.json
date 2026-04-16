@@ -1,7 +1,6 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "APA-.YY-.##",
  "creation": "2026-02-20 08:40:55.500202",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -168,11 +167,10 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-28 18:06:55.201303",
+ "modified": "2026-04-01 18:43:01.250537",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Annual Performance Assessment",
- "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

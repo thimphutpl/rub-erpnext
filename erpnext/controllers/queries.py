@@ -238,6 +238,42 @@ def filter_college_programme_modules(doctype, txt, searchfield, start, page_len,
 		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
 	)
 
+# Following added by Kinley Dorji 2026/02/27
+# searches for module in a programmee in a college
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def filter_college_modules(doctype, txt, searchfield, start, page_len, filters):
+	# fields = get_fields(doctype, ["fb.name", "fb.company"])
+	searchfields = frappe.get_meta(doctype).get_search_fields()
+	searchfields = " or ".join("m."+field + " like %(txt)s" for field in searchfields)
+	tutor_cond = ""
+	if not filters.get("college"):
+		frappe.throw("Please select College")
+	semesters = []
+	return frappe.db.sql(
+		"""select m.name, m.module_code from `tabModule` m, `tabModule College` c, `tabModule Tutor Item` mti
+		where
+			c.parent = m.name
+			and mti.parent = m.name
+			and c.college = '{company}'
+			and (m.{key} like %(txt)s
+				or m.name like %(txt)s
+				or c.college like %(txt)s
+				or c.programme like %(txt)s
+				or {scond})
+		order by
+			c.idx desc,
+			m.name, c.college
+		limit %(page_len)s offset %(start)s""".format(
+			company = filters.get("college"),
+			**{
+				"key": searchfield,
+				"scond": searchfields,
+			}
+		),
+		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	)
+
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def get_programme(doctype, txt, searchfield, start, page_len, filters):

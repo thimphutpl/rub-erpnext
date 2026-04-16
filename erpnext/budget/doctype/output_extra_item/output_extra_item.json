@@ -29,6 +29,7 @@
    "fieldtype": "Link",
    "label": "Output No",
    "options": "Planning Output",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -36,6 +37,7 @@
    "fieldtype": "Link",
    "label": "Project No",
    "options": "Planning Project",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -53,6 +55,7 @@
    "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Activity",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -73,13 +76,15 @@
    "fieldname": "sub_activity",
    "fieldtype": "Small Text",
    "in_list_view": 1,
-   "label": "Sub Activity"
+   "label": "Sub Activity",
+   "read_only": 1
   },
   {
    "fieldname": "unit",
    "fieldtype": "Link",
    "label": "Unit",
-   "options": "APA Unit"
+   "options": "APA Unit",
+   "read_only": 1
   },
   {
    "fieldname": "weightage",
@@ -93,6 +98,7 @@
    "in_list_view": 1,
    "label": "Activity Link",
    "options": "Additional Activities",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -100,15 +106,16 @@
    "fieldname": "sub_activity_link",
    "fieldtype": "Link",
    "label": "Sub Activity Link",
-   "options": "Additional Sub Activities"
+   "options": "Additional Sub Activities",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-30 16:06:49.688151",
- "modified_by": "Administrator",
+ "modified": "2026-04-01 16:10:06.408898",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
  "module": "Budget",
  "name": "Output Extra Item",
  "owner": "Administrator",

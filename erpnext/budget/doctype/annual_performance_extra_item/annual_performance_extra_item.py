@@ -15,9 +15,7 @@ class AnnualPerformanceExtraItem(Document):
 		from frappe.types import DF
 
 		activities: DF.SmallText | None
-		activities_no: DF.Link | None
 		activity_link: DF.Link | None
-		activity_no: DF.Int
 		category: DF.Data | None
 		irt_rating: DF.Data | None
 		justification: DF.SmallText | None
@@ -30,6 +28,7 @@ class AnnualPerformanceExtraItem(Document):
 		project: DF.SmallText | None
 		project_no: DF.Int
 		raw_rating: DF.Data | None
+		remarks: DF.SmallText | None
 		self_rating: DF.Data | None
 		sub_activity: DF.SmallText | None
 		sub_activity_link: DF.Link | None

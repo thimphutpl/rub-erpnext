@@ -54,13 +54,60 @@ frappe.ui.form.on("Budget Reappropiations", {
             };
         });
     },
-
+	from_activity_type: function(frm){
+        frm.set_value("from_activity", "")
+		if (frm.doc.from_activity_type == "Additional Activities"){
+			frm.set_query("from_activity", function() {
+                if (!frm.doc.college || !frm.doc.from_year || !frm.doc.to_year) {
+                    return {
+                        filters: {
+                            name: ["=", ""]  // Forces no results
+                        }
+                    };
+                }
+				return {
+					filters: {
+						college: frm.doc.college || '',
+						from_year: frm.doc.from_year || '',
+						to_year: frm.doc.to_year || '',
+					}
+				}
+			});
+		}
+	},
+	to_activity_type: function(frm){
+        frm.set_value("to_activity", "")
+		if (frm.doc.to_activity_type == "Additional Activities"){
+			frm.set_query("to_activity", function() {
+                if (!frm.doc.college || !frm.doc.from_year || !frm.doc.to_year) {
+                    return {
+                        filters: {
+                            name: ["=", ""]  // Forces no results
+                        }
+                    };
+                }
+				return {
+					filters: {
+						college: frm.doc.college || '',
+						from_year: frm.doc.from_year || '',
+						to_year: frm.doc.to_year || '',
+					}
+				}
+			});
+		}
+	},
     from_budget_type(frm) {
+        frm.set_value("from_activity", "")
         frm.set_query("from_activity", () => {
             let filters = {
-                project: frm.doc.from_project || ''
+                disabled: 0,
+                project: frm.doc.from_project || '',
             };
-
+            if (frm.doc.from_activity_type == "Additional Activities"){
+                filters.college = frm.doc.college || '';
+                filters.from_year = frm.doc.from_year || '';
+                filters.to_year = frm.doc.to_year || '';
+            }
             if (frm.doc.from_budget_type === "Current") {
                 filters.is_current = 1;
             } else if (frm.doc.from_budget_type === "Capital") {
@@ -72,11 +119,17 @@ frappe.ui.form.on("Budget Reappropiations", {
     },
 
     to_budget_type(frm) {
+        frm.set_value("to_activity", "")
         frm.set_query("to_activity", () => {
             let filters = {
-                project: frm.doc.to_project || ''
+                disabled: 0,
+                project: frm.doc.to_project || '',
             };
-
+            if (frm.doc.to_activity_type == "Additional Activities"){
+                filters.college = frm.doc.college || '';
+                filters.from_year = frm.doc.from_year || '';
+                filters.to_year = frm.doc.to_year || '';
+            }
             if (frm.doc.to_budget_type === "Current") {
                 filters.is_current = 1;
             } else if (frm.doc.to_budget_type === "Capital") {
@@ -85,5 +138,5 @@ frappe.ui.form.on("Budget Reappropiations", {
 
             return { filters };
         });
-    }
+    },
 });

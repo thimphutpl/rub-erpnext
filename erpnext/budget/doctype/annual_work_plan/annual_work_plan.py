@@ -6,6 +6,7 @@ from frappe.model.document import Document
 from frappe.utils import flt
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
+from frappe.utils import getdate, today
 
 class AnnualWorkPlan(Document):
 	# begin: auto-generated types
@@ -34,14 +35,25 @@ class AnnualWorkPlan(Document):
 
 	def autoname(self):
 		abbr = frappe.db.get_value("Company", self.colleges, "abbr")
-		self.name = "AWP/"+"/"+self.from_year+"/"+self.to_year+"/"+abbr
+		self.name = "AWP/"+self.from_year+"/"+self.to_year+"/"+abbr
 
 	def validate(self):
+		self.check_applicable_date()
 		self.validate_college()
 		self.validate_budget()
 		self.validate_proposed_and_approved_budget()
 		self.calculate_proposed_and_approved_budget()
 		self.apply_proposed_to_approved()
+	
+	def check_applicable_date(self):
+		current_date = getdate(today())
+		from_date = frappe.db.get_single_value("Budget Settings", "awp_from_date")
+		to_date = frappe.db.get_single_value("Budget Settings", "awp_to_date")
+		if not (getdate(today()) <= getdate(to_date)):
+			frappe.throw("Transaction not allowed after <b>{0}</b>".format(to_date))
+
+		if not (getdate(from_date) <= getdate(today())):
+			frappe.throw("Transaction not allowed before <b>{0}</b>".format(from_date))
 
 	def apply_proposed_to_approved(self):
 		actions = get_apply_reapply_actions("Annual Work Plan", self.name)
@@ -150,7 +162,6 @@ class AnnualWorkPlan(Document):
 
 		# Validate current document rows
 		for row in self.apa_details:
-
 			available_budget = approved_budget_map.get(row.activity_link, 0)
 			already_approved_budget = awp_map.get(row.activity_link, 0)
 
@@ -172,41 +183,21 @@ class AnnualWorkPlan(Document):
 				)
 
 @frappe.whitelist()
-def fetch_budgetplan(fyp):
-	planning = frappe.db.sql('''
-		select output, project, activities, activity_link,
-		output_no, activities_no,project_no 
-		from `tabFYP Detail` 
-		where parent=%s order by idx 
-	''',(fyp), as_dict=True)
+def get_additional_activities(from_year, to_year, college):
+	if not college and not from_year and not to_year:
+		frappe.throw("Select College, From Year and To Year")
+	additional = frappe.db.sql('''
+		SELECT t3.name AS output_no, t3.output, t2.name AS project_no, t2.project, t1.name AS activity_link,
+		t1.activities, t1.is_current, t1.is_capital, t1.funding_source
+		FROM `tabAdditional Activities` t1
+		INNER JOIN `tabPlanning Project` t2
+		ON t1.project = t2.name
+		INNER JOIN `tabPlanning Output` t3
+		ON t2.planning_output = t3.name
+		WHERE t1.college=%s AND t1.from_year=%s AND t1.to_year=%s
+	''',(college, from_year, to_year), as_dict=True)
 
-	# Should be list
-	planning_update = []
-
-	# Track last seen serial numbers
-	last_output_no = None
-	# last_project_no = None
-
-	for row in planning:
-		# Hide repeated output
-		if row["output_si_no"] == last_output_no:
-			# row["output_si_no"] = ""
-			row["output"] = ""
-		else:
-			last_output_no = row["output_si_no"]
-
-		# Hide repeated project
-		# if row["project_si_no"] == last_project_no:
-		# 	# row["project_si_no"] = ""
-		# 	row["project"] = ""
-		# else:
-		# 	last_project_no = row["project_si_no"]
-
-		planning_update.append(row)
-
-	# frappe.throw(str(planning_update))
-
-	return planning_update
+	return additional
 
 @frappe.whitelist()
 def create_apa_for_subsidiaries(apa_name):

@@ -20,7 +20,7 @@ class CustomWorkflow:
 		self.field_list		= ["user_id", "employee_name", "designation", "name"]
 		self.student_field_list = ["user", "student_name", "name"]
 
-		if self.doc.doctype in ("Travel Authorization", "Travel Advance", "Travel Adjustment", "Travel Claim", "Employee Advance", "Leave Encashment","Overtime Application","Events","Leave Application") and self.doc.doctype not in ("Annual Programme Monitoring Report", "Student Leave Application"):
+		if self.doc.doctype in ("Travel Authorization", "Travel Advance", "Travel Adjustment", "Travel Claim", "Employee Advance", "Leave Encashment","Overtime Application","Events","Leave Application") and self.doc.doctype not in ("Annual Programme Monitoring Report", "University Wide Module Report", "Student Leave Application"):
 			self.employee		= frappe.db.get_value("Employee", self.doc.employee, self.field_list)
 			self.reports_to 	= frappe.db.get_value("Employee", {"name":frappe.db.get_value("Employee", self.doc.employee, "reports_to")}, self.field_list)
 			# if not self.reports_to:
@@ -38,7 +38,7 @@ class CustomWorkflow:
 					frappe.throw("Please set HR Approver in Company Settings")
 		### =============== *** =============== *** === NYUTHYUE === *** =============== *** =============== ###
 
-		elif self.doc.doctype != "Material Request" and self.doc.doctype not in ("Asset Issue Details", "Compile Budget","POL Expense","Vehicle Request", "Repair And Services", "Asset Movement", "Budget Reappropiation", "Annual Programme Monitoring Report", "Student Leave Application"):
+		elif self.doc.doctype != "Material Request" and self.doc.doctype not in ("Asset Issue Details", "Compile Budget","POL Expense","Vehicle Request", "Repair And Services", "Asset Movement", "Budget Reappropiation", "Annual Programme Monitoring Report", "University Wide Module Report", "Student Leave Application"):
 			self.employee		= frappe.db.get_value("Employee", self.doc.employee, self.field_list)
 			self.reports_to = frappe.db.get_value("Employee", {"name":frappe.db.get_value("Employee", self.doc.employee, "reports_to")}, self.field_list)
 				
@@ -213,6 +213,8 @@ class CustomWorkflow:
 			self.pms_appeal()
 		elif self.doc.doctype == "Annual Programme Monitoring Report":
 			self.apmr()
+		elif self.doc.doctype == "University Wide Module Report":
+			self.uwmr()
 		elif self.doc.doctype == "Student Leave Application":
 			self.student_leave_application()
 		else:
@@ -765,6 +767,39 @@ class CustomWorkflow:
 			if frappe.session.user != self.doc.owner:
 				if "Administrator" not in frappe.get_roles(frappe.session.user):
 					frappe.throw("Not Allowed to Approve this Document.<br>Allowed Users: <br> {}".format(self.doc.owner))
+		else:
+			frappe.throw(_("Invalid Workflow State {}").format(self.doc.workflow_state))
+
+	def uwmr(self):
+		# if (
+		# 	self.new_state
+		# 	and self.old_state
+		# 	and self.new_state.lower() == self.old_state.lower()
+		# ):
+		# 	return
+		if self.new_state.lower() in ("Draft".lower()):
+			pass
+		elif self.new_state.lower() in ("Waiting Verification".lower()) and self.old_state.lower() in ("Draft".lower()):
+			if not self.doc.to:
+				frappe.throw("Please select atleast one To User")
+			if frappe.session.user != self.doc.owner:
+				frappe.throw("Only {} can apply this Document".format(self.doc.owner))
+				
+				self.doc.permitted_users = self.doc.to
+		elif self.new_state.lower() == ("Approved".lower()):
+			permitted_users = []
+			for pu in self.doc.permitted_users:
+				permitted_users.append(pu.user)
+			if frappe.session.user not in permitted_users:
+				if "Administrator" not in frappe.get_roles(frappe.session.user):
+					frappe.throw("Not Allowed to Approve this Document.<br>Allowed Users: <br> {}".format(", ".join(str(idx+1)+". "+a for idx, a in enumerate(permitted_users))))	
+		elif self.new_state.lower() == ("Rejected".lower()):
+			permitted_users = []
+			for pu in self.doc.permitted_users:
+				permitted_users.append(pu.user)
+			if frappe.session.user not in permitted_users:
+				if "Administrator" not in frappe.get_roles(frappe.session.user):
+					frappe.throw("Not Allowed to Reject this Document.<br>Allowed Users: <br> {}".format(", ".join(str(idx+1)+". "+a for idx, a in enumerate(permitted_users))))
 		else:
 			frappe.throw(_("Invalid Workflow State {}").format(self.doc.workflow_state))
 
@@ -1461,6 +1496,7 @@ def get_field_map():
 		"PMS Appeal": ["approver","approver_name","approver_designation"],
 		"Asset Issue Details": [],
 		"Annual Programme Monitoring Report": [],
+		"University Wide Module Report": [],
 		'Student Leave Application': ["approver", "approver_name", "approver_designation"],
 	}
 

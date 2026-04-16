@@ -19,6 +19,7 @@ class APATargetOutcomeItem(Document):
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
+		status: DF.Link | None
 		target: DF.Data | None
 		unit: DF.Link | None
 		weightage: DF.Percent

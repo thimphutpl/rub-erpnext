@@ -29,6 +29,18 @@ def execute(filters=None):
             "fieldtype": "Data",
             "width": 400
         },
+         {
+            "fieldname": "academic_year",
+            "label": _("Academic Year"),
+            "fieldtype": "Data",
+            "width": 100
+        },
+         {
+            "fieldname": "title",
+            "label": _("Semester"),
+            "fieldtype": "Data",
+            "width": 100
+        },
         {
             "fieldname": "student_count",
             "label": _("Number of Students"),
@@ -66,6 +78,8 @@ def execute(filters=None):
             sf.feedback_type,
             sf.college,
             r.question,
+            sf.academic_year,
+            at.title,
             COUNT(DISTINCT sf.student) AS student_count,
             AVG(r.rating) AS average_rating,
             COUNT(r.rating) AS total_responses
@@ -73,6 +87,8 @@ def execute(filters=None):
             `tabStudent Feedback` sf
         INNER JOIN 
             `tabRating Responses` r ON sf.name = r.parent
+        INNER JOIN 
+            `tabAcademic Term` at ON sf.academic_year=at.academic_year
         WHERE 
             {conditions}
         GROUP BY 

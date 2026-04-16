@@ -56,7 +56,6 @@ frappe.ui.form.on("Annual Work Plan", {
     get_planning_info: function(frm){
         frappe.call({
             method:"erpnext.budget.doctype.five_year_plan_proposal.five_year_plan_proposal.fetch_budgetplan",
-            
             args: {
                     fyp: frm.doc.fyp
                 },
@@ -65,9 +64,6 @@ frappe.ui.form.on("Annual Work Plan", {
                         // Clear existing rows first (optional)
                         console.log(r.message)
                         frm.clear_table("apa_details");
-
-
-    
                         // r.message should be an array of objects
                         r.message.forEach(function(row) {
                             let child = frm.add_child("apa_details");
@@ -79,12 +75,40 @@ frappe.ui.form.on("Annual Work Plan", {
                             child.project_no = row.project_si_no
                             child.is_current = row.is_current
                             child.is_capital = row.is_capital
-                            // child.competency = row.competency_item;
-                            // child.description = row.description;
+                            child.funding_source = row.funding_source
                         });
-    
-                        // Refresh the table to show the new data
                         frm.refresh_field("apa_details");
+                    }
+                }
+        })
+    },
+    get_additional_activities: function(frm){
+        frappe.call({
+            method:"erpnext.budget.doctype.annual_work_plan.annual_work_plan.get_additional_activities",
+            args: {
+                    from_year: frm.doc.from_year,
+                    to_year: frm.doc.to_year,
+                    college: frm.doc.colleges
+                },
+                callback: function(r) {
+                    if (r.message) {
+                        // Clear existing rows first (optional)
+                        console.log(r.message)
+                        frm.clear_table("apa_extra_details");
+                        // r.message should be an array of objects
+                        r.message.forEach(function(row) {
+                            let child = frm.add_child("apa_extra_details");
+                            child.output = row.output
+                            child.activities= row.activities
+                            child.project = row.project
+                            child.activity_link = row.activity_link
+                            child.output_no = row.output_no
+                            child.project_no = row.project_no
+                            child.is_current = row.is_current
+                            child.is_capital = row.is_capital
+                            child.funding_source = row.funding_source
+                        });
+                        frm.refresh_field("apa_extra_details");
                     }
                 }
         })

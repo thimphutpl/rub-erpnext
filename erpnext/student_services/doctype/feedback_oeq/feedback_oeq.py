@@ -18,5 +18,6 @@ class FeedbackOEQ(Document):
 		parentfield: DF.Data
 		parenttype: DF.Data
 		question: DF.Data | None
+		status: DF.Literal["Enable", "Disable"]
 	# end: auto-generated types
 	pass

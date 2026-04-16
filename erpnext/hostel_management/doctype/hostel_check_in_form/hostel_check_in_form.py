@@ -20,7 +20,7 @@ def get_students_from_room(hostel_room):
 	students = frappe.get_all(
 		"Student List Item",
 		filters={"parent": hostel_room, "parenttype": "Hostel Room"},
-		fields=["student_code", "year",]
+		fields=["student_code", "year", "first_name", "last_name"]
 	)
 
 	return students

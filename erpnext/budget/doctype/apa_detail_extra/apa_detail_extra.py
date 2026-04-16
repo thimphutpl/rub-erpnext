@@ -28,7 +28,5 @@ class APADetailExtra(Document):
 		project: DF.SmallText | None
 		project_no: DF.Link | None
 		proposed_budget: DF.Currency
-		sub_activity: DF.SmallText | None
-		sub_activity_link: DF.Link | None
 	# end: auto-generated types
 	pass

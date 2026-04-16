@@ -1,0 +1,314 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"TOHSdp-ORh\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Bulk Hostel Allocation\",\"col\":3}},{\"id\":\"XYhGEszq5Y\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hostel Attendance\",\"col\":3}},{\"id\":\"lcqMZ96g08\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hostel Room\",\"col\":3}},{\"id\":\"Zc8UFFSjzg\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Hostel Room\",\"col\":4}},{\"id\":\"AzCGLmq2DV\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b></b></span>\",\"col\":12}},{\"id\":\"nPccGEq_41\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Hostel Management</span>\",\"col\":12}},{\"id\":\"8_nBh-4IGL\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel\",\"col\":4}},{\"id\":\"6wA1jEUFYM\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Transactions\",\"col\":4}},{\"id\":\"QCDmsjjIPF\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Budget\",\"col\":4}},{\"id\":\"5XZFp0dlcl\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Attendance Application\",\"col\":4}},{\"id\":\"7bZr4U9v-c\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Check-In Trasnactions\",\"col\":4}},{\"id\":\"Mz4MSvThSA\",\"type\":\"card\",\"data\":{\"card_name\":\"Report\",\"col\":4}},{\"id\":\"yx-OsgXJbN\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Counsellor Application\",\"col\":4}}]",
+ "creation": "2025-07-29 14:56:45.589418",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "retail",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Hostel Management",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Attendance Application",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Attendance",
+   "link_count": 0,
+   "link_to": "Hostel Attendance",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Type",
+   "link_count": 0,
+   "link_to": "Hostel Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Room",
+   "link_count": 0,
+   "link_to": "Hostel Room",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Check-In Trasnactions",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Check-In Form",
+   "link_count": 0,
+   "link_to": "Hostel Check-In Form",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Check-Out Form",
+   "link_count": 0,
+   "link_to": "Hostel Check-Out Form",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Budget",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Budget",
+   "link_count": 0,
+   "link_to": "Hostel Budget",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Transactions",
+   "link_count": 5,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Apply",
+   "link_count": 0,
+   "link_to": "Hostel Apply",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Bulk Hostel Allocation",
+   "link_count": 0,
+   "link_to": "Hostel Allocation Bulk Upload",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Change Application",
+   "link_count": 0,
+   "link_to": "Hostel Change Application",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Maintenance Application",
+   "link_count": 0,
+   "link_to": "Hostel Maintenance Application",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Maintenance Report",
+   "link_count": 0,
+   "link_to": "Hostel Maintenance Report",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Report",
+   "link_count": 6,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Hostel Allocation Bulk Upload ",
+   "link_count": 0,
+   "link_to": "Hostel Allocation Bulk Upload Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Hostel Change Application",
+   "link_count": 0,
+   "link_to": "Hostel Change Application Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Hostel Budget Report",
+   "link_count": 0,
+   "link_to": "Hostel Budget Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Hostel Room Report",
+   "link_count": 0,
+   "link_to": "Hostel Room Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Hostel Councilor Report",
+   "link_count": 0,
+   "link_to": "Hostel Counsellor Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Hostel Attendance Report",
+   "link_count": 0,
+   "link_to": "Hostel Attendance Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Counsellor Application",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Student Responsibilities",
+   "link_count": 0,
+   "link_to": "Student Responsibilities",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hostel Councilor",
+   "link_count": 0,
+   "link_to": "Hostel Councillor",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-04-16 09:54:04.825426",
+ "modified_by": "Administrator",
+ "module": "Hostel Management",
+ "name": "Hostel Management",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Hostel Room",
+   "label": "Hostel Room",
+   "quick_list_filter": "[]"
+  }
+ ],
+ "roles": [],
+ "sequence_id": 41.0,
+ "shortcuts": [
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "Hostel Room",
+   "link_to": "Hostel Room",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "Bulk Hostel Allocation",
+   "link_to": "Hostel Allocation Bulk Upload",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "Hostel Attendance",
+   "link_to": "Hostel Attendance",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Hostel Management"
+}

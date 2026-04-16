@@ -9,6 +9,7 @@
   "from_year",
   "budget_output",
   "budget_project",
+  "budget_activity_type",
   "budget_type",
   "budget_activity",
   "supplement_amount",
@@ -41,10 +42,10 @@
   },
   {
    "fieldname": "budget_activity",
-   "fieldtype": "Link",
+   "fieldtype": "Dynamic Link",
    "in_list_view": 1,
    "label": "Budget Activity",
-   "options": "Planning Activities",
+   "options": "budget_activity_type",
    "reqd": 1
   },
   {
@@ -139,13 +140,21 @@
    "label": "Budget Project",
    "options": "Planning Project",
    "reqd": 1
+  },
+  {
+   "default": "Planning Activities",
+   "fieldname": "budget_activity_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Budget Activity Type",
+   "options": "Planning Activities\nAdditional Activities"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-26 12:21:15.615187",
+ "modified": "2026-04-06 14:33:32.466746",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Supplementary Budgets",

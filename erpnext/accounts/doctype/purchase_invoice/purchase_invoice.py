@@ -251,29 +251,7 @@ class PurchaseInvoice(BuyingController):
 	def before_save(self):
 		if not self.on_hold:
 			self.release_date = ""
-		self.validate_taxes_and_charges()
-		# self.calculate_gst_for_items()
 	
-	def validate_taxes_and_charges(self):
-		if not self.taxes_and_charges:
-			msgprint(_("You are creating a Purchase Order without including GST."), 
-					 title=_("Warning"), indicator="orange")
-	# def calculate_gst_for_items(self):
-	# 	if self.gst_amount < 0:
-	# 		for t in self.taxes:
-	# 			if t.account_head:
-	# 				break
-
-	# 		# Update each item
-	# 		for item in self.items:
-	# 			if not item.qty or not item.net_amount:
-	# 				# gst = 0.0
-	# 				item.gst_qty = 0.0
-	# 				item.rate_including_gst = item.net_rate or 0.0
-	# 				continue
-	# 			# item.gst = (item.amount * gst_rate) / 100
-	# 			item.gst_qty = (item.gst_amount / item.qty) if item.qty else 0.0
-	# 			item.rate_including_gst = (item.net_rate or 0.0) + item.gst_qty		
 
 	def invoice_is_blocked(self):
 		return self.on_hold and (not self.release_date or self.release_date > getdate(nowdate()))
@@ -299,6 +277,7 @@ class PurchaseInvoice(BuyingController):
 		validate_service_stop_date(self)
 
 		self.validate_release_date()
+		self.validate_advance_entries()
 		self.check_conversion_rate()
 		self.validate_credit_to_acc()
 		self.clear_unallocated_advances("Purchase Invoice Advance", "advances")
@@ -1047,6 +1026,7 @@ class PurchaseInvoice(BuyingController):
 
 	# make advance gl entry customisation for advance incorporation by paying advance in different accounts
 	def make_advance_gl_entry(self, gl_entries):
+		frappe.throw("hi")
 		for a in self.get("advances"):
 			if flt(a.allocated_amount) and a.advance_account:
 				advance_account_currency = get_account_currency(a.advance_account)

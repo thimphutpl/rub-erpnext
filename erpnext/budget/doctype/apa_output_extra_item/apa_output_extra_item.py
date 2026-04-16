@@ -16,7 +16,6 @@ class APAOutputExtraItem(Document):
 
 		activities: DF.SmallText | None
 		activity_link: DF.Link | None
-		activity_no: DF.Data | None
 		justification: DF.SmallText | None
 		output: DF.SmallText | None
 		output_no: DF.Int
@@ -25,6 +24,7 @@ class APAOutputExtraItem(Document):
 		parenttype: DF.Data
 		project: DF.SmallText | None
 		project_no: DF.Int
+		status: DF.Link | None
 		sub_activity: DF.SmallText | None
 		sub_activity_link: DF.Link | None
 		target: DF.Data | None

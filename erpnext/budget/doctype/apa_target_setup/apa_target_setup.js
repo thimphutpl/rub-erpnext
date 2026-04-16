@@ -70,6 +70,8 @@ frappe.ui.form.on("APA Target Setup", {
                             child.unit = row.unit
                             child.weightage = row.weightage
                             child.sub_activity = row.sub_activity
+                            child.sub_activity_link = row.sub_activity_link
+                            child.activity_link = row.activity_link
                         });
     
                         frm.refresh_field("output_extra_items");

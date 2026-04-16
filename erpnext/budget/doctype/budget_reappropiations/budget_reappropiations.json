@@ -8,19 +8,21 @@
  "field_order": [
   "section_break_kyrh",
   "appropriation_date",
+  "from_year",
   "from_output",
   "from_project",
+  "from_activity_type",
   "from_budget_type",
   "from_activity",
-  "from_year",
   "appropiation_amount",
   "column_break_prmd",
   "college",
+  "to_year",
   "to_output",
   "to_project",
+  "to_activity_type",
   "to_budget_type",
   "to_activity",
-  "to_year",
   "remarks",
   "approval_details_section",
   "approver",
@@ -66,17 +68,17 @@
   },
   {
    "fieldname": "from_activity",
-   "fieldtype": "Link",
+   "fieldtype": "Dynamic Link",
    "in_list_view": 1,
    "label": "From Activity",
-   "options": "Planning Activities",
+   "options": "from_activity_type",
    "reqd": 1
   },
   {
    "fieldname": "to_activity",
-   "fieldtype": "Link",
+   "fieldtype": "Dynamic Link",
    "label": "To Activity",
-   "options": "Planning Activities",
+   "options": "to_activity_type",
    "reqd": 1
   },
   {
@@ -177,13 +179,27 @@
    "label": "To Project",
    "options": "Planning Project",
    "reqd": 1
+  },
+  {
+   "default": "Planning Activities",
+   "fieldname": "from_activity_type",
+   "fieldtype": "Select",
+   "label": "From Activity Type",
+   "options": "Planning Activities\nAdditional Activities"
+  },
+  {
+   "default": "Planning Activities",
+   "fieldname": "to_activity_type",
+   "fieldtype": "Select",
+   "label": "To Activity Type",
+   "options": "Planning Activities\nAdditional Activities"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-25 20:39:49.135450",
+ "modified": "2026-04-06 12:25:41.107918",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Budget Reappropiations",

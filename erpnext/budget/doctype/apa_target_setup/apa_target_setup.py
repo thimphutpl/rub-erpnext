@@ -29,7 +29,7 @@ class APATargetSetup(Document):
 
 	def autoname(self):
 		college_abbr = frappe.get_value("Company", self.college, "abbr")
-		self.name = make_autoname(f"APA Target/{college_abbr}/{self.from_year}-{self.to_year}/.##")
+		self.name = make_autoname(f"APA Target Setup/{college_abbr}/{self.from_year}-{self.to_year}/.##")
 
 @frappe.whitelist()
 def fetch_output_and_outcome(from_year, to_year, college):

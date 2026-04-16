@@ -9,6 +9,7 @@
   "activities",
   "unit",
   "column_break_jhsc",
+  "disabled",
   "from_date",
   "to_date",
   "is_capital",
@@ -101,13 +102,18 @@
    "label": "Unit",
    "options": "APA Unit",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2026-03-26 12:30:43.059480",
+ "modified": "2026-04-01 16:25:52.261535",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Planning Activities",
