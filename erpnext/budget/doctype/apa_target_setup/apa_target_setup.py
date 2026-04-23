@@ -96,7 +96,6 @@ def fetch_output_and_outcome(from_year, to_year, college):
 
 # def send_expiry_alerts():
 #     today = nowdate()
-a
 #     # define reminder windows
 #     target_dates = [
 #         add_days(today, 1),
