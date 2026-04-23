@@ -15,6 +15,7 @@ class APAOutcomeItem(Document):
 		from frappe.types import DF
 
 		category: DF.Data | None
+		evidence: DF.Attach | None
 		irt_rating: DF.Percent
 		justification: DF.SmallText | None
 		means_of_verification: DF.Data | None

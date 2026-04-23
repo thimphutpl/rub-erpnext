@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:FYPP/{from_year}-{to_year}/{#}",
+ "autoname": "format:FYPP/{fiscal_year}/{#}",
  "creation": "2025-11-25 12:30:48.698719",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -66,14 +66,14 @@
    "fieldname": "from_year",
    "fieldtype": "Link",
    "label": "From Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
    "fieldname": "to_year",
    "fieldtype": "Link",
    "label": "To Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
@@ -112,7 +112,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-25 18:49:22.281388",
+ "modified": "2026-04-23 10:32:32.655533",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Five Year Plan Proposal",

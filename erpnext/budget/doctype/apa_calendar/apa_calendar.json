@@ -5,7 +5,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "fiscal_year",
+  "from_year",
   "column_break_bxlx",
   "to_year",
   "target_setup_section",
@@ -37,15 +37,6 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
-  },
-  {
-   "fieldname": "fiscal_year",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "From Year",
-   "options": "Fiscal Year",
-   "reqd": 1,
-   "unique": 1
   },
   {
    "fieldname": "target_setup_section",
@@ -121,16 +112,25 @@
    "fieldname": "to_year",
    "fieldtype": "Link",
    "label": "To Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
+  },
+  {
+   "fieldname": "from_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "From Year",
+   "options": "Budget Year",
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-07 14:36:44.689305",
- "modified_by": "rohan.gurung@thimphutechpark.bt",
+ "modified": "2026-04-20 10:06:04.071174",
+ "modified_by": "Administrator",
  "module": "Budget",
  "name": "APA Calendar",
  "owner": "Administrator",

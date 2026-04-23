@@ -1,7 +1,6 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:AB/{from_year}-{to_year}/{#}",
  "creation": "2026-02-17 10:00:39.565176",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -71,14 +70,14 @@
    "fieldname": "from_year",
    "fieldtype": "Link",
    "label": "From Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
    "fieldname": "to_year",
    "fieldtype": "Link",
    "label": "To Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
@@ -100,11 +99,10 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-26 17:10:10.035128",
+ "modified": "2026-04-23 10:36:23.583069",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Approved Budget",
- "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

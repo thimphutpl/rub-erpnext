@@ -35,7 +35,7 @@ class AnnualWorkPlan(Document):
 
 	def autoname(self):
 		abbr = frappe.db.get_value("Company", self.colleges, "abbr")
-		self.name = "AWP/"+self.from_year+"/"+self.to_year+"/"+abbr
+		self.name = "AWP/"+self.from_year+"-"+self.to_year+"/"+abbr
 
 	def validate(self):
 		self.check_applicable_date()

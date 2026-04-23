@@ -3,12 +3,9 @@
 
 import frappe
 from frappe.model.document import Document
-
+from frappe.utils import getdate
 
 class PlanningOutput(Document):
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
-
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
@@ -20,34 +17,21 @@ class PlanningOutput(Document):
 		rub_strategic_plan: DF.Link | None
 		serial_number: DF.Int
 		to_date: DF.Date
-	# end: auto-generated types
-	pass
 
 	def autoname(self):
-		self.name = "Output "+str(self.serial_number_generation())
+		self.name = "Output("+str(getdate(self.from_date).year)+"-"+str(getdate(self.to_date).year)+") - "+str(self.serial_number_generation())
 
 	def validate(self):
-		# self.check_serial_number()
-		self.serial_number = self.serial_number_generation()
+		self.serial_number = int(self.serial_number_generation())
 
 	def serial_number_generation(self):
-		max_serial = frappe.db.get_value("Planning Output", {"from_date": self.from_date, "to_date": self.to_date, "docstatus": 1}, "serial_number", as_dict=True)
-		serial_number = (int(max_serial.serial_number) if max_serial else 0) + 1
+		max_serial = frappe.db.sql(
+				"""SELECT MAX(serial_number) FROM `tabPlanning Output` where from_date = %s and to_date = %s and docstatus = 1""", (self.from_date, self.to_date),
+				as_dict=False
+			)[0][0]
+		serial_number = (max_serial if max_serial else 0) + 1
 
 		return serial_number
-
-	def check_serial_number(self):
-		serials = frappe.get_all(
-			"Planning Output",
-			filters={
-				"from_date": [">=", self.from_date],
-				"to_date": ["<=", self.to_date],
-				"docstatus": 1
-			},
-			pluck="serial_number"
-		)
-		if self.serial_number in serials:
-			frappe.throw(_("Serial Number: {0} exists for date between {1} and {2}".format(self.serial_number, self.from_date, self.to_date)))
 
 @frappe.whitelist()
 def make_planning_project(name, from_date, to_date):
@@ -55,13 +39,5 @@ def make_planning_project(name, from_date, to_date):
 	po.planning_output = name
 	po.from_date = from_date
 	po.to_date = to_date
-	max_serial = frappe.db.sql(
-		"""SELECT MAX(serial_number) FROM `tabPlanning Project` where from_date >= %s and to_date <= %s and docstatus = 1""", (from_date, to_date),
-		as_dict=False
-	)[0][0]
-
-	po.serial_number = (max_serial if max_serial else 0) + 1
-
-	# po.serial_number = max_serial + 1
 	return po
 

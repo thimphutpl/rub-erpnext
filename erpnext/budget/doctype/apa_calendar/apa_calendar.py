@@ -17,7 +17,7 @@ class APACalendar(Document):
 		amended_from: DF.Link | None
 		evaluation_end_date: DF.Date
 		evaluation_start_date: DF.Date
-		fiscal_year: DF.Link
+		from_year: DF.Link
 		review_end_date: DF.Date
 		review_start_date: DF.Date
 		target_setup_end_date: DF.Date

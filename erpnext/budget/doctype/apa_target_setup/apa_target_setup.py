@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
+from frappe.utils import add_days, nowdate
 
 class APATargetSetup(Document):
 	# begin: auto-generated types
@@ -92,3 +93,33 @@ def fetch_output_and_outcome(from_year, to_year, college):
 		"output_extra": output_extra,
 		"outcome": outcome
 	}
+
+# def send_expiry_alerts():
+#     today = nowdate()
+a
+#     # define reminder windows
+#     target_dates = [
+#         add_days(today, 1),
+#         add_days(today, 2)
+#     ]
+#     docs = frappe.get_all(
+#         "APA Calender",
+#         filters={
+#             "expiry_date": ["in", target_dates],
+#             "docstatus": ["!=", 2]  # ignore cancelled
+#         },
+#         fields=["name", "expiry_date", "owner"]
+#     )
+
+#     for d in docs:
+#         # Prevent duplicate sending (optional but important)
+#         if not already_sent(d.name, d.expiry_date):
+#             frappe.sendmail(
+#                 recipients=[d.owner],
+#                 subject="Expiry Reminder",
+#                 message=f"""
+#                 Document <b>{d.name}</b> is expiring on <b>{d.expiry_date}</b>.
+#                 """
+#             )
+
+#             mark_as_sent(d.name, d.expiry_date)

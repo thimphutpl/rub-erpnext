@@ -18,7 +18,8 @@
   "proposed_budget",
   "approved_budget",
   "is_current",
-  "is_capital"
+  "is_capital",
+  "remarks"
  ],
  "fields": [
   {
@@ -105,14 +106,19 @@
    "fieldtype": "Check",
    "label": "Is Capital",
    "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-30 11:11:22.733563",
- "modified_by": "Administrator",
+ "modified": "2026-04-16 14:03:44.348879",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
  "module": "Budget",
  "name": "APA Detail",
  "owner": "Administrator",

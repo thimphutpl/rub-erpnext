@@ -118,14 +118,14 @@
    "fieldname": "from_year",
    "fieldtype": "Link",
    "label": "From Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
    "fieldname": "to_year",
    "fieldtype": "Link",
    "label": "To Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
@@ -148,7 +148,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-31 17:14:24.043258",
+ "modified": "2026-04-20 10:05:22.994175",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Annual Work Plan",

@@ -109,7 +109,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "From Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
@@ -117,7 +117,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "To Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
@@ -154,7 +154,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-06 14:33:32.466746",
+ "modified": "2026-04-20 10:10:41.290576",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Supplementary Budgets",

@@ -103,7 +103,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "From Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
@@ -111,7 +111,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "To Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
@@ -130,7 +130,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-06 12:24:19.793366",
+ "modified": "2026-04-20 10:13:49.493986",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Additional Activities",

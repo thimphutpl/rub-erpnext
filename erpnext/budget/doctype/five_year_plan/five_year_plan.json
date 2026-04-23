@@ -1,7 +1,6 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:FYP/{from_year}-{to_year}/{#}",
  "creation": "2026-02-09 09:25:33.572696",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -48,7 +47,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "From Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
@@ -71,7 +70,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "To Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
@@ -117,11 +116,10 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-31 15:08:33.478245",
+ "modified": "2026-04-23 10:25:50.090497",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Five Year Plan",
- "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

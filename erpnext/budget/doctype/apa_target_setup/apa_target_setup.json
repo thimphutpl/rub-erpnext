@@ -70,7 +70,7 @@
    "fieldname": "to_year",
    "fieldtype": "Link",
    "label": "To Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
@@ -78,7 +78,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "From Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
@@ -96,7 +96,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-28 17:08:56.945512",
+ "modified": "2026-04-20 10:07:00.097014",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "APA Target Setup",

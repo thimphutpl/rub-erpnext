@@ -25,7 +25,8 @@
   "justification",
   "self_rating",
   "category",
-  "remarks"
+  "remarks",
+  "evidence"
  ],
  "fields": [
   {
@@ -153,14 +154,19 @@
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "label": "Remarks"
+  },
+  {
+   "fieldname": "evidence",
+   "fieldtype": "Attach",
+   "label": "Evidence"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-04-15 17:40:51.018739",
- "modified_by": "Administrator",
+ "modified": "2026-04-21 15:59:38.817388",
+ "modified_by": "mon.chhetri@thimphutechpark.bt",
  "module": "Budget",
  "name": "Annual Performance Extra Item",
  "owner": "Administrator",

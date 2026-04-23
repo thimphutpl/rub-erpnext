@@ -18,6 +18,7 @@ class APAOutputItem(Document):
 		activities_no: DF.Link | None
 		activity_link: DF.Link | None
 		category: DF.Data | None
+		evidence: DF.Attach | None
 		irt_rating: DF.Data | None
 		justification: DF.SmallText | None
 		means_of_verification: DF.Data | None

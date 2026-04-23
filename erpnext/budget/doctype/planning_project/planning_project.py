@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-
+from frappe.utils import getdate
 
 class PlanningProject(Document):
 	# begin: auto-generated types
@@ -21,34 +21,38 @@ class PlanningProject(Document):
 		serial_number: DF.Int
 		to_date: DF.Date | None
 	# end: auto-generated types
-	pass
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		from_date: DF.Date | None
+		planning_output: DF.Link | None
+		project: DF.SmallText | None
+		serial_number: DF.Int
+		to_date: DF.Date | None
+
+	def autoname(self):
+		self.name = "Project("+str(getdate(self.from_date).year)+"-"+str(getdate(self.to_date).year)+") - "+str(self.serial_number_generation())
 
 	def validate(self):
-		self.check_serial_number()
+		self.serial_number = int(self.serial_number_generation())
 
-	def check_serial_number(self):
-		serials = frappe.get_all(
-			"Planning Project",
-			filters={
-				"from_date": [">=", self.from_date],
-				"to_date": ["<=", self.to_date],
-				"docstatus": 1
-			},
-			pluck="serial_number"
-		)
-		if self.serial_number in serials:
-			frappe.throw(_("Serial Number: {0} exists for date between {1} and {2}".format(self.serial_number, self.from_date, self.to_date)))
+	def serial_number_generation(self):
+		max_serial = frappe.db.sql(
+				"""SELECT MAX(serial_number) FROM `tabPlanning Project` where from_date = %s and to_date = %s and docstatus = 1""", (self.from_date, self.to_date),
+				as_dict=False
+			)[0][0]
+		serial_number = (max_serial if max_serial else 0) + 1
 
+		return serial_number
+		
 @frappe.whitelist()
 def make_planning_activities(name, from_date, to_date):
 	po = frappe.new_doc("Planning Activities")
 	po.project = name
 	po.from_date = from_date
 	po.to_date = to_date
-	# max_serial = frappe.db.sql(
-	# 	"""SELECT MAX(serial_number) FROM `tabPlanning Activities` where fiscal_year = %s""", (fiscal_year),
-	# 	as_dict=False
-	# )[0][0]
-	# po.serial_number = max_serial + 1
 	return po
 

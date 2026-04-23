@@ -33,8 +33,9 @@ class BudgetWithdrawal(Document):
 	# end: auto-generated types
 
 	def autoname(self):
+		abbr = frappe.db.get_value("Company", self.college, "abbr")
 		self.name = make_autoname(
-			f"BW/{self.from_year}-{self.to_year}/.##"
+			f"BW/{abbr}/{self.from_year}-{self.to_year}/.##"
 		)	
 
 	def validate(self):

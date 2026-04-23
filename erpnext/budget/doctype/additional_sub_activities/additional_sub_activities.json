@@ -63,14 +63,14 @@
    "fieldname": "from_year",
    "fieldtype": "Link",
    "label": "From Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
    "fieldname": "to_year",
    "fieldtype": "Link",
    "label": "To Year",
-   "options": "Fiscal Year",
+   "options": "Budget Year",
    "reqd": 1
   },
   {
@@ -99,7 +99,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-30 16:28:14.021759",
+ "modified": "2026-04-20 10:15:06.557849",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Additional Sub Activities",

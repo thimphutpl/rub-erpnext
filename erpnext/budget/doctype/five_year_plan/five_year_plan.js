@@ -10,7 +10,9 @@ frappe.ui.form.on("Five Year Plan", {
                     frappe.call({
                         method: "erpnext.budget.doctype.five_year_plan.five_year_plan.create_awp_for_subsidiaries",
                         args: {
-                            fyp_name: frm.doc.name
+                            fyp_name: frm.doc.name,
+                            from_year: frm.doc.from_year,
+                            to_year: frm.doc.to_year,
                         },
                         freeze: true,
                         freeze_message: __('Creating AWP copies...'),
@@ -73,33 +75,4 @@ frappe.ui.form.on("Five Year Plan", {
                 }
         })
     }
-    // get_proposal_details: function(frm){
-	//     cur_frm.clear_table("items");
-	//     cur_frm.refresh_fields("items");
-    //     if(frm.doc.from_year && frm.doc.to_year && frm.doc.rub_strategic_plan){
-    //         frappe.call({
-    //             method:"erpnext.budget.doctype.five_year_plan.five_year_plan.get_fyp_proposal",
-    //             args: {
-    //                     rub_strategic_plan: frm.doc.rub_strategic_plan,
-    //                     from_year: frm.doc.from_year,
-    //                     to_year: frm.doc.to_year,
-    //                 },
-    //                 callback: function(r) {
-    //                     if(r.message) {
-    //                         cur_frm.clear_table("items");
-    //                         r.message.forEach(function(fyp_proposal) {
-    //                             var row = frappe.model.add_child(cur_frm.doc, "Five Year Plan Items", "items");
-    //                             row.five_year_plan_proposal = fyp_proposal['name']
-    //                             row.college = fyp_proposal['colleges']
-    //                             row.proposed_budget = fyp_proposal['total_proposed_budget']
-    //                             refresh_field("items");
-    //                         });
-    //                     }
-    //                     cur_frm.refresh_fields("items");
-    //                 },
-    //             freeze: true,
-    //             freeze_message: '<span style="color:white; background-color: red; padding: 10px 50px; border-radius: 5px;">Fetching FYP Proposal...</span>',
-    //         })
-    //     }
-    // },
 });

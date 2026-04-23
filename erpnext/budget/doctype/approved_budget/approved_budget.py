@@ -4,11 +4,9 @@
 import frappe
 from frappe.model.document import Document
 from frappe.utils import flt
+from frappe.model.naming import make_autoname
 
 class ApprovedBudget(Document):
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
-
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
@@ -20,11 +18,16 @@ class ApprovedBudget(Document):
 		amended_from: DF.Link | None
 		college: DF.Link
 		from_year: DF.Link
-		ab_extra_item: DF.Table[ApprovedBudgetItem]
+		items: DF.Table[ApprovedBudgetItem]
 		to_year: DF.Link
 		total_approved_budget: DF.Currency
-	# end: auto-generated types
-	
+
+	def autoname(self):
+		abbr = frappe.db.get_value("Company", self.college, "abbr")
+		self.name = make_autoname(
+			f"AB/{abbr}/{self.from_year}-{self.to_year}/.##"
+		)
+
 	def validate(self):
 		self.check_approved_budget()
 		self.validate_approved_budget()

@@ -34,8 +34,9 @@ class SupplementaryBudgets(Document):
 	# end: auto-generated types
 
 	def autoname(self):
+		abbr = frappe.db.get_value("Company", self.college, "abbr")
 		self.name = make_autoname(
-			f"SB/{self.from_year}-{self.to_year}/.##"
+			f"SB/{abbr}/{self.from_year}-{self.to_year}/.##"
 		)	
 	def validate(self):
 		self.validate_budget()

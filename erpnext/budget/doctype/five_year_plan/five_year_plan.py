@@ -3,8 +3,8 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import now_datetime
-from frappe.utils import flt
+from frappe.utils import now_datetime,  import flt
+from frappe.model.naming import make_autoname
 
 class FiveYearPlan(Document):
 	# begin: auto-generated types
@@ -25,8 +25,11 @@ class FiveYearPlan(Document):
 		to_year: DF.Link
 		total_approved_budget: DF.Currency
 		total_proposed_budget: DF.Currency
-	# end: auto-generated types
-	pass
+
+	def autoname(self):
+		self.name = make_autoname(
+			f"FYP/{self.from_year}-{self.to_year}/.##"
+		)	
 
 	def validate(self):
 		self.check_fyp_year()
@@ -139,7 +142,7 @@ def fetch_budgetplan(from_year, to_year):
 
 
 @frappe.whitelist()
-def create_awp_for_subsidiaries(fyp_name):
+def create_awp_for_subsidiaries(fyp_name, from_year, to_year):
     colleges = frappe.db.sql("""
         SELECT name
         FROM `tabCompany`

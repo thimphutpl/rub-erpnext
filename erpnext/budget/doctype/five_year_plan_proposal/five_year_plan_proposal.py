@@ -3,8 +3,8 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import flt
-from frappe.utils import getdate, today
+from frappe.utils import flt, getdate, today
+from frappe.model.naming import make_autoname
 
 class FiveYearPlanProposal(Document):
 	# begin: auto-generated types
@@ -26,7 +26,10 @@ class FiveYearPlanProposal(Document):
 		to_year: DF.Link
 		total_proposed_budget: DF.Currency
 	# end: auto-generated types
-	pass
+	def autoname(self):
+		self.name = make_autoname(
+			f"FYPP/{self.from_year}-{self.to_year}/.##"
+		)	
 
 	def validate(self):
 		self.check_applicable_date()

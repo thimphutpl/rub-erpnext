@@ -36,11 +36,11 @@ class BudgetReappropiations(Document):
 		to_output: DF.Link
 		to_project: DF.Link
 		to_year: DF.Link
-	# end: auto-generated types
-
+		
 	def autoname(self):
+		abbr = frappe.db.get_value("Company", self.college, "abbr")
 		self.name = make_autoname(
-			f"BR/{self.from_year}-{self.to_year}/.##"
+			f"BR/{abbr}/{self.from_year}-{self.to_year}/.##"
 		)	
 	def validate(self):
 		self.validate_budget()
