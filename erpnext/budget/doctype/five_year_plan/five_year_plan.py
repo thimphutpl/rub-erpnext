@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import now_datetime,  import flt
+from frappe.utils import now_datetime, flt
 from frappe.model.naming import make_autoname
 
 class FiveYearPlan(Document):
