@@ -18,13 +18,11 @@ class APACalendar(Document):
 		evaluation_end_date: DF.Date
 		evaluation_start_date: DF.Date
 		from_year: DF.Link
-		review_end_date: DF.Date
+		review_end_date: DF.Dateπ
 		review_start_date: DF.Date
 		target_setup_end_date: DF.Date
 		target_setup_start_date: DF.Date
 		to_year: DF.Link
-	# end: auto-generated types
-	
-	# def validate(self):
-	# 	if self.fiscal_year in frappe.db.get_all("APA Calender", filters={"docstatus": "1"}, pluck="fiscal_year"):
-	# 		frappe.throw("APA Calender exists for fiscal year: {0}".format(self.fiscal_year))
+
+	def autoname(self):
+		self.name = str(self.from_year)+"-"+str(self.to_year)
