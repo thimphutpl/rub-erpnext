@@ -26,7 +26,7 @@ class BudgetWithdrawal(Document):
 		budget_type: DF.Literal["", "Current", "Capital"]
 		college: DF.Link
 		from_year: DF.Link
-		posting_date: DF.Date~
+		posting_date: DF.Date
 		remarks: DF.SmallText | None
 		to_year: DF.Link
 		withdrawal_amount: DF.Currency
