@@ -21,7 +21,58 @@ erpnext.setup.EmployeeController = class EmployeeController extends frappe.ui.fo
 };
 
 frappe.ui.form.on("Employee", {
-	onload: function (frm) {
+	company: function(frm) {
+
+		// clear dependent fields when company changes
+		frm.set_value("branch", null);
+		frm.set_value("department", null);
+		frm.set_value("division", null);
+		frm.set_value("section", null);
+		frm.set_value("unit", null);
+
+	},
+	setup: function(frm) {
+
+		frm.set_query("branch", function() {
+			if (!frm.doc.company) {
+				frappe.msgprint("Please select college first");
+				return;
+			}
+
+			return {
+				filters: {
+					company: frm.doc.company,
+					disabled:0
+				}
+			};
+		});
+		frm.set_query("business_activity", function() {
+			if (!frm.doc.company) {
+				frappe.msgprint("Please select college first");
+				return;
+			}
+
+			return {
+				filters: {
+					company: frm.doc.company,
+					is_disabled:0
+				}
+			};
+		});
+
+		frm.set_query("second_approver",function(){
+			if (!frm.doc.company) {
+				frappe.msgprint("Please select college first");
+				return;
+			}
+
+			return{
+				filters:{
+					company:frm.doc.company,
+					status:"Active"
+				}
+			}
+		})
 		frm.set_query("department", function () {
 			return {
 				filters: {
@@ -64,7 +115,14 @@ frappe.ui.form.on("Employee", {
 
 				},
 			};
-		});
+		});	
+	
+
+	},
+	
+	onload: function (frm) {
+		frm.fields_dict.section-head.collapse(false);
+		
 	},
 	
 	// department: function(frm) {

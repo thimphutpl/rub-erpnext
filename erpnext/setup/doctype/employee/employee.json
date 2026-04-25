@@ -21,12 +21,12 @@
   "middle_name",
   "last_name",
   "employee_name",
-  "scan_sign",
   "column_break_9",
   "gender",
   "date_of_joining",
   "image",
   "old_id",
+  "scan_sign",
   "employment_details_section",
   "employment_type",
   "employee_group",
@@ -35,9 +35,7 @@
   "region",
   "reports_to_name",
   "job_type",
-  "parent_agency_eid",
   "pms_group",
-  "staff_category",
   "column_break_22",
   "employment_status",
   "probation_end_date",
@@ -45,7 +43,8 @@
   "promotion_cycle",
   "promotion_due_date",
   "parent_organization",
-  "is_teaching_staff",
+  "parent_agency_eid",
+  "staff_category",
   "leave_and_expense_claim_section",
   "reports_to",
   "second_approver",
@@ -53,20 +52,20 @@
   "approver_name",
   "second_approver_name",
   "erpnext_user",
-  "create_user_permission",
   "create_user",
   "user_id",
+  "create_user_permission",
   "company_details_section",
   "company",
   "department",
   "employee_number",
   "division",
-  "section",
   "unit",
   "column_break_25",
   "branch",
   "cost_center",
   "business_activity",
+  "section",
   "employment_details",
   "scheduled_confirmation_date",
   "contract_start_date",
@@ -160,8 +159,8 @@
   "internal_work_history",
   "adverse_record",
   "employee_disciplinary",
-  "training_records_section",
-  "train_record",
+  "section_break_xwyg",
+  "table_ouss",
   "exit",
   "resignation_letter_date",
   "relieving_date",
@@ -313,7 +312,6 @@
    "label": "Relation"
   },
   {
-   "collapsible": 1,
    "fieldname": "erpnext_user",
    "fieldtype": "Section Break",
    "label": "User Details"
@@ -349,6 +347,7 @@
   {
    "fieldname": "scheduled_confirmation_date",
    "fieldtype": "Date",
+   "hidden": 1,
    "label": "Offer Date",
    "oldfieldname": "scheduled_confirmation_date",
    "oldfieldtype": "Date"
@@ -356,6 +355,7 @@
   {
    "fieldname": "final_confirmation_date",
    "fieldtype": "Date",
+   "hidden": 1,
    "label": "Confirmation Date",
    "oldfieldname": "final_confirmation_date",
    "oldfieldtype": "Date"
@@ -597,7 +597,6 @@
    "label": "Health Details"
   },
   {
-   "collapsible": 1,
    "fieldname": "educational_qualification",
    "fieldtype": "Section Break",
    "label": "Educational Qualification"
@@ -609,7 +608,6 @@
    "options": "Employee Education"
   },
   {
-   "collapsible": 1,
    "fieldname": "previous_work_experience",
    "fieldtype": "Section Break",
    "label": "Previous Work Experience",
@@ -622,10 +620,9 @@
    "options": "Employee External Work History"
   },
   {
-   "collapsible": 1,
    "fieldname": "history_in_company",
    "fieldtype": "Section Break",
-   "label": "History In Company",
+   "label": "History In College",
    "options": "Simple"
   },
   {
@@ -644,6 +641,7 @@
   {
    "fieldname": "resignation_letter_date",
    "fieldtype": "Date",
+   "hidden": 1,
    "label": "Resignation Letter Date",
    "oldfieldname": "resignation_letter_date",
    "oldfieldtype": "Date"
@@ -666,6 +664,7 @@
   {
    "fieldname": "leave_encashed",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Leave Encashed?",
    "oldfieldname": "leave_encashed",
    "oldfieldtype": "Select",
@@ -675,6 +674,7 @@
    "depends_on": "eval:doc.leave_encashed ==\"Yes\"",
    "fieldname": "encashment_date",
    "fieldtype": "Date",
+   "hidden": 1,
    "label": "Encashment Date",
    "oldfieldname": "encashment_date",
    "oldfieldtype": "Date"
@@ -689,6 +689,7 @@
   {
    "fieldname": "held_on",
    "fieldtype": "Date",
+   "hidden": 1,
    "label": "Exit Interview Held On",
    "oldfieldname": "held_on",
    "oldfieldtype": "Date"
@@ -696,6 +697,7 @@
   {
    "fieldname": "new_workplace",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "New Workplace",
    "oldfieldname": "new_workplace",
    "oldfieldtype": "Data"
@@ -731,6 +733,7 @@
   {
    "fieldname": "attendance_device_id",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Attendance Device ID (Biometric/RF tag ID)",
    "no_copy": 1,
    "unique": 1
@@ -758,6 +761,7 @@
   {
    "fieldname": "ctc",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Cost to Company (CTC)",
    "options": "salary_currency"
   },
@@ -827,6 +831,7 @@
   {
    "fieldname": "feedback_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Feedback"
   },
   {
@@ -1020,11 +1025,13 @@
   {
    "fieldname": "pms_records_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "PMS Records"
   },
   {
    "fieldname": "adverse_record",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Adverse Record"
   },
   {
@@ -1067,17 +1074,6 @@
    "fieldname": "contract_start_date",
    "fieldtype": "Date",
    "label": "Contract Start Date"
-  },
-  {
-   "collapsible": 1,
-   "fieldname": "training_records_section",
-   "fieldtype": "Section Break",
-   "label": "Training Records"
-  },
-  {
-   "fieldname": "train_record",
-   "fieldtype": "Table",
-   "options": "Training Records"
   },
   {
    "fieldname": "permanent_details_section",
@@ -1139,11 +1135,13 @@
   {
    "fieldname": "leave_and_expense_claim_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Leave and Expense Claim"
   },
   {
    "fieldname": "second_approver",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Approver",
    "options": "Employee"
   },
@@ -1159,6 +1157,7 @@
   {
    "fieldname": "second_approver_name",
    "fieldtype": "Read Only",
+   "ignore_user_permissions": 1,
    "label": "Approver Name"
   },
   {
@@ -1217,12 +1216,6 @@
    "options": "Business Activity"
   },
   {
-   "default": "0",
-   "fieldname": "is_teaching_staff",
-   "fieldtype": "Check",
-   "label": "Is Teaching Staff"
-  },
-  {
    "fieldname": "pms_group",
    "fieldtype": "Link",
    "label": "PMS Group",
@@ -1231,12 +1224,13 @@
   {
    "fieldname": "staff_category",
    "fieldtype": "Select",
-   "label": "Staff Category",
-   "options": "\nTeaching\nNon-Teaching"
+   "label": "Occupation Group",
+   "options": "\nAcademics\nAdministrative\nTechnical\nTeaching\nNon-Teaching"
   },
   {
    "fieldname": "applicant_id",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Applicant ID",
    "read_only": 1
   },
@@ -1249,7 +1243,7 @@
   {
    "fieldname": "employee_research_tab",
    "fieldtype": "Tab Break",
-   "label": "Employee Research"
+   "label": "Research and Publication"
   },
   {
    "fieldname": "research_articles",
@@ -1289,7 +1283,8 @@
   },
   {
    "fieldname": "section_break_ymfq",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "hidden": 1
   },
   {
    "fieldname": "knowledge_transfer_and_community_service",
@@ -1304,8 +1299,19 @@
   {
    "fieldname": "research_event_organized",
    "fieldtype": "Table",
+   "hidden": 1,
    "label": "Research Event Organized",
    "options": "Research Event Organized Item"
+  },
+  {
+   "fieldname": "section_break_xwyg",
+   "fieldtype": "Section Break",
+   "label": "Training Records"
+  },
+  {
+   "fieldname": "table_ouss",
+   "fieldtype": "Table",
+   "options": "Training Records"
   }
  ],
  "icon": "fa fa-user",
@@ -1313,7 +1319,7 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2026-03-31 08:59:25.749910",
+ "modified": "2026-04-25 14:30:59.479584",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Employee",
