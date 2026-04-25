@@ -88,7 +88,29 @@ def get_children(doctype, parent=None, company=None, is_root=False):
 		filters["parent_department"] = parent
 
 	return frappe.get_all("Department", fields=fields, filters=filters, order_by="name")
-
+@frappe.whitelist()
+def get_user_company():
+	"""
+	Get company from the Employee record linked to the current user
+	"""
+	user = frappe.session.user
+	
+	# Get employee linked to this user
+	employee = frappe.db.get_value("Employee", {"user_id": user}, "name")
+	
+	if employee:
+		# Get company from employee
+		company = frappe.db.get_value("Employee", employee, "company")
+		if company:
+			return company
+	
+	# Fallback: try getting from User default
+	company = frappe.defaults.get_user_default("Company")
+	if company:
+		return company
+	
+	# If still no company, return None
+	return None
 
 @frappe.whitelist()
 def add_node():
@@ -101,104 +123,6 @@ def add_node():
 		args.parent_department = None
 
 	frappe.get_doc(args).insert()
-# @frappe.whitelist()
-# def get_employee_count(department_name):
-#     dep = frappe.get_doc("Department", department_name)
-
-#     # Type flags
-#     is_department = cint(dep.is_department)
-#     is_division   = cint(dep.is_division)
-#     is_section    = cint(dep.is_section)
-#     is_unit       = cint(dep.is_unit)
-
-#     # Recursive function to get all child nodes
-#     def get_all_child_departments(parent):
-#         children = frappe.get_all("Department", filters={"parent_department": parent}, pluck="name")
-#         all_children = []
-#         for c in children:
-#             all_children.append(c)
-#             all_children += get_all_child_departments(c)
-#         return all_children
-
-#     # Include node itself + all child nodes
-#     all_nodes = [dep.name] + get_all_child_departments(dep.name)
-
-#     # Build SQL condition based on node type
-#     conditions = []
-#     if is_division:
-#         conditions.append('division in ({})'.format(','.join(['"%s"' % d for d in all_nodes])))
-#     if is_department:
-#         conditions.append('department in ({})'.format(','.join(['"%s"' % d for d in all_nodes])))
-#     if is_section:
-#         conditions.append('section in ({})'.format(','.join(['"%s"' % d for d in all_nodes])))
-#     if is_unit:
-#         conditions.append('unit in ({})'.format(','.join(['"%s"' % d for d in all_nodes])))
-
-#     cond = " or ".join(conditions)
-#     if cond:
-#         cond = "and (" + cond + ")"
-
-#     # Count active employees
-#     res = frappe.db.sql("""
-#         select count(*) from `tabEmployee`
-#         where status = "Active" {}
-#     """.format(cond))
-
-#     employee_count = res[0][0] if res else 0
-
-#     return {
-#         "is_department": is_department,
-#         "is_division": is_division,
-#         "is_section": is_section,
-#         "is_unit": is_unit,
-#         "employee_count": employee_count,
-#         "approver": dep.approver
-#     }
-
-# @frappe.whitelist()
-# def get_employee_count(department_name):
-#     dep = frappe.get_doc("Department", department_name)
-
-#     is_department = cint(dep.is_department)
-#     is_division   = cint(dep.is_division)
-#     is_section    = cint(dep.is_section)
-#     is_unit       = cint(dep.is_unit)
-
-#     def get_all_child_departments(parent):
-#         children = frappe.get_all(
-#             "Department",
-#             filters={"parent_department": parent},
-#             pluck="name"
-#         )
-#         all_children = []
-#         for c in children:
-#             all_children.append(c)
-#             all_children += get_all_child_departments(c)
-#         return all_children
-
-#     all_nodes = [dep.name] + get_all_child_departments(dep.name)
-
-#     cond = 'and department in ({})'.format(
-#         ','.join(['"%s"' % d for d in all_nodes])
-#     )
-
-#     res = frappe.db.sql("""
-#         select count(*) from `tabEmployee`
-#         where status = "Active"
-#         and company = %s
-#         {}
-#     """.format(cond), (dep.company,))
-
-#     employee_count = res[0][0] if res else 0
-
-#     return {
-#         "is_department": is_department,
-#         "is_division": is_division,
-#         "is_section": is_section,
-#         "is_unit": is_unit,
-#         "employee_count": employee_count,
-#         "approver": dep.approver
-#     }
 
 @frappe.whitelist()
 def get_employee_count(department_name):
