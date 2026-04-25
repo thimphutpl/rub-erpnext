@@ -52,9 +52,12 @@ function get_employee_count(node) {
 				format_string += `<span class="badge badge-light" style="font-size:xx-small; margin-left:5px; border-right:1px solid grey; border-radius:3px 0px 0px 3px; background-color:#ffe6b3">Unit</span>`;
 			}
 
-			// Employee count badge
-			format_string += `<span class="badge badge-light" style="font-size:xx-small; border-radius:0px 3px 3px 0px; background-color:gold">Employee:${r.message.employee_count}</span>`;
-
+			if (r.message.employee_count > 0) {
+	format_string += `<span class="badge badge-light"
+		style="font-size:xx-small; border-radius:0px 3px 3px 0px; background-color:gold">
+		Employee:${r.message.employee_count}
+	</span>`;
+}
 			// Approver badge (optional)
 			if (r.message.approver) {
 				format_string += `<span class="badge badge-light" style="font-size:xx-small; margin-left:5px; border-radius:3px; background-color:#f7d9e5">Approver:${r.message.approver}</span>`;
