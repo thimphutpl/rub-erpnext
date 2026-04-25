@@ -7,7 +7,7 @@ frappe.treeview_settings["Company"] = {
 			fieldname: "company",
 			fieldtype: "Link",
 			options: "Company",
-			label: __("Company"),
+			label: __("College"),
 			get_query: function () {
 				return {
 					filters: [["Company", "is_group", "=", 1]],
@@ -16,11 +16,11 @@ frappe.treeview_settings["Company"] = {
 		},
 	],
 	breadcrumb: "Setup",
-	root_label: "All Companies",
+	root_label: "All Companie",
 	get_tree_root: false,
 	menu_items: [
 		{
-			label: __("New Company"),
+			label: __("New College"),
 			action: function () {
 				frappe.new_doc("Company", true);
 			},

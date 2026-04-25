@@ -126,10 +126,13 @@ class Company(NestedSet):
 		sso_name: DF.Data | None
 		stock_adjustment_account: DF.Link | None
 		stock_received_but_not_billed: DF.Link | None
+		student_counsellor: DF.Link | None
 		student_leave_application_approval_notification_template: DF.Link | None
 		student_leave_application_status_notification_template: DF.Link | None
 		student_service_officer: DF.Link | None
 		submit_err_jv: DF.Check
+		supplier_advance_account_domestic: DF.Link | None
+		supplier_advance_account_international: DF.Link | None
 		tax_id: DF.Data | None
 		total_monthly_sales: DF.Currency
 		transactions_annual_history: DF.Code | None
