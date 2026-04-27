@@ -936,7 +936,7 @@ def post_depreciation_entries(date=None):
 
 	if failed_asset_names:
 		set_depr_entry_posting_status_for_failed_assets(failed_asset_names)
-		notify_depr_entry_posting_error(failed_asset_names, error_log_names)
+		# notify_depr_entry_posting_error(failed_asset_names, error_log_names)
 
 	frappe.db.commit()
 
