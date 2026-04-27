@@ -45,6 +45,7 @@
   "parent_organization",
   "parent_agency_eid",
   "staff_category",
+  "sub_category",
   "leave_and_expense_claim_section",
   "reports_to",
   "second_approver",
@@ -157,10 +158,10 @@
   "external_work_history",
   "history_in_company",
   "internal_work_history",
-  "adverse_record",
-  "employee_disciplinary",
+  "employee_disciplinary_record_section",
+  "employee_disciplinary_record",
   "section_break_xwyg",
-  "table_ouss",
+  "training_development",
   "exit",
   "resignation_letter_date",
   "relieving_date",
@@ -588,12 +589,14 @@
    "description": "Here you can maintain family details like name and occupation of parent, spouse and children",
    "fieldname": "family_background",
    "fieldtype": "Small Text",
+   "hidden": 1,
    "label": "Family Background"
   },
   {
    "description": "Here you can maintain height, weight, allergies, medical concerns etc",
    "fieldname": "health_details",
    "fieldtype": "Small Text",
+   "hidden": 1,
    "label": "Health Details"
   },
   {
@@ -1029,18 +1032,6 @@
    "label": "PMS Records"
   },
   {
-   "fieldname": "adverse_record",
-   "fieldtype": "Section Break",
-   "hidden": 1,
-   "label": "Adverse Record"
-  },
-  {
-   "fieldname": "employee_disciplinary",
-   "fieldtype": "Table",
-   "options": "Employee Disciplinary Summary",
-   "read_only": 1
-  },
-  {
    "fieldname": "ip_number",
    "fieldtype": "Data",
    "label": "IP Phone Number"
@@ -1225,7 +1216,7 @@
    "fieldname": "staff_category",
    "fieldtype": "Select",
    "label": "Occupation Group",
-   "options": "\nAcademics\nAdministrative\nTechnical\nTeaching\nNon-Teaching"
+   "options": "\nAcademics\nAdministrative\nTechnical"
   },
   {
    "fieldname": "applicant_id",
@@ -1309,9 +1300,27 @@
    "label": "Training Records"
   },
   {
-   "fieldname": "table_ouss",
+   "fieldname": "employee_disciplinary_record_section",
+   "fieldtype": "Section Break",
+   "label": "Disciplinary Record"
+  },
+  {
+   "fieldname": "employee_disciplinary_record",
    "fieldtype": "Table",
-   "options": "Training Records"
+   "label": "Employee Disciplinary Record",
+   "options": "Employee Disciplinary Summary"
+  },
+  {
+   "fieldname": "training_development",
+   "fieldtype": "Table",
+   "label": "Training and Development",
+   "options": "Training and Development"
+  },
+  {
+   "fieldname": "sub_category",
+   "fieldtype": "Select",
+   "label": "Sub Category ",
+   "options": "\nGeneral Service\nOperation Service"
   }
  ],
  "icon": "fa fa-user",
@@ -1319,7 +1328,7 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2026-04-25 14:30:59.479584",
+ "modified": "2026-04-26 16:55:16.507144",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Employee",

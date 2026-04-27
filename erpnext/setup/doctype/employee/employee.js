@@ -60,19 +60,66 @@ frappe.ui.form.on("Employee", {
 			};
 		});
 
-		frm.set_query("second_approver",function(){
-			if (!frm.doc.company) {
-				frappe.msgprint("Please select college first");
-				return;
-			}
+		// frm.set_query("second_approver",function(){
+		// 	if (!frm.doc.company) {
+		// 		frappe.msgprint("Please select college first");
+		// 		return;
+		// 	}
 
-			return{
-				filters:{
-					company:frm.doc.company,
-					status:"Active"
-				}
-			}
-		})
+		// 	return{
+		// 		filters:{
+		// 			company:frm.doc.company,
+		// 			status:"Active"
+		// 		}
+		// 	}
+		// })
+
+    
+		// frm.set_query("second_approver", function () {
+        //     let filters = {
+        //         status: "Active"
+        //     };
+        //     if (frm.doc.designation !== "President") {
+
+        //         if (!frm.doc.company) {
+        //             frappe.msgprint("Please select college first");
+        //             return;
+        //         }
+
+        //         filters.company = frm.doc.company;
+        //     }
+
+        //     return {
+        //         filters: filters
+        //     };
+        // });
+
+		frm.set_query("second_approver", function () {
+
+            // If President → only Vice Chancellor allowed
+            if (frm.doc.designation === "President") {
+                return {
+                    filters: {
+                        designation: "Vice Chancellor"
+                    }
+                };
+            }
+
+            // For others → require company first
+            if (!frm.doc.company) {
+                frappe.msgprint("Please select college first");
+                return;
+            }
+
+            return {
+                filters: {
+                    status: "Active",
+                    company: frm.doc.company
+                }
+            };
+        });
+
+		
 		frm.set_query("department", function () {
 			return {
 				filters: {
