@@ -23,6 +23,7 @@ class CustomWorkflow:
 		if self.doc.doctype in ("Travel Authorization", "Travel Advance", "Travel Adjustment", "Travel Claim", "Employee Advance", "Leave Encashment","Overtime Application","Events","Leave Application") and self.doc.doctype not in ("Annual Programme Monitoring Report", "University Wide Module Report", "Student Leave Application"):
 			self.employee		= frappe.db.get_value("Employee", self.doc.employee, self.field_list)
 			self.reports_to 	= frappe.db.get_value("Employee", {"name":frappe.db.get_value("Employee", self.doc.employee, "reports_to")}, self.field_list)
+			self.second_approver 	= frappe.db.get_value("Employee", {"name":frappe.db.get_value("Employee", self.doc.employee, "second_approver")}, self.field_list)
 			# if not self.reports_to:
 			# 	ceo=frappe.db.get_single_value("HR Settings","ceo")
 			# 	if self.doc.employee==ceo:
@@ -31,7 +32,8 @@ class CustomWorkflow:
 			# 	frappe.throw("Reports To not set for Employee {}".format(self.doc.employee if self.doc.employee else frappe.db.get_value("Employee", {"user_id",self.doc.owner}, "name")))
 
 			# self.hr_manager = frappe.db.get_value("Employee", frappe.db.get_single_value("HR Settings", "hr_manager"), self.field_list)
-			college_or_company = self.doc.college or self.doc.company
+			# college_or_company = self.doc.college or self.doc.company
+			college_or_company = getattr(self.doc, "college", None) or getattr(self.doc, "company", None)
 			if frappe.db.exists("Company", college_or_company):
 				self.hr_approver = frappe.db.get_value("Company", college_or_company, "hr_approver")
 				if not self.hr_approver:
@@ -49,7 +51,7 @@ class CustomWorkflow:
 				else:
 					frappe.throw('Expense Approver not set for employee {}'.format(self.doc.employee))
 			self.supervisors_supervisor = frappe.db.get_value("Employee", frappe.db.get_value("Employee", frappe.db.get_value("Employee", self.doc.employee, "reports_to"), "reports_to"), self.field_list)
-			self.hr_approver	= frappe.db.get_value("Employee", frappe.db.get_single_value("HR Settings", "hr_approver"), self.field_list)
+			# self.hr_approver	= frappe.db.get_value("Employee", frappe.db.get_single_value("HR Settings", "hr_approver"), self.field_list)
 			self.hrgm = frappe.db.get_value("Employee",frappe.db.get_single_value("HR Settings","hr_manager"), self.field_list)
 			# self.ceo			= frappe.db.get_value("Employee", frappe.db.get_value("Employee", {"designation": "Chief Executive Officer", "status": "Active"},"name"), self.field_list)
 			#self.pms_appealer  = frappe.db.get_value("Employee", frappe.db.get_single_value("PMS Setting", "approver"), self.field_list)
@@ -140,7 +142,22 @@ class CustomWorkflow:
 				frappe.throw('Expense Approver not set for employee {}'.format(self.doc.employee))
 			self.vehicle_mto = frappe.db.get_value("Employee",{"user_id":frappe.db.get_value("Department",department,"approver_id")},self.field_list)
 
-		self.login_user		= frappe.db.get_value("Employee", {"user_id": frappe.session.user}, self.field_list)
+		# self.login_user	= frappe.db.get_value("Employee", {"user_id": frappe.session.user}, self.field_list)
+		# self.login_user = frappe.db.get_value("Student",{"user_id":frappe.session.user},self.field_list)
+		user = frappe.session.user
+
+		self.login_user = frappe.db.get_value(
+			"Employee",
+			{"user_id": user},
+			["name", "user_id"],
+			as_dict=True
+		) or frappe.db.get_value(
+			"Student",
+			{"user": user},
+			["name", "user"],
+			as_dict=True
+		)
+
 
 		if not self.login_user and frappe.session.user not in ("Administrator", "sonam.zangmo@thimphutechpark.bt", "sonam.norbu@thimphutechpark.bt", "mon.chhetri@thimphutechpark.bt"):
 			if "PERC Member" in frappe.get_roles(frappe.session.user):
@@ -230,6 +247,16 @@ class CustomWorkflow:
 			vars(self.doc)[self.doc_approver[0]] = officiating[0] if officiating else self.reports_to[0]
 			vars(self.doc)[self.doc_approver[1]] = officiating[1] if officiating else self.reports_to[1]
 			vars(self.doc)[self.doc_approver[2]] = officiating[2] if officiating else self.reports_to[2]
+		elif approver_type =="Leave Approver":
+			if not self.second_approver:
+				frappe.throw("Leave Approver not set for Employee {}".format(self.doc.employee if self.doc.employee else frappe.db.get_value("Employee", {"user_id",self.doc.owner}, "name")))
+			officiating = get_officiating_employee(self.second_approver[3])
+			if officiating:
+				officiating = frappe.db.get_value("Employee",officiating[0].officiating_employee,self.field_list)
+			vars(self.doc)[self.doc_approver[0]] = officiating[0] if officiating else self.second_approver[0]
+			vars(self.doc)[self.doc_approver[1]] = officiating[1] if officiating else self.second_approver[1]
+			vars(self.doc)[self.doc_approver[2]] = officiating[2] if officiating else self.second_approver[2]	
+			
 		
 		elif approver_type =="User Supervisor":
 			officiating = get_officiating_employee(self.user_supervisor[3])
@@ -458,12 +485,13 @@ class CustomWorkflow:
 		elif self.new_state.lower() == ("Waiting For Approval".lower()):
 			if frappe.session.user != self.doc.owner:
 				frappe.throw("Only {} can apply this leave".format(self.doc.owner))
-			self.set_approver("Supervisor")
+			self.set_approver("Leave Approver")
 		elif self.new_state.lower() == ("Approved".lower()):
 			if frappe.session.user != self.doc.leave_approver:
 				frappe.throw(f"Only {self.doc.leave_approver} can Approve this Leave Application.")	
 		elif self.new_state.lower() == ("Rejected".lower()):
 			if frappe.session.user != self.doc.leave_approver:
+
 				frappe.throw(f"Only {self.doc.leave_approver} can Reject this Leave Application.")
 		elif self.new_state.lower() == ("Cancelled".lower()):
 			hr_manager=frappe.get_value("Company", self.doc.company, "hr_manager")
@@ -963,7 +991,33 @@ class NotifyCustomWorkflow:
 				"subject": email_template.subject,
 				"notify": "employee"
 			})
+	def notify_forward(self):
+		user = frappe.session.user
+		employee = frappe.db.get_value("Employee",
+		{"user_id": user},
+		"user_id")
+		parent_doc = frappe.get_doc(self.doc.doctype, self.doc.name)
+		args = parent_doc.as_dict()	
+		template = None
+		if self.doc.doctype == "Events":
+			template = frappe.db.get_single_value('HR Settings', 'events_approval_notification_template')
+			if not template:
+				frappe.msgprint(_("Please set default template for Events Approval Notification in HR Settings."))
+			else:
+				template = ""
 
+		if not template:
+			frappe.msgprint(_("Please set default template for {}.").format(self.doc.doctype))
+			return
+		email_template = frappe.get_doc("Email Template", template)
+		message = frappe.render_template(email_template.response, args)
+		self.notify({
+			# for post in messages
+			"message": message,
+			"message_to": employee,
+			# for email
+			"subject": email_template.subject
+		})	
 	def notify_approver(self):
 		if self.doc.get(self.doc_approver[0]):
 			parent_doc = frappe.get_doc(self.doc.doctype, self.doc.name)
@@ -993,11 +1047,7 @@ class NotifyCustomWorkflow:
 				template = frappe.db.get_single_value('HR Settings', 'travel_authorization_approval_notification_template')
 				if not template:
 					frappe.msgprint(_("Please set default template for Authorization Approval Notification in HR Settings."))
-					return
-			elif self.doc.doctype == "Events":
-				template = frappe.db.get_single_value('HR Settings', 'events_approval_notification_template')
-				if not template:
-					frappe.msgprint(_("Please set default template for Events Approval Notification in HR Settings."))		
+					return		
 			elif self.doc.doctype == "Travel Claim":
 				template = frappe.db.get_single_value('HR Settings', 'travel_claim_approval_notification_template')
 				if not template:
@@ -1092,7 +1142,6 @@ class NotifyCustomWorkflow:
 		student = frappe.get_doc("Student", self.doc.student)
 		if not student.user:
 			return
-
 		parent_doc = frappe.get_doc(self.doc.doctype, self.doc.name)
 		args = parent_doc.as_dict()
 
@@ -1101,6 +1150,10 @@ class NotifyCustomWorkflow:
 			if not template:
 				frappe.msgprint(_("Please set default template for Leave Status Notification in <b>Company under Student Settings</b>."))
 				return
+		elif self.doc.doctype == "Events":
+			template = frappe.db.get_single_value('HR Settings', 'events_status_notification_template')
+			if not template:
+				frappe.msgprint(_("Please set default template for Events Status Notification in HR Settings."))		
 		else:
 			template = ""
 
@@ -1396,6 +1449,7 @@ class NotifyCustomWorkflow:
 				return	
 		if self.doc.doctype == "Leave Encashment":
 			wf_state = self.new_state
+			
 			if wf_state =="Waiting for verification":
 				self.notify_user_role(wf_state)
 				return
@@ -1404,6 +1458,21 @@ class NotifyCustomWorkflow:
 				return
 			elif wf_state == "Approved by CEO":
 				self.notify_employee()
+				return	
+		if self.doc.doctype=="Events":
+			wf_state =self.new_state
+			if wf_state =="Draf":
+				return
+			if wf_state =="Waiting for Approval":
+				self.notify_forward()
+				return
+			elif wf_state == "Approved":
+				user = frappe.session.user
+				roles = frappe.get_roles(user)
+				if "Student" in roles:
+					self.notify_student()
+				elif "Employee" in roles:
+					self.notify_employee()
 				return	
 		
 		if self.doc.doctype == "Employee Advance":
@@ -1441,6 +1510,13 @@ class NotifyCustomWorkflow:
 			else:
 				frappe.msgprint(_("Email notifications not configured for workflow state {}").format(self.new_state))
 				return
+		# if self.doc.doctype=="Leave Application":
+		# 	wf_state = self.new_state
+		# 	if wf_state == "Approved":
+		# 		self.notify_employee()
+		# 	elif wf_state == "Rejected":
+		# 		self.notify_employee()	
+
 		if (self.doc.doctype not in self.field_map) or not frappe.db.exists("Workflow", {"document_type": self.doc.doctype, "is_active": 1}):
 			return
 		if self.new_state == "Draft":
