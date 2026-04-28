@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 
@@ -18,30 +19,65 @@ class HostelMaintenanceApplication(Document):
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
-		applied_by: DF.Link | None
+		applied_by: DF.Link
 		assets: DF.Table[HostelAssetMaintenance]
 		attach_picture: DF.AttachImage | None
 		available_time: DF.Time | None
 		branch: DF.Link | None
 		check_out_list: DF.Table[HostelCheckOutItem]
-		college: DF.Link | None
+		college: DF.Link
 		cost_center: DF.Link | None
 		damage_type: DF.Literal["Vandalism", "Loss or Misuse of Property", "Damage to Shared Facilities"]
 		description_of_maintenance: DF.SmallText | None
 		first_name: DF.Data | None
 		fiscal_year: DF.Link
+		focal_type: DF.Literal["", "Plumber", "Electrician", "Mason", "Carpenter"]
 		full_name: DF.Data | None
 		hostel_check_in_form: DF.Link | None
 		hostel_check_out_form: DF.Link | None
 		hostel_maintenance_report: DF.Data | None
 		hostel_room: DF.Link | None
-		hostel_type: DF.Data | None
+		hostel_type: DF.Data
 		last_name: DF.Data | None
 		maintenance_focal: DF.Link | None
 		maintenance_required_on: DF.Date | None
 		maintenance_type: DF.Literal["Repair", "Replacement"]
 		phone_number: DF.Data | None
+		posting_date: DF.Date
 	# end: auto-generated types
+
+	def validate(self):
+		self.set_maintenance_focal_from_college()
+
+		if not self.maintenance_focal:
+			frappe.throw("Please Assign Maintenace focal in Company under hostel")
+		
+	def set_maintenance_focal_from_college(self):
+		"""Auto-set maintenance_focal based on focal_type from the college"""
+		if self.focal_type and self.college:
+			# Map focal_type to the corresponding field in Company doctype
+			focal_field_map = {
+				"Plumber": "plumber",
+				"Electrician": "electrician",
+				"Mason": "mason",
+				"Carpenter": "carpenter"
+			}
+			
+			focal_field = focal_field_map.get(self.focal_type)
+			
+			if focal_field:
+				# Get the employee from the company
+				company_focal = frappe.db.get_value("Company", self.college, focal_field)
+				
+				if company_focal:
+					self.maintenance_focal = company_focal
+				else:
+					frappe.msgprint(_("No {0} assigned to {1}. Please assign one in Company master.").format(
+						self.focal_type, self.college
+					), alert=True, indicator='orange')
+			else:
+				# Clear maintenance_focal if focal_type is invalid
+				self.maintenance_focal = None	
 	def on_cancel(self):
 		# Ver 2.0.190509, Following method added by SHIV on 2019/05/20
 		""" ++++++++++ Ver 2.0.190509 Ends ++++++++++++ """
@@ -110,16 +146,50 @@ def get_hostel_room_by_student(applied_by):
 
 @frappe.whitelist()
 def get_hostel_checkin_form(applied_by, fiscal_year):
-    result = frappe.db.sql("""
-        SELECT hci.name
-        FROM `tabHostel Check-In Form` hci
-        INNER JOIN `tabCheck-In Students Items` cisi
-            ON cisi.parent = hci.name
-        WHERE cisi.student_code = %s
-        AND hci.fiscal_year = %s
-        AND hci.docstatus = 1
-        LIMIT 1
-    """, (applied_by, fiscal_year), as_dict=True)
+	result = frappe.db.sql("""
+		SELECT hci.name
+		FROM `tabHostel Check-In Form` hci
+		INNER JOIN `tabCheck-In Students Items` cisi
+			ON cisi.parent = hci.name
+		WHERE cisi.student_code = %s
+		AND hci.fiscal_year = %s
+		AND hci.docstatus = 1
+		LIMIT 1
+	""", (applied_by, fiscal_year), as_dict=True)
 
-    return result[0].name if result else None 	
+	return result[0].name if result else None 	
 	
+def get_permission_query_conditions(user):
+	if not user:
+		user = frappe.session.user
+
+	user_roles = frappe.get_roles(user)
+	if "SSO" in user_roles or "Administrator" in user_roles:
+		return         
+
+	student = frappe.db.get_value(
+		"Student",
+		{"user": user},
+		"name"
+	)
+
+	if student:
+		return f"`tabHostel Maintenance Application`.applied_by = '{student}'"
+
+	return "" 
+
+
+@frappe.whitelist()
+def get_company_focal_persons(company):
+    """Get all focal persons assigned to a company"""
+    if not company:
+        return {}
+    
+    focal_persons = frappe.db.get_value(
+        "Company",
+        company,
+        ["plumber", "electrician", "mason", "carpenter"],
+        as_dict=True
+    )
+    
+    return focal_persons or {}

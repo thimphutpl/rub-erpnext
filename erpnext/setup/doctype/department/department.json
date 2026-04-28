@@ -142,6 +142,7 @@
   {
    "fieldname": "approver",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Approver",
    "options": "Employee"
   },
@@ -160,7 +161,7 @@
  "idx": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2026-04-24 19:23:56.514174",
+ "modified": "2026-04-25 15:53:50.310378",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Department",

@@ -24,10 +24,27 @@ class HostelBudget(Document):
 		hostel_councilor: DF.Link
 		hostel_councilor_name: DF.Data | None
 		posting_date: DF.Date
+		previous_amount: DF.Float
 		total_budget_collection: DF.Float
 	# end: auto-generated types
 	# pass
 
+	# def validate(self):
+	# 	total_amount = sum([d.amount for d in self.get("expenses_amount")])
+	# 	self.balance_amount = (self.total_budget_collection or 0) - total_amount
+
 	def validate(self):
-		total_amount = sum([d.amount for d in self.get("expenses_amount")])
-		self.balance_amount = (self.total_budget_collection or 0) - total_amount
+		previous = frappe.db.sql("""
+			SELECT balance_amount
+			FROM `tabHostel Budget`
+			WHERE hostel_block = %s
+			AND name != %s
+			AND docstatus = 1
+			ORDER BY posting_date DESC, creation DESC
+			LIMIT 1
+		""", (self.hostel_block, self.name), as_dict=True)
+
+		self.previous_amount = previous[0].balance_amount if previous else 0
+		self.total_budget_collection = (self.total_budget_collection or 0) + self.previous_amount
+		total_expense = sum([d.amount for d in self.get("expenses_amount")])
+		self.balance_amount = self.total_budget_collection - total_expense

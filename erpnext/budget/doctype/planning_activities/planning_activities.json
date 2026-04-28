@@ -113,8 +113,8 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-01 16:25:52.261535",
- "modified_by": "Administrator",
+ "modified": "2026-04-27 09:52:32.799853",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
  "module": "Budget",
  "name": "Planning Activities",
  "naming_rule": "Expression (old style)",
@@ -129,6 +129,17 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Budget Manager",
    "share": 1,
    "write": 1
   }

@@ -7,7 +7,6 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_t0fv",
-  "amended_from",
   "company",
   "scrap_date",
   "asset_category",
@@ -27,16 +26,6 @@
   {
    "fieldname": "section_break_t0fv",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Bulk Asset Disposal",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
   },
   {
    "fieldname": "scrap_date",
@@ -130,7 +119,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-01 12:22:31.941371",
+ "modified": "2026-04-24 10:49:20.863515",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Bulk Asset Disposal",

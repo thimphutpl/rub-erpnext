@@ -155,6 +155,12 @@
   "column_break_gdhb",
   "income_account",
   "hostel_branch",
+  "maintenance_focal_section",
+  "carpenter",
+  "mason",
+  "column_break_ucad",
+  "electrician",
+  "plumber",
   "research_account_tab",
   "receivable_accounts",
   "column_break_lqhk",
@@ -1202,6 +1208,39 @@
    "fieldtype": "Link",
    "label": "Student Counsellor",
    "options": "User"
+  },
+  {
+   "fieldname": "maintenance_focal_section",
+   "fieldtype": "Section Break",
+   "label": "Maintenance Focal"
+  },
+  {
+   "fieldname": "carpenter",
+   "fieldtype": "Link",
+   "label": "Carpenter",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "mason",
+   "fieldtype": "Link",
+   "label": "Mason",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "column_break_ucad",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "electrician",
+   "fieldtype": "Link",
+   "label": "Electrician",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "plumber",
+   "fieldtype": "Link",
+   "label": "Plumber",
+   "options": "Employee"
   }
  ],
  "icon": "fa fa-building",
@@ -1209,7 +1248,7 @@
  "image_field": "company_logo",
  "is_tree": 1,
  "links": [],
- "modified": "2026-04-25 16:49:17.674084",
+ "modified": "2026-04-26 22:12:32.676916",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",

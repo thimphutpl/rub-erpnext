@@ -6,9 +6,6 @@ from frappe.model.document import Document
 from frappe.utils import getdate
 
 class PlanningProject(Document):
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
-
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
@@ -20,19 +17,6 @@ class PlanningProject(Document):
 		project: DF.SmallText | None
 		serial_number: DF.Int
 		to_date: DF.Date | None
-	# end: auto-generated types
-	from typing import TYPE_CHECKING
-
-	if TYPE_CHECKING:
-		from frappe.types import DF
-
-		amended_from: DF.Link | None
-		from_date: DF.Date | None
-		planning_output: DF.Link | None
-		project: DF.SmallText | None
-		serial_number: DF.Int
-		to_date: DF.Date | None
-
 	def autoname(self):
 		self.name = "Project("+str(getdate(self.from_date).year)+"-"+str(getdate(self.to_date).year)+") - "+str(self.serial_number_generation())
 

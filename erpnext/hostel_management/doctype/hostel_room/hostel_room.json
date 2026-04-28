@@ -6,16 +6,17 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "hostel_type",
-  "room_number",
-  "capacity",
-  "room_description",
-  "column_break_sbzz",
+  "section_break_jlbk",
   "company",
   "college_abbreviation",
   "cost_center",
   "catering_type",
   "hostel_room_sub_category",
+  "column_break_zgzz",
+  "hostel_type",
+  "room_number",
+  "capacity",
+  "room_description",
   "hostel_asset_items_section",
   "hostel_room_item",
   "student_list_section",
@@ -27,24 +28,23 @@
    "fieldname": "capacity",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "Capacity"
-  },
-  {
-   "fieldname": "column_break_sbzz",
-   "fieldtype": "Column Break"
+   "label": "Capacity",
+   "reqd": 1
   },
   {
    "fieldname": "room_number",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Room Number"
+   "label": "Room Number",
+   "reqd": 1
   },
   {
    "fieldname": "hostel_type",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Hostel Type ",
-   "options": "Hostel Type"
+   "options": "Hostel Type",
+   "reqd": 1
   },
   {
    "fieldname": "hostel_asset_items_section",
@@ -76,7 +76,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Company/College",
+   "label": "College",
    "options": "Company",
    "reqd": 1
   },
@@ -88,10 +88,10 @@
   {
    "fieldname": "cost_center",
    "fieldtype": "Link",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Cost Center",
-   "options": "Cost Center",
-   "reqd": 1
+   "options": "Cost Center"
   },
   {
    "fetch_from": "company.abbr",
@@ -114,14 +114,23 @@
   {
    "fieldname": "hostel_room_sub_category",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Hostel Room Sub Category",
    "options": "Hostel Room Sub Category"
+  },
+  {
+   "fieldname": "section_break_jlbk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_zgzz",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-19 14:53:07.557389",
+ "modified": "2026-04-28 09:26:23.654758",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Room",

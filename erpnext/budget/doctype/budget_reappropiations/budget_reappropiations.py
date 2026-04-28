@@ -22,6 +22,36 @@ class BudgetReappropiations(Document):
 		approver: DF.Link | None
 		approver_designation: DF.Data | None
 		approver_name: DF.Data | None
+		available_balance: DF.Currency
+		college: DF.Link
+		from_activity: DF.DynamicLink
+		from_activity_type: DF.Literal["Planning Activities", "Additional Activities"]
+		from_budget_type: DF.Literal["", "Current", "Capital"]
+		from_output: DF.Link
+		from_project: DF.Link
+		from_year: DF.Link
+		remarks: DF.SmallText | None
+		to_activity: DF.DynamicLink
+		to_activity_type: DF.Literal["Planning Activities", "Additional Activities"]
+		to_budget_type: DF.Literal["", "Current", "Capital"]
+		to_output: DF.Link
+		to_project: DF.Link
+		to_year: DF.Link
+	# end: auto-generated types
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		appropiation_amount: DF.Currency
+		appropriation_date: DF.Date
+		approver: DF.Link | None
+		approver_designation: DF.Data | None
+		approver_name: DF.Data | None
 		college: DF.Link
 		from_activity: DF.DynamicLink
 		from_activity_type: DF.Literal["Planning Activities", "Additional Activities"]
@@ -208,5 +238,39 @@ class BudgetReappropiations(Document):
 				},
 				update_modified=False
 			)
-		# from_row.db_set("approved_budget", from_row.approved_budget, update_modified=False)
-		# to_row.db_set("approved_budget", to_row.approved_budget, update_modified=False)
+
+@frappe.whitelist()
+def get_availabe_balance(from_activity, from_activity_type, from_year, to_year, college):
+	if from_activity_type == "Planning Activities":
+		approved_budget = frappe.db.sql("""
+			SELECT
+				approved_budget
+			FROM `tabApproved Budget` ab
+			INNER JOIN `tabApproved Budget Item` abi
+			ON abi.parent = ab.name
+			WHERE ab.college = %s AND ab.from_year = %s AND ab.to_year = %s
+			AND abi.activity_link = %s AND ab.docstatus = 1
+		""", (college, from_year, to_year, from_activity), as_dict=True)
+
+		if not approved_budget:
+			frappe.throw("No Approved Budget found")
+
+		consumed_budget = frappe.db.sql("""
+			SELECT
+				SUM(amount)
+			FROM `tabConsumed Budget`
+			WHERE business_activity = %s AND docstatus = 1
+		""", (from_activity), as_dict=True)
+		return (flt(approved_budget[0].approved_budget) - (flt(consumed_budget[0].amount)/1000000) if consumed_budget else 0)
+	elif from_activity_type == "Additional Activities":
+		approved_budget = frappe.db.sql("""
+			SELECT
+				approved_budget
+			FROM `tabApproved Budget` ab
+			INNER JOIN `tabApproved Budget Extra Item` abi
+			ON abi.parent = ab.name
+			WHERE ab.college = %s AND ab.from_year = %s AND ab.to_year = %s
+			AND abi.activity_link = %s AND ab.docstatus = 1
+		""", (college, from_year, to_year, from_activity), as_dict=True)
+
+		return flt(approved_budget[0].approved_budget)

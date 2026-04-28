@@ -1,13 +1,10 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 class BudgetSettings(Document):
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
-
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
@@ -26,5 +23,4 @@ class BudgetSettings(Document):
 		fypp_from_date: DF.Date | None
 		fypp_to_date: DF.Date | None
 		monthly_budget_check: DF.Check
-	# end: auto-generated types
 	pass

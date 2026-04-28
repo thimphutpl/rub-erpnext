@@ -6,6 +6,20 @@ frappe.ui.form.on("Budget Reappropiations", {
         if (!frm.doc.appropriation_date) {
             frm.set_value("appropriation_date", frappe.datetime.get_today())
         }
+        frm.set_query("from_output", () => {
+            return {
+                filters: {
+                    docstatus: 1,
+                },
+            };
+		});
+        frm.set_query("to_output", () => {
+            return {
+                filters: {
+                    docstatus: 1,
+                },
+            };
+		});
 
 	},
     setup(frm) {
@@ -22,6 +36,7 @@ frappe.ui.form.on("Budget Reappropiations", {
             return {
                 filters: {
                     planning_output: frm.doc.from_output || '',
+                    docstatus: 1,
                 },
             };
 		});
@@ -31,6 +46,7 @@ frappe.ui.form.on("Budget Reappropiations", {
             return {
                 filters: {
                     planning_output: frm.doc.to_output || '',
+                    docstatus: 1,
                 },
             };
 		});
@@ -39,7 +55,7 @@ frappe.ui.form.on("Budget Reappropiations", {
         frm.set_query("from_activity", () => {
             return {
                 filters: {
-                    project: frm.doc.from_project || ''
+                    project: frm.doc.from_project || '',
                 }
             };
         });
@@ -49,7 +65,7 @@ frappe.ui.form.on("Budget Reappropiations", {
         frm.set_query("to_activity", () => {
             return {
                 filters: {
-                    project: frm.doc.to_project || ''
+                    project: frm.doc.to_project || '',
                 }
             };
         });
@@ -139,4 +155,29 @@ frappe.ui.form.on("Budget Reappropiations", {
             return { filters };
         });
     },
+    from_activity(frm){
+        if (frm.doc.from_activity && frm.doc.from_year && frm.doc.to_year && frm.doc.college) {
+            frm.trigger("set_available_balance")
+        }
+    },
+    set_available_balance(frm) {
+        if (frm.doc.from_activity && frm.doc.from_year && frm.doc.to_year && frm.doc.college) {
+			frappe.call({
+                method:"erpnext.budget.doctype.budget_reappropiations.budget_reappropiations.get_availabe_balance",
+                args: {
+                    from_activity: frm.doc.from_activity,
+                    from_activity_type: frm.doc.from_activity_type,
+                    from_year: frm.doc.from_year,
+                    to_year: frm.doc.to_year,
+                    college: frm.doc.college,
+                },
+                callback: function(r) {
+                    if (r.message) {
+                        frm.set_value("available_balance", r.message);
+                        frm.refresh_field("available_balance");
+                    }
+                }
+            })
+		}
+    }
 });

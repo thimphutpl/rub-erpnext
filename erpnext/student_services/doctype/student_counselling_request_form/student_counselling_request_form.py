@@ -1,7 +1,7 @@
 # Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 
@@ -17,7 +17,9 @@ class StudentCounsellingRequestForm(Document):
 		academic_stress: DF.Check
 		amended_from: DF.Link | None
 		anxiety_or_depression: DF.Check
+		approver: DF.Data | None
 		career_guidance: DF.Check
+		college: DF.Link
 		cosent: DF.Check
 		do_you_consent_to_being_contacted_by_the_counsellor: DF.Literal["Yes", "No"]
 		email_address: DF.Data | None
@@ -25,7 +27,7 @@ class StudentCounsellingRequestForm(Document):
 		help_resource: DF.Literal["Yes", "No"]
 		how_urgent_is_your_concern: DF.Literal["Urgent", "Moderate", "Not urgent"]
 		other: DF.Check
-		phone_number: DF.Date | None
+		phone_number: DF.Data | None
 		please_briefly_describe_your_concern: DF.Text | None
 		preferred_date: DF.Date | None
 		preferred_mode_of_counselling: DF.Literal["Face-to-face", "Phone call", "Online"]
@@ -38,4 +40,48 @@ class StudentCounsellingRequestForm(Document):
 		substance_use: DF.Check
 		year_of_study: DF.Data | None
 	# end: auto-generated types
-	pass
+	def validate(self):
+		self.check_validate_approval()
+
+		
+		self.validate_workflow()
+
+
+	def check_validate_approval(self):
+		doc=frappe.get_doc("Company",self.college)
+		if doc.student_counsellor is None:
+			frappe.throw("Set student counsellor in "+ str(self.college))
+
+	def validate_workflow(self):
+		self.new_state = self.workflow_state
+		self.old_state = self.get_db_value("workflow_state")
+
+		if self.new_state=='Waiting Approval':
+			if self.owner != frappe.session.user:
+				frappe.throw("Only "+str(self.owner)+ " can able to apply ")
+
+		if self.new_state=='Approved':
+			approver_user=get_user_id(self.approver)
+			
+			if frappe.session.user != approver_user:
+				frappe.throw("Only "+str(approver_user)+ " can able to approved")
+
+		
+		#frappe.throw(str(self.new_state))
+
+def get_user_id(approver):
+	doc=frappe.get_doc("Employee",approver)
+	return doc.user_id
+
+def get_permission_query_conditions(user):
+	if not user:
+		user=frappe.session.user
+
+	user_roles=frappe.get_roles(user)
+	
+	if "Administrator" in user_roles:
+		return
+	if "Councillor" in user_roles or "Student" in user_roles :
+		#frappe.throw(str(`tabStudent Counselling Request Form`.`approver`))
+		empid=''
+		return f"""(`tabStudent Counselling Request Form`.approver='{user}'  ) or (`tabStudent Counselling Request Form`.owner='{user}'  )"""

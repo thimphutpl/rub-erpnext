@@ -15,17 +15,15 @@ class ClubManagementDetails(Document):
 		from frappe.types import DF
 
 		designation: DF.Data | None
-		employee_id: DF.Link | None
-		first_name: DF.Data | None
-		full_name_employee: DF.Data | None
-		last_name: DF.Data | None
+		employee_student: DF.DynamicLink | None
+		full_name: DF.Data | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
 		program: DF.Data | None
-		role: DF.Literal["Club Advisor", "Club Coordinator"]
+		role: DF.Literal["", "Club Advisor", "Club Coordinator"]
 		semester: DF.Data | None
-		student_code: DF.Link | None
+		type: DF.Literal["", "Employee", "Student"]
 		year: DF.Data | None
 	# end: auto-generated types
 	pass

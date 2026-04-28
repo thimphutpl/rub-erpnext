@@ -63,7 +63,6 @@
    "read_only": 1
   },
   {
-   "collapsible": 1,
    "depends_on": "eval: doc.from_date && doc.to_date",
    "fieldname": "add_weekly_holidays",
    "fieldtype": "Section Break",
@@ -150,7 +149,7 @@
  "icon": "fa fa-calendar",
  "idx": 1,
  "links": [],
- "modified": "2026-01-18 10:42:15.870339",
+ "modified": "2026-04-25 16:30:52.966163",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Holiday List",

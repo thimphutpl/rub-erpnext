@@ -8,6 +8,7 @@
   "section_break_n7f8",
   "amended_from",
   "basic_information_section",
+  "college",
   "student_id",
   "programme",
   "column_break_vpam",
@@ -32,6 +33,7 @@
   "please_briefly_describe_your_concern",
   "column_break_plni",
   "how_urgent_is_your_concern",
+  "approver",
   "appointment_preferences_section",
   "preferred_mode_of_counselling",
   "column_break_xazc",
@@ -104,7 +106,7 @@
   },
   {
    "fieldname": "phone_number",
-   "fieldtype": "Date",
+   "fieldtype": "Data",
    "label": "Phone Number"
   },
   {
@@ -253,14 +255,27 @@
   {
    "fieldname": "column_break_lkmj",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "college",
+   "fieldtype": "Link",
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "college.student_counsellor",
+   "fieldname": "approver",
+   "fieldtype": "Data",
+   "label": "Approver"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-08 16:38:49.497775",
- "modified_by": "Administrator",
+ "modified": "2026-04-21 14:33:06.573147",
+ "modified_by": "sangay.choden@thimphutechpark.bt",
  "module": "Student Services",
  "name": "Student Counselling Request Form",
  "owner": "Administrator",
@@ -276,6 +291,29 @@
    "role": "System Manager",
    "share": 1,
    "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Councillor",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Student",
+   "share": 1,
    "write": 1
   }
  ],

@@ -9,14 +9,17 @@ class HostelAllocationBulkUpload(Document):
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
-        from frappe.model.document import Document
+        from erpnext.hostel_management.doctype.block_counsellor_details.block_counsellor_details import BlockCounsellorDetails
+        from erpnext.hostel_management.doctype.hostel_allocation_item.hostel_allocation_item import HostelAllocationItem
         from frappe.types import DF
 
         amended_from: DF.Link | None
         company: DF.Link
+        gender: DF.Literal["", "Male", "Female"]
+        hostel_type: DF.TableMultiSelect[BlockCounsellorDetails]
         posting_date: DF.Date
         re_allocate_hostel_room: DF.Check
-        table_caon: DF.Table[Document]
+        table_caon: DF.Table[HostelAllocationItem]
         year: DF.Link
     # end: auto-generated types
 
@@ -29,43 +32,6 @@ class HostelAllocationBulkUpload(Document):
 
     def on_submit(self):
         self.update_hostel_room_students()
-        
-    # def on_cancel(self):
-    #     """Revert hostel room student allocations when this document is cancelled."""
-    #     room_allocations = {}
-
-    #     for row in self.table_caon:
-    #         if row.hostel_room and row.student_code:
-    #             room_allocations.setdefault(row.hostel_room, []).append(row.student_code)
-
-    #     for room_code, students_to_remove in room_allocations.items():
-    #         try:
-    #             hostel_room = frappe.get_doc("Hostel Room", room_code)
-    #             hostel_room.set("student_list", [])
-
-    #             existing_students = frappe.db.sql("""
-    #                 SELECT hai.student_code, hai.first_name, hai.last_name, hai.status, habu.year
-    #                 FROM `tabHostel Allocation Item` hai
-    #                 JOIN `tabHostel Allocation Bulk Upload` habu 
-    #                     ON hai.parent = habu.name
-    #                 WHERE habu.docstatus = 1
-    #                 AND habu.name != %s
-    #                 AND hai.hostel_room = %s
-    #             """, (self.name, room_code), as_dict=1)
-
-    #             for s in existing_students:
-    #                 hostel_room.append("student_list", s)
-
-    #             hostel_room.save()
-    #             frappe.msgprint(_("Reverted student list for room {0} after cancellation of allocation {1}")
-    #                             .format(room_code, self.name))
-
-    #         except frappe.DoesNotExistError:
-    #             frappe.msgprint(_("Hostel Room {0} does not exist.").format(room_code),
-    #                             indicator="orange", alert=True)
-    #         except Exception as e:
-    #             frappe.msgprint(_("Error reverting room {0}: {1}").format(room_code, str(e)),
-    #                             indicator="red", alert=True)
 
     def on_cancel(self):
         """
@@ -102,35 +68,6 @@ class HostelAllocationBulkUpload(Document):
 
         frappe.msgprint(_("Students removed successfully after cancellation."))
 
-        
-
-    # def validate_room_capacity(self):
-    #     """Validate that no room exceeds capacity for the same academic year."""
-    #     room_students = {}
-    #     for row in self.table_caon:
-    #         if row.hostel_room:
-    #             room_students[row.hostel_room] = room_students.get(row.hostel_room, 0) + 1
-
-    #     for room_code, new_count in room_students.items():
-    #         existing_count = frappe.db.sql("""
-    #             SELECT COUNT(*) as count
-    #             FROM `tabHostel Allocation Item` hai
-    #             JOIN `tabHostel Allocation Bulk Upload` habu 
-    #                 ON hai.parent = habu.name
-    #             WHERE habu.docstatus = 1 
-    #             AND hai.hostel_room = %s
-    #             AND habu.year = %s
-    #         """, (room_code, self.year), as_dict=1)[0].count
-
-    #         room_capacity = frappe.db.get_value("Hostel Room", room_code, "capacity")
-    #         if not room_capacity:
-    #             frappe.throw(_("Room {0} does not exist or capacity is not set.").format(room_code))
-
-    #         if existing_count + new_count > room_capacity:
-    #             frappe.throw(_("Room {0} will have {1} students after this allocation. "
-    #                            "Maximum allowed is {2} for academic year {3}.").format(
-    #                 room_code, existing_count + new_count, room_capacity, self.year
-    #             ))
 
     def validate_room_capacity(self):
         """Validate that no room exceeds capacity for the same academic year and status validation."""
@@ -249,59 +186,6 @@ class HostelAllocationBulkUpload(Document):
             all_active = all(s["status"] == "Active" for s in prev_students)
             if all_active and not self.re_allocate_hostel_room:
                 frappe.throw(_("Room {0} has already reached its maximum capacity, or the student is still active.").format(row.hostel_room))
-                
-
-    # def update_hostel_room_students(self):
-    #     """
-    #     Update student_list in Hostel Room:
-    #     - Keep Active students from previous years
-    #     - Replace Left students with current year's Active students
-    #     """
-    #     room_allocations = {}
-    #     for row in self.table_caon:
-    #         if row.hostel_room and row.student_code:
-    #             room_allocations.setdefault(row.hostel_room, []).append({
-    #                 "student_code": row.student_code,
-    #                 "first_name": row.first_name,
-    #                 "last_name": row.last_name,
-    #                 "year": self.year,
-    #                 "status": row.status
-    #             })
-
-    #     for room_code, new_students in room_allocations.items():
-    #         try:
-    #             hostel_room = frappe.get_doc("Hostel Room", room_code)
-    #             hostel_room.set("student_list", [])
-
-    #             existing_students = frappe.db.sql("""
-    #                 SELECT hai.student_code, hai.first_name, hai.last_name, habu.year, hai.status
-    #                 FROM `tabHostel Allocation Item` hai
-    #                 JOIN `tabHostel Allocation Bulk Upload` habu 
-    #                     ON hai.parent = habu.name
-    #                 WHERE habu.docstatus = 1
-    #                 AND hai.hostel_room = %s
-    #             """, (room_code,), as_dict=1)
-
-    #             if self.re_allocate_hostel_room:
-    #                 # Clear all existing students
-    #                 hostel_room.set("student_list", [])
-    #             else:
-    #                 for s in existing_students:
-    #                     if s["status"] == "Active" and s["year"] < self.year:
-    #                         hostel_room.append("student_list", s)
-    #                 for ns in new_students:
-    #                     hostel_room.append("student_list", ns)
-
-    #                 hostel_room.save()
-    #                 frappe.msgprint(_("Updated student list for room {0} for academic year {1}")
-    #                                 .format(room_code, self.year))
-
-    #         except frappe.DoesNotExistError:
-    #             frappe.msgprint(_("Hostel Room {0} does not exist.").format(room_code),
-    #                             indicator="orange", alert=True)
-    #         except Exception as e:
-    #             frappe.msgprint(_("Error updating room {0}: {1}").format(room_code, str(e)),
-    #                             indicator="red", alert=True)
 
     def update_hostel_room_students(self):
         """
@@ -453,4 +337,237 @@ class HostelAllocationBulkUpload(Document):
                     _("Student {0} belongs to Company {1}, "
                     "but this allocation is for Company {2}.")
                     .format(row.student_code, student_company, self.company)
-                )                              
+                ) 
+
+# def get_permission_query_conditions(user):
+#     if not user:
+#         user = frappe.session.user
+
+#     student = frappe.db.get_value(
+#         "Student",
+#         {"user": user},
+#         "gender"
+#     )
+
+#     if student:
+#         return f"`tabHostel Allocation Bulk Upload`.gender = '{student}'"
+
+#     return "" 
+
+# def get_permission_query_conditions(user):
+#     if not user:
+#         user = frappe.session.user
+
+#     # Get student linked to user
+#     student = frappe.db.get_value(
+#         "Student",
+#         {"user": user},
+#         "name",
+#         "gender"
+#     )
+
+#     if not student:
+#         return ""
+
+#     return f"""
+#         EXISTS (
+#             SELECT 1 FROM `tabHostel Allocation Item` hai
+#             WHERE hai.parent = `tabHostel Allocation Bulk Upload`.name
+#             AND hai.student_code = '{student}'
+#         )
+#     """
+
+@frappe.whitelist()
+def get_students(year, gender, company):
+    if not year:
+        frappe.throw("Please select Year")
+
+    filters = {
+        "year": year,
+        "status": "Active",
+        "company": company
+    }
+
+    if gender:
+        filters["gender"] = gender
+
+    students = frappe.get_all(
+        "Student",
+        filters=filters,
+        fields=["name", "first_name", "middle_name", "last_name", "gender", "cid", "catering_type", "scholarship_type", "status" ]
+    )
+
+    return students
+
+def get_permission_query_conditions(user):
+    if not user:
+        user = frappe.session.user
+
+    user_roles = frappe.get_roles(user)
+    if "SSO" in user_roles or "Administrator" in user_roles:
+        return        
+
+    student = frappe.db.get_value(
+        "Student",
+        {"user": user},
+        ["name", "gender"],
+        as_dict=True
+    )
+
+    if not student:
+        return "1=0"   # No access
+
+    return f"""
+        `tabHostel Allocation Bulk Upload`.gender = '{student.gender}'
+        AND EXISTS (
+            SELECT 1 FROM `tabHostel Allocation Item` hai
+            WHERE hai.parent = `tabHostel Allocation Bulk Upload`.name
+            AND hai.student_code = '{student.name}'
+        )
+    """
+
+@frappe.whitelist()
+def auto_allocate_rooms(company, year, hostel_types, students):
+    import json
+
+    if isinstance(hostel_types, str):
+        hostel_types = [h.strip() for h in hostel_types.split(",") if h.strip()]
+
+    if isinstance(students, str):
+        students = json.loads(students)
+
+    if not company or not hostel_types or not students:
+        return []
+
+    # -------------------------
+    # 1. Get Rooms
+    # -------------------------
+    rooms = frappe.get_all(
+        "Hostel Room",
+        filters={
+            "company": company,
+            "hostel_type": ["in", hostel_types]
+        },
+        fields=["name", "capacity"],
+        order_by="name asc"
+    )
+
+    # -------------------------
+    # 2. Build Room Availability
+    # -------------------------
+    room_slots = []
+
+    for room in rooms:
+        occupied = frappe.db.count(
+            "Student List Item",
+            {
+                "parent": room.name,
+                "parenttype": "Hostel Room"
+            }
+        )
+
+        available = (room.capacity or 0) - occupied
+
+        if available > 0:
+            room_slots.append({
+                "room": room.name,
+                "available": available
+            })
+
+    # -------------------------
+    # 3. Allocate Students
+    # -------------------------
+    allocations = []
+    student_index = 0
+
+    for slot in room_slots:
+        for i in range(slot["available"]):
+            if student_index >= len(students):
+                break
+
+            student = students[student_index]
+
+            allocations.append({
+                "student_code": student.get("student_code"),
+                "hostel_room": slot["room"]
+            })
+
+            student_index += 1
+
+        if student_index >= len(students):
+            break
+
+    return allocations
+
+# @frappe.whitelist()
+# def get_students_and_rooms(company, year, gender=None, hostel_types=None):
+#     if not company or not year:
+#         frappe.throw("Company and Year are required")
+
+#     # -------------------------
+#     # 1. Fetch Students
+#     # -------------------------
+#     student_filters = {
+#         "year": year,
+#         "status": "Active"
+#     }
+
+#     if gender:
+#         student_filters["gender"] = gender
+
+#     students = frappe.get_all(
+#         "Student",
+#         filters=student_filters,
+#         fields=[
+#             "name", "first_name", "middle_name", "last_name",
+#             "gender", "cid", "catering_type", "scholarship_type", "status"
+#         ]
+#     )
+
+#     # -------------------------
+#     # 2. Process Hostel Types
+#     # -------------------------
+#     if isinstance(hostel_types, str):
+#         hostel_types = [h.strip() for h in hostel_types.split(",") if h.strip()]
+
+#     room_filters = {
+#         "company": company
+#     }
+
+#     if hostel_types:
+#         room_filters["hostel_type"] = ["in", hostel_types]
+
+#     # -------------------------
+#     # 3. Fetch Rooms
+#     # -------------------------
+#     rooms = frappe.get_all(
+#         "Hostel Room",
+#         filters=room_filters,
+#         fields=["name", "capacity", "hostel_type"]
+#     )
+
+#     room_data = []
+
+#     for room in rooms:
+#         # Count students in Student List Item
+#         student_count = frappe.db.count(
+#             "Student List Item",
+#             {
+#                 "parent": room.name,
+#                 "parenttype": "Hostel Room"
+#             }
+#         )
+
+#         available = (room.capacity or 0) - student_count
+
+#         room_data.append({
+#             "hostel_room": room.name,
+#             "capacity": room.capacity,
+#             "occupied": student_count,
+#             "available": available
+#         })
+
+#     return {
+#         "students": students,
+#         "rooms": room_data
+#     }    

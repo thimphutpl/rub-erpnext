@@ -40,6 +40,7 @@
    "reqd": 1
   },
   {
+   "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -147,8 +148,8 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-09 14:36:54.862684",
- "modified_by": "mon.chhetri@thimphutechpark.bt",
+ "modified": "2026-04-26 15:59:54.782247",
+ "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Club Membership Application",
  "naming_rule": "Expression",
@@ -166,6 +167,17 @@
    "role": "System Manager",
    "share": 1,
    "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Student",
+   "share": 1,
    "write": 1
   }
  ],

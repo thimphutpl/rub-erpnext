@@ -12,17 +12,19 @@
   "first_name",
   "last_name",
   "full_name",
+  "phone_number",
   "column_break_edso",
+  "posting_date",
+  "fiscal_year",
   "hostel_room",
   "hostel_type",
-  "phone_number",
   "branch",
   "cost_center",
-  "fiscal_year",
   "hostel_maintenance_request_section",
   "maintenance_type",
   "maintenance_required_on",
   "available_time",
+  "focal_type",
   "maintenance_focal",
   "column_break_gyul",
   "damage_type",
@@ -51,7 +53,8 @@
    "fieldname": "applied_by",
    "fieldtype": "Link",
    "label": "Applied by",
-   "options": "Student"
+   "options": "Student",
+   "reqd": 1
   },
   {
    "fetch_from": "applied_by.first_name",
@@ -83,14 +86,16 @@
    "fieldname": "hostel_type",
    "fieldtype": "Data",
    "label": "Hostel Type ",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fieldname": "hostel_room",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Hostel Room",
-   "options": "Hostel Room"
+   "options": "Hostel Room",
+   "read_only": 1
   },
   {
    "fieldname": "hostel_maintenance_request_section",
@@ -101,7 +106,8 @@
    "fieldname": "maintenance_type",
    "fieldtype": "Select",
    "label": "Maintenance Type",
-   "options": "Repair\nReplacement"
+   "options": "Repair\nReplacement",
+   "reqd": 1
   },
   {
    "fieldname": "maintenance_required_on",
@@ -137,7 +143,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "College",
-   "options": "Company"
+   "options": "Company",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_cpso",
@@ -198,7 +205,8 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Damage Type",
-   "options": "Vandalism\nLoss or Misuse of Property\nDamage to Shared Facilities"
+   "options": "Vandalism\nLoss or Misuse of Property\nDamage to Shared Facilities",
+   "reqd": 1
   },
   {
    "fieldname": "maintenance_focal",
@@ -255,13 +263,26 @@
    "label": "Fiscal Year",
    "options": "Fiscal Year",
    "reqd": 1
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "focal_type",
+   "fieldtype": "Select",
+   "label": "Focal Type",
+   "options": "\nPlumber\nElectrician\nMason\nCarpenter",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-30 10:55:43.550861",
+ "modified": "2026-04-27 10:31:32.349292",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Maintenance Application",

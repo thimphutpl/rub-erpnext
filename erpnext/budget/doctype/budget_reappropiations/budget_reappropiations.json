@@ -14,6 +14,7 @@
   "from_activity_type",
   "from_budget_type",
   "from_activity",
+  "available_balance",
   "appropiation_amount",
   "column_break_prmd",
   "college",
@@ -62,7 +63,7 @@
    "fieldname": "college",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
+   "label": "College",
    "options": "Company",
    "reqd": 1
   },
@@ -193,13 +194,19 @@
    "fieldtype": "Select",
    "label": "To Activity Type",
    "options": "Planning Activities\nAdditional Activities"
+  },
+  {
+   "fieldname": "available_balance",
+   "fieldtype": "Currency",
+   "label": "Available Balance (In Million)",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-20 10:10:55.360230",
+ "modified": "2026-04-23 14:52:42.476194",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Budget Reappropiations",

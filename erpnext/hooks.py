@@ -302,6 +302,15 @@ has_website_permission = {
 
 permission_query_conditions = {
 	"Employee": "erpnext.setup.doctype.employee.employee.get_permission_query_conditions",
+	"Hostel Allocation Bulk Upload": "erpnext.hostel_management.doctype.hostel_allocation_bulk_upload.hostel_allocation_bulk_upload.get_permission_query_conditions",
+	"Hostel Room": "erpnext.hostel_management.doctype.hostel_room.hostel_room.get_permission_query_conditions",
+	"Hostel Change Application": "erpnext.hostel_management.doctype.hostel_change_application.hostel_change_application.get_permission_query_conditions",
+    "Student Counselling Request Form": "erpnext.student_services.doctype.student_counselling_request_form.student_counselling_request_form.get_permission_query_conditions",
+	"Hostel Maintenance Application": "erpnext.hostel_management.doctype.hostel_maintenance_application.hostel_maintenance_application.get_permission_query_conditions",
+	"Hostel Maintenance Report": "erpnext.hostel_management.doctype.hostel_maintenance_report.hostel_maintenance_report.get_permission_query_conditions",
+	"Hostel Apply": "erpnext.hostel_management.doctype.hostel_apply.hostel_apply.get_permission_query_conditions",
+	"Hostel Check-In Form": "erpnext.hostel_management.doctype.hostel_check_in_form.hostel_check_in_form.get_permission_query_conditions",
+	"Hostel Check-Out Form": "erpnext.hostel_management.doctype.hostel_check_out_form.hostel_check_out_form.get_permission_query_conditions"
 }
 
 before_tests = "erpnext.setup.utils.before_tests"

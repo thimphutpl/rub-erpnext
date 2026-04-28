@@ -16,7 +16,7 @@ class HostelAllocationItem(Document):
 
 		amended_from: DF.Link | None
 		capacity: DF.Data | None
-		catering_type: DF.Literal["", "Mess", "Self-catering"]
+		catering_type: DF.Data | None
 		cid_number: DF.Int
 		first_name: DF.Data | None
 		gender: DF.Data | None
@@ -27,7 +27,7 @@ class HostelAllocationItem(Document):
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
-		scholarship_type: DF.Literal["", "Government Scholarship", "Self Funding"]
+		scholarship_type: DF.Data | None
 		status: DF.Data | None
 		student_code: DF.Link | None
 		year: DF.Data | None

@@ -6,9 +6,6 @@ from frappe.model.document import Document
 
 
 class PlanningActivities(Document):
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
-
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
@@ -26,5 +23,4 @@ class PlanningActivities(Document):
 		project: DF.Link | None
 		to_date: DF.Date
 		unit: DF.Link
-	# end: auto-generated types
 	pass

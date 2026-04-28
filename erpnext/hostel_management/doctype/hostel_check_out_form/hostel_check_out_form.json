@@ -7,11 +7,13 @@
  "engine": "InnoDB",
  "field_order": [
   "hostel_details_section",
+  "student",
   "college",
   "hostel_room",
   "column_break_ujof",
   "fiscal_year",
   "posting_date",
+  "hostel_change",
   "student_details_section",
   "table_fvvp",
   "aseet_details_section",
@@ -41,6 +43,7 @@
    "label": "Hostel Details"
   },
   {
+   "fetch_from": "student.company",
    "fieldname": "college",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -70,6 +73,7 @@
   {
    "fieldname": "student_details_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Student Details"
   },
   {
@@ -101,13 +105,26 @@
    "label": "Hostel Check-In Link",
    "read_only": 1,
    "reqd": 1
+  },
+  {
+   "fieldname": "student",
+   "fieldtype": "Link",
+   "label": "Student",
+   "options": "Student",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "hostel_change",
+   "fieldtype": "Check",
+   "label": "Hostel Change"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-22 22:38:21.238216",
+ "modified": "2026-04-27 14:57:56.528328",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Check-Out Form",

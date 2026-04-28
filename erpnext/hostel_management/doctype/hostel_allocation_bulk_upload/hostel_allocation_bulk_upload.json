@@ -8,9 +8,15 @@
  "field_order": [
   "year",
   "posting_date",
+  "hostel_type",
   "column_break_uvpt",
   "company",
   "re_allocate_hostel_room",
+  "gender",
+  "section_break_hkpi",
+  "get_student",
+  "column_break_eree",
+  "hostel_allocation",
   "section_break_bqtw",
   "table_caon",
   "amended_from"
@@ -60,8 +66,8 @@
    "fieldname": "year",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Year",
-   "options": "Fiscal Year",
+   "label": "Academic Year",
+   "options": "Year",
    "reqd": 1
   },
   {
@@ -69,14 +75,45 @@
    "fieldname": "re_allocate_hostel_room",
    "fieldtype": "Check",
    "label": "Re Allocate Hostel Room"
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Select",
+   "label": "Gender",
+   "options": "\nMale\nFemale",
+   "reqd": 1
+  },
+  {
+   "fieldname": "get_student",
+   "fieldtype": "Button",
+   "label": "Get Student"
+  },
+  {
+   "fieldname": "hostel_type",
+   "fieldtype": "Table MultiSelect",
+   "label": "Hostel Type",
+   "options": "Block Counsellor Details"
+  },
+  {
+   "fieldname": "section_break_hkpi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_eree",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hostel_allocation",
+   "fieldtype": "Button",
+   "label": "Hostel Allocation"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-03 23:06:59.744466",
- "modified_by": "mon.chhetri@thimphutechpark.bt",
+ "modified": "2026-04-28 09:48:53.553092",
+ "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Allocation Bulk Upload",
  "naming_rule": "Expression",

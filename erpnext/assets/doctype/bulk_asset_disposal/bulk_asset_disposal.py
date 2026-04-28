@@ -20,7 +20,6 @@ class BulkAssetDisposal(Document):
 		from frappe.types import DF
 
 		amended_form: DF.Link | None
-		amended_from: DF.Link | None
 		asset_category: DF.Link
 		branch: DF.Link | None
 		company: DF.Link

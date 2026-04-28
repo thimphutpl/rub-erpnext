@@ -15,7 +15,19 @@ erpnext.setup.EmployeeController = class EmployeeController extends frappe.ui.fo
 		};
 	}
 
-	refresh() {
+	refresh(frm) {
+		if (!frm.dashboard || !frm.dashboard.wrapper) return;
+
+		let section = $(frm.dashboard.wrapper)
+			.find('.form-dashboard-section.form-links');
+
+		let head = section.find('.section-head');
+		let body = section.find('.section-body');
+
+		if (head.length) {
+			head.addClass('collapsed');
+			body.hide();
+		}
 		erpnext.toggle_naming_series();
 	}
 };
@@ -166,22 +178,7 @@ frappe.ui.form.on("Employee", {
 	
 
 	},
-	
-	onload: function (frm) {
-		frm.fields_dict.section-head.collapse(false);
-		
-	},
-	
-	// department: function(frm) {
-    //     frm.set_query('department', function() {
-    //         return {
-    //             filters: {
-    //                 is_department: 1, // show only records flagged as Department
-    //                 disabled: 0       // exclude disabled records
-    //             }
-    //         };
-    //     });
-    // },
+
 	prefered_contact_email: function (frm) {
 		frm.events.update_contact(frm);
 	},

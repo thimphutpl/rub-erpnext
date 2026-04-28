@@ -41,9 +41,11 @@
   "qr_code",
   "custodian_details_section",
   "custodian",
-  "hostel",
   "column_break_rbqr",
   "custodian_name",
+  "location_section",
+  "hostel",
+  "column_break_bfhc",
   "roombuilding",
   "accounting_dimensions_section",
   "branch",
@@ -211,12 +213,12 @@
    "options": "Location"
   },
   {
-   "depends_on": "eval:doc.is_hostel_asset == \"Employee\";",
+   "depends_on": "eval:!doc.hostel && !doc.roombuilding;",
    "fieldname": "custodian",
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
    "label": "Custodian",
-   "mandatory_depends_on": "eval:!doc.is_hostel_asset;",
+   "mandatory_depends_on": "eval:!doc.hostel && !doc.roombuilding;",
    "options": "Employee"
   },
   {
@@ -723,11 +725,11 @@
    "label": "Existing PR Reference"
   },
   {
-   "depends_on": "eval:doc.is_hostel_asset == \"Hostel Room\";",
+   "depends_on": "eval:!doc.custodian && !doc.roombuilding;",
    "fieldname": "hostel",
    "fieldtype": "Link",
    "label": "Hostel",
-   "mandatory_depends_on": "eval:doc.is_hostel_asset == \"Hostel Room\";",
+   "mandatory_depends_on": "eval:!doc.custodian && !doc.roombuilding;",
    "options": "Hostel Room"
   },
   {
@@ -745,11 +747,11 @@
    "label": "QR Code Link"
   },
   {
-   "depends_on": "eval:doc.is_hostel_asset == \"Room\";",
+   "depends_on": "eval:!doc.custodian && !doc.hostel;",
    "fieldname": "roombuilding",
    "fieldtype": "Link",
    "label": "Room/Building",
-   "mandatory_depends_on": "eval:doc.is_hostel_asset == \"Room\";",
+   "mandatory_depends_on": "eval:!doc.custodian && !doc.hostel;",
    "options": "Room"
   },
   {
@@ -761,8 +763,18 @@
   {
    "fieldname": "is_hostel_asset",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Asset Custodian Type",
    "options": "\nEmployee\nHostel Room\nRoom"
+  },
+  {
+   "fieldname": "location_section",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "column_break_bfhc",
+   "fieldtype": "Column Break"
   }
  ],
  "idx": 72,
@@ -806,7 +818,7 @@
    "link_fieldname": "reference_code"
   }
  ],
- "modified": "2026-03-31 15:09:14.405626",
+ "modified": "2026-04-27 11:31:42.265032",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset",

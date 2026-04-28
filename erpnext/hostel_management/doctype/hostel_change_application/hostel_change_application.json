@@ -247,22 +247,24 @@
   {
    "fieldname": "fiscal_year",
    "fieldtype": "Link",
-   "label": "Fiscal Year",
-   "options": "Fiscal Year",
+   "label": "Academic Year",
+   "options": "Year",
    "reqd": 1
   },
   {
+   "fetch_from": "student_code.cid",
    "fieldname": "cid_number",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "CID Number"
+   "label": "CID Number",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-30 11:00:55.333146",
+ "modified": "2026-04-27 16:58:07.481094",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Change Application",

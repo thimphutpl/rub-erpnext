@@ -6,12 +6,16 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "student_councilor",
+  "councilor_name",
+  "last_name",
   "company",
-  "hostel_block",
+  "get_hostel_attendance",
   "column_break_wpzc",
+  "fiscal_year",
   "posting_date",
   "hostel_councellor",
-  "fiscal_year",
+  "hostel_block",
   "section_break_ugky",
   "hostel_councillor",
   "section_break_lxei",
@@ -63,20 +67,22 @@
    "reqd": 1
   },
   {
+   "fetch_from": "student_councilor.company",
    "fieldname": "company",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "College",
    "options": "Company",
+   "read_only": 1,
    "reqd": 1
   },
   {
    "fieldname": "fiscal_year",
    "fieldtype": "Link",
-   "hidden": 1,
    "in_list_view": 1,
-   "label": "Fiscal Year",
-   "options": "Fiscal Year"
+   "label": "Academic Year",
+   "options": "Year",
+   "reqd": 1
   },
   {
    "fetch_from": "hostel_block.hostel_councellor",
@@ -84,7 +90,7 @@
    "fieldtype": "Link",
    "hidden": 1,
    "in_list_view": 1,
-   "label": "Hostel Councellor",
+   "label": "Hostel Councilor",
    "options": "Student"
   },
   {
@@ -94,15 +100,40 @@
   {
    "fieldname": "hostel_councillor",
    "fieldtype": "Table",
+   "hidden": 1,
    "label": "Hostel Councillor",
    "options": "Hostel Councillor Item"
+  },
+  {
+   "fieldname": "student_councilor",
+   "fieldtype": "Link",
+   "label": "Councilor ID",
+   "options": "Student",
+   "reqd": 1
+  },
+  {
+   "fieldname": "get_hostel_attendance",
+   "fieldtype": "Button",
+   "label": "Get Hostel Attendance"
+  },
+  {
+   "fetch_from": "student_councilor.first_name",
+   "fieldname": "councilor_name",
+   "fieldtype": "Data",
+   "label": "First Name"
+  },
+  {
+   "fetch_from": "student_councilor.last_name",
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-23 10:58:18.707395",
+ "modified": "2026-04-27 14:52:55.633674",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Attendance",

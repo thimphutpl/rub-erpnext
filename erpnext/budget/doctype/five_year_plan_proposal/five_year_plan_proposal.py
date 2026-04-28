@@ -7,9 +7,6 @@ from frappe.utils import flt, getdate, today
 from frappe.model.naming import make_autoname
 
 class FiveYearPlanProposal(Document):
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
-
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
@@ -25,7 +22,7 @@ class FiveYearPlanProposal(Document):
 		rub_strategic_plan: DF.Link
 		to_year: DF.Link
 		total_proposed_budget: DF.Currency
-	# end: auto-generated types
+
 	def autoname(self):
 		self.name = make_autoname(
 			f"FYPP/{self.from_year}-{self.to_year}/.##"
@@ -44,10 +41,18 @@ class FiveYearPlanProposal(Document):
 		current_date = getdate(today())
 		from_date = frappe.db.get_single_value("Budget Settings", "fypp_from_date")
 		to_date = frappe.db.get_single_value("Budget Settings", "fypp_to_date")
-		if not (getdate(today()) <= getdate(to_date)):
+		allow_transaction = frappe.db.exists(
+			"Allow Budget Transaction",
+			{"college": self.colleges, "from_date": ["<=", today()], "to_date": [">=", today()], "transaction_type": self.doctype, "docstatus": 1},
+			"name",
+		)
+		if not from_date or not to_date:
+			frappe.throw("Transaction not allowed because Five Year Plan Proposal dates (from & to) not set in Budget Settings")
+
+		if not (allow_transaction or getdate(today()) <= getdate(to_date)):
 			frappe.throw("Transaction not allowed after <b>{0}</b>".format(to_date))
 
-		if not (getdate(from_date) <= getdate(today())):
+		if not (allow_transaction or getdate(from_date) <= getdate(today())):
 			frappe.throw("Transaction not allowed before <b>{0}</b>".format(from_date))
 
 	def check_college(self):

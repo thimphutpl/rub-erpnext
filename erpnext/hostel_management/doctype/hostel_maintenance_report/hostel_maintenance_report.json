@@ -21,6 +21,7 @@
   "posting_time",
   "hostel_type",
   "hostel_room",
+  "maintenance_status",
   "maintenance_requirement_sect",
   "maintenance_type",
   "maintenance_required_on",
@@ -64,7 +65,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Student Code",
-   "options": "Student"
+   "options": "Student",
+   "reqd": 1
   },
   {
    "fetch_from": "student_code.first_name",
@@ -93,7 +95,8 @@
    "fieldtype": "Link",
    "label": "Hostel Type",
    "options": "Hostel Type",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fieldname": "hostel_room",
@@ -111,7 +114,8 @@
    "fieldname": "maintenance_type",
    "fieldtype": "Select",
    "label": "Maintenance Type",
-   "options": "\nRepair\nReplacement"
+   "options": "\nRepair\nReplacement",
+   "reqd": 1
   },
   {
    "fieldname": "maintenance_required_on",
@@ -136,19 +140,22 @@
    "fieldname": "damage_type",
    "fieldtype": "Select",
    "label": "Damage Type",
-   "options": "\nVandalism\nLoss or Misuse of Property\nDamage to Shared Facilities"
+   "options": "\nVandalism\nLoss or Misuse of Property\nDamage to Shared Facilities",
+   "reqd": 1
   },
   {
    "fieldname": "maintenance_focal",
    "fieldtype": "Link",
    "label": "Maintenance Focal",
-   "options": "Employee"
+   "options": "Employee",
+   "reqd": 1
   },
   {
    "fieldname": "expenses_borne_by",
    "fieldtype": "Select",
    "label": "Expenses Borne by",
-   "options": "\nStudent\nCollege"
+   "options": "\nStudent\nCollege",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_pwka",
@@ -221,7 +228,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "College",
-   "options": "Company"
+   "options": "Company",
+   "reqd": 1
   },
   {
    "fieldname": "posting_time",
@@ -259,13 +267,21 @@
    "label": "Fiscal Year",
    "options": "Fiscal Year",
    "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "maintenance_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Maintenance Status",
+   "options": "\nOn Going\nCompleted"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-02 12:17:12.727046",
+ "modified": "2026-04-27 10:03:50.417215",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Maintenance Report",

@@ -16,65 +16,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Masters and Settings",
-   "link_count": 5,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Budget Settings",
-   "link_count": 0,
-   "link_to": "Budget Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "RUB Strategic Plan",
-   "link_count": 0,
-   "link_to": "RUB Strategic Plan",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Planning Output",
-   "link_count": 0,
-   "link_to": "Planning Output",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Planning Project",
-   "link_count": 0,
-   "link_to": "Planning Project",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Planning Activities",
-   "link_count": 0,
-   "link_to": "Planning Activities",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Reports",
    "link_count": 4,
    "link_type": "DocType",
@@ -223,10 +164,30 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Annual Performance Assessment",
-   "link_count": 9,
+   "link_count": 11,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "APA Calendar",
+   "link_count": 0,
+   "link_to": "APA Calendar",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "APA Status",
+   "link_count": 0,
+   "link_to": "APA Status",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   },
   {
    "hidden": 0,
@@ -317,10 +278,79 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Masters and Settings",
+   "link_count": 6,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Budget Year",
+   "link_count": 0,
+   "link_to": "Budget Year",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Budget Settings",
+   "link_count": 0,
+   "link_to": "Budget Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "RUB Strategic Plan",
+   "link_count": 0,
+   "link_to": "RUB Strategic Plan",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Planning Output",
+   "link_count": 0,
+   "link_to": "Planning Output",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Planning Project",
+   "link_count": 0,
+   "link_to": "Planning Project",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Planning Activities",
+   "link_count": 0,
+   "link_to": "Planning Activities",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-04-07 14:37:11.144618",
- "modified_by": "rohan.gurung@thimphutechpark.bt",
+ "modified": "2026-04-21 14:59:30.916914",
+ "modified_by": "sonam.choki@thimphutechpark.bt",
  "module": "Budget",
  "name": "Planning & Budget",
  "number_cards": [],

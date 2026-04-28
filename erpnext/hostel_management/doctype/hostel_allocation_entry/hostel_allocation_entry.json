@@ -1,0 +1,137 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-04-27 15:30:50.135339",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "student",
+  "student_name",
+  "transaction_type",
+  "transaction_name",
+  "capacity",
+  "year",
+  "current_hostel_room",
+  "current_hostel_type",
+  "hostel_change_type",
+  "column_break_poex",
+  "posting_date",
+  "hostel_type",
+  "hostel_room",
+  "catering_type",
+  "scholarship_type"
+ ],
+ "fields": [
+  {
+   "fieldname": "student",
+   "fieldtype": "Link",
+   "label": "Student Code",
+   "options": "Student"
+  },
+  {
+   "fieldname": "student_name",
+   "fieldtype": "Data",
+   "label": "Student Name"
+  },
+  {
+   "fieldname": "column_break_poex",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "hostel_type",
+   "fieldtype": "Link",
+   "label": "Hostel Type",
+   "options": "Hostel Type"
+  },
+  {
+   "fieldname": "hostel_room",
+   "fieldtype": "Link",
+   "label": "Hostel Room",
+   "options": "Hostel Room"
+  },
+  {
+   "fieldname": "transaction_type",
+   "fieldtype": "Link",
+   "label": "Transaction Type",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "transaction_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Transaction Name",
+   "options": "transaction_type"
+  },
+  {
+   "fieldname": "capacity",
+   "fieldtype": "Int",
+   "label": "Capacity"
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Link",
+   "label": "Year",
+   "options": "Year"
+  },
+  {
+   "fieldname": "catering_type",
+   "fieldtype": "Select",
+   "label": "Catering Type",
+   "options": "\nMess Services\nSelf-Catering\nDay Scholar"
+  },
+  {
+   "fieldname": "scholarship_type",
+   "fieldtype": "Link",
+   "label": "Scholarship Type",
+   "options": "Scholarship Type"
+  },
+  {
+   "fieldname": "current_hostel_room",
+   "fieldtype": "Link",
+   "label": "Current Hostel Room",
+   "options": "Hostel Room"
+  },
+  {
+   "fieldname": "current_hostel_type",
+   "fieldtype": "Link",
+   "label": "Current Hostel Type",
+   "options": "Hostel Type"
+  },
+  {
+   "fieldname": "hostel_change_type",
+   "fieldtype": "Select",
+   "label": "Hostel Change Type",
+   "options": "\nSwap\nRoom Transfer\nDay Scholar"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-27 16:35:25.452087",
+ "modified_by": "Administrator",
+ "module": "Hostel Management",
+ "name": "Hostel Allocation Entry",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

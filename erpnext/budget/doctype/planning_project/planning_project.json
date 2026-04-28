@@ -69,8 +69,8 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-23 10:25:15.506212",
- "modified_by": "Administrator",
+ "modified": "2026-04-27 09:50:14.818398",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
  "module": "Budget",
  "name": "Planning Project",
  "owner": "Administrator",
@@ -84,6 +84,17 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Budget Manager",
    "share": 1,
    "write": 1
   }

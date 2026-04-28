@@ -1430,6 +1430,8 @@ class AccountsController(TransactionBase):
 				"remarks": d.remarks,
 				"advance_amount": flt(d.amount),
 				"allocated_amount": allocated_amount,
+				"cost_center":d.cost_center,
+				"advance_account":d.advance_account,
 				"ref_exchange_rate": flt(d.exchange_rate),  # exchange_rate of advance entry
 				"difference_posting_date": self.posting_date,
 			}
@@ -1457,7 +1459,13 @@ class AccountsController(TransactionBase):
 			amount_field = "debit_in_account_currency"
 			order_field = "purchase_order"
 			order_doctype = "Purchase Order"
-			party_account.append(self.credit_to)
+			# party_account.append(self.credit_to)
+			supplier =frappe.db.get_value("Supplier",self.supplier,"country")
+			if supplier =="Bhutan":
+				party_account.append(frappe.db.get_value("Company", self.company, "supplier_advance_account_domestic"))
+			else:
+				party_account.append(frappe.db.get_value("Company", self.company, "supplier_advance_account_international"))
+
 
 		party_accounts = get_party_account(
 			party_type, party=party, company=self.company, include_advance=True
@@ -3268,6 +3276,7 @@ def get_common_query(
 			(payment_entry.name).as_("reference_name"),
 			payment_entry.posting_date,
 			(payment_entry.remarks).as_("remarks"),
+			payment_entry.cost_center,
 			(payment_entry.book_advance_payments_in_separate_party_account),
 		)
 		.where(payment_entry.payment_type == payment_type)
@@ -3275,23 +3284,31 @@ def get_common_query(
 		.where(payment_entry.party == party)
 		.where(payment_entry.docstatus == 1)
 	)
-
-	field = "paid_from" if payment_type == "Receive" else "paid_to"
-
-	q = q.select((payment_entry[f"{field}_account_currency"]).as_("currency"))
-	q = q.select(payment_entry[field])
-	account_condition = payment_entry[field].isin(party_account)
-	if default_advance_account:
-		q = q.where(
-			account_condition
-			| (
-				(payment_entry[field] == default_advance_account)
-				& (payment_entry.book_advance_payments_in_separate_party_account == 1)
-			)
-		)
-
+	if payment_type == "Receive":
+		q = q.select((payment_entry.paid_from_account_currency).as_("currency"))
+		q = q.select((payment_entry.paid_from).as_("advance_account"))
+		q = q.where(payment_entry.paid_from.isin(party_account))
 	else:
-		q = q.where(account_condition)
+		q = q.select((payment_entry.paid_to_account_currency).as_("currency"))
+		q = q.select((payment_entry.paid_to).as_("advance_account"))
+		q = q.where(payment_entry.paid_to.isin(party_account))
+
+	# field = "paid_from" if payment_type == "Receive" else "paid_to"
+
+	# q = q.select((payment_entry[f"{field}_account_currency"]).as_("currency"))
+	# q = q.select(payment_entry[field])
+	# account_condition = payment_entry[field].isin(party_account)
+	# if default_advance_account:
+	# 	q = q.where(
+	# 		account_condition
+	# 		| (
+	# 			(payment_entry[field] == default_advance_account)
+	# 			& (payment_entry.book_advance_payments_in_separate_party_account == 1)
+	# 		)
+	# 	)
+
+	# else:
+	# 	q = q.where(account_condition)
 
 	if payment_type == "Receive":
 		q = q.select((payment_entry.source_exchange_rate).as_("exchange_rate"))

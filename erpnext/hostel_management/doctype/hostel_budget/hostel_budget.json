@@ -15,6 +15,7 @@
   "hostel_councilor_name",
   "section_break_hpza",
   "expense_type",
+  "previous_amount",
   "total_budget_collection",
   "expenses_amount",
   "balance_amount",
@@ -112,13 +113,18 @@
    "fieldtype": "Data",
    "label": "Hostel Councilor Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "previous_amount",
+   "fieldtype": "Float",
+   "label": "Previous Amount"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-22 09:36:21.633271",
+ "modified": "2026-04-23 00:13:44.288942",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Budget",

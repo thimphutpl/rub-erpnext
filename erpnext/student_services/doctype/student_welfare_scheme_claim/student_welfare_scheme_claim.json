@@ -185,6 +185,7 @@
   {
    "fieldname": "receivable_amount_in_words",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Receivable Amount (In Words)"
   },
   {
@@ -255,8 +256,8 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-09 15:23:20.123337",
- "modified_by": "kalden.dorji@thimphutechpark.bt",
+ "modified": "2026-04-21 15:17:39.123559",
+ "modified_by": "sonam.choki@thimphutechpark.bt",
  "module": "Student Services",
  "name": "Student Welfare Scheme Claim",
  "naming_rule": "Expression (old style)",

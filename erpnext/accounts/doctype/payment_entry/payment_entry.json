@@ -222,7 +222,6 @@
    "read_only": 1
   },
   {
-   "collapsible": 1,
    "fieldname": "payment_accounts_section",
    "fieldtype": "Section Break",
    "label": "Accounts"
@@ -827,7 +826,7 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2026-04-15 11:08:34.172203",
+ "modified": "2026-04-20 11:28:33.171191",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Payment Entry",

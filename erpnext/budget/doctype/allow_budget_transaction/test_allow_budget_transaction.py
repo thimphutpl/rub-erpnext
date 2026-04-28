@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestHostelApply(FrappeTestCase):
+class TestAllowBudgetTransaction(FrappeTestCase):
 	pass

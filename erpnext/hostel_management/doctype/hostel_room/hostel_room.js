@@ -19,12 +19,47 @@ frappe.ui.form.on("Hostel Room", {
 				}
 			}
 		}); 
-		frm.set_query('hostel_type', function(doc) {
+		// frm.set_query('hostel_type', function(doc) {
+		// 	return {
+		// 		filters: {
+		// 			"company": doc.company
+		// 		}
+		// 	}
+		// }); 
+		frm.set_query("hostel_type", function(){
+            if (!frm.doc.company) {
+                return {
+                    filters: [
+                        ["name", "=", ""]  // Return empty result
+                    ]
+                };
+            }
+			return {
+				filters: {
+					company: frm.doc.company
+				}
+			}
+		});
+		frm.set_query('student_list', function(doc) {
 			return {
 				filters: {
 					"company": doc.company
 				}
 			}
 		}); 
+		frm.fields_dict["student_list"].grid.get_field("student_code").get_query = function(doc, cdt, cdn) {
+            return {
+                filters: {
+                    company: frm.doc.company
+                }
+            };
+        };
+		frm.fields_dict["hostel_room_item"].grid.get_field("asset_code").get_query = function(doc, cdt, cdn) {
+            return {
+                filters: {
+                    company: frm.doc.company
+                }
+            };
+        };
 	}
 });

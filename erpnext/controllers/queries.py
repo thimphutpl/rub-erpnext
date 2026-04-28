@@ -32,6 +32,7 @@ def employee_query(
 	reference_doctype: str | None = None,
 	ignore_user_permissions: bool = False,
 ):
+	
 	doctype = "Employee"
 	conditions = []
 	fields = get_fields(doctype, ["name", "employee_name"])
@@ -527,14 +528,14 @@ def filter_assessment_component(doctype, txt, searchfield, start, page_len, filt
 	`tabModule Assessment Item` mai, `tabAssessment Component` ac
 	where mac.name = mai.parent
 	and ac.name = mai.assessment_name
-	and ac.examination_assesment = 0
+	and ac.examination_assesment = '{}'
 	and college = '{}'
 	and mac.tutor = '{}'
 	and mac.docstatus = 1
 	and mac.academic_term = '{}'
 	and mac.module = '{}'
 	and programme = '{}'
-	""".format(filters.get("college"), filters.get("tutor"), filters.get("academic_term"), filters.get("module"), filters.get("programme")))
+	""".format(filters.get("examination_assesment"),filters.get("college"), filters.get("tutor"), filters.get("academic_term"), filters.get("module"), filters.get("programme")))
 	# frappe.throw(filters.get("college")+" "+filters.get("programme")+" "+filters.get("module")+" "+filters.get("academic_term")+" "+filters.get("tutor"))
 	
 	# return frappe.db.sql(

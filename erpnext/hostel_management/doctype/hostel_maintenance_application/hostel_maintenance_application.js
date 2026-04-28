@@ -2,7 +2,12 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Hostel Maintenance Application", {
-	
+	onload (frm) {
+		if (!frm.doc.posting_date) {
+			frm.set_value('posting_date', frappe.datetime.now_date());
+			// frm.set_value("posting_date", get_today());
+		}
+	},
 	refresh(frm) {
 		if (!frm.doc.hostel_maintenance_report && frm.doc.docstatus == 1 && frm.doc.workflow_state == "Approved")  {
 			frm.add_custom_button(__("Hostel Maintenance Report"), function () {
@@ -92,6 +97,27 @@ frappe.ui.form.on("Hostel Maintenance Application", {
 	fiscal_year: function(frm) {
         fetch_checkin_form(frm);
         fetch_checkout_form(frm);
+    },
+	focal_type: function(frm) {
+        if (frm.doc.focal_type && frm.doc.college) {
+            set_maintenance_focal(frm);
+        } else if (frm.doc.focal_type && !frm.doc.college) {
+            frappe.msgprint({
+                title: __('College Required'),
+                message: __('Please select a College first'),
+                indicator: 'orange'
+            });
+            frm.set_value('focal_type', '');
+        }
+    },
+    
+    college: function(frm) {
+        if (frm.doc.college && frm.doc.focal_type) {
+            set_maintenance_focal(frm);
+        } else if (frm.doc.college && !frm.doc.focal_type) {
+            // Optional: Show available focal types for this college
+            get_available_focal_types(frm);
+        }
     }
 });
 
@@ -144,3 +170,102 @@ frappe.ui.form.on('Hostel Asset Maintenance', {
 	}
 });
 
+function set_maintenance_focal(frm) {
+    if (!frm.doc.focal_type || !frm.doc.college) {
+        return;
+    }
+    
+    // Map focal_type to field in Company
+    const focal_field_map = {
+        "Plumber": "plumber",
+        "Electrician": "electrician",
+        "Mason": "mason",
+        "Carpenter": "carpenter"
+    };
+    
+    const field_name = focal_field_map[frm.doc.focal_type];
+    
+    if (!field_name) {
+        frappe.msgprint({
+            title: __('Invalid Focal Type'),
+            message: __('Please select a valid Focal Type'),
+            indicator: 'red'
+        });
+        return;
+    }
+    
+    frappe.call({
+        method: "frappe.client.get_value",
+        args: {
+            doctype: "Company",
+            filters: { name: frm.doc.college },
+            fieldname: field_name
+        },
+        callback: function(r) {
+            if (r.message && r.message[field_name]) {
+                frm.set_value("maintenance_focal", r.message[field_name]);
+                
+                // Get employee details for display
+                frappe.call({
+                    method: "frappe.client.get_value",
+                    args: {
+                        doctype: "Employee",
+                        filters: { name: r.message[field_name] },
+                        fieldname: ["employee_name", "department", "cell_number"]
+                    },
+                    callback: function(emp_r) {
+                        if (emp_r.message) {
+                            let msg = __("Assigned {0}: {1}").format(
+                                frm.doc.focal_type,
+                                emp_r.message.employee_name
+                            );
+                            frappe.show_alert({
+                                message: msg,
+                                indicator: 'green'
+                            }, 3);
+                        }
+                    }
+                });
+            } else {
+                frappe.msgprint({
+                    title: __('No Focal Person Found'),
+                    message: __("No {0} assigned to {1}. Please assign one in Company master.").format(
+                        frm.doc.focal_type,
+                        frm.doc.college
+                    ),
+                    indicator: 'orange'
+                });
+                frm.set_value("maintenance_focal", "");
+            }
+        }
+    });
+}
+
+function get_available_focal_types(frm) {
+    frappe.call({
+        method: "erpnext.hostel_management.doctype.hostel_maintenance_application.hostel_maintenance_application.get_company_focal_persons",
+        args: {
+            company: frm.doc.college
+        },
+        callback: function(r) {
+            if (r.message) {
+                let available = [];
+                if (r.message.plumber) available.push("Plumber");
+                if (r.message.electrician) available.push("Electrician");
+                if (r.message.mason) available.push("Mason");
+                if (r.message.carpenter) available.push("Carpenter");
+                
+                if (available.length > 0) {
+                    frappe.msgprint({
+                        title: __('Available Focal Types'),
+                        message: __("Available focal types for {0}: {1}").format(
+                            frm.doc.college,
+                            available.join(", ")
+                        ),
+                        indicator: 'blue'
+                    });
+                }
+            }
+        }
+    });
+}

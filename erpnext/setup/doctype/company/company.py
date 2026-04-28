@@ -38,6 +38,7 @@ class Company(NestedSet):
 		bank_account: DF.Link | None
 		book_advance_payments_in_separate_party_account: DF.Check
 		capital_work_in_progress_account: DF.Link | None
+		carpenter: DF.Link | None
 		chart_of_accounts: DF.Literal[None]
 		college_code: DF.Data | None
 		company_description: DF.TextEditor | None
@@ -83,6 +84,7 @@ class Company(NestedSet):
 		discount_account: DF.Link | None
 		disposal_account: DF.Link | None
 		domain: DF.Data | None
+		electrician: DF.Link | None
 		email: DF.Data | None
 		employer_contribution_pf_account: DF.Link | None
 		enable: DF.Check
@@ -105,11 +107,13 @@ class Company(NestedSet):
 		is_overseeing_company: DF.Check
 		lft: DF.Int
 		logo: DF.Attach | None
+		mason: DF.Link | None
 		monthly_sales_target: DF.Currency
 		old_parent: DF.Data | None
 		parent_company: DF.Link | None
 		payment_terms: DF.Link | None
 		phone_no: DF.Data | None
+		plumber: DF.Link | None
 		qr_gen_url: DF.Data | None
 		receivable_account: DF.Link | None
 		receivable_accounts: DF.Link | None

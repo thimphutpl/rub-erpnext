@@ -2018,6 +2018,7 @@ class PaymentEntry(AccountsController):
 		total_positive_outstanding_including_order = 0
 		total_negative_outstanding = 0
 		paid_amount -= sum(flt(d.amount, precision) for d in self.deductions)
+	
 
 		for ref in self.references:
 			reference_outstanding_amount = flt(ref.outstanding_amount)
@@ -2619,6 +2620,7 @@ def get_split_invoice_rows(invoice: dict, payment_term_template: str, exc_rates:
 	payment_schedule = frappe.get_all(
 		"Payment Schedule", filters={"parent": invoice.voucher_no}, fields=["*"], order_by="due_date"
 	)
+	
 	for payment_term in payment_schedule:
 		if payment_term.outstanding <= 0.1:
 			continue
@@ -2998,6 +3000,7 @@ def get_payment_entry(
 	created_from_payment_request=False,
 ):
 	doc = frappe.get_doc(dt, dn)
+	
 	over_billing_allowance = frappe.db.get_single_value("Accounts Settings", "over_billing_allowance")
 	if dt in ("Sales Order", "Purchase Order") and flt(doc.per_billed, 2) >= (100.0 + over_billing_allowance):
 		frappe.throw(_("Can only make payment against unbilled {0}").format(_(dt)))
@@ -3031,6 +3034,7 @@ def get_payment_entry(
 	paid_amount, received_amount = set_paid_amount_and_received_amount(
 		dt, party_account_currency, bank, outstanding_amount, payment_type, bank_amount, doc
 	)
+	
 
 	reference_date = getdate(reference_date)
 	paid_amount, received_amount, discount_amount, valid_discounts = apply_early_payment_discount(
@@ -3404,6 +3408,7 @@ def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_curre
 		grand_total = outstanding_amount = party_amount
 	elif dt in ("Sales Invoice", "Purchase Invoice"):
 		
+		
 		if party_account_currency == doc.company_currency:
 			grand_total = doc.base_rounded_total or doc.base_grand_total
 		else:
@@ -3416,13 +3421,14 @@ def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_curre
 			dis_acc += flt(i.amount_discount)
 		# frappe.throw(str(discount_amount))
 		# outstanding_amount = doc.total-doc.taxes_and_charges_deducted-doc.write_off_amount-doc.total_advance-dis_acc
-		outstanding_amount = doc.grand_total
+		outstanding_amount = doc.outstanding_amount
 		# frappe.throw(str(outstanding_amount))
 		
 	elif dt == "Dunning":
+		
 	
 		grand_total = doc.grand_total
-		outstanding_amount = doc.grand_total
+		outstanding_amount = doc.outstanding_amount or doc.grand_total
 	else:
 		
 		if party_account_currency == doc.company_currency:

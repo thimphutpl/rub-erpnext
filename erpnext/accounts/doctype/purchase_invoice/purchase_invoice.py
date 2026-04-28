@@ -136,7 +136,7 @@ class PurchaseInvoice(BuyingController):
 		items: DF.Table[PurchaseInvoiceItem]
 		language: DF.Data | None
 		ld_days: DF.Data | None
-		ld_percentage: DF.Literal["", "0.001", "0.0005"]
+		ld_percentage: DF.Literal["", "0.0010", "0.0009", "0.0008", "0.0007", "0.0006", "0.0005"]
 		letter_head: DF.Link | None
 		material_request: DF.Link | None
 		material_request_date: DF.Date | None
@@ -1026,7 +1026,6 @@ class PurchaseInvoice(BuyingController):
 
 	# make advance gl entry customisation for advance incorporation by paying advance in different accounts
 	def make_advance_gl_entry(self, gl_entries):
-		frappe.throw("hi")
 		for a in self.get("advances"):
 			if flt(a.allocated_amount) and a.advance_account:
 				advance_account_currency = get_account_currency(a.advance_account)

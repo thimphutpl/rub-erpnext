@@ -15,12 +15,12 @@ class EmployeeEducation(Document):
 		from frappe.types import DF
 
 		class_per: DF.Data | None
-		level: DF.Literal["Graduate", "Post Graduate", "Under Graduate"]
+		level: DF.Literal["", "Degree", "Master", "Post Graduate", "Under Graduate", "Diploma", "Certificate", "PGD"]
 		maj_opt_subj: DF.Text | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
-		qualification: DF.Data | None
+		qualification: DF.Link | None
 		school_univ: DF.SmallText | None
 		year_of_passing: DF.Int
 	# end: auto-generated types

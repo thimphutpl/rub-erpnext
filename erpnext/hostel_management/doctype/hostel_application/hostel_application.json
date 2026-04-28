@@ -13,10 +13,11 @@
   "middle_name",
   "last_name",
   "column_break_cwls",
-  "posting_date",
   "fiscal_year",
+  "posting_date",
   "section_break_mfyf",
   "hostel_room",
+  "column_break_wnck",
   "hostel_type",
   "section_break_ha7s",
   "amended_from"
@@ -27,7 +28,7 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Hostel Apply",
+   "options": "Hostel Application",
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
@@ -74,21 +75,24 @@
    "fieldname": "first_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "First Name"
+   "label": "First Name",
+   "read_only": 1
   },
   {
    "fetch_from": "student_code.middle_name",
    "fieldname": "middle_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Middle Name"
+   "label": "Middle Name",
+   "read_only": 1
   },
   {
    "fetch_from": "student_code.last_name",
    "fieldname": "last_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Last Name"
+   "label": "Last Name",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_mfyf",
@@ -108,20 +112,27 @@
    "label": "Hostel Type"
   },
   {
+   "fetch_from": "student_code.cid",
    "fieldname": "cid_number",
    "fieldtype": "Int",
+   "hidden": 1,
    "label": "CID Number",
-   "length": 12
+   "length": 12,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_wnck",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-06 09:41:55.909447",
+ "modified": "2026-04-25 15:20:28.869149",
  "modified_by": "Administrator",
  "module": "Hostel Management",
- "name": "Hostel Apply",
+ "name": "Hostel Application",
  "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [

@@ -433,10 +433,7 @@ class PurchaseReceipt(BuyingController):
 		self.make_bundle_using_old_serial_batch_fields()
 		supplier_type = frappe.db.get_value("Supplier",self.supplier,"Country")
 		if supplier_type != "Bhutan":
-			self.make_tax_payment()
-		# Updating stock ledger should always be called after updating prevdoc status,
-		# because updating ordered qty, reserved_qty_for_subcontract in bin
-		# depends upon updated ordered qty in PO
+			self.make_tax_payment() 
 		self.update_stock_ledger()
 		self.make_gl_entries()
 		self.repost_future_sle_and_gle()

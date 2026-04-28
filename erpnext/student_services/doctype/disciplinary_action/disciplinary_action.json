@@ -17,7 +17,6 @@
   "column_break_ltgx",
   "posting_date",
   "problem_date",
-  "problem_time",
   "location_of_issue_caused",
   "contact_number",
   "hostel",
@@ -87,6 +86,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -209,16 +209,9 @@
   },
   {
    "fieldname": "problem_date",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "Problem Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "problem_time",
-   "fieldtype": "Time",
-   "in_list_view": 1,
-   "label": "Problem Time",
+   "label": "Problem Date Time",
    "reqd": 1
   },
   {
@@ -262,7 +255,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-23 13:26:12.973412",
+ "modified": "2026-04-26 16:05:35.811377",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Disciplinary Action",

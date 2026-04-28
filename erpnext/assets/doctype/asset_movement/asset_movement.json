@@ -74,6 +74,7 @@
   {
    "fieldname": "reference_doctype",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Reference Document Type",
    "no_copy": 1,
    "options": "DocType"
@@ -81,6 +82,7 @@
   {
    "fieldname": "reference_name",
    "fieldtype": "Dynamic Link",
+   "hidden": 1,
    "label": "Reference Document Name",
    "no_copy": 1,
    "options": "reference_doctype"
@@ -185,7 +187,7 @@
   {
    "fieldname": "asset_custodian_type",
    "fieldtype": "Link",
-   "label": "Asset Custodian Type",
+   "label": "Movement Based On",
    "options": "DocType"
   },
   {
@@ -229,7 +231,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-04 11:25:27.716842",
+ "modified": "2026-04-27 17:12:42.780396",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset Movement",

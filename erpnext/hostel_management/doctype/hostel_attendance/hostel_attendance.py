@@ -84,6 +84,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 
@@ -100,14 +101,87 @@ class HostelAttendance(Document):
 
         amended_from: DF.Link | None
         company: DF.Link
-        fiscal_year: DF.Link | None
+        councilor_name: DF.Data | None
+        fiscal_year: DF.Link
         hostel_block: DF.Link
         hostel_councellor: DF.Link | None
         hostel_councillor: DF.Table[HostelCouncillorItem]
+        last_name: DF.Data | None
         posting_date: DF.Date
+        student_councilor: DF.Link
         table_tulk: DF.Table[HostelAttendanceDetails]
     # end: auto-generated types
-    pass
+    def on_submit(self):
+        """Auto-create HostelAttendanceEntry records for each student when submitting attendance"""
+        self.create_hostel_attendance_entries()
+
+    def create_hostel_attendance_entries(self):
+        """Create individual HostelAttendanceEntry records for each student in the attendance table"""
+        
+        if not self.table_tulk:
+            frappe.msgprint(_("No attendance records found to create entries."))
+            return
+
+        # Build full councilor name from first_name + last_name
+        full_councilor_name = ""
+        if self.councilor_name:
+            full_councilor_name = self.councilor_name
+            # If there's a last_name field, append it
+            if hasattr(self, 'last_name') and self.last_name:
+                full_councilor_name = f"{self.councilor_name} {self.last_name}"            
+        
+        created_count = 0
+        skipped_count = 0
+        
+        for row in self.table_tulk:
+            # Skip if no student code
+            if not row.student_code:
+                skipped_count += 1
+                continue
+            
+            # Check if attendance entry already exists for this student on this date
+            existing_entry = frappe.db.exists("Hostel Attendance Entry", {
+                "student_code": row.student_code,
+                "posting_date": self.posting_date,
+                "attendance": row.attendance
+            })
+            
+            if existing_entry:
+                skipped_count += 1
+                continue
+            
+            # Create new Hostel Attendance Entry
+            try:
+                attendance_entry = frappe.get_doc({
+                    "doctype": "Hostel Attendance Entry",
+                    "posting_date": self.posting_date,
+                    "student_code": row.student_code,
+                    "student_name": row.student_name,
+                    "room_number": row.room_number,
+                    "attendance": row.attendance,
+                    "college": self.company,
+                    "hostel_councilor": self.student_councilor,
+                    "councilor_name": full_councilor_name,
+                })
+                
+                attendance_entry.insert()
+                attendance_entry.submit()
+                created_count += 1
+                
+            except Exception as e:
+                frappe.log_error(
+                    title="Hostel Attendance Entry Creation Error",
+                    message=f"Error creating attendance entry for student {row.student_code}: {str(e)}"
+                )
+                frappe.msgprint(_(f"Error creating attendance entry for student {row.student_code}: {str(e)}"), 
+                              indicator='orange', alert=True)
+        
+        # Show summary message
+        if created_count > 0:
+            frappe.msgprint(_(f"Successfully created {created_count} Hostel Attendance Entry records."))
+        if skipped_count > 0:
+            frappe.msgprint(_(f"Skipped {skipped_count} records (no student code or already exists)."), 
+                          indicator='orange', alert=True)
 
 
 # @frappe.whitelist()
@@ -183,7 +257,7 @@ def get_hostel_attendance(company, hostel_block, posting_date):
             # Full name
             full_name = " ".join(filter(None, [d.first_name, d.last_name]))
 
-            # 🔥 Fetch Student Attendance
+            #Fetch Student Attendance
             attendance = frappe.db.get_value(
                 "Student Attendance",
                 {
@@ -192,7 +266,7 @@ def get_hostel_attendance(company, hostel_block, posting_date):
                 },
                 "status"
             )
-
+            # if attendance and len(attendance) > 0:
             results.append({
                 "room_number": d.room_number,
                 "student_code": d.student_code,

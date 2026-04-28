@@ -33,7 +33,7 @@
    "fieldname": "company",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
+   "label": "College",
    "options": "Company",
    "reqd": 1
   },
@@ -45,7 +45,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-19 15:06:09.429430",
+ "modified": "2026-04-25 12:23:39.647549",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Room Sub Category",

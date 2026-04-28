@@ -25,8 +25,6 @@ class APASubActivities(Document):
 		sub_activity: DF.Data
 		to_year: DF.Link
 		unit: DF.Link
-	# end: auto-generated types
-	pass
 
 	def autoname(self):
 		college_abbr = frappe.get_value("Company", self.college, "abbr")

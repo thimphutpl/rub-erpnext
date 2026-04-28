@@ -29,7 +29,7 @@ class HostelMaintenanceReport(BuyingController, StockController):
 		activity: DF.Link | None
 		amended_from: DF.Link | None
 		branch: DF.Link | None
-		company: DF.Link | None
+		company: DF.Link
 		cost_center: DF.Link | None
 		damage_type: DF.Literal["", "Vandalism", "Loss or Misuse of Property", "Damage to Shared Facilities"]
 		description_of_maintenance: DF.SmallText | None
@@ -40,28 +40,35 @@ class HostelMaintenanceReport(BuyingController, StockController):
 		full_name: DF.Data | None
 		hostel_maintenance_application: DF.Data | None
 		hostel_room: DF.Link | None
-		hostel_type: DF.Link | None
+		hostel_type: DF.Link
 		items: DF.Table[HostelMaintenanceReportItem]
 		jv: DF.Link | None
 		last_name: DF.Data | None
-		maintenance_focal: DF.Link | None
+		maintenance_focal: DF.Link
 		maintenance_required_on: DF.Date | None
+		maintenance_status: DF.Literal["", "On Going", "Completed"]
 		maintenance_type: DF.Literal["", "Repair", "Replacement"]
 		phone_number: DF.Data | None
 		posting_date: DF.Date
 		posting_time: DF.Time | None
 		report_on_maintenance: DF.SmallText | None
-		student_code: DF.Link | None
+		student_code: DF.Link
 		total_expenses_incurred: DF.Currency
 	# end: auto-generated types
 
+	def before_submit(self):
+		"""Set status to 'On Going' before submit"""
+		self.maintenance_status = "On Going"
+		self.update_maintenance_application_status("On Going")
+
 	def on_submit(self):
+		self.link_maintenance_application_to_maintenance_report()
+		# self.email_notification("submitted") (Tempporary Hide)
 		# self.validate_dc()
 		# self.validate_data()
 		# self.check_on_dry_hire()
 		# self.check_budget()
 		# self.update_stock_ledger()
-		self.link_maintenance_application_to_maintenance_report()
 		self.email_notification()
 
 		""" ++++++++++ Ver 2.0.190509 Begins ++++++++++ """
@@ -81,6 +88,41 @@ class HostelMaintenanceReport(BuyingController, StockController):
 		else:
 			make_stock_entry(self.name)	
 			self.post_journal_entry()
+
+	def before_update_after_submit(self):
+		"""Handle status changes after submit"""
+		# Get the previous document
+		old_doc = frappe.get_doc("Hostel Maintenance Report", self.name)
+		
+		# If status changed from On Going to Completed
+		if old_doc.maintenance_status == "On Going" and self.maintenance_status == "Completed":
+			self.on_status_change_to_completed()
+	
+	def on_status_change_to_completed(self):
+		"""Handle when status is changed to Completed"""
+		self.update_maintenance_application_status("Completed")
+		# self.send_completion_notification()
+	
+	def update_maintenance_application_status(self, status):
+		"""Update the linked maintenance application status"""
+		if self.hostel_maintenance_application:
+			try:
+				application = frappe.get_doc("Hostel Maintenance Application", self.hostel_maintenance_application)
+				application.maintenance_status = status
+				application.save(ignore_permissions=True)
+			except Exception as e:
+				frappe.log_error(f"Error updating maintenance application status: {str(e)}", "Hostel Maintenance Report")
+
+	def link_maintenance_application_to_maintenance_report(self):
+		"""Link the maintenance application to this report"""
+		if self.hostel_maintenance_application:
+			try:
+				application = frappe.get_doc("Hostel Maintenance Application", self.hostel_maintenance_application)
+				application.hostel_maintenance_report = self.name
+				application.maintenance_status = "On Going"
+				application.save(ignore_permissions=True)
+			except Exception as e:
+				frappe.log_error(f"Error linking maintenance application: {str(e)}", "Hostel Maintenance Report")							
 
 	def email_notification(self):
 		# ===== Send Email to Maintenance Focal =====
@@ -190,13 +232,13 @@ class HostelMaintenanceReport(BuyingController, StockController):
 	def post_journal_entry(self):
 		#expense_bank_account = frappe.db.get_value("Branch", self.branch, "expense_bank_account")
 		# expense_bank_account = frappe.db.get_value("Company", frappe.defaults.get_user_default("Company"), "expenses_included_in_asset_valuation")
-		expense_bank_account = frappe.db.get_value("Company", self.company, "income_accounts")
+		expense_bank_account = frappe.db.get_value("Company", self.company, "income_account")
 		if not expense_bank_account:
 			frappe.throw("No Default Payable Account set in Company")
 
 		# maintenance_account = frappe.db.get_value("Company", frappe.defaults.get_user_default("Company"), "asset_received_but_not_billed")
 		# maintenance_account = frappe.db.get_value("Company", self.company, "default_income_account")
-		maintenance_account = frappe.db.get_value("Company", self.company, "receivable_accounts")
+		maintenance_account = frappe.db.get_value("Company", self.company, "receivable_account")
 		if not maintenance_account:
 			frappe.throw("No Default Payable Account set in Company")	
 
@@ -207,7 +249,8 @@ class HostelMaintenanceReport(BuyingController, StockController):
 			je.voucher_type = 'Bank Entry'
 			je.naming_series = 'Bank Payment Voucher'
 			je.remark = 'Payment against : ' + self.name
-			je.posting_date = self.maintenance_required_on
+			# je.posting_date = self.maintenance_required_on
+			je.posting_date = self.posting_date
 			je.branch = self.branch
 			je.company = self.company
 			je.activity = self.activity
@@ -392,15 +435,65 @@ def get_warehouse_by_cost_center(cost_center):
 
 @frappe.whitelist()
 def get_hostel_checkin_form(student_code, fiscal_year):
-    result = frappe.db.sql("""
-        SELECT hci.name
-        FROM `tabHostel Check-In Form` hci
-        INNER JOIN `tabCheck-In Students Items` cisi
-            ON cisi.parent = hci.name
-        WHERE cisi.student_code = %s 
-        AND hci.fiscal_year = %s
-        AND hci.docstatus = 1
-        LIMIT 1
-    """, (student_code, fiscal_year), as_dict=True)
+	result = frappe.db.sql("""
+		SELECT hci.name
+		FROM `tabHostel Check-In Form` hci
+		INNER JOIN `tabCheck-In Students Items` cisi
+			ON cisi.parent = hci.name
+		WHERE cisi.student_code = %s 
+		AND hci.fiscal_year = %s
+		AND hci.docstatus = 1
+		LIMIT 1
+	""", (student_code, fiscal_year), as_dict=True)
 
-    return result[0].name if result else None 
+	return result[0].name if result else None 
+
+# Add this whitelisted method to update status after submit
+@frappe.whitelist()
+def update_maintenance_status(report_name, new_status):
+	"""
+	Update maintenance status of a report (only for submitted documents)
+	"""
+	if new_status not in ["On Going", "Completed"]:
+		frappe.throw(_("Invalid status. Allowed values: 'On Going', 'Completed'"))
+	
+	report = frappe.get_doc("Hostel Maintenance Report", report_name)
+	
+	# Check if document is submitted
+	if report.docstatus != 1:
+		frappe.throw(_("Only submitted reports can update status"))
+	
+	# Update status
+	report.maintenance_status = new_status
+	report.save(ignore_permissions=True)
+	
+	# If completed, send notification
+	if new_status == "Completed":
+		return
+		# report.send_completion_notification()
+	
+	frappe.db.commit()
+	
+	return {
+		"success": True,
+		"message": _("Maintenance status updated to {0}").format(new_status)
+	}	
+
+def get_permission_query_conditions(user):
+	if not user:
+		user = frappe.session.user
+
+	user_roles = frappe.get_roles(user)
+	if "SSO" in user_roles or "Administrator" in user_roles:
+		return         
+
+	student = frappe.db.get_value(
+		"Student",
+		{"user": user},
+		"name"
+	)
+
+	if student:
+		return f"`tabHostel Maintenance Report`.student_code = '{student}'"
+
+	return "" 

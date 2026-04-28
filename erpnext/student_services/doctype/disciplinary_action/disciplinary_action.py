@@ -35,8 +35,7 @@ class DisciplinaryAction(Document):
 		name_reporter: DF.Data | None
 		name_student: DF.Data | None
 		posting_date: DF.Date
-		problem_date: DF.Date
-		problem_time: DF.Time
+		problem_date: DF.Datetime
 		program: DF.Data | None
 		scholarship: DF.Literal["", "Self", "Government Scholarship"]
 		section: DF.Data | None

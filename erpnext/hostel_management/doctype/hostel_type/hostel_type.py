@@ -14,7 +14,7 @@ class HostelType(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		company: DF.Link | None
-		hostel_type: DF.Data | None
+		company: DF.Link
+		hostel_type: DF.Data
 	# end: auto-generated types
 	pass

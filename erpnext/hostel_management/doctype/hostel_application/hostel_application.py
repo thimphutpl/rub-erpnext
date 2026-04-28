@@ -6,7 +6,7 @@ from frappe import _
 from frappe.model.document import Document
 
 
-class HostelApply(Document):
+class HostelApplication(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -33,6 +33,23 @@ class HostelApply(Document):
 			frappe.throw(_("Hostel Room is required for Apply."))
 
 		self.validate_room_capacity()
+		self.validate_company_before_student()
+
+	def validate_company_before_student(self):
+		"""Validate that student cannot be selected without company"""
+		if self.student_code and not self.company:
+			frappe.throw(_("Please select a College first before selecting Student"))
+
+		if self.student_code and self.company:
+			# Get the company from the selected Student
+			room_company = frappe.db.get_value("Student", self.student_code, "company")
+			
+			if room_company and room_company != self.company:
+				frappe.throw(_("Student {0} belongs to {1}, but you have selected {2}. Please select a Student from the correct College.").format(
+					frappe.bold(self.student_code),
+					frappe.bold(room_company),
+					frappe.bold(self.company)
+				))		
 
 	def on_submit(self):
 		self.move_student()
@@ -115,3 +132,22 @@ class HostelApply(Document):
 		room_doc.save()
 
 		frappe.msgprint(_(f"Student removed from room {self.hostel_room}"))	
+
+def get_permission_query_conditions(user):
+	if not user:
+		user = frappe.session.user
+
+	user_roles = frappe.get_roles(user)
+	if "SSO" in user_roles or "Administrator" in user_roles:
+		return         
+
+	student = frappe.db.get_value(
+		"Student",
+		{"user": user},
+		"name"
+	)
+
+	if student:
+		return f"`tabHostel Application`.student_code = '{student}'"
+
+	return "" 

@@ -30,8 +30,6 @@ class AnnualWorkPlan(Document):
 		to_year: DF.Link
 		total_approved_budget: DF.Currency
 		total_proposed_budget: DF.Currency
-	# end: auto-generated types
-	pass
 
 	def autoname(self):
 		abbr = frappe.db.get_value("Company", self.colleges, "abbr")
@@ -49,10 +47,19 @@ class AnnualWorkPlan(Document):
 		current_date = getdate(today())
 		from_date = frappe.db.get_single_value("Budget Settings", "awp_from_date")
 		to_date = frappe.db.get_single_value("Budget Settings", "awp_to_date")
-		if not (getdate(today()) <= getdate(to_date)):
+		allow_transaction = frappe.db.exists(
+			"Allow Budget Transaction",
+			{"college": self.colleges, "from_date": ["<=", today()], "to_date": [">=", today()], "transaction_type": self.doctype, "docstatus": 1},
+			"name",
+		)
+
+		if not from_date or not to_date:
+			frappe.throw("Transaction not allowed because Annual Work Plan dates (from & to) not set in Budget Settings")
+
+		if not (allow_transaction or getdate(today()) <= getdate(to_date)):
 			frappe.throw("Transaction not allowed after <b>{0}</b>".format(to_date))
 
-		if not (getdate(from_date) <= getdate(today())):
+		if not (allow_transaction or getdate(from_date) <= getdate(today())):
 			frappe.throw("Transaction not allowed before <b>{0}</b>".format(from_date))
 
 	def apply_proposed_to_approved(self):
@@ -137,7 +144,7 @@ class AnnualWorkPlan(Document):
 
 		# Get Already Approved Budget from Annual Work Plan
 		awp_list = frappe.db.sql("""
-			SELECT awpi.approved_budget, awpi.activity_link
+			SELECT awpi.approved_budget, awpi.proposed_budget, awpi.activity_link
 			FROM `tabAnnual Work Plan` awp
 			INNER JOIN `tabAPA Detail` awpi 
 				ON awp.name = awpi.parent
@@ -152,18 +159,25 @@ class AnnualWorkPlan(Document):
 				+ flt(d.approved_budget)
 			)
 		# Sum AWP budgets properly (important!)
-		awp_map = {}
+		awp_approved_map = {}
+		awp_proposed_map = {}
 
 		for d in awp_list:
-			awp_map[d.activity_link] = (
-				awp_map.get(d.activity_link, 0)
+			awp_approved_map[d.activity_link] = (
+				awp_approved_map.get(d.activity_link, 0)
 				+ flt(d.approved_budget)
 			)
+			awp_approved_map[d.activity_link] = (
+				awp_approved_map.get(d.activity_link, 0)
+				+ flt(d.proposed_budget)
+			)
+			
 
 		# Validate current document rows
 		for row in self.apa_details:
 			available_budget = approved_budget_map.get(row.activity_link, 0)
-			already_approved_budget = awp_map.get(row.activity_link, 0)
+			already_approved_budget = awp_approved_map.get(row.activity_link, 0)
+			already_proposed_budget = awp_proposed_map.get(row.activity_link, 0)
 
 			if not available_budget:
 				frappe.throw(
@@ -171,12 +185,23 @@ class AnnualWorkPlan(Document):
 					.format(row.activities)
 				)
 
-			total_budget = (
+			total_approved_budget = (
 				flt(row.approved_budget)
 				+ already_approved_budget
 			)
 
-			if total_budget > available_budget:
+			total_proposed_budget = (
+				flt(row.proposed_budget)
+				+ already_proposed_budget
+			)
+
+			if total_approved_budget > available_budget:
+				frappe.throw(
+					_("Approved budget for Activity <b>{0}<b/> exceeds available budget <b>({1})</b>")
+					.format(row.activities, available_budget)
+				)
+
+			if total_proposed_budget > available_budget:
 				frappe.throw(
 					_("Approved budget for Activity <b>{0}<b/> exceeds available budget <b>({1})</b>")
 					.format(row.activities, available_budget)

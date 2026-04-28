@@ -2,6 +2,12 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Hostel Change Application", {
+    onload (frm) {
+        if (!frm.doc.posting_date) {
+			frm.set_value('posting_date', frappe.datetime.now_date());
+			// frm.set_value("posting_date", get_today());
+		}
+    },
 	refresh(frm) { 
         frm.set_query("company", function(){
 			return {
@@ -18,6 +24,13 @@ frappe.ui.form.on("Hostel Change Application", {
         //     };
         // });
         frm.set_query("applied_by", function() {
+            if (!frm.doc.company) {
+                return {
+                    filters: [
+                        ["name", "=", ""]  // Return empty result
+                    ]
+                };
+            }
             return {
                 filters: {
                     company: frm.doc.company

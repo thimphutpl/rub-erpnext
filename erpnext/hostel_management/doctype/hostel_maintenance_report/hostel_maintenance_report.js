@@ -4,7 +4,7 @@
 frappe.ui.form.on("Hostel Maintenance Report", {
 	refresh(frm) {
 		if (frm.doc.docstatus == 1) {
-            // if (frm.doc.expenses_borne_by == "Student") {
+            if (frm.doc.expenses_borne_by == "Student") {
                 frm.add_custom_button(__("Payment Entry"), function() {
                     frappe.call({
                         method: "erpnext.hostel_management.doctype.hostel_maintenance_report.hostel_maintenance_report.make_payment_entry",
@@ -17,7 +17,7 @@ frappe.ui.form.on("Hostel Maintenance Report", {
                         }
                     });
                 }, __("Create"));
-            // }
+            }
 
             // if (frm.doc.expenses_borne_by == "College") {
             //     frm.add_custom_button(__("Stock Entry"), function() {
@@ -60,6 +60,35 @@ frappe.ui.form.on("Hostel Maintenance Report", {
         if (frm.is_new()) {
             frm.set_value("posting_date", frappe.datetime.get_today());
             // frm.set_value("posting_time", frappe.datetime.get_today());
+        }
+		// Add status update button only if document is submitted and not completed
+        if (frm.doc.docstatus === 1 && frm.doc.maintenance_status !== "Completed") {
+            frm.add_custom_button(__('Mark as Completed'), function() {
+                mark_maintenance_completed(frm);
+            }, __("Status"));
+        }
+        
+        // Set status indicator
+        set_status_indicator(frm);
+        
+        // Make status field read-only if document is draft
+        if (frm.doc.docstatus === 0) {
+            frm.set_df_property('maintenance_status', 'read_only', 0);
+            frm.set_df_property('maintenance_status', 'description', __('Status will be set to "On Going" when submitted'));
+        } else {
+            frm.set_df_property('maintenance_status', 'read_only', 0);
+        }
+    },
+    
+    maintenance_status: function(frm) {
+        set_status_indicator(frm);
+        
+        // Show alert when status changes
+        if (frm.doc.maintenance_status === "Completed") {
+            frappe.show_alert({
+                message: __('Maintenance marked as Completed'),
+                indicator: 'green'
+            }, 5);
         }
 
 	},
@@ -168,3 +197,41 @@ frappe.ui.form.on("Hostel Maintenance Item", {
 		}
 	},
 });
+
+function mark_maintenance_completed(frm) {
+    frappe.confirm(
+        __('Are you sure you want to mark this maintenance as Completed?'),
+        function() {
+            frappe.call({
+                method: "erpnext.hostel_management.doctype.hostel_maintenance_report.hostel_maintenance_report.update_maintenance_status",
+                args: {
+                    report_name: frm.doc.name,
+                    new_status: "Completed"
+                },
+                callback: function(r) {
+                    if (r.message && r.message.success) {
+                        frappe.msgprint({
+                            title: __('Success'),
+                            message: r.message.message,
+                            indicator: 'green'
+                        });
+                        frm.reload_doc();
+                    }
+                }
+            });
+        }
+    );
+}
+
+function set_status_indicator(frm) {
+    // Set status indicator on the form
+    if (frm.doc.maintenance_status === "Completed") {
+        frm.page.set_indicator(__('Completed'), 'green');
+    } else if (frm.doc.maintenance_status === "On Going") {
+        frm.page.set_indicator(__('On Going'), 'orange');
+    } else if (frm.doc.docstatus === 0) {
+        frm.page.set_indicator(__('Draft'), 'red');
+    } else {
+        frm.page.set_indicator(__('Submitted'), 'blue');
+    }
+}
