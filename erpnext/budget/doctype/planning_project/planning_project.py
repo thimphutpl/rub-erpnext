@@ -17,15 +17,19 @@ class PlanningProject(Document):
 		project: DF.SmallText | None
 		serial_number: DF.Int
 		to_date: DF.Date | None
+
 	def autoname(self):
-		self.name = "Project("+str(getdate(self.from_date).year)+"-"+str(getdate(self.to_date).year)+") - "+str(self.serial_number_generation())
+		# planning_output = frappe.db.get_value("Planning Output", self.planning_output)
+		# if not self.planning_output:
+		# 	frappe.thrp
+		self.name = "Project("+str(self.planning_output)+") - "+str(self.serial_number_generation())
 
 	def validate(self):
 		self.serial_number = int(self.serial_number_generation())
 
 	def serial_number_generation(self):
 		max_serial = frappe.db.sql(
-				"""SELECT MAX(serial_number) FROM `tabPlanning Project` where from_date = %s and to_date = %s and docstatus = 1""", (self.from_date, self.to_date),
+				"""SELECT MAX(serial_number) FROM `tabPlanning Project` where from_date = %s and to_date = %s and planning_output = %s and docstatus = 1""", (self.from_date, self.to_date, self.planning_output),
 				as_dict=False
 			)[0][0]
 		serial_number = (max_serial if max_serial else 0) + 1
