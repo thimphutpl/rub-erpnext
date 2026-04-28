@@ -408,6 +408,7 @@
   {
    "fieldname": "reports_to",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Verifier",
    "options": "Employee"
   },
@@ -1126,7 +1127,6 @@
   {
    "fieldname": "leave_and_expense_claim_section",
    "fieldtype": "Section Break",
-   "hidden": 1,
    "label": "Leave and Expense Claim"
   },
   {
@@ -1143,6 +1143,7 @@
   {
    "fieldname": "approver_name",
    "fieldtype": "Read Only",
+   "hidden": 1,
    "label": "Verifier Name"
   },
   {
@@ -1328,7 +1329,7 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2026-04-26 16:55:16.507144",
+ "modified": "2026-04-28 16:35:56.362213",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Employee",
