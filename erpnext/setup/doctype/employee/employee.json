@@ -1127,6 +1127,7 @@
   {
    "fieldname": "leave_and_expense_claim_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Leave and Expense Claim"
   },
   {
@@ -1147,6 +1148,7 @@
    "label": "Verifier Name"
   },
   {
+   "fetch_from": "second_approver.employee_name",
    "fieldname": "second_approver_name",
    "fieldtype": "Read Only",
    "ignore_user_permissions": 1,
@@ -1329,48 +1331,14 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2026-04-28 16:50:24.820397",
+ "modified": "2026-04-28 22:09:37.975502",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Employee",
  "naming_rule": "By \"Naming Series\" field",
  "nsm_parent_field": "reports_to",
  "owner": "Administrator",
- "permissions": [
-  {
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Employee"
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "import": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "HR User",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "import": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "HR Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
+ "permissions": [],
  "row_format": "Dynamic",
  "search_fields": "employee_name",
  "show_name_in_global_search": 1,
