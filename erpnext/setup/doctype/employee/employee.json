@@ -1127,7 +1127,6 @@
   {
    "fieldname": "leave_and_expense_claim_section",
    "fieldtype": "Section Break",
-   "hidden": 1,
    "label": "Leave and Expense Claim"
   },
   {
@@ -1331,7 +1330,7 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2026-04-28 22:09:37.975502",
+ "modified": "2026-04-28 23:44:49.305008",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Employee",
