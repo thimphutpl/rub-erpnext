@@ -1150,7 +1150,7 @@
    "fieldname": "second_approver_name",
    "fieldtype": "Read Only",
    "ignore_user_permissions": 1,
-   "label": "Approver Name"
+   "label": "Approver  Name"
   },
   {
    "fieldname": "reports_to_name",
@@ -1329,7 +1329,7 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2026-04-28 16:35:56.362213",
+ "modified": "2026-04-28 16:50:24.820397",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Employee",
