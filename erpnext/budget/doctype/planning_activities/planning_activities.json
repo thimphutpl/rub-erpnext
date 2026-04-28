@@ -19,7 +19,9 @@
   "items",
   "references_section",
   "project",
-  "amended_from"
+  "amended_from",
+  "column_break_ducb",
+  "output"
  ],
  "fields": [
   {
@@ -108,13 +110,24 @@
    "fieldname": "disabled",
    "fieldtype": "Check",
    "label": "Disabled"
+  },
+  {
+   "fieldname": "column_break_ducb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "output",
+   "fieldtype": "Link",
+   "label": "Output",
+   "options": "Planning Output",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-27 09:52:32.799853",
- "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "modified": "2026-04-28 16:09:00.772779",
+ "modified_by": "Administrator",
  "module": "Budget",
  "name": "Planning Activities",
  "naming_rule": "Expression (old style)",

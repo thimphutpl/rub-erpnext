@@ -6,6 +6,28 @@ from frappe.model.document import Document
 
 
 class PlanningActivities(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from erpnext.budget.doctype.output_category_item.output_category_item import OutputCategoryItem
+		from frappe.types import DF
+
+		activities: DF.SmallText | None
+		amended_from: DF.Link | None
+		disabled: DF.Check
+		from_date: DF.Date
+		funding_source: DF.Link | None
+		is_capital: DF.Check
+		is_current: DF.Check
+		items: DF.Table[OutputCategoryItem]
+		output: DF.Link | None
+		project: DF.Link | None
+		to_date: DF.Date
+		unit: DF.Link
+	# end: auto-generated types
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:

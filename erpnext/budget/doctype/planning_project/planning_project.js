@@ -18,6 +18,7 @@ frappe.ui.form.on("Planning Project", {
 				name: frm.doc.name,
 				from_date: frm.doc.from_date,
 				to_date: frm.doc.to_date,
+				planning_output: frm.doc.planning_output,
 			},
 			callback: function (r) {
 				var doclist = frappe.model.sync(r.message);

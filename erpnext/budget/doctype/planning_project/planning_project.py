@@ -19,9 +19,6 @@ class PlanningProject(Document):
 		to_date: DF.Date | None
 
 	def autoname(self):
-		# planning_output = frappe.db.get_value("Planning Output", self.planning_output)
-		# if not self.planning_output:
-		# 	frappe.thrp
 		self.name = "Project("+str(self.planning_output)+") - "+str(self.serial_number_generation())
 
 	def validate(self):
@@ -37,10 +34,11 @@ class PlanningProject(Document):
 		return serial_number
 		
 @frappe.whitelist()
-def make_planning_activities(name, from_date, to_date):
+def make_planning_activities(name, from_date, to_date, planning_output):
 	po = frappe.new_doc("Planning Activities")
 	po.project = name
 	po.from_date = from_date
 	po.to_date = to_date
+	po.output = planning_output
 	return po
 
