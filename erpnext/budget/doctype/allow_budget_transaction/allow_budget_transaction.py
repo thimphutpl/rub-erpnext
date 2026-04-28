@@ -25,15 +25,15 @@ class AllowBudgetTransaction(Document):
 			f"AT/{abbr}/{getdate(self.from_date).year}-{getdate(self.to_date).year}/.##"
 		)	
 
-	def validate(self):
-		self.validate_date()
+	# def validate(self):
+	# 	self.validate_date()
 	
-	def validate_date(self):
-		result = frappe.db.get_value(
-			"Allow Budget Transaction",
-			{"college": self.college, "from_date": self.from_date, "to_date": self.to_date, "transaction_type": self.transaction_type},
-			"name",
-		)
-		if result:
-			frappe.throw("Transaction exists with same parameter for college <b>{0}</b> (Transaction No: {1})".format(self.college, result))
+	# def validate_date(self):
+	# 	result = frappe.db.get_value(
+	# 		"Allow Budget Transaction",
+	# 		{"college": self.college, "from_date": self.from_date, "to_date": self.to_date, "transaction_type": self.transaction_type},
+	# 		"name",
+	# 	)
+	# 	if result:
+	# 		frappe.throw("Transaction exists with same parameter for college <b>{0}</b> (Transaction No: {1})".format(self.college, result))
 

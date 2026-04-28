@@ -29,6 +29,29 @@ class AnnualWorkPlan(Document):
 		remarks: DF.SmallText | None
 		to_year: DF.Link
 		total_approved_budget: DF.Currency
+		total_approved_budget_in_fyp: DF.Currency
+		total_proposed_budget: DF.Currency
+	# end: auto-generated types
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from erpnext.budget.doctype.apa_detail.apa_detail import APADetail
+		from erpnext.budget.doctype.apa_detail_extra.apa_detail_extra import APADetailExtra
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		apa_copies: DF.Check
+		apa_details: DF.Table[APADetail]
+		apa_extra_details: DF.Table[APADetailExtra]
+		colleges: DF.Link
+		from_year: DF.Link
+		fyp: DF.Link
+		remarks: DF.SmallText | None
+		to_year: DF.Link
+		total_approved_budget: DF.Currency
 		total_proposed_budget: DF.Currency
 
 	def autoname(self):
@@ -123,7 +146,6 @@ class AnnualWorkPlan(Document):
 			frappe.throw(_("No proposed budget found for college: {0} in the five year plan proposal".format(self.colleges)))
 
 	def validate_budget(self):
-		# Get Approved Budget from Five Year Plan
 		approved_budget_list = frappe.db.sql("""
 			SELECT fypi.approved_budget, fypi.activity_link
 			FROM `tabFive Year Plan` fyp
@@ -142,7 +164,6 @@ class AnnualWorkPlan(Document):
 				.format(self.from_year, self.to_year)
 			)
 
-		# Get Already Approved Budget from Annual Work Plan
 		awp_list = frappe.db.sql("""
 			SELECT awpi.approved_budget, awpi.proposed_budget, awpi.activity_link
 			FROM `tabAnnual Work Plan` awp
@@ -158,7 +179,6 @@ class AnnualWorkPlan(Document):
 				approved_budget_map.get(d.activity_link, 0)
 				+ flt(d.approved_budget)
 			)
-		# Sum AWP budgets properly (important!)
 		awp_approved_map = {}
 		awp_proposed_map = {}
 
@@ -172,8 +192,6 @@ class AnnualWorkPlan(Document):
 				+ flt(d.proposed_budget)
 			)
 			
-
-		# Validate current document rows
 		for row in self.apa_details:
 			available_budget = approved_budget_map.get(row.activity_link, 0)
 			already_approved_budget = awp_approved_map.get(row.activity_link, 0)
@@ -236,7 +254,6 @@ def create_apa_for_subsidiaries(apa_name):
 	created = []
 
 	for college in colleges:
-		# prevent duplicate FYP per college
 		if frappe.db.exists("Annual Performance Agreement", {
 			"colleges": college["name"],
 			"parent_fyp": parent_apa.name
@@ -245,7 +262,6 @@ def create_apa_for_subsidiaries(apa_name):
 
 		fyp_copy = frappe.new_doc("Annual Performance Agreement")
 
-		# copy all fields safely
 		fyp_copy.update({
 			key: value
 			for key, value in parent_apa.as_dict().items()
@@ -261,7 +277,6 @@ def create_apa_for_subsidiaries(apa_name):
 		fyp_copy.insert(ignore_permissions=True)
 		created.append(fyp_copy.name)
 
-	# mark parent only if copies created
 	if created:
 		parent_apa.db_set("apa_copies", 1)
 
@@ -275,10 +290,9 @@ def create_apa_for_subsidiaries(apa_name):
 def make_approved_budget(source_name, target_doc=None):
     def set_missing_values(source, target):
         target.college = source.colleges
-        # target.from_year = source.year
 
     doc = get_mapped_doc(
-        "Annual Work Plan",   # Source DocType
+        "Annual Work Plan",
         source_name,
         {
             "Annual Work Plan": {
@@ -308,26 +322,22 @@ def get_apply_reapply_actions(doctype, docname=None):
 	"""
 	actions = []
 
-	# Get workflow assigned to this doctype
 	workflow_name = frappe.db.get_value("Workflow", {"document_type": doctype}, "name")
 	if not workflow_name:
-		return actions  # No workflow defined
-	# Get transitions for this workflow
+		return actions
+
 	transitions = frappe.get_all(
 		"Workflow Transition",
 		filters={"parent": workflow_name},
 		fields=["action", "state", "next_state"]
 	)
 
-	# If a docname is given, get current workflow state
 	current_state = None
 	if docname:
 		current_state = frappe.db.get_value(doctype, docname, "workflow_state")
 
-	# Filter actions
 	for t in transitions:
 		if t["action"] in ["Apply", "Re-Apply"]:
-			# If docname given, only include actions valid for current state
 			if current_state:
 				if t["state"] == current_state:
 					actions.append(t["action"])

@@ -14,8 +14,6 @@ class BudgetYear(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		year_end_date: DF.Date
 		year_name: DF.Data
-		year_start_date: DF.Date
 	# end: auto-generated types
 	pass

@@ -9,6 +9,7 @@
   "fyp",
   "from_year",
   "apa_copies",
+  "total_approved_budget_in_fyp",
   "column_break_teau",
   "colleges",
   "to_year",
@@ -142,13 +143,19 @@
    "fieldname": "get_additional_activities",
    "fieldtype": "Button",
    "label": "Get Additional Activities"
+  },
+  {
+   "fieldname": "total_approved_budget_in_fyp",
+   "fieldtype": "Currency",
+   "label": "Total Approved Budget in FYP (In Million)",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-20 10:05:22.994175",
+ "modified": "2026-04-28 11:18:26.799591",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Annual Work Plan",
