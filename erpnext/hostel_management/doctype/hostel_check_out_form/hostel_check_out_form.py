@@ -13,6 +13,147 @@ class HostelCheckOutForm(Document):
 		self.validate_posting_date_within_fiscal_year()
 		self.validate_duplicate_check_in()
 
+	def on_submit(self):
+		"""Handle hostel check-out submission"""
+		# If Permanent Exit and Deallocation, remove student from hostel room
+		if self.check_out_type == "Permanent Exit" or self.check_out_type == "Deallocation":
+			self.remove_student_from_hostel_room()
+
+	def on_cancel(self):
+		"""Handle cancellation of hostel check-out"""
+		# If this was a Permanent Exit and Deallocation, add student back to hostel room
+		if self.check_out_type == "Permanent Exit" or self.check_out_type == "Deallocation":
+			self.add_student_back_to_hostel_room()				
+
+	def get_hostel_room_from_check_in(self):
+		"""Get the hostel room from the student's check-in form by looking in child table"""
+		if not self.student or not self.fiscal_year:
+			return None
+		
+		# Find the check-in form that has this student in its Check-In Asset Items child table
+		check_in_forms = frappe.db.get_all(
+			"Hostel Check-In Form",
+			filters={
+				"fiscal_year": self.fiscal_year,
+				"docstatus": 1
+			},
+			fields=["name", "hostel_room"]
+		)
+		
+		for check_in in check_in_forms:
+			# Check if this student exists in the Check-In Asset Items of this form
+			exists = frappe.db.exists("Check-In Asset Items", {
+				"parent": check_in.name,
+				"parenttype": "Hostel Check-In Form",
+				"student": self.student
+			})
+			
+			if exists:
+				return check_in.hostel_room
+		
+		return None
+
+	def remove_student_from_hostel_room(self):
+		"""Remove student from the hostel room's student list"""
+		if not self.student:
+			return
+		
+		# Get the hostel room from check-in
+		hostel_room_name = self.get_hostel_room_from_check_in()
+		
+		if not hostel_room_name:
+			frappe.msgprint(_("No active hostel room found for student {0} in fiscal year {1}").format(
+				self.student, self.fiscal_year
+			))
+			return
+		
+		# Get the hostel room document
+		hostel_room = frappe.get_doc("Hostel Room", hostel_room_name)
+		
+		# Check if student exists in the student_list using student_code field
+		student_found = False
+		for student_entry in hostel_room.student_list:
+			if student_entry.student_code == self.student:
+				hostel_room.student_list.remove(student_entry)
+				student_found = True
+				break
+		
+		if student_found:
+			# Update hostel room status if no students left
+			if len(hostel_room.student_list) == 0:
+				hostel_room.status = "Available"
+			
+			hostel_room.flags.ignore_permissions = True
+			hostel_room.save()
+			frappe.msgprint(_("Student {0} has been removed from Hostel Room {1}").format(
+				self.student, hostel_room_name
+			))
+		else:
+			frappe.msgprint(_("Student {0} not found in Hostel Room {1} student list").format(
+				self.student, hostel_room_name
+			), alert=True)
+
+	def add_student_back_to_hostel_room(self):
+		"""Add student back to hostel room when checkout is cancelled"""
+		if not self.student:
+			return
+		
+		# Get the hostel room from check-in
+		hostel_room_name = self.get_hostel_room_from_check_in()
+		
+		if not hostel_room_name:
+			return
+		
+		# Get the hostel room document
+		hostel_room = frappe.get_doc("Hostel Room", hostel_room_name)
+		
+		# Get check-in date from the check-in form
+		check_in_form = None
+		check_in_forms = frappe.db.get_all(
+			"Hostel Check-In Form",
+			filters={
+				"fiscal_year": self.fiscal_year,
+				"docstatus": 1
+			},
+			fields=["name", "check_in_date"]
+		)
+		
+		check_in_date = None
+		for check_in in check_in_forms:
+			exists = frappe.db.exists("Check-In Asset Items", {
+				"parent": check_in.name,
+				"parenttype": "Hostel Check-In Form",
+				"student": self.student
+			})
+			if exists:
+				check_in_form = check_in.name
+				check_in_date = check_in.check_in_date
+				break
+		
+		# Check if student already exists in the list using student_code field
+		student_exists = False
+		for student_entry in hostel_room.student_list:
+			if student_entry.student_code == self.student:
+				student_exists = True
+				break
+		
+		# Add student back if not already present
+		if not student_exists:
+			hostel_room.append("student_list", {
+				"student_code": self.student,
+				"check_in_date": check_in_date
+			})
+			
+			# Update room status
+			if hostel_room.status == "Available":
+				hostel_room.status = "Occupied"
+			
+			hostel_room.flags.ignore_permissions = True
+			hostel_room.save()
+			frappe.msgprint(_("Student {0} has been added back to Hostel Room {1}").format(
+				self.student, hostel_room_name
+			), alert=True)
+
 	def validate_assets_exist(self):
 		"""Validate that checked-in assets exist for this student"""
 		if self.student and self.fiscal_year:

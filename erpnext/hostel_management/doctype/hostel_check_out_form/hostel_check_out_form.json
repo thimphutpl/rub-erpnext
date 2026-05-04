@@ -14,6 +14,7 @@
   "fiscal_year",
   "posting_date",
   "hostel_change",
+  "check_out_type",
   "student_details_section",
   "table_fvvp",
   "aseet_details_section",
@@ -117,14 +118,21 @@
    "default": "0",
    "fieldname": "hostel_change",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "Hostel Change"
+  },
+  {
+   "fieldname": "check_out_type",
+   "fieldtype": "Select",
+   "label": "Check Out Type",
+   "options": "\nDeallocation\nHostel Change\nPermanent Exit"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-27 14:57:56.528328",
+ "modified": "2026-04-28 13:51:18.367638",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Check-Out Form",

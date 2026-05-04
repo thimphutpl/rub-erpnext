@@ -1,7 +1,7 @@
 // Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 
-// frappe.ui.form.on("Hostel Attendance Entry", {
+// frappe.ui.form.on("Attendance Entry", {
 // 	refresh(frm) {
 
 // 	},

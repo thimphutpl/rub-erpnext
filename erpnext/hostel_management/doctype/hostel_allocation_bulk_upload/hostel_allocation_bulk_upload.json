@@ -6,8 +6,8 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "year",
   "posting_date",
+  "year",
   "hostel_type",
   "column_break_uvpt",
   "company",
@@ -66,7 +66,7 @@
    "fieldname": "year",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Academic Year",
+   "label": "Student Year",
    "options": "Year",
    "reqd": 1
   },
@@ -92,7 +92,8 @@
    "fieldname": "hostel_type",
    "fieldtype": "Table MultiSelect",
    "label": "Hostel Type",
-   "options": "Block Counsellor Details"
+   "options": "Block Counsellor Details",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_hkpi",
@@ -112,7 +113,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-28 09:48:53.553092",
+ "modified": "2026-04-29 10:42:34.324206",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Allocation Bulk Upload",

@@ -78,14 +78,16 @@
    "fieldtype": "Link",
    "label": "Current Room",
    "options": "Hostel Room",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fetch_from": "current_room.hostel_type",
    "fieldname": "hostel_type",
    "fieldtype": "Data",
    "label": "Hostel Type",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fieldname": "column_break_grdp",
@@ -247,7 +249,7 @@
   {
    "fieldname": "fiscal_year",
    "fieldtype": "Link",
-   "label": "Academic Year",
+   "label": "Student Year",
    "options": "Year",
    "reqd": 1
   },
@@ -264,7 +266,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-27 16:58:07.481094",
+ "modified": "2026-04-29 10:47:40.940233",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Change Application",

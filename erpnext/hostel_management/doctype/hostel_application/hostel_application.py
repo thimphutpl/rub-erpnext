@@ -21,11 +21,11 @@ class HostelApplication(Document):
 		first_name: DF.Data | None
 		fiscal_year: DF.Link
 		hostel_room: DF.Link
-		hostel_type: DF.Data | None
+		hostel_type: DF.Data
 		last_name: DF.Data | None
 		middle_name: DF.Data | None
 		posting_date: DF.Date
-		student_code: DF.Link | None
+		student_code: DF.Link
 	# end: auto-generated types
 
 	def validate(self):

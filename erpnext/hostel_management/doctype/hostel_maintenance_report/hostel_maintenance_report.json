@@ -42,7 +42,8 @@
   "jv",
   "amended_from",
   "hostel_maintenance_application",
-  "activity"
+  "activity",
+  "status"
  ],
  "fields": [
   {
@@ -72,13 +73,15 @@
    "fetch_from": "student_code.first_name",
    "fieldname": "first_name",
    "fieldtype": "Data",
-   "label": "First Name"
+   "label": "First Name",
+   "read_only": 1
   },
   {
    "fetch_from": "student_code.last_name",
    "fieldname": "last_name",
    "fieldtype": "Data",
-   "label": "Last Name"
+   "label": "Last Name",
+   "read_only": 1
   },
   {
    "fieldname": "phone_number",
@@ -103,7 +106,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Hostel Room",
-   "options": "Hostel Room"
+   "options": "Hostel Room",
+   "reqd": 1
   },
   {
    "fieldname": "maintenance_requirement_sect",
@@ -191,7 +195,6 @@
   {
    "fieldname": "branch",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Branch",
    "options": "Branch"
   },
@@ -199,7 +202,6 @@
    "fetch_from": "branch.cost_center",
    "fieldname": "cost_center",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Cost Center",
    "options": "Cost Center"
   },
@@ -218,7 +220,6 @@
   {
    "fieldname": "hostel_maintenance_application",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Hostel Maintenance Application",
    "options": "Hostel Maintenance Application"
   },
@@ -242,7 +243,8 @@
    "fieldname": "full_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Full Name"
+   "label": "Full Name",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_wehm",
@@ -272,16 +274,26 @@
    "allow_on_submit": 1,
    "fieldname": "maintenance_status",
    "fieldtype": "Select",
+   "in_filter": 1,
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Maintenance Status",
    "options": "\nOn Going\nCompleted"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\nOn Going\nCompleted\nCancelled",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-27 10:03:50.417215",
+ "modified": "2026-04-29 12:26:43.444433",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Maintenance Report",

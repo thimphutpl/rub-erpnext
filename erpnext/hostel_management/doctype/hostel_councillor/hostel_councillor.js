@@ -19,7 +19,7 @@ frappe.ui.form.on("Hostel Councillor", {
 		});
         frm.set_query("hostel_room", function() {
             if (!frm.doc.company) {
-                return { filters: [["name", "=", ""]] };
+                return { filters: [["company", "=", ""]] };
             }
         
             let hostel_types = [];
@@ -44,6 +44,9 @@ frappe.ui.form.on("Hostel Councillor", {
         });
 
         frm.set_query("hostel_type", function() {
+            if (!frm.doc.company) {
+                return { filters: [["company", "=", ""]] };
+            }
             return {
                 filters: { company: frm.doc.company }
             };

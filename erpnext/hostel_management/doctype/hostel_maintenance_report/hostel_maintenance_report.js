@@ -122,6 +122,25 @@ frappe.ui.form.on("Hostel Maintenance Report", {
 			});
 		}
 	},
+	get_indicator: function(doc) {
+
+        if (doc.maintenance_status === "Completed") {
+            return [__("Completed"), "green", "maintenance_status,=,Completed"];
+        }
+
+        if (doc.maintenance_status === "On Going") {
+            return [__("On Going"), "orange", "maintenance_status,=,On Going"];
+        }
+
+        // fallback
+        if (doc.docstatus === 0) {
+            return [__("Draft"), "red"];
+        }
+
+        if (doc.docstatus === 2) {
+            return [__("Cancelled"), "grey"];
+        }
+    }
 });
 
 function update_child_table_columns(frm) {
@@ -223,15 +242,25 @@ function mark_maintenance_completed(frm) {
     );
 }
 
+// function set_status_indicator(frm) {
+//     // Set status indicator on the form
+//     if (frm.doc.maintenance_status === "Completed") {
+//         frm.page.set_indicator(__('Completed'), 'green');
+//     } else if (frm.doc.maintenance_status === "On Going") {
+//         frm.page.set_indicator(__('On Going'), 'orange');
+//     } else if (frm.doc.docstatus === 0) {
+//         frm.page.set_indicator(__('Draft'), 'red');
+//     } else {
+//         frm.page.set_indicator(__('Completed'), 'blue');
+//     }
+// }
+
 function set_status_indicator(frm) {
-    // Set status indicator on the form
-    if (frm.doc.maintenance_status === "Completed") {
+    if (frm.doc.status === "Completed") {
         frm.page.set_indicator(__('Completed'), 'green');
-    } else if (frm.doc.maintenance_status === "On Going") {
+    } else if (frm.doc.status === "On Going") {
         frm.page.set_indicator(__('On Going'), 'orange');
-    } else if (frm.doc.docstatus === 0) {
-        frm.page.set_indicator(__('Draft'), 'red');
-    } else {
-        frm.page.set_indicator(__('Submitted'), 'blue');
+    } else if (frm.doc.status === "Cancelled") {
+        frm.page.set_indicator(__('Cancelled'), 'red');
     }
 }

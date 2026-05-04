@@ -32,6 +32,7 @@ class HostelAllocationBulkUpload(Document):
 
     def on_submit(self):
         self.update_hostel_room_students()
+        self.create_hostel_allocation_entry()
 
     def on_cancel(self):
         """
@@ -68,6 +69,80 @@ class HostelAllocationBulkUpload(Document):
 
         frappe.msgprint(_("Students removed successfully after cancellation."))
 
+    def create_hostel_allocation_entry(self):
+        """Create individual HostelAttendanceEntry records for each student in the attendance table"""
+        
+        if not self.table_caon:
+            frappe.msgprint(_("No attendance records found to create entries."))
+            return
+
+        # # Build full councilor name from first_name + last_name
+        # full_councilor_name = ""
+        # if self.councilor_name:
+        #     full_councilor_name = self.councilor_name
+        #     # If there's a last_name field, append it
+        #     if hasattr(self, 'last_name') and self.last_name:
+        #         full_councilor_name = f"{self.councilor_name} {self.last_name}"            
+        
+        created_count = 0
+        skipped_count = 0
+        
+        for row in self.table_caon:
+            # Skip if no student code
+            if not row.student_code:
+                skipped_count += 1
+                continue
+            
+            # Check if attendance entry already exists for this student on this date
+            existing_entry = frappe.db.exists("Hostel Allocation Entry", {
+                "student": row.student_code,
+                "posting_date": self.posting_date,
+                "student_name": f"{row.first_name} {row.middle_name} {row.last_name}" if row.first_name and row.middle_name and row.last_name else row.first_name,
+                "year": row.year,
+                "transaction_type": "Hostel Allocation Bulk Upload",
+                "transaction_name": self.name,
+                "hostel_type": row.hostel_type,
+                "hostel_room": row.hostel_room,
+            })
+            
+            if existing_entry:
+                skipped_count += 1
+                continue
+            
+            # Create new Hostel Allocation Entry
+            try:
+                hostel_entry = frappe.get_doc({
+                    "doctype": "Hostel Allocation Entry",
+                    "student": row.student_code,
+                    "posting_date": self.posting_date,
+                    "student_name": f"{row.first_name} {row.middle_name} {row.last_name}" if row.first_name and row.middle_name and row.last_name else row.first_name,
+                    "year": row.year,
+                    "transaction_type": "Hostel Allocation Bulk Upload",
+                    "transaction_name": self.name,
+                    "current_hostel_type": row.hostel_type,
+                    "current_hostel_room": row.hostel_room,
+                    "catering_type": row.catering_type,
+                    "scholarship_type": row.scholarship_type
+                })
+                
+                hostel_entry.insert()
+                # hostel_entry.submit()
+                created_count += 1
+                
+            except Exception as e:
+                frappe.log_error(
+                    title="Hostel Hostel Entry Creation Error",
+                    message=f"Error creating hostel entry for student {row.student_code}: {str(e)}"
+                )
+                frappe.msgprint(_(f"Error creating hostel entry for student {row.student_code}: {str(e)}"), 
+                              indicator='orange', alert=True)
+        
+        # Show summary message
+        if created_count > 0:
+            frappe.msgprint(_(f"Successfully created {created_count} Hostel Entry records."))
+        if skipped_count > 0:
+            frappe.msgprint(_(f"Skipped {skipped_count} records (no student code or already exists)."), 
+                          indicator='orange', alert=True)
 
     def validate_room_capacity(self):
         """Validate that no room exceeds capacity for the same academic year and status validation."""
@@ -448,7 +523,7 @@ def auto_allocate_rooms(company, year, hostel_types, students):
             "company": company,
             "hostel_type": ["in", hostel_types]
         },
-        fields=["name", "capacity"],
+        fields=["name", "capacity", "hostel_type"],
         order_by="name asc"
     )
 
@@ -471,6 +546,7 @@ def auto_allocate_rooms(company, year, hostel_types, students):
         if available > 0:
             room_slots.append({
                 "room": room.name,
+                "hostel_type": room.hostel_type,
                 "available": available
             })
 
@@ -489,7 +565,8 @@ def auto_allocate_rooms(company, year, hostel_types, students):
 
             allocations.append({
                 "student_code": student.get("student_code"),
-                "hostel_room": slot["room"]
+                "hostel_room": slot["room"],
+                "hostel_type": slot["hostel_type"]
             })
 
             student_index += 1
@@ -498,76 +575,3 @@ def auto_allocate_rooms(company, year, hostel_types, students):
             break
 
     return allocations
-
-# @frappe.whitelist()
-# def get_students_and_rooms(company, year, gender=None, hostel_types=None):
-#     if not company or not year:
-#         frappe.throw("Company and Year are required")
-
-#     # -------------------------
-#     # 1. Fetch Students
-#     # -------------------------
-#     student_filters = {
-#         "year": year,
-#         "status": "Active"
-#     }
-
-#     if gender:
-#         student_filters["gender"] = gender
-
-#     students = frappe.get_all(
-#         "Student",
-#         filters=student_filters,
-#         fields=[
-#             "name", "first_name", "middle_name", "last_name",
-#             "gender", "cid", "catering_type", "scholarship_type", "status"
-#         ]
-#     )
-
-#     # -------------------------
-#     # 2. Process Hostel Types
-#     # -------------------------
-#     if isinstance(hostel_types, str):
-#         hostel_types = [h.strip() for h in hostel_types.split(",") if h.strip()]
-
-#     room_filters = {
-#         "company": company
-#     }
-
-#     if hostel_types:
-#         room_filters["hostel_type"] = ["in", hostel_types]
-
-#     # -------------------------
-#     # 3. Fetch Rooms
-#     # -------------------------
-#     rooms = frappe.get_all(
-#         "Hostel Room",
-#         filters=room_filters,
-#         fields=["name", "capacity", "hostel_type"]
-#     )
-
-#     room_data = []
-
-#     for room in rooms:
-#         # Count students in Student List Item
-#         student_count = frappe.db.count(
-#             "Student List Item",
-#             {
-#                 "parent": room.name,
-#                 "parenttype": "Hostel Room"
-#             }
-#         )
-
-#         available = (room.capacity or 0) - student_count
-
-#         room_data.append({
-#             "hostel_room": room.name,
-#             "capacity": room.capacity,
-#             "occupied": student_count,
-#             "available": available
-#         })
-
-#     return {
-#         "students": students,
-#         "rooms": room_data
-#     }    

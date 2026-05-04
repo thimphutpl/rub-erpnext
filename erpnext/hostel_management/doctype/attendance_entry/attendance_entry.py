@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class HostelAttendanceEntry(Document):
+class AttendanceEntry(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -22,5 +22,7 @@ class HostelAttendanceEntry(Document):
 		room_number: DF.Link | None
 		student_code: DF.Link | None
 		student_name: DF.Data | None
+		transaction_name: DF.DynamicLink | None
+		transaction_type: DF.Link | None
 	# end: auto-generated types
 	pass

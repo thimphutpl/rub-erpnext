@@ -102,7 +102,7 @@
   {
    "fieldname": "get_hostel_rooms",
    "fieldtype": "Button",
-   "label": "Get Hostel Rooms"
+   "label": "Get Student List"
   },
   {
    "fieldname": "academic_year",
@@ -121,7 +121,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-28 08:16:27.405438",
+ "modified": "2026-04-28 11:07:25.922222",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Councillor",

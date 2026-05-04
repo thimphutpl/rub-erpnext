@@ -36,10 +36,10 @@ class HostelMaintenanceApplication(Document):
 		hostel_check_in_form: DF.Link | None
 		hostel_check_out_form: DF.Link | None
 		hostel_maintenance_report: DF.Data | None
-		hostel_room: DF.Link | None
+		hostel_room: DF.Link
 		hostel_type: DF.Data
 		last_name: DF.Data | None
-		maintenance_focal: DF.Link | None
+		maintenance_focal: DF.Link
 		maintenance_required_on: DF.Date | None
 		maintenance_type: DF.Literal["Repair", "Replacement"]
 		phone_number: DF.Data | None

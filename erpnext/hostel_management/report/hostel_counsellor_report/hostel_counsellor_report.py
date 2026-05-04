@@ -18,7 +18,7 @@ def execute(filters=None):
         {"label": "Room Number", "fieldname": "room_number", "fieldtype": "Data", "width": 140},
         {"label": "Hostel Capacity", "fieldname": "hostel_capacity", "fieldtype": "Int", "width": 120},
     ]
-    conditions = ["sd.student_responsibiltiy = 'Hostel Counsellor'"]
+    conditions = ["sd.student_responsibiltiy = 'Hostel Councillor'"]
     values = []
 
     if filters.get("academic_year"):
@@ -57,7 +57,7 @@ def execute(filters=None):
             `tabStudent Leader and Coordinator Items` sd
                 ON sd.parent = slac.name
         LEFT JOIN
-            `tabHostel Counsellor` hc
+            `tabHostel Councillor` hc
                 ON sd.hostel_counsellor = hc.name
         LEFT JOIN
             `tabBlock Counsellor Details` cd

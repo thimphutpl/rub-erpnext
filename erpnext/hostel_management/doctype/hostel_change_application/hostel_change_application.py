@@ -709,12 +709,12 @@ class HostelChangeApplication(Document):
 		cid_number: DF.Int
 		comments_approver: DF.SmallText | None
 		company: DF.Link
-		current_room: DF.Link | None
+		current_room: DF.Link
 		first_name: DF.Data | None
 		fiscal_year: DF.Link
 		hostel_check_in_form: DF.Link
 		hostel_check_out_form: DF.Link | None
-		hostel_type: DF.Data | None
+		hostel_type: DF.Data
 		hostel_type_req: DF.Data | None
 		last_name: DF.Data | None
 		operation_type: DF.Literal["", "Room Transfer", "Room Swap", "Day Scholar"]

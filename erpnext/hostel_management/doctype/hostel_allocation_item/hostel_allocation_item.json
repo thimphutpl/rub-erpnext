@@ -43,7 +43,6 @@
    "fetch_from": "student_code.middle_name",
    "fieldname": "middle_name",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Middle Name"
   },
   {
@@ -126,7 +125,6 @@
    "fetch_from": "student_code.cid",
    "fieldname": "cid_number",
    "fieldtype": "Int",
-   "in_list_view": 1,
    "label": "CID Number",
    "length": 12
   },
@@ -143,7 +141,7 @@
  "is_submittable": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-04-23 15:16:51.081581",
+ "modified": "2026-04-28 12:02:04.867005",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Allocation Item",

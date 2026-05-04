@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"TOHSdp-ORh\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Bulk Hostel Allocation\",\"col\":3}},{\"id\":\"XYhGEszq5Y\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hostel Attendance\",\"col\":3}},{\"id\":\"lcqMZ96g08\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hostel Room\",\"col\":3}},{\"id\":\"Zc8UFFSjzg\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Hostel Room\",\"col\":4}},{\"id\":\"AzCGLmq2DV\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b></b></span>\",\"col\":12}},{\"id\":\"nPccGEq_41\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Hostel Management</span>\",\"col\":12}},{\"id\":\"8_nBh-4IGL\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel\",\"col\":4}},{\"id\":\"6wA1jEUFYM\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Transactions\",\"col\":4}},{\"id\":\"QCDmsjjIPF\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Budget\",\"col\":4}},{\"id\":\"5XZFp0dlcl\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Attendance Application\",\"col\":4}},{\"id\":\"7bZr4U9v-c\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Check-In Trasnactions\",\"col\":4}},{\"id\":\"yx-OsgXJbN\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Counsellor Application\",\"col\":4}},{\"id\":\"Mz4MSvThSA\",\"type\":\"card\",\"data\":{\"card_name\":\"Report\",\"col\":4}}]",
+ "content": "[{\"id\":\"TOHSdp-ORh\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Bulk Hostel Allocation\",\"col\":3}},{\"id\":\"XYhGEszq5Y\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hostel Attendance\",\"col\":3}},{\"id\":\"lcqMZ96g08\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hostel Room\",\"col\":3}},{\"id\":\"AzCGLmq2DV\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b></b></span>\",\"col\":12}},{\"id\":\"nPccGEq_41\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Hostel Management</span>\",\"col\":12}},{\"id\":\"8_nBh-4IGL\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel\",\"col\":4}},{\"id\":\"6wA1jEUFYM\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Transactions\",\"col\":4}},{\"id\":\"QCDmsjjIPF\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Budget\",\"col\":4}},{\"id\":\"5XZFp0dlcl\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Attendance Application\",\"col\":4}},{\"id\":\"7bZr4U9v-c\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Check-In Trasnactions\",\"col\":4}},{\"id\":\"yx-OsgXJbN\",\"type\":\"card\",\"data\":{\"card_name\":\"Hostel Counsellor Application\",\"col\":4}},{\"id\":\"Mz4MSvThSA\",\"type\":\"card\",\"data\":{\"card_name\":\"Report\",\"col\":4}}]",
  "creation": "2025-07-29 14:56:45.589418",
  "custom_blocks": [],
  "docstatus": 0,
@@ -297,21 +297,15 @@
    "type": "Link"
   }
  ],
- "modified": "2026-04-25 14:48:26.754763",
- "modified_by": "Administrator",
+ "modified": "2026-04-28 13:09:27.086212",
+ "modified_by": "rohan.gurung@thimphutechpark.bt",
  "module": "Hostel Management",
  "name": "Hostel Management",
  "number_cards": [],
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
- "quick_lists": [
-  {
-   "document_type": "Hostel Room",
-   "label": "Hostel Room",
-   "quick_list_filter": "[]"
-  }
- ],
+ "quick_lists": [],
  "roles": [],
  "sequence_id": 41.0,
  "shortcuts": [

@@ -39,7 +39,7 @@ class HostelMaintenanceReport(BuyingController, StockController):
 		fiscal_year: DF.Link
 		full_name: DF.Data | None
 		hostel_maintenance_application: DF.Data | None
-		hostel_room: DF.Link | None
+		hostel_room: DF.Link
 		hostel_type: DF.Link
 		items: DF.Table[HostelMaintenanceReportItem]
 		jv: DF.Link | None
@@ -52,6 +52,7 @@ class HostelMaintenanceReport(BuyingController, StockController):
 		posting_date: DF.Date
 		posting_time: DF.Time | None
 		report_on_maintenance: DF.SmallText | None
+		status: DF.Literal["", "On Going", "Completed", "Cancelled"]
 		student_code: DF.Link
 		total_expenses_incurred: DF.Currency
 	# end: auto-generated types
@@ -69,7 +70,7 @@ class HostelMaintenanceReport(BuyingController, StockController):
 		# self.check_on_dry_hire()
 		# self.check_budget()
 		# self.update_stock_ledger()
-		self.email_notification()
+		# self.email_notification()
 
 		""" ++++++++++ Ver 2.0.190509 Begins ++++++++++ """
 		if (self.expenses_borne_by == "College" or self.expenses_borne_by == ""):
@@ -194,7 +195,23 @@ class HostelMaintenanceReport(BuyingController, StockController):
 
 	def validate(self):
 		self.calculate_amount()
-		# self.validate_accounts()	
+		# self.validate_accounts()
+		self.set_status()
+
+	def set_status(self):
+		"""Override default status behavior"""
+
+		if self.docstatus == 0:
+			self.status = "On Going"
+
+		elif self.docstatus == 1:
+			if self.maintenance_status == "Completed":
+				self.status = "Completed"
+			else:
+				self.status = "On Going"
+
+		elif self.docstatus == 2:
+			self.status = "Cancelled"			
 
 	def calculate_amount(self):
 		for item in self.items:
