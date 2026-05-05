@@ -15,21 +15,30 @@ erpnext.setup.EmployeeController = class EmployeeController extends frappe.ui.fo
 		};
 	}
 
-	refresh(frm) {
-		if (!frm.dashboard || !frm.dashboard.wrapper) return;
+	// refresh(frm) {
+	// 	if (!frm.dashboard || !frm.dashboard.wrapper) return;
 
-		let section = $(frm.dashboard.wrapper)
-			.find('.form-dashboard-section.form-links');
+	// 	let section = $(frm.dashboard.wrapper)
+	// 		.find('.form-dashboard-section.form-links');
 
-		let head = section.find('.section-head');
-		let body = section.find('.section-body');
+	// 	let head = section.find('.section-head');
+	// 	let body = section.find('.section-body');
 
-		if (head.length) {
-			head.addClass('collapsed');
-			body.hide();
-		}
-		erpnext.toggle_naming_series();
-	}
+	// 	if (head.length) {
+	// 		head.addClass('collapsed');
+	// 		body.hide();
+	// 	}
+	// 	erpnext.toggle_naming_series();
+	// }
+	 refresh(frm) {
+        frappe.after_ajax(() => {
+            let $conn = $('.row.form-dashboard-section.form-links');
+            if ($conn.length) {
+                $conn.find('.section-head.collapsible').addClass("collapsed");
+                $conn.find('.section-body').addClass("hide");
+            }
+        });
+    }
 };
 
 frappe.ui.form.on("Employee", {
