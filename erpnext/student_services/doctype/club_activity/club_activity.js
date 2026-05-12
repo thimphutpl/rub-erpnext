@@ -143,9 +143,9 @@ frappe.ui.form.on("Club Activity", {
                 
                 r.message.forEach(function(coordinator) {
                     var child = frm.add_child("club_coordinator_details");
-                    child.student_code = coordinator.student_code;
-					child.first_name = coordinator.first_name;
-					child.last_name = coordinator.last_name;
+                    child.student_code = coordinator.employee_student;
+					child.full_name = coordinator.full_name;
+					
                     child.parentfield = "club_coordinator_details";
                     child.parenttype = frm.doctype;
                 });

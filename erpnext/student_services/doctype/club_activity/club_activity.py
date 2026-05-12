@@ -138,7 +138,7 @@ def get_coordinators(club_name):
 			'parentfield': 'club_management', 
 			'parent': club_name
 		},
-		fields=['student_code','first_name','last_name']
+		fields=['employee_student','full_name']
 	)
 	
 

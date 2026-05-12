@@ -14,8 +14,7 @@ class ClubCoordinatorDetails(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		first_name: DF.Data | None
-		last_name: DF.Data | None
+		full_name: DF.Data | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data

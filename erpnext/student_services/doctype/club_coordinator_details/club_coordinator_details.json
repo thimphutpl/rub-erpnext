@@ -7,8 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "student_code",
-  "first_name",
-  "last_name"
+  "full_name"
  ],
  "fields": [
   {
@@ -21,18 +20,10 @@
   },
   {
    "fetch_from": "student_code.first_name",
-   "fieldname": "first_name",
+   "fieldname": "full_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "First Name",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "student_code.last_name",
-   "fieldname": "last_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Last Name",
+   "label": "Full Name",
    "read_only": 1
   }
  ],
@@ -40,7 +31,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-16 10:17:27.103198",
+ "modified": "2026-05-12 22:13:41.396895",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Club Coordinator Details",
