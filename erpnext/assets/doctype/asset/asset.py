@@ -1473,3 +1473,17 @@ def add_reference_in_jv_on_split(entry_name, new_asset_name, old_asset_name, dep
 def update_disable_depreciation(asset_id):
 	frappe.db.sql("Update `tabAsset` set disable_depreciation = 1 where name = '{}'".format(asset_id))
 	return 1
+
+def get_permission_query_conditions(user):
+	if not user: user = frappe.session.user
+	user_roles = frappe.get_roles(user)
+
+	if user == "Administrator" or "System Manager" in user_roles or "Asset User" in user_roles: 
+		return
+
+	return """(
+		exists(select 1
+			from `tabEmployee` e
+			where e.user_id = '{user}'
+			and `tabAsset`.custodian = e.name)
+	)""".format(user=user)

@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"Pfs9YKjGJr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Budget Dashboard\",\"col\":3}},{\"id\":\"B39LiLyS4q\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Budget Management</span>\",\"col\":12}},{\"id\":\"AX57UKwmU1\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters and Settings\",\"col\":4}},{\"id\":\"An30Mopj0x\",\"type\":\"card\",\"data\":{\"card_name\":\"Transactions\",\"col\":4}},{\"id\":\"HEBjk2-vEZ\",\"type\":\"card\",\"data\":{\"card_name\":\"Budget\",\"col\":4}},{\"id\":\"gaSKoGthts\",\"type\":\"card\",\"data\":{\"card_name\":\"Annual Performance Assessment\",\"col\":4}},{\"id\":\"RhQiW1eeE0\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"Pfs9YKjGJr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Budget Dashboard\",\"col\":3}},{\"id\":\"B39LiLyS4q\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Budget Management</span>\",\"col\":12}},{\"id\":\"AX57UKwmU1\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters and Settings\",\"col\":3}},{\"id\":\"An30Mopj0x\",\"type\":\"card\",\"data\":{\"card_name\":\"Transactions\",\"col\":3}},{\"id\":\"HEBjk2-vEZ\",\"type\":\"card\",\"data\":{\"card_name\":\"Budget\",\"col\":3}},{\"id\":\"gaSKoGthts\",\"type\":\"card\",\"data\":{\"card_name\":\"Annual Performance Assessment\",\"col\":3}},{\"id\":\"RhQiW1eeE0\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2024-09-03 09:56:52.454684",
  "custom_blocks": [],
  "docstatus": 0,
@@ -107,55 +107,6 @@
    "label": "Budget Withdrawal",
    "link_count": 0,
    "link_to": "Budget Withdrawal",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Transactions",
-   "link_count": 4,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Five Year Plan Proposal",
-   "link_count": 0,
-   "link_to": "Five Year Plan Proposal",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Five Year Plan",
-   "link_count": 0,
-   "link_to": "Five Year Plan",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Additional Activities",
-   "link_count": 0,
-   "link_to": "Additional Activities",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Annual Work Plan",
-   "link_count": 0,
-   "link_to": "Annual Work Plan",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -347,10 +298,69 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Transactions",
+   "link_count": 5,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Five Year Plan Proposal",
+   "link_count": 0,
+   "link_to": "Five Year Plan Proposal",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Five Year Plan",
+   "link_count": 0,
+   "link_to": "Five Year Plan",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Additional Activities",
+   "link_count": 0,
+   "link_to": "Additional Activities",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Annual Work Plan",
+   "link_count": 0,
+   "link_to": "Annual Work Plan",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Allow Budget Transaction",
+   "link_count": 0,
+   "link_to": "Allow Budget Transaction",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-04-21 14:59:30.916914",
- "modified_by": "sonam.choki@thimphutechpark.bt",
+ "modified": "2026-05-12 11:05:23.048347",
+ "modified_by": "Administrator",
  "module": "Budget",
  "name": "Planning & Budget",
  "number_cards": [],

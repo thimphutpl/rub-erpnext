@@ -20,7 +20,8 @@
   "section_break_zrkq",
   "item",
   "amended_form",
-  "reference"
+  "reference",
+  "amended_from"
  ],
  "fields": [
   {
@@ -89,7 +90,7 @@
   {
    "fieldname": "company",
    "fieldtype": "Link",
-   "label": "Company",
+   "label": "Company/College",
    "options": "Company",
    "reqd": 1
   },
@@ -114,12 +115,22 @@
    "fieldname": "reference",
    "fieldtype": "Data",
    "label": "Reference"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Bulk Asset Disposal",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-24 10:49:20.863515",
+ "modified": "2026-05-12 14:56:01.449358",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Bulk Asset Disposal",

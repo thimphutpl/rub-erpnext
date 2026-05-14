@@ -85,9 +85,9 @@ class FiveYearPlanProposal(Document):
 @frappe.whitelist()
 def fetch_budgetplan():
 	planning = frappe.db.sql('''
-		SELECT po.serial_number as output_si_no, 
-		po.output, pp.serial_number as project_si_no, 
-		pp.project, pa.activities, pa.name as activity_link, pa.is_current, pa.is_capital FROM `tabPlanning Output` po 
+		SELECT po.serial_number as output_si_no, po.output, pp.serial_number as project_si_no, 
+		pp.project, pa.activities, pa.name as activity_link, pa.is_current, pa.is_capital 
+		FROM `tabPlanning Output` po 
 		INNER JOIN `tabPlanning Project` pp ON po.name = pp.planning_output 
 		INNER JOIN `tabPlanning Activities` pa ON pa.project = pp.name 
 		WHERE pa.disabled = 0

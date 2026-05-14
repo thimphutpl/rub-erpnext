@@ -7,6 +7,27 @@ from frappe.utils import flt
 from frappe.model.naming import make_autoname
 
 class ApprovedBudget(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from erpnext.budget.doctype.approved_budget_extra_item.approved_budget_extra_item import ApprovedBudgetExtraItem
+		from erpnext.budget.doctype.approved_budget_item.approved_budget_item import ApprovedBudgetItem
+		from frappe.types import DF
+
+		ab_extra_item: DF.Table[ApprovedBudgetExtraItem]
+		amended_from: DF.Link | None
+		college: DF.Link
+		cost_center: DF.Link
+		from_date: DF.Date | None
+		from_year: DF.Link
+		items: DF.Table[ApprovedBudgetItem]
+		to_date: DF.Date | None
+		to_year: DF.Link
+		total_approved_budget: DF.Currency
+	# end: auto-generated types
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:

@@ -6,7 +6,8 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "year_name"
+  "year_name",
+  "from_date"
  ],
  "fields": [
   {
@@ -16,12 +17,18 @@
    "label": "Year Name",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "Budget Mid Point Date",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-28 11:11:35.280236",
+ "modified": "2026-04-28 20:49:24.470928",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Budget Year",

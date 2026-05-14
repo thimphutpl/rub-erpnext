@@ -282,11 +282,12 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 
 		this.frm.set_query("taxes_and_charges", function (doc) {
 			let allowed_companies = [doc.company]; // use doc instead of frm.doc
-			console.log("allowed_companies:", allowed_companies);
+			
 
 			return {
 				filters: [
-					['docstatus', '!=', 2]
+					['docstatus', '!=', 2],
+					["company", "=", doc.company]
 				]
 			};
 		});

@@ -50,6 +50,7 @@ class PurchaseOrder(BuyingController):
 		from erpnext.buying.doctype.purchase_order_item_supplied.purchase_order_item_supplied import PurchaseOrderItemSupplied
 		from frappe.types import DF
 
+		activity: DF.Link | None
 		additional_discount_percentage: DF.Float
 		address_display: DF.SmallText | None
 		advance_paid: DF.Currency

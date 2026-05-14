@@ -15,7 +15,7 @@ class QualificationType(Document):
 		from frappe.types import DF
 
 		duration_years: DF.Float
-		level: DF.Literal["", "Certificate", "Diploma", "Bachelor's", "Master's", "Doctorate"]
+		level: DF.Literal["", "Certificate", "Diploma", "Bachelor's", "Master's", "Doctorate", "Class X", "Class XII"]
 		qualification_name: DF.Data
 		quatification_code: DF.Data
 	# end: auto-generated types

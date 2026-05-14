@@ -70,6 +70,7 @@ class PurchaseInvoice(BuyingController):
 		from erpnext.buying.doctype.purchase_receipt_item_supplied.purchase_receipt_item_supplied import PurchaseReceiptItemSupplied
 		from frappe.types import DF
 
+		activity: DF.Link | None
 		additional_discount_percentage: DF.Float
 		address_display: DF.SmallText | None
 		advance_tax: DF.Table[AdvanceTax]
@@ -1055,15 +1056,29 @@ class PurchaseInvoice(BuyingController):
 	def make_supplier_gl_entry(self, gl_entries):
 		# Checked both rounding_adjustment and rounded_total
 		# because rounded_total had value even before introduction of posting GLE based on rounded total
-		grand_total = (
-			self.rounded_total if (self.rounding_adjustment and self.rounded_total) else self.grand_total
-		)
-		base_grand_total = flt(
-			self.base_rounded_total
-			if (self.base_rounding_adjustment and self.base_rounded_total > 0)
-			else self.base_grand_total,
-			self.precision("base_grand_total"),
-		) - flt(self.total_advance)
+		if self.write_off_amount:
+			base_grand_total = self.outstanding_amount
+			grand_total = self.outstanding_amount
+		else:
+			grand_total = (
+				self.rounded_total if (self.rounding_adjustment and self.rounded_total) else self.grand_total
+			)
+			base_grand_total = flt(
+				self.base_rounded_total
+				if (self.base_rounding_adjustment and self.base_rounded_total > 0)
+				else self.base_grand_total,
+				self.precision("base_grand_total"),
+			) - flt(self.total_advance)
+		gst_amount=0.0
+		# grand_total = (
+		# 	self.rounded_total if (self.rounding_adjustment and self.rounded_total) else self.grand_total
+		# )
+		# base_grand_total = flt(
+		# 	self.base_rounded_total
+		# 	if (self.base_rounding_adjustment and self.base_rounded_total > 0)
+		# 	else self.base_grand_total,
+		# 	self.precision("base_grand_total"),
+		# ) - flt(self.total_advance)
 		gst_amount=0.0
 		for item in self.items:
 			gst_amount+=flt(item.gst_amount)
@@ -1072,7 +1087,6 @@ class PurchaseInvoice(BuyingController):
 			against_voucher = self.name
 			if self.is_return and self.return_against and not self.update_outstanding_for_self:
 				against_voucher = self.return_against
-			# Did not use base_grand_total to book rounding loss gle
 			gl_entries.append(
 				self.get_gl_dict(
 					{
@@ -1095,6 +1109,7 @@ class PurchaseInvoice(BuyingController):
 					item=self,
 				)
 			)
+			# frappe.throw(str(gl_entries))
 
 	def make_item_gl_entries(self, gl_entries):
 		# item gl entries
@@ -1370,7 +1385,7 @@ class PurchaseInvoice(BuyingController):
 						self.negative_expense_to_be_booked += flt(
 							item.item_tax_amount, item.precision("item_tax_amount")
 						)
-
+			# frappe.throw(str(gl_entries))
 			if item.is_fixed_asset and item.landed_cost_voucher_amount:
 				self.update_gross_purchase_amount_for_linked_assets(item)
 
@@ -1478,9 +1493,10 @@ class PurchaseInvoice(BuyingController):
 					item=item,
 				)
 			)
+			# frappe.throw(str(gl_entries))
 
 			warehouse_debit_amount = stock_amount
-
+	   
 		return warehouse_debit_amount
 
 	def make_tax_gl_entries(self, gl_entries):
@@ -1527,7 +1543,7 @@ class PurchaseInvoice(BuyingController):
 					)
 				valuation_tax.setdefault(tax.name, 0)
 				valuation_tax[tax.name] += (tax.add_deduct_tax == "Add" and 1 or -1) * flt(base_amount)
-
+			
 		if self.is_opening == "No" and self.negative_expense_to_be_booked and valuation_tax:
 			# credit valuation tax amount in "Expenses Included In Valuation"
 			# this will balance out valuation amount included in cost of goods sold
@@ -1559,7 +1575,7 @@ class PurchaseInvoice(BuyingController):
 					)
 
 					i += 1
-
+			
 		if self.auto_accounting_for_stock and self.update_stock and valuation_tax:
 			for tax in self.get("taxes"):
 				
@@ -1576,7 +1592,7 @@ class PurchaseInvoice(BuyingController):
 							item=tax,
 						)
 					)			
-
+			
 	def make_internal_transfer_gl_entries(self, gl_entries):
 	
 		if self.is_internal_transfer() and flt(self.base_total_taxes_and_charges):
@@ -1594,6 +1610,7 @@ class PurchaseInvoice(BuyingController):
 					item=self,
 				)
 			)
+			
 
 	def make_payment_gl_entries(self, gl_entries):
 		# Make Cash GL Entries
@@ -1638,6 +1655,7 @@ class PurchaseInvoice(BuyingController):
 					item=self,
 				)
 			)
+			
 
 	def make_write_off_gl_entry(self, gl_entries):
 		# writeoff account includes petty difference in the invoice amount
@@ -1645,28 +1663,28 @@ class PurchaseInvoice(BuyingController):
 		if self.write_off_account and flt(self.write_off_amount):
 			write_off_account_currency = get_account_currency(self.write_off_account)
 
-			gl_entries.append(
-				self.get_gl_dict(
-					{
-						"account": self.credit_to,
-						"party_type": "Supplier",
-						"party": self.supplier,
-						"against": self.write_off_account,
-						"debit": self.base_write_off_amount,
-						"debit_in_account_currency": self.base_write_off_amount
-						if self.party_account_currency == self.company_currency
-						else self.write_off_amount,
-						"against_voucher": self.return_against
-						if cint(self.is_return) and self.return_against
-						else self.name,
-						"against_voucher_type": self.doctype,
-						"cost_center": self.cost_center,
-						"project": self.project,
-					},
-					self.party_account_currency,
-					item=self,
-				)
-			)
+			# gl_entries.append(
+			# 	self.get_gl_dict(
+			# 		{
+			# 			"account": self.credit_to,
+			# 			"party_type": "Supplier",
+			# 			"party": self.supplier,
+			# 			"against": self.write_off_account,
+			# 			"debit": self.base_write_off_amount,
+			# 			"debit_in_account_currency": self.base_write_off_amount
+			# 			if self.party_account_currency == self.company_currency
+			# 			else self.write_off_amount,
+			# 			"against_voucher": self.return_against
+			# 			if cint(self.is_return) and self.return_against
+			# 			else self.name,
+			# 			"against_voucher_type": self.doctype,
+			# 			"cost_center": self.cost_center,
+			# 			"project": self.project,
+			# 		},
+			# 		self.party_account_currency,
+			# 		item=self,
+			# 	)
+			# )
 			gl_entries.append(
 				self.get_gl_dict(
 					{
@@ -1681,6 +1699,7 @@ class PurchaseInvoice(BuyingController):
 					item=self,
 				)
 			)
+			# frappe.throw(str(gl_entries))
 
 	def make_gle_for_rounding_adjustment(self, gl_entries):
 		# if rounding adjustment in small and conversion rate is also small then

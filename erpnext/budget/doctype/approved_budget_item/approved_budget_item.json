@@ -22,7 +22,8 @@
   "initial_approved_budget",
   "approved_budget",
   "is_current",
-  "is_capital"
+  "is_capital",
+  "planning_activities_name"
  ],
  "fields": [
   {
@@ -138,13 +139,18 @@
    "fieldtype": "Currency",
    "label": "Withdrawal Amount (In Million)",
    "read_only": 1
+  },
+  {
+   "fieldname": "planning_activities_name",
+   "fieldtype": "Data",
+   "label": "Planning Activities Name"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-26 17:05:20.388924",
+ "modified": "2026-04-28 20:05:12.335897",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Approved Budget Item",

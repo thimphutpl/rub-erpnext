@@ -29,7 +29,7 @@
    "fieldname": "level",
    "fieldtype": "Select",
    "label": "Level",
-   "options": "\nCertificate\nDiploma\nBachelor's\nMaster's\nDoctorate"
+   "options": "\nCertificate\nDiploma\nBachelor's\nMaster's\nDoctorate\nClass X\nClass XII"
   },
   {
    "fieldname": "duration_years",
@@ -40,7 +40,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-25 00:15:42.060306",
+ "modified": "2026-05-11 15:07:18.225845",
  "modified_by": "Administrator",
  "module": "Faculty Management",
  "name": "Qualification Type",

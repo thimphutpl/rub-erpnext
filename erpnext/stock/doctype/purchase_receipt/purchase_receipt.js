@@ -50,6 +50,12 @@ frappe.ui.form.on("Purchase Receipt", {
 				filters: { company: frm.doc.company },
 			};
 		});
+		frm.set_query("activity", function () {
+			return {
+				filters: {},
+			};
+		});
+	   
 
 		frm.set_query("subcontracting_receipt", function () {
 			return {

@@ -31,6 +31,8 @@
   "accounting_dimensions_section",
   "cost_center",
   "dimension_col_break",
+  "activity",
+  "column_break_gpuf",
   "project",
   "section_break_auzt",
   "notify_account",
@@ -1349,13 +1351,23 @@
    "fieldname": "description_advance",
    "fieldtype": "Small Text",
    "label": "Description"
+  },
+  {
+   "fieldname": "column_break_gpuf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "activity",
+   "fieldtype": "Link",
+   "label": "Activity",
+   "options": "Approved Budget"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 105,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-15 16:10:40.595299",
+ "modified": "2026-05-06 10:19:06.135523",
  "modified_by": "Administrator",
  "module": "Buying",
  "name": "Purchase Order",

@@ -172,7 +172,7 @@ def execute(filters=None):
             college,
             transaction_type,
             transaction_name
-        FROM `tabHostel Attendance Entry`
+        FROM `tabAttendance Entry`
         {where_ha}
         ORDER BY 
             CAST(room_number AS UNSIGNED) ASC

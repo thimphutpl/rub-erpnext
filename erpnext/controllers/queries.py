@@ -14,6 +14,7 @@ from frappe.query_builder.functions import Concat, Locate, Sum
 from frappe.utils import cint, nowdate, today, unique
 from pypika import Order
 from frappe import _
+from datetime import datetime
 
 import erpnext
 from erpnext.stock.get_item_details import _get_item_tax_template
@@ -165,7 +166,7 @@ def filter_college_programmes(doctype, txt, searchfield, start, page_len, filter
 	if not filters.get("college"):
 		frappe.throw("Please select College")
 	return frappe.db.sql(
-		"""select p.name, c.company from `tabProgramme` p, `tabColleges` c
+		"""select p.name, p.programme_name from `tabProgramme` p, `tabColleges` c
 		where
 			c.parent = p.name
 			and c.company = '{company}'
@@ -238,6 +239,68 @@ def filter_college_programme_modules(doctype, txt, searchfield, start, page_len,
 		),
 		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
 	)
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def filter_timetable_schedule_entries(doctype, txt, searchfield, start, page_len, filters):
+	# fields = get_fields(doctype, ["fb.name", "fb.company"])
+	searchfields = frappe.get_meta(doctype).get_search_fields()
+	searchfields = " or ".join("tse."+field + " like %(txt)s" for field in searchfields)
+	tutor_cond = ""
+	if not filters.get("college"):
+		frappe.throw("Please select College")
+	if not filters.get("date"):
+		frappe.throw("Please select Date")
+	tutor_id = frappe.db.get_value("Employee", {"user_id": filters.get("tutor")})
+	day = datetime.strptime(filters.get("date"), "%Y-%m-%d").strftime("%A")
+	programmes = frappe.db.sql("select mc.programme from `tabModule College` mc left join `tabModule Tutor Item` mti on mti.parent = mc.parent and mc.college = %s where mti.tutor = %s", (filters.get("college"), tutor_id), as_dict=1)
+	if not programmes:
+		frappe.throw("You are either not assigned with <b>Modules</b> or you are not a <b>Tutor</b>.", title="Module Tutor Allocation Data Missing")
+	if not frappe.db.exists("Timetable Schedule Entry", {"college": filters.get("college")}):
+		frappe.msgprint("No Timetable Schedule Entry found for College: {}".format(filters.get("college")))
+	semesters = []
+	# frappe.msgprint("""select tse.name, tse.module_code, tse.from_time, tse.to_time, tse.day from `tabTimetable Schedule Entry` tse, `tabAcademic Term` at
+	# 	where
+	# 		at.college = tse.college
+	# 		and at.term_start_date <= '{date}' and at.term_end_date >= '{date}'
+	# 		and tse.college = '{company}'
+	# 		and tse.programme in ({programmes})
+	# 		and tse.day = '{day}'
+	# 	order by
+	# 		tse.name, tse.college""".format(
+	# 		company = filters.get("college"),
+	# 		date = filters.get("date"),
+	# 		programmes = ", ".join("'"+p.programme+"'" for p in programmes) if len(programmes) > 0 else [],
+	# 		day = day
+	# 	))
+	return frappe.db.sql(
+		"""select tse.name, tse.programme, tse.module_code, tse.from_time, tse.to_time, tse.day from `tabTimetable Schedule Entry` tse, `tabAcademic Term` at
+		where
+			at.college = tse.college
+			and at.term_start_date <= '{date}' and at.term_end_date >= '{date}'
+			and tse.college = '{company}'
+			and tse.programme in ({programmes})
+			and tse.day = '{day}'
+			and (tse.{key} like %(txt)s
+				or tse.name like %(txt)s
+				or tse.college like %(txt)s
+				or tse.programme like %(txt)s
+				or {scond})
+		order by
+			tse.name, tse.college
+		limit %(page_len)s offset %(start)s""".format(
+			company = filters.get("college"),
+			date = filters.get("date"),
+			programmes = ", ".join("'"+p.programme+"'" for p in programmes) if len(programmes) > 0 else "'No modules assigned to you'",
+			day = day,
+			**{
+				"key": searchfield,
+				"scond": searchfields,
+			}
+		),
+		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	)
+
 
 # Following added by Kinley Dorji 2026/02/27
 # searches for module in a programmee in a college
@@ -521,8 +584,10 @@ def filter_assessment_component(doctype, txt, searchfield, start, page_len, filt
 		frappe.throw("Please Select Module")
 	if not filters.get("academic_term"):
 		frappe.throw("Please Select Academic Term")
-	if not filters.get("tutor"):
-		frappe.throw("Please Select Tutor")
+
+	#commented below by tw as tutor check is not longer required
+	# if not filters.get("tutor"):
+	# 	frappe.throw("Please Select Tutor")
 	return frappe.db.sql("""
 	select mai.assessment_name from `tabModule Assessment Criteria` mac,
 	`tabModule Assessment Item` mai, `tabAssessment Component` ac
@@ -530,12 +595,11 @@ def filter_assessment_component(doctype, txt, searchfield, start, page_len, filt
 	and ac.name = mai.assessment_name
 	and ac.examination_assesment = '{}'
 	and college = '{}'
-	and mac.tutor = '{}'
 	and mac.docstatus = 1
 	and mac.academic_term = '{}'
 	and mac.module = '{}'
 	and programme = '{}'
-	""".format(filters.get("examination_assesment"),filters.get("college"), filters.get("tutor"), filters.get("academic_term"), filters.get("module"), filters.get("programme")))
+	""".format(filters.get("examination_assesment"),filters.get("college"), filters.get("academic_term"), filters.get("module"), filters.get("programme")))
 	# frappe.throw(filters.get("college")+" "+filters.get("programme")+" "+filters.get("module")+" "+filters.get("academic_term")+" "+filters.get("tutor"))
 	
 	# return frappe.db.sql(

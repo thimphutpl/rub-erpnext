@@ -8,8 +8,11 @@
   "section_break_fcey",
   "from_year",
   "college",
+  "from_date",
   "column_break_izcg",
   "to_year",
+  "cost_center",
+  "to_date",
   "section_break_yjvz",
   "items",
   "section_break_irvz",
@@ -93,13 +96,36 @@
    "fieldtype": "Table",
    "label": "Additional Activities",
    "options": "Approved Budget Extra Item"
+  },
+  {
+   "fetch_from": "from_year.from_date",
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "hidden": 1,
+   "label": "From Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "to_year.from_date",
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "hidden": 1,
+   "label": "To Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-23 10:36:23.583069",
+ "modified": "2026-05-14 15:52:42.098984",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Approved Budget",

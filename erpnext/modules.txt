@@ -27,3 +27,4 @@ Student Services
 Legal
 Budget
 PMS
+eNote

@@ -26,6 +26,7 @@ class ApprovedBudgetItem(Document):
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
+		planning_activities_name: DF.Data | None
 		project: DF.SmallText | None
 		project_no: DF.Int
 		reappropiation_received: DF.Currency

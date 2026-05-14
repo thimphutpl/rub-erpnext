@@ -40,6 +40,13 @@ erpnext.accounts.PurchaseInvoice = class PurchaseInvoice extends erpnext.buying.
 				filters: { company: doc.company },
 			};
 		});
+		this.frm.set_query("taxes_and_charges",function(doc){
+			return{
+				filters:{
+					company:doc.company
+				}
+			}
+		})
 	}
 
 	onload() {
@@ -717,6 +724,11 @@ frappe.ui.form.on("Purchase Invoice", {
 					is_group: 0,
 					report_type: "Profit and Loss",
 				},
+			};
+		});
+		frm.set_query("activity", function () {
+			return {
+				filters: { college: frm.doc.company },
 			};
 		});
 

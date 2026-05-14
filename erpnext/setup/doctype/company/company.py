@@ -46,6 +46,7 @@ class Company(NestedSet):
 		company_name: DF.Data
 		cost_center: DF.Link | None
 		country: DF.Link
+		crc_approval: DF.Link | None
 		create_chart_of_accounts_based_on: DF.Literal["", "Standard Template", "Existing Company"]
 		credit_limit: DF.Currency
 		date_of_commencement: DF.Date | None

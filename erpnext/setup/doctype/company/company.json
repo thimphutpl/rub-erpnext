@@ -165,6 +165,8 @@
   "receivable_accounts",
   "column_break_lqhk",
   "income_accounts",
+  "crc_approver_detail_section",
+  "crc_approval",
   "tab_9_tab",
   "sb_student_settings",
   "college_code",
@@ -238,8 +240,7 @@
   {
    "fieldname": "company_logo",
    "fieldtype": "Attach Image",
-   "hidden": 1,
-   "label": "Company Logo"
+   "label": "College Logo"
   },
   {
    "fieldname": "company_description",
@@ -1241,6 +1242,17 @@
    "fieldtype": "Link",
    "label": "Plumber",
    "options": "Employee"
+  },
+  {
+   "fieldname": "crc_approver_detail_section",
+   "fieldtype": "Section Break",
+   "label": "CRC Approver Detail"
+  },
+  {
+   "fieldname": "crc_approval",
+   "fieldtype": "Link",
+   "label": "CRC Approval",
+   "options": "Employee"
   }
  ],
  "icon": "fa fa-building",
@@ -1248,7 +1260,7 @@
  "image_field": "company_logo",
  "is_tree": 1,
  "links": [],
- "modified": "2026-04-26 22:12:32.676916",
+ "modified": "2026-05-14 11:23:03.771064",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",

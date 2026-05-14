@@ -4,6 +4,13 @@
 frappe.provide("erpnext.accounts");
 
 frappe.ui.form.on("Cost Center", {
+	setup:function(frm){
+		frm.set_query("warehouse", function (doc) {
+			return {
+				filters: { company: doc.company },
+			};
+		});
+	},
 	onload: function (frm) {
 		frm.set_query("parent_cost_center", function () {
 			return {

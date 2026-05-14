@@ -57,12 +57,12 @@ def get_columns():
 			"fieldtype": "Currency",
 			"width": 120
 		},
-		{
-			"label": "Committed",
-			"fieldname": "committed",
-			"fieldtype": "Currency",
-			"width": 120
-		},
+		# {
+		# 	"label": "Committed",
+		# 	"fieldname": "committed",
+		# 	"fieldtype": "Currency",
+		# 	"width": 120
+		# },
 		{
 			"label": "Consumed",
 			"fieldname": "consumed",
@@ -135,12 +135,12 @@ def get_data(filters):
 			if budgets:
 				row = budgets[0]
 
-				approved_budget = row[0] or 0
-				reappropiation_received = row[1] or 0
-				reappropiation_sent = row[2] or 0
-				supplementary_received = row[3] or 0
-				activity_link = row[4]
-				initial_approved_budget = row[5] 
+				approved_budget = (row[0]*1000000) or 0
+				reappropiation_received = (row[1]*1000000) or 0
+				reappropiation_sent = (row[2]*1000000) or 0
+				supplementary_received = (row[3]*1000000) or 0
+				activity_link = (row[4]*1000000)
+				initial_approved_budget = (row[5]*1000000)
 			else:
 				approved_budget = 0
 				reappropiation_received = 0
@@ -153,20 +153,20 @@ def get_data(filters):
 
 			from_date = f"{from_year}-01-01"
 			to_date = f"{end_year}-12-31"
-			committed = frappe.db.sql("""
-				SELECT SUM(amount)
-				FROM `tabCommitted Budget`
-				WHERE company = %s
-				AND reference_date BETWEEN %s AND %s
-				AND business_activity = %s
-			""", (
-				college,
-				from_date,
-				to_date,
-				i.activities
-			))[0][0]
+			# committed = frappe.db.sql("""
+			# 	SELECT SUM(amount)
+			# 	FROM `tabCommitted Budget`
+			# 	WHERE company = %s
+			# 	AND reference_date BETWEEN %s AND %s
+			# 	AND business_activity = %s
+			# """, (
+			# 	college,
+			# 	from_date,
+			# 	to_date,
+			# 	i.activities
+			# ))[0][0]
 
-			committed = flt(committed)
+			# committed = flt(committed)
 
 			# frappe.throw(str(i.activities))
 
@@ -192,7 +192,7 @@ def get_data(filters):
 			i['reappropiation_sent'] = reappropiation_sent
 			i['supplementary_received'] = supplementary_received
 			i['current'] = current
-			i['committed'] = committed
+			# i['committed'] = committed
 			i['consumed'] = consumed
 			i['available'] = available
 

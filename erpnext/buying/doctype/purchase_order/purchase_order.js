@@ -67,6 +67,13 @@ frappe.ui.form.on("Purchase Order", {
 				filters: { company: doc.company },
 			};
 		});
+		frm.set_query("activity", function () {
+			return {
+				filters: { college: frm.doc.company },
+			};
+		});
+
+		
 
 		if (!frm.doc.branch && frm.doc.company) {
 			frappe.db.get_list("Branch", {
@@ -262,31 +269,6 @@ frappe.ui.form.on("Purchase Order", {
 			return;
 		}
 
-		if (!frm.doc.company) {
-			frappe.msgprint(__('Please select a Company first.'));
-			frm.set_value("taxes_and_charges", null);
-			return;
-		}
-		// setTimeout(async () => {
-		// 	if (!frm.doc.taxes || frm.doc.taxes.length === 0) return;
-		// 	for (let row of frm.doc.taxes) {
-		// 		if (!row.account_head) continue;
-		// 		let base_name = row.account_head.split(' - ')[0].trim();
-		// 		const accounts = await frappe.db.get_list("Account", {
-		// 			fields: ["name"],
-		// 			filters: {
-		// 				company: frm.doc.company,
-		// 				account_name: ["like", `%${base_name}%`]
-		// 			},
-		// 			limit: 1
-		// 		});
-
-		// 		if (accounts.length > 0) {
-		// 			row.account_head = accounts[0].name;
-		// 		}
-		// 	}
-		// 	frm.refresh_field("taxes");
-		// }, 200);
 	}
 });
 // cur_frm.fields_dict["items"].grid.get_field("expense_account").get_query = function (doc, cdt, cdn) {

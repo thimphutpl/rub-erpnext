@@ -20,13 +20,30 @@ def sync_child_account():
     #          print(str(count)+". "+acc.rub_account)
     #          count += 1
 
-    for acc in frappe.db.sql(""" SELECT name AS rub_account FROM `tabAccount`  WHERE company = 'Royal University of Bhutan'
+    for acc in frappe.db.sql(""" SELECT name AS rub_account FROM `tabAccount`  WHERE company = 'Royal University of Bhutan' and is_group=0 and parent_account is not NULL
              """, as_dict=1):
-             doc = frappe.get_doc("Account", acc.rub_account)
-             doc.validate_account_currency()
-             doc.validate_root_company_and_sync_account_to_children()
-             print(str(count)+". "+acc.rub_account)
-             count += 1
+        doc = frappe.get_doc("Account", acc.rub_account)
+        doc1 = frappe.copy_doc(doc)
+        doc1.flags.ignore_root_company_validation = True
+        doc1.flags.ignore_mandatory = True
+        doc1.update(
+        {
+            "company": "Gedu College of Business Studies",
+            "name": None,
+            
+        }
+        
+        )
+        doc1.parent_account = doc1.parent_account.replace(" - RUB", " - GCBS")
+        #doc1.insert(ignore_permissions=True)
+
+        
+        #  doc.validate_account_currency()
+        #  doc.validate_root_company_and_sync_account_to_children()
+        doc1.save()
+        print(str(count)+". "+acc.rub_account)
+        count += 1
+        #  frappe.db.commit()
 
 def notify_user_on_desk():
     """

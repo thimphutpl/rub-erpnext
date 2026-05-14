@@ -35,6 +35,7 @@ class PurchaseReceipt(BuyingController):
 		from erpnext.stock.doctype.purchase_receipt_item.purchase_receipt_item import PurchaseReceiptItem
 		from frappe.types import DF
 
+		activity: DF.Link | None
 		actual_receipt_date: DF.Date
 		additional_discount_percentage: DF.Float
 		address_display: DF.SmallText | None
@@ -432,14 +433,15 @@ class PurchaseReceipt(BuyingController):
 		self.make_bundle_for_sales_purchase_return()
 		self.make_bundle_using_old_serial_batch_fields()
 		supplier_type = frappe.db.get_value("Supplier",self.supplier,"Country")
-		if supplier_type != "Bhutan":
-			self.make_tax_payment() 
+		 
 		self.update_stock_ledger()
 		self.make_gl_entries()
 		self.repost_future_sle_and_gle()
 		self.set_consumed_qty_in_subcontract_order()
 		self.reserve_stock_for_sales_order()
 		self.update_asset_receive_entries()
+		if supplier_type != "Bhutan":
+			self.make_tax_payment()
 
 	def check_next_docstatus(self):
 		submit_rv = frappe.db.sql(
@@ -1097,83 +1099,115 @@ class PurchaseReceipt(BuyingController):
 			.where(sle_table.voucher_no == self.name)
 			.where(sle_table.voucher_type == "Purchase Receipt")
 		).run()
-	def make_tax_payment(source_name, target_doc=None, args=None):
-		supplier = frappe.db.get_value("Supplier",source_name.supplier,'supplier_type')
+	def make_tax_payment(self):
+		supplier = frappe.db.get_value("Supplier",self.supplier,'supplier_type')
 		if supplier == "Domestic Vendor":
 			return
-		def set_missing_values(source, target):
-			target.posting_date = source_name.posting_date
-			gst_input_account = None
-			cost_center = source_name.cost_center
+		je = frappe.new_doc("Journal Entry")
+		je.title = self.name
+		je.voucher_type = 'Journal Entry'
+		je.naming_series = 'Journal Voucher'
+		je.remark = 'Payment against : ' + self.name
+		je.activity = self.activity
+		je.posting_date = self.posting_date
+		je.company = self.company
+		je.branch = self.branch
+
+		for tax in self.taxes:
+			if tax.is_gst == 0:
+				je.append("accounts", {
+					"account": tax.account_head,
+					"reference_type": "Purchase Receipt",
+					"reference_name": self.name,
+					"cost_center": self.cost_center,
+					"credit_in_account_currency": flt(tax.base_tax_amount_after_discount_amount),
+					"credit": flt(tax.base_tax_amount_after_discount_amount),
+				
+				})
+				je.append("accounts", {
+					"account": tax.account_head,
+					"reference_type": "Purchase Receipt",
+					"reference_name": self.name,
+					"cost_center": self.cost_center,
+					"debit_in_account_currency": flt(tax.base_tax_amount_after_discount_amount),
+					"debit": flt(tax.base_tax_amount_after_discount_amount),
+				})
 			
-			for tax in source_name.taxes:
-				if tax.is_gst == 1:
-					gst_input_account = tax.account_head		
-			bank_account = frappe.db.get_value("Branch", source_name.branch, "expense_bank_account")
-			gst_amount = total_charges = 0
-			post_gst_jv = 0
-			party_type = "Supplier"
-			target.branch = source_name.branch
-			party = source_name.supplier
-			target.tax_payment_jv = 1
-			target.purchase_receipt = source_name.name
-			target.voucher_type = 'Bank Entry'
-			target.naming_series = 'Bank Payment Voucher'
-			for tax in source_name.taxes:
-				if tax.is_gst == 0:
-					custom_row = target.append("accounts")
-					custom_row.account = tax.account_head
-					custom_row.debit = flt(tax.base_tax_amount_after_discount_amount,2)
-					custom_row.debit_in_account_currency = flt(tax.base_tax_amount_after_discount_amount,2)
-					custom_row.cost_center = cost_center
-					custom_row.reference_type = "Purchase Receipt"
-					custom_row.reference_name = source_name.name
-					total_charges += tax.base_tax_amount_after_discount_amountf
-				else:
+			je.save()
+			frappe.db.commit()	
+		# def set_missing_values(source, target):
+		# 	target.posting_date = source_name.posting_date
+		# 	gst_input_account = None
+		# 	cost_center = source_name.cost_center
+			
+		# 	for tax in source_name.taxes:
+		# 		if tax.is_gst == 1:
+		# 			gst_input_account = tax.account_head		
+		# 	bank_account = frappe.db.get_value("Branch", source_name.branch, "expense_bank_account")
+		# 	gst_amount = total_charges = 0
+		# 	post_gst_jv = 0
+		# 	party_type = "Supplier"
+		# 	target.branch = source_name.branch
+		# 	party = source_name.supplier
+		# 	target.tax_payment_jv = 1
+		# 	target.purchase_receipt = source_name.name
+		# 	target.voucher_type = 'Bank Entry'
+		# 	target.naming_series = 'Bank Payment Voucher'
+		# 	for tax in source_name.taxes:
+		# 		if tax.is_gst == 0:
+		# 			custom_row = target.append("accounts")
+		# 			custom_row.account = tax.account_head
+		# 			custom_row.debit = flt(tax.base_tax_amount_after_discount_amount,2)
+		# 			custom_row.debit_in_account_currency = flt(tax.base_tax_amount_after_discount_amount,2)
+		# 			custom_row.cost_center = cost_center
+		# 			custom_row.reference_type = "Purchase Receipt"
+		# 			custom_row.reference_name = source_name.name
+		# 			total_charges += tax.base_tax_amount_after_discount_amount
+		# 		else:
 					
-					gst_amount += tax.base_tax_amount_after_discount_amount
-					cost_center = tax.cost_center if tax.cost_center else cost_center
-					party_type = tax.party_type if tax.party_type else party_type
-					party = tax.party if tax.party else party
-					total_charges += tax.base_tax_amount_after_discount_amount
-			gst_row = target.append("accounts")
-			gst_row.account = gst_input_account
-			gst_row.party_type = party_type
-			gst_row.debit = flt(gst_amount,2)
-			gst_row.debit_in_account_currency = flt(gst_amount,2)
-			gst_row.cost_center = source_name.cost_center
-			gst_row.reference_type = "Purchase Receipt"
-			gst_row.reference_name = source_name.name
-			bank_row = target.append("accounts")
-			bank_row.account = bank_account
-			bank_row.credit = flt(total_charges,2)
-			bank_row.credit_in_account_currency = flt(total_charges,2)
-			bank_row.cost_center = source_name.cost_center
-			bank_row.reference_type = "Purchase Receipt"
-			bank_row.reference_name = source_name.name
+		# 			gst_amount += tax.base_tax_amount_after_discount_amount
+		# 			cost_center = tax.cost_center if tax.cost_center else cost_center
+		# 			party_type = tax.party_type if tax.party_type else party_type
+		# 			party = tax.party if tax.party else party
+		# 			total_charges += tax.base_tax_amount_after_discount_amount
+		# 	# gst_row = target.append("accounts")
+		# 	# gst_row.account = gst_input_account
+		# 	# gst_row.party_type = party_type
+		# 	# gst_row.debit = flt(gst_amount,2)
+		# 	# gst_row.debit_in_account_currency = flt(gst_amount,2)
+		# 	# gst_row.cost_center = source_name.cost_center
+		# 	# gst_row.reference_type = "Purchase Receipt"
+		# 	# gst_row.reference_name = source_name.name
+		# 	# bank_row = target.append("accounts")
+		# 	# bank_row.account = bank_account
+		# 	# bank_row.credit = flt(total_charges,2)
+		# 	# bank_row.credit_in_account_currency = flt(total_charges,2)
+		# 	# bank_row.cost_center = source_name.cost_center
+		# 	# bank_row.reference_type = "Purchase Receipt"
+		# 	# bank_row.reference_name = source_name.name
 
 
-		doclist = get_mapped_doc(
-			"Purchase Receipt",
-			source_name,
-			{
-				"Purchase Receipt": {
-					"doctype": "Journal Entry",
-					"posting_date":source_name.posting_date,
-					"validation": {
-						"docstatus": ["=", 1],
-					},
-				},
-			},
-			target_doc,
-			set_missing_values,
-		)
+		# doclist = get_mapped_doc(
+		# 	"Purchase Receipt",
+		# 	source_name,
+		# 	{
+		# 		"Purchase Receipt": {
+		# 			"doctype": "Journal Entry",
+		# 			"posting_date":source_name.posting_date,
+		# 			"validation": {
+		# 				"docstatus": ["=", 0],
+		# 			},
+		# 		},
+		# 	},
+		# 	target_doc,
+		# 	set_missing_values,
+		# )
 		
 	
-		doclist.save()
-		frappe.db.set_value("Purchase Receipt", source_name.name, "journal_no", doclist.name)
+		# doclist.save()
+		# frappe.db.set_value("Purchase Receipt", source_name.name, "journal_no", doclist.name)
 		
-		return doclist
+		# return doclist
 
 def get_stock_value_difference(voucher_no, voucher_detail_no, warehouse):
 	return frappe.db.get_value(

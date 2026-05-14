@@ -28,8 +28,10 @@
   "company",
   "is_return",
   "return_against",
+  "activity",
   "accounting_dimensions_section",
   "cost_center",
+  "column_break_pnfd",
   "dimension_col_break",
   "project",
   "currency_and_price_list",
@@ -1369,14 +1371,24 @@
    "fieldtype": "Link",
    "label": "Journal No",
    "options": "Journal Entry"
+  },
+  {
+   "fieldname": "column_break_pnfd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "activity",
+   "fieldtype": "Link",
+   "label": "Activity",
+   "options": "Planning Activities"
   }
  ],
  "icon": "fa fa-truck",
  "idx": 261,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-26 16:48:54.225986",
- "modified_by": "sangay.choden@thimphutechpark.bt",
+ "modified": "2026-05-07 10:28:07.378619",
+ "modified_by": "Administrator",
  "module": "Stock",
  "name": "Purchase Receipt",
  "naming_rule": "By \"Naming Series\" field",

@@ -302,6 +302,7 @@ has_website_permission = {
 
 permission_query_conditions = {
 	"Employee": "erpnext.setup.doctype.employee.employee.get_permission_query_conditions",
+	"Asset": "erpnext.assets.doctype.asset.asset.get_permission_query_conditions",
 	"Hostel Allocation Bulk Upload": "erpnext.hostel_management.doctype.hostel_allocation_bulk_upload.hostel_allocation_bulk_upload.get_permission_query_conditions",
 	"Hostel Room": "erpnext.hostel_management.doctype.hostel_room.hostel_room.get_permission_query_conditions",
 	"Hostel Change Application": "erpnext.hostel_management.doctype.hostel_change_application.hostel_change_application.get_permission_query_conditions",

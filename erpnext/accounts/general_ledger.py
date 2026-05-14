@@ -404,7 +404,7 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 			
 				if not args.is_cancelled:
 					#Commit Budget
-					frappe.throw(frappe.as_json(args))
+					# frappe.throw(frappe.as_json(args))
 					bud_obj = frappe.get_doc({
 						"doctype": "Committed Budget",
 						"account": args.account,
@@ -821,12 +821,16 @@ def validate_against_planning_activities(args):
 		if not budget_amount or  flt(budget_amount) == 0:
 			frappe.throw("Budget not set for Activity")
 
-		if total_expense > budget_amount and args.against_voucher_type not in ("Asset Movement", "Asset Value Adjustment"):
+		million_in_budget = budget_amount * 1000000
+
+		if total_expense > million_in_budget  and args.against_voucher_type not in ("Asset Movement", "Asset Value Adjustment"):
 			frappe.throw("Expense exceeded the allocated Budget")
 
 def get_budget_amount(self):
 	posting_date = self.posting_date
-	posting_year =getdate(posting_date).year 
+	# posting_year =getdate(posting_date).year 
+
+	# frappe.throw(str())
 	# result = frappe.db.sql(
 	# 	"""
 	# 	SELECT apa.approved_budget
@@ -841,6 +845,7 @@ def get_budget_amount(self):
 	# 	(self.activity, self.company, posting_year),
 	# )
 	# frappe.throw(str(self.activity))
+	# activity_name = frappe.db.get_value("Planning Activities",self.activity,'activities')
 	result = frappe.db.sql(
 		"""
 		select api.approved_budget from 
@@ -849,11 +854,11 @@ def get_budget_amount(self):
 		WHERE api.activity_link = %s
 		  AND ab.docstatus = 1
 		  AND ab.college = %s
-		  AND ab.fiscal_year = %s
+		  AND %s between ab.from_date and ab.to_date
 		""",
-		(self.activity, self.company, posting_year),
+		(self.activity, self.company, posting_date),
 	)
-	# frappe.throw(str(result))
+	
 
 	return flt(result[0][0]) if result and result[0][0] else 0
 

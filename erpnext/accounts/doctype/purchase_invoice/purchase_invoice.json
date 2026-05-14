@@ -44,6 +44,8 @@
   "imprest_party",
   "accounting_dimensions_section",
   "cost_center",
+  "column_break_hiyo",
+  "activity",
   "dimension_col_break",
   "project",
   "currency_and_price_list",
@@ -1781,13 +1783,23 @@
    "fieldtype": "Select",
    "label": "LD Percentage",
    "options": "\n0.0010\n0.0009\n0.0008\n0.0007\n0.0006\n0.0005"
+  },
+  {
+   "fieldname": "column_break_hiyo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "activity",
+   "fieldtype": "Link",
+   "label": "Activity",
+   "options": "Approved Budget"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 204,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-20 15:48:29.230634",
+ "modified": "2026-05-06 10:30:50.015254",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Purchase Invoice",

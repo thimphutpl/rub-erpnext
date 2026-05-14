@@ -19,6 +19,7 @@
   "process_deferred_accounting",
   "reversal_of",
   "activity",
+  "activity_name",
   "column_break1",
   "mode_of_payment",
   "from_template",
@@ -661,6 +662,13 @@
    "fieldtype": "Link",
    "label": "Activity",
    "options": "Planning Activities"
+  },
+  {
+   "fetch_from": "activity.activities",
+   "fieldname": "activity_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Activity Name"
   }
  ],
  "icon": "fa fa-file-text",
@@ -675,8 +683,8 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2026-01-14 11:47:12.425866",
- "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "modified": "2026-04-28 20:08:27.196065",
+ "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Journal Entry",
  "naming_rule": "By \"Naming Series\" field",

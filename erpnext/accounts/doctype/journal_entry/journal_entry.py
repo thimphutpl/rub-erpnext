@@ -52,6 +52,7 @@ class JournalEntry(AccountsController):
 
 		accounts: DF.Table[JournalEntryAccount]
 		activity: DF.Link | None
+		activity_name: DF.Data | None
 		amended_from: DF.Link | None
 		apply_tds: DF.Check
 		auto_repeat: DF.Link | None
