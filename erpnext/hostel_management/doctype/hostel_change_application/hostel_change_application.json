@@ -11,10 +11,10 @@
   "applied_by",
   "cid_number",
   "first_name",
-  "last_name",
   "column_break_whpb",
-  "posting_date",
   "fiscal_year",
+  "posting_date",
+  "last_name",
   "change_details_section",
   "current_room",
   "hostel_type",
@@ -222,8 +222,7 @@
    "fieldname": "hostel_check_in_form",
    "fieldtype": "Link",
    "label": "Hostel Check-In Form",
-   "options": "Hostel Check-In Form",
-   "reqd": 1
+   "options": "Hostel Check-In Form"
   },
   {
    "fieldname": "column_break_enaj",
@@ -250,7 +249,7 @@
    "fieldname": "fiscal_year",
    "fieldtype": "Link",
    "label": "Student Year",
-   "options": "Year",
+   "options": "Fiscal Year",
    "reqd": 1
   },
   {
@@ -266,7 +265,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-29 10:47:40.940233",
+ "modified": "2026-05-18 00:59:09.557161",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Change Application",

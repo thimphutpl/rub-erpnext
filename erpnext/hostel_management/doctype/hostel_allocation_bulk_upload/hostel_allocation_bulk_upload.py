@@ -471,6 +471,8 @@ def get_students(year, gender, company):
         filters=filters,
         fields=["name", "first_name", "middle_name", "last_name", "gender", "cid", "catering_type", "scholarship_type", "status" ]
     )
+    if not students:
+        frappe.throw(str("Please set Year in Student List"))
 
     return students
 

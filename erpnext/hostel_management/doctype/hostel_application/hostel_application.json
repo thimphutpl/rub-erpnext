@@ -57,6 +57,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "student_code.year",
    "fieldname": "fiscal_year",
    "fieldtype": "Link",
    "label": "Student Year",
@@ -132,7 +133,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-29 10:40:21.779024",
+ "modified": "2026-05-18 00:09:36.463207",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Application",
