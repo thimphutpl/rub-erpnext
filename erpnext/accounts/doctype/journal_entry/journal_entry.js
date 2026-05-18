@@ -280,6 +280,7 @@ frappe.ui.form.on("Journal Entry", {
 	},
 
 	apply_tds: function(frm){
+
 		$.each(frm.doc.accounts || [], function(i, row) {
 			if(row.add_deduct_tax){
 				frappe.model.set_value(row.doctype, row.name, "apply_tds", cint(frm.doc.apply_tds));
@@ -389,7 +390,7 @@ var draw_tds_table = function(frm){
 	if(is_tds)$(cur_frm.fields_dict.tds_table.wrapper).html('<table class="table table-bordered">'+row+'</table>');
 	else $(cur_frm.fields_dict.tds_table.wrapper).html('');
 
-	// frm.refresh_field("tds_table")
+	 frm.refresh_field("tds_table")
 }
 
 var update_jv_details = function (doc, r) {

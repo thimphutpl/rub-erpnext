@@ -948,19 +948,26 @@ class JournalEntry(AccountsController):
 			# self.total_credit = flt(self.total_credit) + flt(d.credit, d.precision("credit"))
 
 			if cint(self.apply_tds) and cint(d.apply_tds) and d.add_deduct_tax:
+				#frappe.throw("hi")
 				tax_amount = flt(d.tax_amount)
 				if(d.add_deduct_tax == "Add"):
+					
 					tax_cr = tax_amount if flt(d.credit) else 0
 					tax_dr = tax_amount if flt(d.debit) else 0
 				else:
+					
 					tax_dr = tax_amount if flt(d.credit) else 0
 					tax_cr = tax_amount if flt(d.debit) else 0
+			# taxc=tax_cr
+			# if cint(self.apply_tds) and not cint(d.apply_tds) and not d.add_deduct_tax:
+			# 	frappe.throw(str(taxc))	
 			self.total_debit = flt(self.total_debit) + flt(d.debit, d.precision("debit")) + flt(tax_dr)
 			self.total_credit = flt(self.total_credit) + flt(d.credit, d.precision("credit")) + flt(tax_cr)
 
 		self.difference = flt(self.total_debit, self.precision("total_debit")) - flt(
 			self.total_credit, self.precision("total_credit")
 		)
+		
 
 	def validate_multi_currency(self):
 		alternate_currency = []
@@ -1911,7 +1918,7 @@ def make_reverse_journal_entry(source_name, target_doc=None):
 	return doclist
 
 @frappe.whitelist()
-def get_tds_account(tax_withholding_category,company):
+def get_tds_account(company):
 	
 	# account = frappe.db.sql("""select t.name,
 	# 		ifnull((select tax_withholding_rate
@@ -1946,11 +1953,11 @@ def get_tds_account(tax_withholding_category,company):
 		INNER JOIN `tabTax Withholding Account` twa ON twc.name = twa.parent 
 
 		WHERE 
-		twc.name = '{}' 
-		AND twa.company = '{}';
+ 
+		twa.company = '{}';
 
 
-	""".format(tax_withholding_category,company), as_dict=True)
+	""".format(company), as_dict=True)
 	# frappe.throw(str(account[0]))
 	return account[0] if account else None
 
