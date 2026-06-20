@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"QUSRVhMMzg\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">PMS(APA)</span>\",\"col\":12}},{\"id\":\"jP20YEuCJS\",\"type\":\"card\",\"data\":{\"card_name\":\"Master Data\",\"col\":4}},{\"id\":\"7lq5cNxXFo\",\"type\":\"card\",\"data\":{\"card_name\":\"PMS Transaction\",\"col\":4}},{\"id\":\"BhjDXKh_0E\",\"type\":\"card\",\"data\":{\"card_name\":\"PMS Setting\",\"col\":4}}]",
+ "content": "[{\"id\":\"QUSRVhMMzg\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Performance Management System (PMS)</span>\",\"col\":12}},{\"id\":\"jP20YEuCJS\",\"type\":\"card\",\"data\":{\"card_name\":\"Master Data\",\"col\":4}},{\"id\":\"7lq5cNxXFo\",\"type\":\"card\",\"data\":{\"card_name\":\"PMS Transaction\",\"col\":4}},{\"id\":\"BhjDXKh_0E\",\"type\":\"card\",\"data\":{\"card_name\":\"PMS Setting\",\"col\":4}}]",
  "creation": "2025-07-24 20:20:38.264828",
  "custom_blocks": [],
  "docstatus": 0,
@@ -11,7 +11,7 @@
  "idx": 0,
  "indicator_color": "",
  "is_hidden": 0,
- "label": "PMS(APA)",
+ "label": "PMS",
  "links": [
   {
    "hidden": 0,
@@ -151,10 +151,10 @@
    "type": "Link"
   }
  ],
- "modified": "2026-04-25 15:33:44.638655",
- "modified_by": "Administrator",
+ "modified": "2026-06-08 12:04:32.321099",
+ "modified_by": "mon.chhetri@thimphutechpark.bt",
  "module": "PMS",
- "name": "PMS(APA)",
+ "name": "PMS",
  "number_cards": [],
  "owner": "pralad.rai@thimphutechpark.bt",
  "parent_page": "",
@@ -163,5 +163,5 @@
  "roles": [],
  "sequence_id": 24.0,
  "shortcuts": [],
- "title": "PMS(APA)"
+ "title": "PMS"
 }

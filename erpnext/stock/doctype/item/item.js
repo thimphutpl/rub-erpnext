@@ -8,6 +8,7 @@ const PURCHASE_DOCTYPES = ["Purchase Order", "Purchase Receipt", "Purchase Invoi
 
 frappe.ui.form.on("Item", {
 	setup: function (frm) {
+		frm.set_df_property("item_code", "reqd", 0);
 		frm.add_fetch("attribute", "numeric_values", "numeric_values");
 		frm.add_fetch("attribute", "from_range", "from_range");
 		frm.add_fetch("attribute", "to_range", "to_range");
@@ -226,16 +227,17 @@ frappe.ui.form.on("Item", {
 	// },
 
 
-	item_group: function(frm) {
-        if (frm.doc.item_group === 'Fixed Asset') {
-            frm.set_value("is_fixed_asset", 1);
-            frm.set_value("is_stock_item", 0);
-            frm.set_value("is_service_item", 0);
-        } else if (frm.doc.item_group === 'Service') {
-            frm.set_value("is_service_item", 1);
-            frm.set_value("is_fixed_asset", 0);
-        }
-    },
+	// item_group: function(frm) {
+    //     if (frm.doc.item_group === 'Fixed Asset') {
+    //         frm.set_value("is_fixed_asset", 1);
+    //         frm.set_value("is_stock_item", 0);
+    //         frm.set_value("is_service_item", 0);
+    //     } else if (frm.doc.item_group === 'Service') {
+    //         frm.set_value("is_service_item", 1);
+    //         frm.set_value("is_fixed_asset", 0);
+    //     }
+    // },
+
 	// is_fixed_asset: function (frm) {
 	// 	// set serial no to false & toggles its visibility
 	// 	frm.set_value("has_serial_no", 0);
@@ -244,11 +246,16 @@ frappe.ui.form.on("Item", {
 
 	// 	frappe.call({
 	// 		method: "erpnext.stock.doctype.item.item.get_asset_naming_series",
-	// 		callback: function (r) {
+	// 		callback: function (r) {s
 	// 			frm.set_value("is_stock_item", frm.doc.is_fixed_asset ? 0 : 1);
 	// 			frm.events.set_asset_naming_series(frm, r.message);
 	// 		},
-	// 	});
+	UPDATE `tabGL Entry` 
+SET posting_date = '2026-06-02' 
+WHERE name IN (
+    '491ed9166f',
+    'bfd9fb9827'
+);// 	});
 
 	// 	frm.trigger("auto_create_assets");
 	// },

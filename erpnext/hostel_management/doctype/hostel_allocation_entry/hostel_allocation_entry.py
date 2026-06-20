@@ -18,7 +18,7 @@ class HostelAllocationEntry(Document):
 		catering_type: DF.Literal["", "Mess Services", "Self-Catering", "Day Scholar"]
 		current_hostel_room: DF.Link | None
 		current_hostel_type: DF.Link | None
-		hostel_change_type: DF.Literal["", "Swap", "Room Transfer", "Day Scholar"]
+		hostel_change_type: DF.Literal["", "Room Swap", "Room Transfer", "Day Scholar"]
 		hostel_room: DF.Link | None
 		hostel_type: DF.Link | None
 		posting_date: DF.Date | None

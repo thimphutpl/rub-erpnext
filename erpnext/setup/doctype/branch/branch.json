@@ -17,7 +17,8 @@
   "accounts_settings_section",
   "expense_bank_account",
   "column_break_yvba",
-  "revenue_bank_account"
+  "revenue_bank_account",
+  "amended_from"
  ],
  "fields": [
   {
@@ -83,12 +84,23 @@
    "fieldtype": "Link",
    "label": "Holiday List",
    "options": "Holiday List"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Branch",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "icon": "fa fa-code-fork",
  "idx": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-03-30 11:51:25.864209",
+ "modified": "2026-05-18 15:25:03.539351",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Branch",
@@ -117,7 +129,6 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",

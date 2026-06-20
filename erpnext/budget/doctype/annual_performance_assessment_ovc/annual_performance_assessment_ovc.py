@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class APATargetOutcomeItem(Document):
+class AnnualPerformanceAssessmentOVC(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,15 +14,6 @@ class APATargetOutcomeItem(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		justification: DF.SmallText | None
-		outcome: DF.Data | None
-		parent: DF.Data
-		parentfield: DF.Data
-		parenttype: DF.Data
-		remarks: DF.SmallText | None
-		status: DF.Link | None
-		target: DF.Data | None
-		unit: DF.Link | None
-		weightage: DF.Percent
+		amended_from: DF.Link | None
 	# end: auto-generated types
 	pass

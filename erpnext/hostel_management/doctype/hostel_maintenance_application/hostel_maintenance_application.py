@@ -31,7 +31,7 @@ class HostelMaintenanceApplication(Document):
 		description_of_maintenance: DF.SmallText | None
 		first_name: DF.Data | None
 		fiscal_year: DF.Link
-		focal_type: DF.Literal["", "Plumber", "Electrician", "Mason", "Carpenter"]
+		focal_type: DF.Literal["", "Plumber", "Electrician", "Mason", "Carpenter", "Technician"]
 		full_name: DF.Data | None
 		hostel_check_in_form: DF.Link | None
 		hostel_check_out_form: DF.Link | None
@@ -60,7 +60,8 @@ class HostelMaintenanceApplication(Document):
 				"Plumber": "plumber",
 				"Electrician": "electrician",
 				"Mason": "mason",
-				"Carpenter": "carpenter"
+				"Carpenter": "carpenter",
+				"Technician": "technician"
 			}
 			
 			focal_field = focal_field_map.get(self.focal_type)

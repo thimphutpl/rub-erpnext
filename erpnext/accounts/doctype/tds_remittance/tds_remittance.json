@@ -7,6 +7,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "company",
   "purpose",
   "branch",
   "from_date",
@@ -14,7 +15,6 @@
   "clearance_date",
   "cb_3",
   "cost_center",
-  "company",
   "posting_date",
   "default_region_cost_center",
   "based_on_region",
@@ -188,7 +188,7 @@
   {
    "fieldname": "company",
    "fieldtype": "Link",
-   "label": "Company",
+   "label": "College",
    "options": "Company",
    "reqd": 1
   },
@@ -266,7 +266,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-25 15:52:10.790656",
+ "modified": "2026-05-18 15:03:26.863969",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "TDS Remittance",

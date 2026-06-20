@@ -606,13 +606,15 @@ class JournalEntry(AccountsController):
 	def validate_party(self):
 		for d in self.get("accounts"):
 			account_type = frappe.get_cached_value("Account", d.account, "account_type")
-			if account_type in ["Receivable", "Payable"]:
-				if not (d.party_type and d.party):
-					frappe.throw(
-						_(
-							"Row {0}: Party Type and Party is required for Receivable / Payable account {1}"
-						).format(d.idx, d.account)
-					)
+			pass
+			
+			# if account_type in ["Receivable", "Payable"]:
+			# 	if not (d.party_type and d.party):
+			# 		frappe.throw(
+			# 			_(
+			# 				"Row {0}: Party Type and Party is required for Receivable / Payable account {1}"
+			# 			).format(d.idx, d.account)
+			# 		)
 				# elif (
 				# 	d.party_type
 				# 	and frappe.db.get_value("Party Type", d.party_type, "account_type") != account_type 

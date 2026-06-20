@@ -3,7 +3,22 @@
 
 frappe.ui.form.on("Approved Budget", {
 	refresh(frm) {
-
+        frm.set_query("college", function () {
+            return {
+                filters: {
+                    is_group: 0,
+                },
+            };
+        });
+        if(frm.doc.college){
+            frm.set_query("cost_center", function () {
+                return {
+                    filters: {
+                        company: frm.doc.college,
+                    },
+                };
+            });
+        }
 	},
     setup(frm) {
         frm.set_query("college", function () {
@@ -13,7 +28,27 @@ frappe.ui.form.on("Approved Budget", {
                 },
             };
         });
+        if(frm.doc.college){
+            frm.set_query("cost_center", function () {
+                return {
+                    filters: {
+                        company: frm.doc.college,
+                    },
+                };
+            });
+        }
     },
+    college(frm) {
+        if(frm.doc.college){
+            frm.set_query("cost_center", function () {
+                return {
+                    filters: {
+                        company: frm.doc.college,
+                    },
+                };
+            });
+        }
+    }
 });
 
 frappe.ui.form.on("APA Detail Extra", {

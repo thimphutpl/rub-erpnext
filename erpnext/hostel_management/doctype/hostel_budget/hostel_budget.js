@@ -14,6 +14,20 @@ frappe.ui.form.on("Hostel Budget", {
         if (frm.is_new() && !frm.doc.posting_date) {
             frm.set_value("posting_date", frappe.datetime.get_today());
         }
+        frm.set_query("hostel_councilor", function(){
+			return {
+				filters: {
+					company: frm.doc.college
+				}
+			}
+		});
+        frm.set_query("hostel_block", function(){
+			return {
+				filters: {
+					company: frm.doc.college
+				}
+			}
+		});
     }
 });
 

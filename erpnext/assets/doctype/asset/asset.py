@@ -480,27 +480,82 @@ class Asset(AccountsController):
 			error_message += _("Please do not book expense of multiple assets against one single Asset.")
 			frappe.throw(error_message, title=_("Invalid Gross Purchase Amount"))
 
+	# def make_asset_movement(self):
+	# 	# reference_doctype = "Purchase Receipt" if self.purchase_receipt else "Purchase Invoice"
+	# 	# reference_docname = self.purchase_receipt or self.purchase_invoice
+	# 	# transaction_date = getdate(self.purchase_date)
+	# 	reference_doctype = "Purchase Receipt" if self.purchase_receipt else ""
+	# 	reference_docname = self.purchase_receipt or ""
+	# 	transaction_date = nowdate()
+	# 	if reference_docname:
+	# 		posting_date, posting_time = frappe.db.get_value(
+	# 			reference_doctype, reference_docname, ["posting_date", "posting_time"]
+	# 		)
+	# 		transaction_date = get_datetime(f"{posting_date} {posting_time}")
+	# 	assets = [
+	# 		{
+	# 			"asset": self.name,
+	# 			"asset_name": self.asset_name,
+	# 			"target_cost_center": self.cost_center,
+	# 			"to_employee": self.custodian,
+	# 			"to_custodian_type": self.is_hostel_asset
+	# 		}
+	# 	]
+	# 	asset_movement = frappe.get_doc(
+	# 		{
+	# 			"doctype": "Asset Movement",
+	# 			"assets": assets,
+	# 			"purpose": "Receipt",
+	# 			"company": self.company,
+	# 			"transaction_date": transaction_date,
+	# 			"reference_doctype": reference_doctype,
+	# 			"reference_name": reference_docname,
+	# 			"inter_company_transfer": 0,
+	# 			"to_company": None,
+	# 		}
+	# 	).insert()
+	# 	asset_movement.submit()
 	def make_asset_movement(self):
-		# reference_doctype = "Purchase Receipt" if self.purchase_receipt else "Purchase Invoice"
-		# reference_docname = self.purchase_receipt or self.purchase_invoice
-		# transaction_date = getdate(self.purchase_date)
 		reference_doctype = "Purchase Receipt" if self.purchase_receipt else ""
 		reference_docname = self.purchase_receipt or ""
 		transaction_date = nowdate()
+		
 		if reference_docname:
 			posting_date, posting_time = frappe.db.get_value(
 				reference_doctype, reference_docname, ["posting_date", "posting_time"]
 			)
 			transaction_date = get_datetime(f"{posting_date} {posting_time}")
+		
+		# Determine to_custodian_type
+		to_custodian_type = self.is_hostel_asset
+		
+		# If is_hostel_asset is empty, determine from custodian or set default
+		if not to_custodian_type or to_custodian_type == "":
+			if self.custodian:
+				# Check what type of document custodian is
+				if frappe.db.exists("Employee", self.custodian):
+					to_custodian_type = "Employee"
+				elif frappe.db.exists("Hostel Room", self.custodian):
+					to_custodian_type = "Hostel Room"
+				elif frappe.db.exists("Room", self.custodian):
+					to_custodian_type = "Room"
+				else:
+					# Default to Employee if custodian exists but type unknown
+					to_custodian_type = "Employee"
+			else:
+				# No custodian, default to Employee
+				to_custodian_type = "Employee"
+		
 		assets = [
 			{
 				"asset": self.name,
 				"asset_name": self.asset_name,
 				"target_cost_center": self.cost_center,
 				"to_employee": self.custodian,
-				"to_custodian_type": self.is_hostel_asset
+				"to_custodian_type": to_custodian_type  # Now always has a value
 			}
 		]
+		
 		asset_movement = frappe.get_doc(
 			{
 				"doctype": "Asset Movement",

@@ -70,22 +70,19 @@
    "fetch_from": "student_code.last_name",
    "fieldname": "last_name",
    "fieldtype": "Data",
-   "label": "Last Name",
-   "read_only": 1
+   "label": "Last Name"
   },
   {
    "fetch_from": "student_code.year",
    "fieldname": "year",
    "fieldtype": "Data",
-   "label": "Year",
-   "read_only": 1
+   "label": "Year"
   },
   {
    "fetch_from": "student_code.semester",
    "fieldname": "semester",
    "fieldtype": "Data",
-   "label": "Semester",
-   "read_only": 1
+   "label": "Semester"
   },
   {
    "fieldname": "club_details_section",
@@ -121,8 +118,7 @@
    "fetch_from": "student_code.programme",
    "fieldname": "programme",
    "fieldtype": "Data",
-   "label": "Programme",
-   "read_only": 1
+   "label": "Programme"
   },
   {
    "depends_on": "eval:doc.status=='In Active'",
@@ -135,7 +131,8 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Active\nIn Active"
+   "options": "Active\nIn Active",
+   "read_only_depends_on": "eval:frappe.user.has_role('Student')"
   },
   {
    "fieldname": "from_date",
@@ -148,7 +145,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-26 15:59:54.782247",
+ "modified": "2026-05-21 14:36:32.425755",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Club Membership Application",

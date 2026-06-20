@@ -12,7 +12,9 @@
   "target",
   "column_break_omja",
   "justification",
-  "status"
+  "status",
+  "section_break_zmgy",
+  "remarks"
  ],
  "fields": [
   {
@@ -57,14 +59,23 @@
    "fieldtype": "Link",
    "label": "Status",
    "options": "APA Status"
+  },
+  {
+   "fieldname": "section_break_zmgy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-04-16 09:24:43.666378",
- "modified_by": "Administrator",
+ "modified": "2026-06-02 09:52:01.787816",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
  "module": "Budget",
  "name": "APA Target Outcome Item",
  "owner": "Administrator",

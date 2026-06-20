@@ -16,7 +16,7 @@ class AssetMovementItem(Document):
 		from frappe.types import DF
 
 		asset: DF.Link
-		asset_custodian_type: DF.Link
+		asset_custodian_type: DF.Literal["", "Employee", "Hostel Room", "Room"]
 		asset_name: DF.Data | None
 		company: DF.Link | None
 		from_employee: DF.DynamicLink | None

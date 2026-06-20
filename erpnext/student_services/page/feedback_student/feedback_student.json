@@ -3,8 +3,8 @@
  "creation": "2026-03-16 12:49:52.998662",
  "docstatus": 0,
  "doctype": "Page",
- "idx": 0,
- "modified": "2026-03-16 12:55:33.542381",
+ "idx": 3,
+ "modified": "2026-05-15 14:03:17.892361",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "feedback-student",
@@ -13,6 +13,9 @@
  "roles": [
   {
    "role": "System Manager"
+  },
+  {
+   "role": "Student"
   }
  ],
  "script": null,

@@ -9,7 +9,7 @@
  "hide_custom": 0,
  "icon": "expenses",
  "idx": 0,
- "indicator_color": "green",
+ "indicator_color": "",
  "is_hidden": 0,
  "label": "ePayment",
  "links": [
@@ -24,7 +24,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-03-02 12:54:29.457563",
+ "modified": "2026-06-12 09:43:32.873823",
  "modified_by": "Administrator",
  "module": "ePayment",
  "name": "ePayment",

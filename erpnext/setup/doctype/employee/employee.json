@@ -1216,9 +1216,9 @@
   },
   {
    "fieldname": "staff_category",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "label": "Occupation Group",
-   "options": "\nAcademics\nAdministrative\nTechnical"
+   "options": "Occupation Group"
   },
   {
    "fieldname": "applicant_id",
@@ -1330,8 +1330,8 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2026-05-11 19:09:32.771182",
- "modified_by": "president.sherubtse@rub.edu.bt",
+ "modified": "2026-05-21 09:12:59.764003",
+ "modified_by": "Administrator",
  "module": "Setup",
  "name": "Employee",
  "naming_rule": "By \"Naming Series\" field",

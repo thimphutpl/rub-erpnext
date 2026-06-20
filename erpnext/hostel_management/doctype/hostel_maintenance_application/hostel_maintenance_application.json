@@ -214,6 +214,7 @@
    "fieldtype": "Link",
    "label": "Maintenance Focal",
    "options": "Employee",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -228,6 +229,7 @@
   {
    "fieldname": "check_in_and_out_link_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Check In and Out Link."
   },
   {
@@ -256,6 +258,7 @@
   {
    "fieldname": "check_out_list",
    "fieldtype": "Table",
+   "hidden": 1,
    "label": "Check Out List",
    "options": "Hostel Check Out Item"
   },
@@ -276,7 +279,7 @@
    "fieldname": "focal_type",
    "fieldtype": "Select",
    "label": "Focal Type",
-   "options": "\nPlumber\nElectrician\nMason\nCarpenter",
+   "options": "\nPlumber\nElectrician\nMason\nCarpenter\nTechnician",
    "reqd": 1
   }
  ],
@@ -284,7 +287,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-29 10:53:12.784451",
+ "modified": "2026-06-01 10:29:57.775599",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Maintenance Application",

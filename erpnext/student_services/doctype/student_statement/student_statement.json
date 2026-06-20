@@ -66,9 +66,9 @@
   {
    "fieldname": "disciplinary_issue_type",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Disciplinary Issue Type",
-   "options": "Disciplinary Issue Type",
-   "reqd": 1
+   "options": "Disciplinary Issue Type"
   },
   {
    "fieldname": "verifier_details_section",
@@ -131,7 +131,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-26 16:02:31.040356",
+ "modified": "2026-05-15 14:13:06.496682",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Student Statement",

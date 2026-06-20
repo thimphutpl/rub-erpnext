@@ -365,9 +365,9 @@ def make_payment_entry(source_name, target_doc=None):
 
 	doc = get_mapped_doc("Hostel Maintenance Report", source_name, {
 			"Hostel Maintenance Report": {
-				"doctype": "Payment Entry",
+				"doctype": "Journal Entry",
 				"field_map": {
-					"name": "payment_entry",
+					"name": "journal_entry",
 					"posting_date": "ta_date",
 					"college":"company",
 					"branch":"branch",
@@ -382,8 +382,10 @@ def make_payment_entry(source_name, target_doc=None):
 				"postprocess": update_date,
 				"validation": {"docstatus": ["=", 1]}
 			},
-			"Hostel Asset Maintenance": {
-				"doctype": "Hostel Maintenance Expenses Item",
+			"Hostel Maintenance Report Item": {
+				"doctype": "Journal Entry Account",
+				"amount": "credit_in_account_currency",
+				"journal_no": "name",
 				"postprocess": transfer_currency,
 			},
 			# "Hostel Maintenance Expenses Item": { 

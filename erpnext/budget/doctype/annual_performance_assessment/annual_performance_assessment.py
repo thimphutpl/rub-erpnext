@@ -43,10 +43,11 @@ class AnnualPerformanceAssessment(Document):
 	def validate(self):
 		self.check_college()
 		self.fetch_percentage_calculation()
-		self.calculate_output_rating()
-		self.calculate_outcome_rating()
-		self.calculate_overall_rating()
-	
+		if self.workflow_state == "Waiting Approval":
+			self.calculate_output_rating()
+			self.calculate_outcome_rating()
+			self.calculate_overall_rating()
+
 	def check_college(self):
 		college = frappe.get_value("Annual Performance Assessment", {"college": self.college, "from_year": self.from_year, "to_year": self.to_year, "docstatus": 1}, "name")
 		if college:
@@ -174,6 +175,7 @@ def fetch_output_and_outcome(from_year, to_year, college):
 @frappe.whitelist()
 def calculate_outcome_irt_rating(raw_rating, outcome, unit):
 	outcome_category = None
+	irt_rating = 0
 	if unit == "Percent":
 		outcome_category = frappe.db.sql('''
 			SELECT  
@@ -225,13 +227,17 @@ def calculate_outcome_irt_rating(raw_rating, outcome, unit):
 	elif unit == "Status of Work":
 		new_raw_rating = outcome_category[0].raw_rating
 
-	irt_rating = ((flt(new_raw_rating, 2) - flt(interpolation_categories[0].apa_min, 2)) / (flt(interpolation_categories[0].apa_max, 2) - flt(interpolation_categories[0].apa_min, 2))) * (flt(interpolation_categories[0].pms_max, 2) - flt(interpolation_categories[0].pms_min, 2)) + flt(interpolation_categories[0].pms_min, 2)
+	if unit == "Status of Work":
+		irt_rating = new_raw_rating
+	else:
+		irt_rating = ((flt(new_raw_rating, 2) - flt(interpolation_categories[0].apa_min, 2)) / (flt(interpolation_categories[0].apa_max, 2) - flt(interpolation_categories[0].apa_min, 2))) * (flt(interpolation_categories[0].pms_max, 2) - flt(interpolation_categories[0].pms_min, 2)) + flt(interpolation_categories[0].pms_min, 2)
 
 	return irt_rating
 
 @frappe.whitelist()
 def calculate_output_irt_rating(raw_rating, activity_link, unit, weightage, sub_activity_no = None):
 	output_category = None
+	irt_rating = 0
 	if sub_activity_no:
 		if unit == "Percent":
 			output_category = frappe.db.sql('''
@@ -305,12 +311,15 @@ def calculate_output_irt_rating(raw_rating, activity_link, unit, weightage, sub_
 			SELECT MAX(`max`)
 			FROM `tabOutput Category Item`
 			WHERE parent = %s
-		""", activity_link, pluck=True)
+		""", sub_activity_no if sub_activity_no else activity_link, pluck=True)
 		new_raw_rating = flt(raw_rating, 2)/flt(max_value[0], 2)*100
 	elif unit == "Status of Work":
 		new_raw_rating = output_category[0].raw_rating
 
-	irt_rating = ((flt(new_raw_rating, 2) - flt(interpolation_categories[0].apa_min, 2)) / (flt(interpolation_categories[0].apa_max, 2) - flt(interpolation_categories[0].apa_min, 2))) * (flt(interpolation_categories[0].pms_max, 2) - flt(interpolation_categories[0].pms_min, 2)) + flt(interpolation_categories[0].pms_min, 2)
+	if unit == "Status of Work":
+		irt_rating = new_raw_rating
+	else:
+		irt_rating = ((flt(new_raw_rating, 2) - flt(interpolation_categories[0].apa_min, 2)) / (flt(interpolation_categories[0].apa_max, 2) - flt(interpolation_categories[0].apa_min, 2))) * (flt(interpolation_categories[0].pms_max, 2) - flt(interpolation_categories[0].pms_min, 2)) + flt(interpolation_categories[0].pms_min, 2)
 	
 	weighted_score = irt_rating/100*flt(weightage, 2)
 
@@ -322,6 +331,7 @@ def calculate_output_irt_rating(raw_rating, activity_link, unit, weightage, sub_
 @frappe.whitelist()
 def calculate_extra_output_irt_rating(raw_rating, activity_link, unit, weightage, sub_activity_link = None):
 	output_category = None
+	irt_rating = 0
 	if sub_activity_link:
 		if unit == "Percent":
 			output_category = frappe.db.sql('''
@@ -394,12 +404,15 @@ def calculate_extra_output_irt_rating(raw_rating, activity_link, unit, weightage
 			SELECT MAX(`max`)
 			FROM `tabOutput Category Item`
 			WHERE parent = %s
-		""", activity_link, pluck=True)
+		""", sub_activity_link if sub_activity_link else activity_link, pluck=True)
 		new_raw_rating = flt(raw_rating, 2)/flt(max_value[0], 2)*100
 	elif unit == "Status of Work":
 		new_raw_rating = output_category[0].raw_rating
-
-	irt_rating = ((flt(new_raw_rating, 2) - flt(interpolation_categories[0].apa_min, 2)) / (flt(interpolation_categories[0].apa_max, 2) - flt(interpolation_categories[0].apa_min, 2))) * (flt(interpolation_categories[0].pms_max, 2) - flt(interpolation_categories[0].pms_min, 2)) + flt(interpolation_categories[0].pms_min, 2)
+		
+	if unit == "Status of Work":
+		irt_rating = new_raw_rating
+	else:
+		irt_rating = ((flt(new_raw_rating, 2) - flt(interpolation_categories[0].apa_min, 2)) / (flt(interpolation_categories[0].apa_max, 2) - flt(interpolation_categories[0].apa_min, 2))) * (flt(interpolation_categories[0].pms_max, 2) - flt(interpolation_categories[0].pms_min, 2)) + flt(interpolation_categories[0].pms_min, 2)
 	
 	weighted_score = irt_rating/100*flt(weightage, 2)
 

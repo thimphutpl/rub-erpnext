@@ -139,6 +139,7 @@ class Company(NestedSet):
 		supplier_advance_account_domestic: DF.Link | None
 		supplier_advance_account_international: DF.Link | None
 		tax_id: DF.Data | None
+		technician: DF.Link | None
 		total_monthly_sales: DF.Currency
 		transactions_annual_history: DF.Code | None
 		unrealized_exchange_gain_loss_account: DF.Link | None

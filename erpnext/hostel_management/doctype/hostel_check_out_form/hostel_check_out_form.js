@@ -16,6 +16,13 @@ frappe.ui.form.on("Hostel Check-Out Form", {
 				}
 			}
 		});
+        frm.set_query("hostel_room", function(){
+			return {
+				filters: {
+					"company": frm.doc.college,
+				}
+			}
+		});
         // Add date validation on form load
         validate_posting_date(frm);
 	},

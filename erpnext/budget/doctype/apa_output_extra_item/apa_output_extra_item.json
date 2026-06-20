@@ -19,7 +19,9 @@
   "sub_activity_link",
   "sub_activity",
   "justification",
-  "status"
+  "status",
+  "section_break_lwso",
+  "remarks"
  ],
  "fields": [
   {
@@ -113,14 +115,23 @@
    "fieldtype": "Link",
    "label": "Status",
    "options": "APA Status"
+  },
+  {
+   "fieldname": "section_break_lwso",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-04-16 09:25:45.532811",
- "modified_by": "Administrator",
+ "modified": "2026-06-02 09:53:41.187346",
+ "modified_by": "sonam.bomjan@thimphutechpark.bt",
  "module": "Budget",
  "name": "APA Output Extra Item",
  "owner": "Administrator",

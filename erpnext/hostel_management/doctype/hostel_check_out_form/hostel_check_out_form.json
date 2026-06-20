@@ -7,8 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "hostel_details_section",
-  "student",
   "college",
+  "student",
   "hostel_room",
   "column_break_ujof",
   "fiscal_year",
@@ -55,6 +55,7 @@
   {
    "fieldname": "hostel_room",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "in_list_view": 1,
    "label": "Hostel Room",
    "options": "Hostel Room",
@@ -132,7 +133,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-28 13:51:18.367638",
+ "modified": "2026-05-19 09:36:56.352450",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Check-Out Form",

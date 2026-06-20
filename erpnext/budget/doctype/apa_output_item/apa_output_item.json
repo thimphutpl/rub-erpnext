@@ -123,8 +123,7 @@
   {
    "fieldname": "category",
    "fieldtype": "Data",
-   "label": "Category",
-   "read_only": 1
+   "label": "Category"
   },
   {
    "fieldname": "target",
@@ -173,8 +172,8 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-04-21 15:58:05.193072",
- "modified_by": "mon.chhetri@thimphutechpark.bt",
+ "modified": "2026-05-25 14:26:42.509585",
+ "modified_by": "Administrator",
  "module": "Budget",
  "name": "APA Output Item",
  "owner": "Administrator",

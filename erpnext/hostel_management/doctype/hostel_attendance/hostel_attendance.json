@@ -101,7 +101,7 @@
    "fieldname": "hostel_councillor",
    "fieldtype": "Table",
    "hidden": 1,
-   "label": "Hostel Councillor",
+   "label": "Hostel Councilor",
    "options": "Hostel Councillor Item"
   },
   {
@@ -133,7 +133,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-27 14:52:55.633674",
+ "modified": "2026-05-19 09:40:53.149316",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Attendance",

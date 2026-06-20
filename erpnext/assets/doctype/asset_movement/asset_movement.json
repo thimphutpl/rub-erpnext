@@ -186,9 +186,9 @@
   },
   {
    "fieldname": "asset_custodian_type",
-   "fieldtype": "Link",
+   "fieldtype": "Select",
    "label": "Movement Based On",
-   "options": "DocType"
+   "options": "Employee\nRoom\nHostel Room"
   },
   {
    "depends_on": "eval:doc.to_single == 1 && !doc.to_employee && !doc.to_roombuilding;",
@@ -231,7 +231,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-27 17:12:42.780396",
+ "modified": "2026-05-20 20:33:26.832128",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset Movement",

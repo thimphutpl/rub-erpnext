@@ -29,6 +29,7 @@ class BulkAssetDisposal(Document):
 		item: DF.Table[BulkAssetDisposalItem]
 		journal_entry: DF.Data | None
 		reference: DF.Data | None
+		remarks: DF.SmallText | None
 		sales_invoice: DF.Data | None
 		scrap: DF.Literal["", "Scrap Asset", "Sale Asset"]
 		scrap_date: DF.Date

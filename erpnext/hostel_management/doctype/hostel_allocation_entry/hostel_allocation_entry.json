@@ -75,7 +75,7 @@
    "fieldname": "year",
    "fieldtype": "Link",
    "label": "Year",
-   "options": "Year"
+   "options": "Fiscal Year"
   },
   {
    "fieldname": "catering_type",
@@ -105,13 +105,13 @@
    "fieldname": "hostel_change_type",
    "fieldtype": "Select",
    "label": "Hostel Change Type",
-   "options": "\nSwap\nRoom Transfer\nDay Scholar"
+   "options": "\nRoom Swap\nRoom Transfer\nDay Scholar"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-27 16:35:25.452087",
+ "modified": "2026-05-21 22:29:58.354915",
  "modified_by": "Administrator",
  "module": "Hostel Management",
  "name": "Hostel Allocation Entry",

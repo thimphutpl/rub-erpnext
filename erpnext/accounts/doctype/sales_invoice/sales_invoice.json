@@ -2215,8 +2215,8 @@
    "link_fieldname": "consolidated_invoice"
   }
  ],
- "modified": "2025-10-10 19:00:09.306771",
- "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "modified": "2026-05-19 11:50:24.053023",
+ "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice",
  "naming_rule": "By \"Naming Series\" field",

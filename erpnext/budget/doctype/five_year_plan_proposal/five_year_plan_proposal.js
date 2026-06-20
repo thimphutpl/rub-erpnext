@@ -3,7 +3,10 @@
 
 frappe.ui.form.on("Five Year Plan Proposal", {
 	refresh(frm) {
-        
+        frm.set_df_property('fyp_details', 'cannot_add_rows', true);
+        frm.set_df_property('fyp_details', 'cannot_delete_rows', true);
+
+        refresh_field('fyp_details');
 	},
     setup(frm) {
         frm.set_query("colleges", function () {

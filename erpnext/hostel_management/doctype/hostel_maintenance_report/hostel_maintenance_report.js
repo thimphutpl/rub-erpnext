@@ -5,7 +5,7 @@ frappe.ui.form.on("Hostel Maintenance Report", {
 	refresh(frm) {
 		if (frm.doc.docstatus == 1) {
             if (frm.doc.expenses_borne_by == "Student") {
-                frm.add_custom_button(__("Payment Entry"), function() {
+                frm.add_custom_button(__("Journal Entry"), function() {
                     frappe.call({
                         method: "erpnext.hostel_management.doctype.hostel_maintenance_report.hostel_maintenance_report.make_payment_entry",
                         args: { source_name: frm.doc.name },

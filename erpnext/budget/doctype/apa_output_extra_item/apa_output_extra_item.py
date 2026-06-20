@@ -24,6 +24,7 @@ class APAOutputExtraItem(Document):
 		parenttype: DF.Data
 		project: DF.SmallText | None
 		project_no: DF.Int
+		remarks: DF.SmallText | None
 		status: DF.Link | None
 		sub_activity: DF.SmallText | None
 		sub_activity_link: DF.Link | None

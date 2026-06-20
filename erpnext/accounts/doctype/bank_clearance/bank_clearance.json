@@ -58,6 +58,7 @@
    "description": "Select the Bank Account to reconcile.",
    "fieldname": "bank_account",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Bank Account",
    "options": "Bank Account"
   },
@@ -91,7 +92,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-11-28 17:24:13.008692",
+ "modified": "2026-06-03 20:56:30.786080",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Bank Clearance",
@@ -107,6 +108,7 @@
  ],
  "quick_entry": 1,
  "read_only": 1,
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "ASC",
  "states": []

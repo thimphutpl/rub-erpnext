@@ -8,6 +8,16 @@ frappe.ui.form.on('TDS Remittance', {
 		}
 		$(".grid-upload").addClass('hidden');
 	},
+	setup:function(frm){
+		frm.set_query("branch",function(){
+			return{
+				filters:{
+					"company":frm.doc.company
+				}
+			}
+		})
+
+	},
 
 	refresh: function (frm) {
 		frm.set_query("credit_account", function(){

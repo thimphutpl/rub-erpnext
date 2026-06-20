@@ -63,7 +63,7 @@ class ClubActivity(Document):
 		self.update_action_plan_detail_status(self.activity_name)
 	def validate(self):
 		#self.get_attendance_club_activites(self.club_name)
-		self.check_attendance()
+		# self.check_attendance()
 		self.calculate_expansive()
 	def check_attendance(self):
 		count=frappe.db.count("Club Attendance Details",{"parent":self.name})

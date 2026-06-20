@@ -16,7 +16,7 @@ def get_data(filters):
 	validate_filters(filters)
 	data = []
 	entries = get_tds_invoices(filters.tax_withholding_category,filters.company, filters.from_date, filters.to_date,
-		name = None, filter_existing = False, party_type = filters.party_type)
+		 filter_existing = False, party_type = filters.party_type)
 	
 	for d in entries:
 		d.update({"tds_rate":filters.tax_withholding_category})

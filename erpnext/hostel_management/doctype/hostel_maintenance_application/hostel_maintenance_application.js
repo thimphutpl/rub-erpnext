@@ -58,6 +58,13 @@ frappe.ui.form.on("Hostel Maintenance Application", {
                 }
             };
         });
+        frm.set_query("maintenance_focal", function() {
+            return {
+                filters: {
+                    company: frm.doc.college
+                }
+            };
+        });
 		frm.fields_dict["assets"].grid.get_field("asset").get_query = function(doc, cdt, cdn) {
             return {
                 filters: {

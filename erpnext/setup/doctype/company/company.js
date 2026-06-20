@@ -31,6 +31,41 @@ frappe.ui.form.on("Company", {
 				}
 			};
 		});
+		frm.set_query("carpenter", function() {
+            return {
+                filters: {
+                    company: frm.doc.name
+                }
+            };
+        });
+		frm.set_query("electrician", function() {
+            return {
+                filters: {
+                    company: frm.doc.name
+                }
+            };
+        });
+		frm.set_query("mason", function() {
+            return {
+                filters: {
+                    company: frm.doc.name
+                }
+            };
+        });
+		frm.set_query("plumber", function() {
+            return {
+                filters: {
+                    company: frm.doc.name
+                }
+            };
+        });
+		frm.set_query("technician", function() {
+            return {
+                filters: {
+                    company: frm.doc.name
+                }
+            };
+        });
 	},
 	setup: function (frm) {
 		frm.__rename_queue = "long";

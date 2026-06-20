@@ -158,6 +158,7 @@
   "maintenance_focal_section",
   "carpenter",
   "mason",
+  "technician",
   "column_break_ucad",
   "electrician",
   "plumber",
@@ -1253,6 +1254,12 @@
    "fieldtype": "Link",
    "label": "CRC Approval",
    "options": "Employee"
+  },
+  {
+   "fieldname": "technician",
+   "fieldtype": "Link",
+   "label": "Technician",
+   "options": "Employee"
   }
  ],
  "icon": "fa fa-building",
@@ -1260,7 +1267,7 @@
  "image_field": "company_logo",
  "is_tree": 1,
  "links": [],
- "modified": "2026-05-14 11:23:03.771064",
+ "modified": "2026-06-17 09:29:01.846442",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",

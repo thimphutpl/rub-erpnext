@@ -17,7 +17,7 @@ class StudentStatement(Document):
 
 		amended_from: DF.Link | None
 		company: DF.Link
-		disciplinary_issue_type: DF.Link
+		disciplinary_issue_type: DF.Link | None
 		name_student: DF.Data | None
 		posting_date: DF.Date
 		program: DF.Data | None

@@ -14,6 +14,7 @@ class Branch(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		amended_from: DF.Link | None
 		branch: DF.Data
 		company: DF.Link
 		cost_center: DF.Link

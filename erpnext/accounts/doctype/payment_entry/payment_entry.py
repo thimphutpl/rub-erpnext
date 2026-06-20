@@ -3049,6 +3049,7 @@ def get_payment_entry(
 	pe.posting_date = nowdate()
 	pe.reference_date = reference_date
 	pe.mode_of_payment = doc.get("mode_of_payment")
+	pe.branch = doc.get("branch")
 	
 	# pe.party = doc.get(scrub(party_type))
 	if dt in ['Repair And Service Invoice']:
@@ -3400,6 +3401,46 @@ def set_payment_type(dt, doc):
 	return payment_type
 
 
+# def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_currency, doc):
+
+# 	grand_total = outstanding_amount = 0
+# 	if party_amount:
+		
+# 		grand_total = outstanding_amount = party_amount
+# 	elif dt in ("Sales Invoice", "Purchase Invoice"):
+		
+		
+# 		if party_account_currency == doc.company_currency:
+# 			grand_total = doc.base_rounded_total or doc.base_grand_total
+# 		else:
+# 			grand_total = doc.rounded_total or doc.grand_total
+# 		# frappe.throw(frappe.as_json(doc))
+# 		# outstanding_amount = doc.outstanding_amount
+# 		# outstanding_amount = doc.grand_total-doc.total_advance
+# 		dis_acc = 0
+# 		for i in doc.items:
+# 			dis_acc += flt(i.amount_discount)
+# 		# frappe.throw(str(discount_amount))
+# 		# outstanding_amount = doc.total-doc.taxes_and_charges_deducted-doc.write_off_amount-doc.total_advance-dis_acc
+# 		outstanding_amount = doc.outstanding_amount
+# 		# frappe.throw(str(outstanding_amount))
+		
+# 	elif dt == "Dunning":
+		
+	
+# 		grand_total = doc.grand_total
+# 		outstanding_amount = doc.outstanding_amount or doc.grand_total
+# 	else:
+		
+# 		if party_account_currency == doc.company_currency:
+# 			grand_total = flt(doc.get("base_rounded_total") or doc.get("base_grand_total"))
+# 		else:
+# 			grand_total = flt(doc.get("rounded_total") or doc.get("grand_total"))
+		
+# 		outstanding_amount = doc.get("outstanding_amount") or (grand_total - flt(doc.advance_paid))
+# 	# frappe.throw(str(outstanding_amount))
+# 	return grand_total, outstanding_amount
+
 def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_currency, doc):
 
 	grand_total = outstanding_amount = 0
@@ -3408,25 +3449,16 @@ def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_curre
 		grand_total = outstanding_amount = party_amount
 	elif dt in ("Sales Invoice", "Purchase Invoice"):
 		
-		
 		if party_account_currency == doc.company_currency:
 			grand_total = doc.base_rounded_total or doc.base_grand_total
 		else:
 			grand_total = doc.rounded_total or doc.grand_total
-		# frappe.throw(frappe.as_json(doc))
-		# outstanding_amount = doc.outstanding_amount
-		# outstanding_amount = doc.grand_total-doc.total_advance
-		dis_acc = 0
-		for i in doc.items:
-			dis_acc += flt(i.amount_discount)
-		# frappe.throw(str(discount_amount))
-		# outstanding_amount = doc.total-doc.taxes_and_charges_deducted-doc.write_off_amount-doc.total_advance-dis_acc
+		
+		# Simply use the outstanding_amount from the invoice
 		outstanding_amount = doc.outstanding_amount
-		# frappe.throw(str(outstanding_amount))
 		
 	elif dt == "Dunning":
 		
-	
 		grand_total = doc.grand_total
 		outstanding_amount = doc.outstanding_amount or doc.grand_total
 	else:
@@ -3437,9 +3469,8 @@ def set_grand_total_and_outstanding_amount(party_amount, dt, party_account_curre
 			grand_total = flt(doc.get("rounded_total") or doc.get("grand_total"))
 		
 		outstanding_amount = doc.get("outstanding_amount") or (grand_total - flt(doc.advance_paid))
-	# frappe.throw(str(outstanding_amount))
+	
 	return grand_total, outstanding_amount
-
 
 def set_paid_amount_and_received_amount(
 	dt, party_account_currency, bank, outstanding_amount, payment_type, bank_amount, doc
