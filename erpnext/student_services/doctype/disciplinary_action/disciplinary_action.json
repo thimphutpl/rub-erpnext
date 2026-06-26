@@ -40,7 +40,9 @@
   "cdc_remarks",
   "attah_cdc",
   "section_break_jx66",
-  "amended_from"
+  "amended_from",
+  "section_break_mbps",
+  "appeal_description"
  ],
  "fields": [
   {
@@ -132,8 +134,7 @@
    "fieldname": "issue_reported_by",
    "fieldtype": "Link",
    "label": "Issue Reported By",
-   "options": "Employee",
-   "reqd": 1
+   "options": "Employee"
   },
   {
    "fetch_from": "issue_reported_by.employee_name",
@@ -249,13 +250,25 @@
    "fieldtype": "Select",
    "label": "Issue Severity",
    "options": "Major Issue\nMinor Issue"
+  },
+  {
+   "fieldname": "section_break_mbps",
+   "fieldtype": "Section Break",
+   "label": "Appeal Application"
+  },
+  {
+   "fieldname": "appeal_description",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Appeal Application",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-26 16:05:35.811377",
+ "modified": "2026-06-26 15:29:42.889501",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Disciplinary Action",

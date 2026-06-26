@@ -288,33 +288,77 @@ def create_apa_for_subsidiaries(apa_name):
 
 @frappe.whitelist()
 def make_approved_budget(source_name, target_doc=None):
-    def set_missing_values(source, target):
-        target.college = source.colleges
+	def set_missing_values(source, target):
+		return
 
-    doc = get_mapped_doc(
-        "Annual Work Plan",
-        source_name,
-        {
-            "Annual Work Plan": {
-                "doctype": "Approved Budget"
-            },
-            "APA Detail": {
-                "doctype": "Approved Budget Item",
-                "field_map": {
-                    "approved_budget": "initial_approved_budget"
-                }
-            },
-            "APA Detail Extra": {
-                "doctype": "Approved Budget Extra Item",
-                "field_map": {
-                }
-            }
-        },
-        target_doc,
-        set_missing_values
-    )
+	def postprocess(source, target):
+		target.college = source.colleges
 
-    return doc
+		# Loop through main child table
+		for row in source.get("apa_details"):
+			existing_total = frappe.db.sql("""
+				SELECT SUM(child.initial_approved_budget)
+				FROM `tabApproved Budget Item` child
+				INNER JOIN `tabApproved Budget` parent
+					ON child.parent = parent.name
+				WHERE parent.from_year = %s
+				AND parent.to_year = %s
+				AND parent.college = %s
+				AND child.activity_link = %s
+				AND parent.docstatus = 1
+			""", (source.from_year, source.to_year, source.colleges, row.activity_link))[0][0] or 0
+			target.available_budget = (row.approved_budget or 0) - existing_total
+			frappe.msgprint(str(target.available_budget))
+
+
+		for row in source.get("apa_extra_details"):
+			existing_total = frappe.db.sql("""
+				SELECT SUM(child.initial_approved_budget)
+				FROM `tabApproved Budget Extra Item` child
+				INNER JOIN `tabApproved Budget` parent
+					ON child.parent = parent.name
+				WHERE parent.from_year = %s
+				AND parent.to_year = %s
+				AND parent.college = %s
+				AND child.activity_link = %s
+				AND parent.docstatus = 1
+			""", (source.from_year, source.to_year, source.colleges, row.activity_link))[0][0] or 0
+
+			target.available_budget = (row.approved_budget or 0) - existing_total
+			
+	doc = get_mapped_doc(
+		"Annual Work Plan",
+		source_name,
+		{
+			"Annual Work Plan": {
+				"doctype": "Approved Budget"
+			},
+			"APA Detail": {
+				"doctype": "Approved Budget Item",
+				"field_map": {
+					"approved_budget": "available_budget"
+				},
+				"field_no_map": {
+					"approved_budget"
+				}
+			},
+			"APA Detail Extra": {
+				"doctype": "Approved Budget Extra Item",
+				"field_map": {
+					"approved_budget": "available_budget"
+				},
+				"field_no_map": {
+					"approved_budget"
+				}
+			}
+		},
+		target_doc,
+		# set_missing_values,
+		ignore_permissions=True,
+		postprocess=postprocess
+	)
+
+	return doc
 
 def get_apply_reapply_actions(doctype, docname=None):
 	"""

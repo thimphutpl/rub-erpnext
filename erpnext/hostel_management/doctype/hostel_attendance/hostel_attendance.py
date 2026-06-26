@@ -18,6 +18,7 @@ class HostelAttendance(Document):
         from frappe.types import DF
 
         amended_from: DF.Link | None
+        attendance_types: DF.Literal["", "Room Attendance", "SUPW Attendance", "Evening Prayer Attendance"]
         company: DF.Link
         councilor_name: DF.Data | None
         fiscal_year: DF.Link

@@ -9,6 +9,7 @@
   "from_year",
   "college",
   "from_date",
+  "available_budget",
   "column_break_izcg",
   "to_year",
   "cost_center",
@@ -119,13 +120,19 @@
    "label": "Cost Center",
    "options": "Cost Center",
    "reqd": 1
+  },
+  {
+   "fieldname": "available_budget",
+   "fieldtype": "Currency",
+   "label": "Available Budget",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-05-14 15:52:42.098984",
+ "modified": "2026-06-22 14:25:18.103364",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Approved Budget",

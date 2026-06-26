@@ -45,9 +45,15 @@ class ApprovedBudget(Document):
 			if not row.approved_budget or row.approved_budget <= 0:
 				frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
 
+			if row.approved_budget and row.approved_budget > row.available_budget:
+				frappe.throw("Approved budget cannot be more than available budget: {0} for row: {1}".format(row.available_budget, row.idx))
+
 		for row in self.ab_extra_item:
 			if not row.approved_budget or row.approved_budget <= 0:
 				frappe.throw("Approved budget not set or is zero for row: {0}".format(row.idx))
+
+			if row.approved_budget and row.approved_budget > row.available_budget:
+				frappe.throw("Approved budget cannot be more than available budget: {0} for row: {1}".format(row.available_budget, row.idx))
 
 	def calculate_approved_budget(self):
 		total_approved_budget = 0
@@ -66,5 +72,5 @@ class ApprovedBudget(Document):
 			WHERE from_year = %s and to_year = %s and college = %s and cost_center = %s and docstatus = 1
 		''',(self.from_year, self.to_year, self.college, self.cost_center), as_dict=True)
 		if fyp:
-			frappe.throw("Approved Budget exists cost_center <b>{0}</b> for year <b>{1}</b> - <b>{2}</b> of <b>{3}</b>".format(self.cost_center, self.from_year, self.to_year, self.college))
+			frappe.throw("Approved Budget exists for cost_center <b>{0}</b> for year <b>{1}</b> - <b>{2}</b> of <b>{3}</b>".format(self.cost_center, self.from_year, self.to_year, self.college))
 

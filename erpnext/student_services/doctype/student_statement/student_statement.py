@@ -16,6 +16,7 @@ class StudentStatement(Document):
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
+		attachment: DF.Attach | None
 		company: DF.Link
 		disciplinary_issue_type: DF.Link | None
 		name_student: DF.Data | None

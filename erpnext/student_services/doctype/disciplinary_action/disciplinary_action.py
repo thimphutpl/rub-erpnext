@@ -18,6 +18,7 @@ class DisciplinaryAction(Document):
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
+		appeal_description: DF.SmallText
 		attachments_investigator: DF.Attach | None
 		attachments_student: DF.Attach | None
 		attah_cdc: DF.Attach | None
@@ -29,7 +30,7 @@ class DisciplinaryAction(Document):
 		designation: DF.Data | None
 		disciplinary_issue_type: DF.Link
 		hostel: DF.Link | None
-		issue_reported_by: DF.Link
+		issue_reported_by: DF.Link | None
 		issue_severity: DF.Literal["Major Issue", "Minor Issue"]
 		location_of_issue_caused: DF.Data
 		name_reporter: DF.Data | None
