@@ -65,7 +65,7 @@ class CostCenter(NestedSet):
 		doc.branch = self.cost_center_name.strip()+" - "+frappe.db.get_value("Company", self.company, "abbr")
 		doc.cost_center = self.name
 		doc.company = self.company
-		doc.save()
+		doc.submit()
 		self.db_set("branch_created", 1)
 
 	def validate_parent_cost_center(self):
