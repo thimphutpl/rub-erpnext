@@ -63,6 +63,7 @@ class Employee(NestedSet):
 		if self.user_id:
 			
 			self.validate_user_details()
+			self.update_user()
 		else:
 			
 			existing_user_id = frappe.db.get_value("Employee", self.name, "user_id")
