@@ -124,8 +124,8 @@ class Employee(NestedSet):
 			email=self.prefered_email
 			create_user(self.name,email=email)
 			self.reload()
-		elif self.user_id and self.status != "Active":
-			self.sync_user_status()	
+		# elif self.user_id and self.status != "Active":
+		# 	self.sync_user_status()	
 
 		if self.user_id:
 			self.update_user()
@@ -189,11 +189,14 @@ class Employee(NestedSet):
 				except frappe.DuplicateEntryError:
 					# already exists
 					pass
-
+		if self.status in ("Inactive", "Left"):
+			user.enabled == 0
+		else:
+			user.enabled = 1
 		user.save()
 
 	def validate_date(self):
-		if self.date_of_birth and getdate(self.date_of_birth) > getdate(today()):
+		if self.date_of_birth and getdate(self.date_of_birth)  getdate(today()):
 			throw(_("Date of Birth cannot be greater than today."))
 
 		self.validate_from_to_dates("date_of_birth", "date_of_joining")
@@ -501,42 +504,42 @@ def has_upload_permission(doc, ptype="read", user=None):
 	return doc.user_id == user
 
 
-def get_permission_query_conditions(user):
-	if not user: user = frappe.session.user
-	user_roles = frappe.get_roles(user)
-	if "HR User" in user_roles or "HR Manager" in user_roles or "Accounts User" in user_roles or "CEO" in user_roles or "System Manager" in user_roles or "ICT Admin" in user_roles:
-		return
-	if "Management" in user_roles:
-		return """(
-			name in (select e1.name
-				from `tabEmployee` as e1, `tabEmployee` as e2
-				where e1.name = e2.name
-				and e1.user_id = '{user}')
-			or
-			name in (select e.name
-				from `tabEmployee` e
-				where e.branch in (
-					select bi.branch
-					from `tabEmployee` a, `tabAssign Branch` ab, `tabBranch Item` bi
-					where a.user_id = '{user}'
-					and ab.employee = a.name
-					and bi.parent = ab.name
-				))
-		)""".format(user=user)
-	else:
-		return """(
-			name in (select e1.name
-				from `tabEmployee` as e1, `tabEmployee` as e2
-				where e1.name = e2.name
-				and e1.user_id = '{user}')
-		)""".format(user=user)
+# def get_permission_query_conditions(user):
+# 	if not user: user = frappe.session.user
+# 	user_roles = frappe.get_roles(user)
+# 	if "HR User" in user_roles or "HR Manager" in user_roles or "Accounts User" in user_roles or "CEO" in user_roles or "System Manager" in user_roles or "ICT Admin" in user_roles:
+# 		return
+# 	if "Management" in user_roles:
+# 		return """(
+# 			name in (select e1.name
+# 				from `tabEmployee` as e1, `tabEmployee` as e2
+# 				where e1.name = e2.name
+# 				and e1.user_id = '{user}')
+# 			or
+# 			name in (select e.name
+# 				from `tabEmployee` e
+# 				where e.branch in (
+# 					select bi.branch
+# 					from `tabEmployee` a, `tabAssign Branch` ab, `tabBranch Item` bi
+# 					where a.user_id = '{user}'
+# 					and ab.employee = a.name
+# 					and bi.parent = ab.name
+# 				))
+# 		)""".format(user=user)
+# 	else:
+# 		return """(
+# 			name in (select e1.name
+# 				from `tabEmployee` as e1, `tabEmployee` as e2
+# 				where e1.name = e2.name
+# 				and e1.user_id = '{user}')
+# 		)""".format(user=user)
 
 def has_record_permission(doc, user):
 	
 	if not user: user = frappe.session.user
 	user_roles = frappe.get_roles(user)
 
-	if "HR User" in user_roles or "HR Manager" in user_roles or "System Manager" in user_roles:
+	if "HR User" in user_roles or "HR Manager" in user_roles or "System Manager" in user_roles or "ICT Admin" in user_roles:
 		return True
 	else:			
 		if frappe.db.exists("Employee", {"name":doc.name, "user_id": user}):
@@ -544,3 +547,15 @@ def has_record_permission(doc, user):
 		else:
 			return False 
 		
+def get_permission_query_conditions(user):
+	
+	if not user:
+		user = frappe.session.user
+
+	user_roles = frappe.get_roles(user)
+	if user == "Administrator" or "HR User" in user_roles or "HR Manager" in user_roles or "System Manager" in user_roles or "ICT Admin" in user_roles:
+		return
+	emp=frappe.db.get_value("Employee", {"user_id": user})
+	return """(`tabEmployee`.reports_to='{emp}') or `tabEmployee`.name = '{emp}'""".format(
+		emp=emp
+	)
