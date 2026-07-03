@@ -211,11 +211,11 @@
   },
   {
    "fieldname": "salutation",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "label": "Salutation",
    "oldfieldname": "salutation",
    "oldfieldtype": "Select",
-   "options": "\nMr\nMs"
+   "options": "Salutation"
   },
   {
    "fieldname": "first_name",
@@ -1330,7 +1330,7 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2026-05-21 09:12:59.764003",
+ "modified": "2026-07-03 14:36:43.328361",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Employee",
