@@ -250,12 +250,7 @@ frappe.ui.form.on("Item", {
 	// 			frm.set_value("is_stock_item", frm.doc.is_fixed_asset ? 0 : 1);
 	// 			frm.events.set_asset_naming_series(frm, r.message);
 	// 		},
-	UPDATE `tabGL Entry` 
-SET posting_date = '2026-06-02' 
-WHERE name IN (
-    '491ed9166f',
-    'bfd9fb9827'
-);// 	});
+	// 	});
 
 	// 	frm.trigger("auto_create_assets");
 	// },
