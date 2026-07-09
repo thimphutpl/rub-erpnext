@@ -66,6 +66,14 @@
   "stock_uom_rate",
   "is_free_item",
   "apply_tds",
+  "section_break_dmui",
+  "gst_included",
+  "section_break_lugb",
+  "gst_template",
+  "gst_account_head",
+  "column_break_adoi",
+  "gst_rate",
+  "total_gst",
   "section_break_29",
   "net_rate",
   "net_amount",
@@ -906,13 +914,63 @@
    "label": "GST Amount",
    "precision": "2",
    "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.gst_included",
+   "fieldname": "section_break_lugb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "gst_included",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "GST included"
+  },
+  {
+   "fieldname": "gst_template",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "GST Template",
+   "mandatory_depends_on": "eval:doc.gst_included",
+   "options": "Purchase Taxes and Charges Template"
+  },
+  {
+   "fieldname": "gst_account_head",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "GST Account Head",
+   "options": "Account",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_adoi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "gst_rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "GST Rate",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_gst",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total GST",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_dmui",
+   "fieldtype": "Section Break"
   }
  ],
  "idx": 1,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-23 13:19:52.963553",
+ "modified": "2026-07-01 10:51:43.281583",
  "modified_by": "Administrator",
  "module": "Buying",
  "name": "Purchase Order Item",

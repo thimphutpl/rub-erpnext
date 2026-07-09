@@ -42,7 +42,11 @@ class PurchaseOrderItem(Document):
 		fg_item: DF.Link | None
 		fg_item_qty: DF.Float
 		from_warehouse: DF.Link | None
+		gst_account_head: DF.Link | None
 		gst_amount: DF.Currency
+		gst_included: DF.Check
+		gst_rate: DF.Currency
+		gst_template: DF.Link | None
 		include_exploded_items: DF.Check
 		is_fixed_asset: DF.Check
 		is_free_item: DF.Check
@@ -86,6 +90,7 @@ class PurchaseOrderItem(Document):
 		supplier_part_no: DF.Data | None
 		supplier_quotation: DF.Link | None
 		supplier_quotation_item: DF.Link | None
+		total_gst: DF.Currency
 		total_weight: DF.Float
 		uom: DF.Link
 		warehouse: DF.Link
