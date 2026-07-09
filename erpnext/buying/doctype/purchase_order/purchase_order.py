@@ -16,6 +16,9 @@ from erpnext.accounts.doctype.sales_invoice.sales_invoice import (
 	update_linked_doc,
 	validate_inter_company_party,
 )
+from frappe.utils.pdf import get_pdf
+
+
 from erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category import (
 	get_party_tax_withholding_details,
 )
@@ -473,6 +476,7 @@ class PurchaseOrder(BuyingController):
 
 	def on_submit(self):
 		super().on_submit()
+		self.notify_supplier_notification()
 		
 
 		if self.is_against_so():
@@ -625,8 +629,8 @@ class PurchaseOrder(BuyingController):
 		# Render message
 		if email_template:
 			args = {"company": base_company,
-		     		"name": self.name,
-    				"description_advance": self.description_advance,}
+			 		"name": self.name,
+					"description_advance": self.description_advance,}
 			message = frappe.render_template(email_template.response, args)
 
 		# SEND MAIL (THIS IS THE IMPORTANT PART)
@@ -637,11 +641,115 @@ class PurchaseOrder(BuyingController):
 				message=message or "Notification"
 			)
 			frappe.msgprint(
-            "Email sent successfully to:<br><br>" +
-            "<br>".join(email_list)
-        )
-        
+			"Email sent successfully to:<br><br>" +
+			"<br>".join(email_list)
+		)
+		
 		return email_list
+	def notify_supplier_notification(self):
+		
+
+		base_company = self.company
+
+		template = frappe.db.get_single_value(
+			"HR Settings",
+			"supplier_notify_template"
+		)
+
+		if not template:
+			return
+
+		email_template = frappe.get_doc("Email Template", template)
+
+		# Get supplier email
+		supplier_email = frappe.db.get_value(
+			"Supplier",
+			self.supplier,
+			"email_address"
+		)
+		letter_head = frappe.db.get_value(
+			"Company",
+			self.company,
+			"letter_head"
+		)
+		
+		# pdf = frappe.get_print(
+		# 	"Purchase Order",
+		# 	self.name,
+		# 	print_format="Purchase Order New",
+		# 	as_pdf=True,
+		#    	no_letterhead=0,
+    	# 	letterhead=letter_head ,
+		# 	pdf_generator="chrome"
+
+		# )
+		html = frappe.get_print(
+			"Purchase Order",
+			self.name,
+			print_format="Purchase Order New",
+			no_letterhead=0,
+			letterhead=self.letter_head
+		)
+
+		# Move letterhead from header to body
+		html = html.replace(
+			'<div id="header-html">',
+			'<div>'
+		)
+
+
+
+		pdf = get_pdf(html)
+		# If email is stored in Contact instead of Supplier
+		if not supplier_email:
+			contact_name = frappe.db.get_value(
+				"Dynamic Link",
+				{
+					"link_doctype": "Supplier",
+					"link_name": self.supplier,
+					"parenttype": "Contact"
+				},
+				"parent"
+			)
+
+			if contact_name:
+				supplier_email = frappe.db.get_value(
+					"Contact",
+					contact_name,
+					"email_id"
+				)
+
+		if not supplier_email:
+			frappe.msgprint(f"No email address found for Supplier: {self.supplier}")
+			return
+
+		# Render Email Template
+		args = {
+			"company": base_company,
+			"name": self.name,
+			"doc": self
+		}
+
+		message = frappe.render_template(email_template.response, args)
+
+		# Send Email
+		frappe.sendmail(
+			recipients=[supplier_email],
+			subject=email_template.subject,
+			message=message,
+			reference_doctype=self.doctype,
+			reference_name=self.name,
+			attachments=[
+				{
+					"fname": f"{self.name}.pdf",
+					"fcontent": pdf
+				}
+			]
+		)
+
+		frappe.msgprint(
+			f"Email sent successfully to <b>{supplier_email}</b>"
+		)
 
 	def has_drop_ship_item(self):
 		return any(d.delivered_by_supplier for d in self.items)
@@ -1122,3 +1230,22 @@ def get_permission_query_conditions(user):
 @frappe.whitelist()
 def fetch_item_gl(cdn):
 	frappe.throw(str(cdn))
+
+@frappe.whitelist()
+def fetch_template(gst_template):
+	doc = frappe.db.sql("""
+		SELECT 
+			account_head,
+			rate
+		FROM `tabPurchase Taxes and Charges`
+		WHERE parent = %s
+		LIMIT 1
+	""", (gst_template,), as_dict=True)
+
+	if not doc:
+		return {}
+
+	return {
+		"account_head": doc[0].account_head,
+		"gst_rate": doc[0].rate
+	}

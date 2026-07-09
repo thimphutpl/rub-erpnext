@@ -24,6 +24,7 @@
   "date_of_establishment",
   "parent_company",
   "logo",
+  "letter_head",
   "company_info",
   "company_logo",
   "date_of_incorporation",
@@ -46,6 +47,7 @@
   "section_break_28",
   "create_chart_of_accounts_based_on",
   "existing_company",
+  "bfs_id",
   "column_break_26",
   "chart_of_accounts",
   "default_settings",
@@ -1260,6 +1262,18 @@
    "fieldtype": "Link",
    "label": "Technician",
    "options": "Employee"
+  },
+  {
+   "fieldname": "bfs_id",
+   "fieldtype": "Data",
+   "label": "Bfs Id",
+   "read_only": 1
+  },
+  {
+   "fieldname": "letter_head",
+   "fieldtype": "Link",
+   "label": "Letter Head",
+   "options": "Letter Head"
   }
  ],
  "icon": "fa fa-building",
@@ -1267,7 +1281,7 @@
  "image_field": "company_logo",
  "is_tree": 1,
  "links": [],
- "modified": "2026-06-17 09:29:01.846442",
+ "modified": "2026-07-09 09:33:11.282428",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",

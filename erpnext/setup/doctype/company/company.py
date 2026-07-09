@@ -36,6 +36,7 @@ class Company(NestedSet):
 		auto_err_frequency: DF.Literal["Daily", "Weekly", "Monthly"]
 		auto_exchange_rate_revaluation: DF.Check
 		bank_account: DF.Link | None
+		bfs_id: DF.Data | None
 		book_advance_payments_in_separate_party_account: DF.Check
 		capital_work_in_progress_account: DF.Link | None
 		carpenter: DF.Link | None
@@ -106,6 +107,7 @@ class Company(NestedSet):
 		income_accounts: DF.Link | None
 		is_group: DF.Check
 		is_overseeing_company: DF.Check
+		letter_head: DF.Link | None
 		lft: DF.Int
 		logo: DF.Attach | None
 		mason: DF.Link | None
