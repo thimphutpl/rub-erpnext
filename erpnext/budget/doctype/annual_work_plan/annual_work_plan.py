@@ -44,6 +44,15 @@ class AnnualWorkPlan(Document):
 		self.calculate_proposed_and_approved_budget()
 		self.apply_proposed_to_approved()
 	
+	def on_cancel(self):
+		if frappe.db.exists(
+			"Approved Budget",
+			{"college": self.colleges, "from_year": self.from_year, "to_year": self.to_year, "docstatus": 1},
+			"name",
+		):
+			frappe.throw("Cancel the existing Approved Budget for college: <b>{0}</b> for the year <b>{1}</b> to <b>{2}</b>".format(self.colleges, self.from_year, self.to_year))
+
+	
 	def check_applicable_date(self):
 		current_date = getdate(today())
 		from_date = frappe.db.get_single_value("Budget Settings", "awp_from_date")
@@ -175,7 +184,7 @@ class AnnualWorkPlan(Document):
 			already_approved_budget = awp_approved_map.get(row.activity_link, 0)
 			already_proposed_budget = awp_proposed_map.get(row.activity_link, 0)
 
-			if not available_budget:
+			if not available_budget and available_budget <= 0:
 				frappe.throw(
 					_("No approved budget found for Activity: <b>{0}</>")
 					.format(row.activities)
@@ -272,37 +281,51 @@ def make_approved_budget(source_name, target_doc=None):
 	def postprocess(source, target):
 		target.college = source.colleges
 
-		# Loop through main child table
-		for row in source.get("apa_details"):
+		# Main activities
+		for source_row, target_row in zip(source.apa_details, target.items):
 			existing_total = frappe.db.sql("""
-				SELECT SUM(child.initial_approved_budget)
+				SELECT COALESCE(SUM(child.initial_approved_budget), 0)
 				FROM `tabApproved Budget Item` child
 				INNER JOIN `tabApproved Budget` parent
 					ON child.parent = parent.name
-				WHERE parent.from_year = %s
+				WHERE parent.docstatus = 1
+				AND parent.from_year = %s
 				AND parent.to_year = %s
 				AND parent.college = %s
 				AND child.activity_link = %s
-				AND parent.docstatus = 1
-			""", (source.from_year, source.to_year, source.colleges, row.activity_link))[0][0] or 0
-			target.available_budget = (row.approved_budget or 0) - existing_total
-			# frappe.msgprint(str(row.approved_budget))
+			""", (
+				source.from_year,
+				source.to_year,
+				source.colleges,
+				source_row.activity_link
+			))[0][0]
 
+			target_row.available_budget = (
+				(source_row.approved_budget or 0) - existing_total
+			)
 
-		for row in source.get("apa_extra_details"):
+		# Extra activities
+		for source_row, target_row in zip(source.apa_extra_details, target.ab_extra_item):
 			existing_total = frappe.db.sql("""
-				SELECT SUM(child.initial_approved_budget)
+				SELECT COALESCE(SUM(child.initial_approved_budget), 0)
 				FROM `tabApproved Budget Extra Item` child
 				INNER JOIN `tabApproved Budget` parent
 					ON child.parent = parent.name
-				WHERE parent.from_year = %s
+				WHERE parent.docstatus = 1
+				AND parent.from_year = %s
 				AND parent.to_year = %s
 				AND parent.college = %s
 				AND child.activity_link = %s
-				AND parent.docstatus = 1
-			""", (source.from_year, source.to_year, source.colleges, row.activity_link))[0][0] or 0
+			""", (
+				source.from_year,
+				source.to_year,
+				source.colleges,
+				source_row.activity_link
+			))[0][0]
 
-			target.available_budget = (row.approved_budget or 0) - existing_total
+			target_row.available_budget = (
+				(source_row.approved_budget or 0) - existing_total
+			)
 			
 	doc = get_mapped_doc(
 		"Annual Work Plan",

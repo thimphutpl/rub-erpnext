@@ -33,7 +33,7 @@ class FiveYearPlan(Document):
 
 	def validate(self):
 		self.check_fyp_year()
-		self.validate_proposed_and_approved_budget()
+		# self.validate_proposed_and_approved_budget()
 		self.calculate_proposed_and_approved_budget()
 
 	def check_fyp_year(self):

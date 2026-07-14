@@ -16,55 +16,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Reports",
-   "link_count": 4,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Budgeting Consumption Report",
-   "link_count": 0,
-   "link_to": "Budgeting Consumption",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Supplementary Budget Report",
-   "link_count": 0,
-   "link_to": "Supplementary Budget Report",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Budget Reappropriation Report",
-   "link_count": 0,
-   "link_to": "Budget Reappropriation Report",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Budget Variance Report",
-   "link_count": 0,
-   "link_to": "Budget Variance Report",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Budget",
    "link_count": 4,
    "link_type": "DocType",
@@ -357,9 +308,58 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Budgeting Consumption Report",
+   "link_count": 0,
+   "link_to": "Budgeting Consumption",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Supplementary Budget Report",
+   "link_count": 0,
+   "link_to": "Supplementary Budget Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Budget Reappropriation Report",
+   "link_count": 0,
+   "link_to": "Budget Reappropriation Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Budget Withdrawal Report",
+   "link_count": 0,
+   "link_to": "Budget Withdrawal Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-06-30 14:59:23.710970",
+ "modified": "2026-07-14 11:32:54.926663",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Planning & Budget",

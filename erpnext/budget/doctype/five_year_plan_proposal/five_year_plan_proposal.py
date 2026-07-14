@@ -31,7 +31,7 @@ class FiveYearPlanProposal(Document):
 	def validate(self):
 		self.check_applicable_date()
 		self.check_college()
-		self.validate_proposed_budget()
+		# self.validate_proposed_budget()
 		self.calculate_proposed_amount()
 	
 	def on_cancel(self):
