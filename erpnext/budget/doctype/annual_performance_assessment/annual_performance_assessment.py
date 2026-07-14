@@ -34,7 +34,6 @@ class AnnualPerformanceAssessment(Document):
 		performance: DF.Data | None
 		to_year: DF.Link
 	# end: auto-generated types
-	pass
 
 	def autoname(self):
 		college_abbr = frappe.get_value("Company", self.college, "abbr")

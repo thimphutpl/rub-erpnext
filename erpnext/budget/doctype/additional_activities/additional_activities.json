@@ -68,6 +68,7 @@
    "label": "is Current"
   },
   {
+   "depends_on": "eval:doc.include_in_apa",
    "fieldname": "section_break_upwi",
    "fieldtype": "Section Break"
   },
@@ -85,11 +86,12 @@
    "options": "Funding Source"
   },
   {
+   "depends_on": "eval:doc.include_in_apa",
    "fieldname": "unit",
    "fieldtype": "Link",
    "label": "Unit",
-   "options": "APA Unit",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.include_in_apa",
+   "options": "APA Unit"
   },
   {
    "fieldname": "college",
@@ -130,7 +132,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-20 10:13:49.493986",
+ "modified": "2026-06-30 14:41:26.622350",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Additional Activities",

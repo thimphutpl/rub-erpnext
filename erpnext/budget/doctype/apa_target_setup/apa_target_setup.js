@@ -46,7 +46,6 @@ frappe.ui.form.on("APA Target Setup", {
                             child.output_no = row.output_no
                             child.project_no = row.project_no
                             child.activity_link = row.activity_link
-                            child.activities_no = row.activities_no
                             child.unit = row.unit
                             child.weightage = row.weightage
                             child.sub_activity_no = row.sub_activity_no
@@ -76,7 +75,8 @@ frappe.ui.form.on("APA Target Setup", {
     
                         frm.refresh_field("output_extra_items");
                     }
-                    if (r.message.outcome) {
+                    if (r.message.outcome && !(frm.doc.college in r.message.ignore_colleges)) {
+                        frm.set_df_property("outcome_items", "hidden", 0);
                         console.log(r.message.outcome)
                         frm.clear_table("outcome_items");
                         
@@ -87,6 +87,9 @@ frappe.ui.form.on("APA Target Setup", {
                             child.weightage = row.weightage
                         });
     
+                        frm.refresh_field("outcome_items");
+                    }else{
+                        frm.set_df_property("outcome_items", "hidden", 1);
                         frm.refresh_field("outcome_items");
                     }
                 }

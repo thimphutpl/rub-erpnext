@@ -27,7 +27,7 @@ class AdditionalActivities(Document):
 		items: DF.Table[OutputCategoryItem]
 		project: DF.Link
 		to_year: DF.Link
-		unit: DF.Link
+		unit: DF.Link | None
 	# end: auto-generated types
 
 	def autoname(self):

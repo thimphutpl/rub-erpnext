@@ -25,6 +25,7 @@ class BudgetWithdrawal(Document):
 		budget_project: DF.Link
 		budget_type: DF.Literal["", "Current", "Capital"]
 		college: DF.Link
+		cost_center: DF.Link
 		from_year: DF.Link
 		posting_date: DF.Date
 		remarks: DF.SmallText | None
@@ -55,10 +56,11 @@ class BudgetWithdrawal(Document):
 				WHERE ab.college = %s
 				AND ab.from_year = %s
 				AND ab.to_year = %s
+				AND ab.cost_center = %s
 				AND ab.docstatus = 1
 				AND abi.activity_link = %s
 				ORDER BY abi.idx
-			""", (self.college, self.from_year, self.to_year, self.budget_activity), as_dict=True)
+			""", (self.college, self.from_year, self.to_year, self.cost_center, self.budget_activity), as_dict=True)
 
 			if not self.approved_budget_list:
 				frappe.throw(
@@ -75,10 +77,11 @@ class BudgetWithdrawal(Document):
 				WHERE ab.college = %s
 				AND ab.from_year = %s
 				AND ab.to_year = %s
+				AND ab.cost_center = %s
 				AND ab.docstatus = 1
 				AND abi.activity_link = %s
 				ORDER BY abi.idx
-			""", (self.college, self.from_year, self.to_year, self.budget_activity), as_dict=True)
+			""", (self.college, self.from_year, self.to_year, self.cost_center, self.budget_activity), as_dict=True)
 
 			if not self.approved_budget_additional_list:
 				frappe.throw(
@@ -99,6 +102,7 @@ class BudgetWithdrawal(Document):
 				"college": self.college,
 				"from_year": self.from_year,
 				"to_year": self.to_year,
+				"cost_center": self.cost_center,
 				"docstatus": 1
 			},
 		)

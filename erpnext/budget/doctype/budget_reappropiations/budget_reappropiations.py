@@ -27,6 +27,7 @@ class BudgetReappropiations(Document):
 		from_activity: DF.DynamicLink
 		from_activity_type: DF.Literal["Planning Activities", "Additional Activities"]
 		from_budget_type: DF.Literal["", "Current", "Capital"]
+		from_cost_center: DF.Link
 		from_output: DF.Link
 		from_project: DF.Link
 		from_year: DF.Link
@@ -34,6 +35,7 @@ class BudgetReappropiations(Document):
 		to_activity: DF.DynamicLink
 		to_activity_type: DF.Literal["Planning Activities", "Additional Activities"]
 		to_budget_type: DF.Literal["", "Current", "Capital"]
+		to_cost_center: DF.Link
 		to_output: DF.Link
 		to_project: DF.Link
 		to_year: DF.Link
@@ -89,10 +91,11 @@ class BudgetReappropiations(Document):
 				WHERE ab.college = %s
 				AND ab.from_year = %s
 				AND ab.to_year = %s
+				AND ab.cost_center = %s
 				AND ab.docstatus = 1
 				AND abi.activity_link = %s
 				ORDER BY abi.idx
-			""", (self.college, self.from_year, self.to_year, self.from_activity), as_dict=True)
+			""", (self.college, self.from_year, self.to_year, self.from_cost_center, self.from_activity), as_dict=True)
 
 			if not self.approved_budget_list:
 				frappe.throw(
@@ -116,10 +119,11 @@ class BudgetReappropiations(Document):
 				WHERE ab.college = %s
 				AND ab.from_year = %s
 				AND ab.to_year = %s
+				AND ab.cost_center = %s
 				AND ab.docstatus = 1
 				AND abi.activity_link = %s
 				ORDER BY abi.idx
-			""", (self.college, self.from_year, self.to_year, self.from_activity), as_dict=True)
+			""", (self.college, self.from_year, self.to_year, self.from_cost_center, self.from_activity), as_dict=True)
 
 			if not self.approved_budget_additional_list:
 				frappe.throw(
@@ -147,6 +151,7 @@ class BudgetReappropiations(Document):
 				"college": self.college,
 				"from_year": self.from_year,
 				"to_year": self.to_year,
+				"cost_center": self.to_cost_center,
 				"docstatus": 1
 			},
 		)
@@ -240,7 +245,13 @@ class BudgetReappropiations(Document):
 			)
 
 @frappe.whitelist()
-def get_availabe_balance(from_activity, from_activity_type, from_year, to_year, college):
+def get_availabe_balance(from_activity, from_activity_type, from_year, to_year, college, from_cost_center):
+	consumed_budget = frappe.db.sql("""
+			SELECT
+				SUM(amount)
+			FROM `tabConsumed Budget`
+			WHERE activity_type = %s AND activity = %s AND docstatus = 1
+		""", (from_activity_type, from_activity), as_dict=True)
 	if from_activity_type == "Planning Activities":
 		approved_budget = frappe.db.sql("""
 			SELECT
@@ -248,19 +259,13 @@ def get_availabe_balance(from_activity, from_activity_type, from_year, to_year, 
 			FROM `tabApproved Budget` ab
 			INNER JOIN `tabApproved Budget Item` abi
 			ON abi.parent = ab.name
-			WHERE ab.college = %s AND ab.from_year = %s AND ab.to_year = %s
+			WHERE ab.college = %s AND ab.from_year = %s AND ab.to_year = %s AND ab.cost_center = %s
 			AND abi.activity_link = %s AND ab.docstatus = 1
-		""", (college, from_year, to_year, from_activity), as_dict=True)
+		""", (college, from_year, to_year, from_cost_center, from_activity), as_dict=True)
 
 		if not approved_budget:
 			frappe.throw("No Approved Budget found")
 
-		consumed_budget = frappe.db.sql("""
-			SELECT
-				SUM(amount)
-			FROM `tabConsumed Budget`
-			WHERE business_activity = %s AND docstatus = 1
-		""", (from_activity), as_dict=True)
 		return (flt(approved_budget[0].approved_budget) - (flt(consumed_budget[0].amount)/1000000) if consumed_budget else 0)
 	elif from_activity_type == "Additional Activities":
 		approved_budget = frappe.db.sql("""
@@ -269,8 +274,10 @@ def get_availabe_balance(from_activity, from_activity_type, from_year, to_year, 
 			FROM `tabApproved Budget` ab
 			INNER JOIN `tabApproved Budget Extra Item` abi
 			ON abi.parent = ab.name
-			WHERE ab.college = %s AND ab.from_year = %s AND ab.to_year = %s
+			WHERE ab.college = %s AND ab.from_year = %s AND ab.to_year = %s AND ab.cost_center = %s
 			AND abi.activity_link = %s AND ab.docstatus = 1
-		""", (college, from_year, to_year, from_activity), as_dict=True)
-
-		return flt(approved_budget[0].approved_budget)
+		""", (college, from_year, to_year, from_cost_center, from_activity), as_dict=True)
+		if not approved_budget:
+			frappe.throw("No Approved Budget found")
+		return (flt(approved_budget[0].approved_budget) - (flt(consumed_budget[0].amount)/1000000) if consumed_budget else 0)
+		# return flt(approved_budget[0].approved_budget)

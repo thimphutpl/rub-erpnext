@@ -24,6 +24,6 @@ class OutcomeIndicator(Document):
 		outcome: DF.Data | None
 		remarks: DF.SmallText | None
 		unit: DF.Link | None
-		weightage: DF.Data | None
+		weightage: DF.Data
 	# end: auto-generated types
 	pass

@@ -311,6 +311,16 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Allow Budget Transaction",
+   "link_count": 0,
+   "link_to": "Allow Budget Transaction",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Five Year Plan Proposal",
    "link_count": 0,
    "link_to": "Five Year Plan Proposal",
@@ -347,19 +357,9 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Allow Budget Transaction",
-   "link_count": 0,
-   "link_to": "Allow Budget Transaction",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
   }
  ],
- "modified": "2026-05-12 11:05:23.048347",
+ "modified": "2026-06-30 14:59:23.710970",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Planning & Budget",

@@ -20,7 +20,36 @@ frappe.ui.form.on("Budget Reappropiations", {
                 },
             };
 		});
-
+        frm.set_query("from_cost_center", function () {
+            return {
+                filters: {
+                    company: "",
+                },
+            };
+        });
+        frm.set_query("to_cost_center", function () {
+            return {
+                filters: {
+                    company: "",
+                },
+            };
+        });
+        if(frm.doc.college){
+            frm.set_query("from_cost_center", function () {
+                return {
+                    filters: {
+                        company: frm.doc.college,
+                    },
+                };
+            });
+            frm.set_query("to_cost_center", function () {
+                return {
+                    filters: {
+                        company: frm.doc.college,
+                    },
+                };
+            });
+        }
 	},
     setup(frm) {
         frm.set_query("college", function () {
@@ -30,6 +59,42 @@ frappe.ui.form.on("Budget Reappropiations", {
                 },
             };
         });
+        if(frm.doc.college){
+            frm.set_query("from_cost_center", function () {
+                return {
+                    filters: {
+                        company: frm.doc.college,
+                    },
+                };
+            });
+            frm.set_query("to_cost_center", function () {
+                return {
+                    filters: {
+                        company: frm.doc.college,
+                    },
+                };
+            });
+        }
+    },
+    college(frm) {
+        if(frm.doc.college){
+            frm.set_value("from_cost_center", "")
+            frm.set_value("to_cost_center", "")
+            frm.set_query("from_cost_center", function () {
+                return {
+                    filters: {
+                        company: frm.doc.college,
+                    },
+                };
+            });
+            frm.set_query("to_cost_center", function () {
+                return {
+                    filters: {
+                        company: frm.doc.college,
+                    },
+                };
+            });
+        }
     },
     from_output(frm) {
 		frm.set_query("from_project", () => {
@@ -161,7 +226,7 @@ frappe.ui.form.on("Budget Reappropiations", {
         }
     },
     set_available_balance(frm) {
-        if (frm.doc.from_activity && frm.doc.from_year && frm.doc.to_year && frm.doc.college) {
+        if (frm.doc.from_activity && frm.doc.from_year && frm.doc.to_year && frm.doc.college && frm.doc.from_cost_center) {
 			frappe.call({
                 method:"erpnext.budget.doctype.budget_reappropiations.budget_reappropiations.get_availabe_balance",
                 args: {
@@ -170,6 +235,7 @@ frappe.ui.form.on("Budget Reappropiations", {
                     from_year: frm.doc.from_year,
                     to_year: frm.doc.to_year,
                     college: frm.doc.college,
+                    from_cost_center: frm.doc.from_cost_center,
                 },
                 callback: function(r) {
                     if (r.message) {

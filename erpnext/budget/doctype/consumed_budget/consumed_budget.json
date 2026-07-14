@@ -9,17 +9,20 @@
   "account",
   "cost_center",
   "project",
+  "amount",
+  "item_code",
+  "com_ref",
+  "amended_from",
+  "column_break_xipd",
+  "company",
   "reference_type",
   "reference_no",
   "reference_date",
   "reference_id",
-  "amount",
-  "item_code",
-  "company",
-  "com_ref",
-  "amended_from",
   "consumed_cost_center",
-  "business_activity"
+  "business_activity",
+  "activity_type",
+  "activity"
  ],
  "fields": [
   {
@@ -109,15 +112,31 @@
   {
    "fieldname": "business_activity",
    "fieldtype": "Link",
+   "label": "Business Activity",
+   "options": "Business Activity"
+  },
+  {
+   "fieldname": "column_break_xipd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "activity_type",
+   "fieldtype": "Select",
+   "label": "Activity Type",
+   "options": "Planning Activities\nAdditional Activities"
+  },
+  {
+   "fieldname": "activity",
+   "fieldtype": "Dynamic Link",
    "label": "Activity",
-   "options": "Planning Activities"
+   "options": "activity_type"
   }
  ],
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-12-20 17:03:01.160743",
+ "modified": "2026-07-10 09:49:31.764380",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Consumed Budget",

@@ -26,6 +26,7 @@ class SupplementaryBudgets(Document):
 		budget_project: DF.Link
 		budget_type: DF.Literal["", "Current", "Capital"]
 		college: DF.Link
+		cost_center: DF.Link
 		from_year: DF.Link
 		posting_date: DF.Date
 		remarks: DF.SmallText | None
@@ -55,10 +56,11 @@ class SupplementaryBudgets(Document):
 				WHERE ab.college = %s
 				AND ab.from_year = %s
 				AND ab.to_year = %s
+				AND ab.cost_center = %s
 				AND ab.docstatus = 1
 				AND abi.activity_link = %s
 				ORDER BY abi.idx
-			""", (self.college, self.from_year, self.to_year, self.budget_activity), as_dict=True)
+			""", (self.college, self.from_year, self.to_year, self.cost_center, self.budget_activity), as_dict=True)
 
 			if not self.approved_budget_list:
 				frappe.throw(
@@ -66,25 +68,25 @@ class SupplementaryBudgets(Document):
 					.format(self.from_year, self.to_year, self.college)
 				)
 
-		if self.budget_activity_type == "Additional Activities":
-			self.approved_budget_additional_list = frappe.db.sql("""
-				SELECT abi.approved_budget, ab.name
-				FROM `tabApproved Budget` ab
-				INNER JOIN `tabApproved Budget Extra Item` abi 
-					ON ab.name = abi.parent
-				WHERE ab.college = %s
-				AND ab.from_year = %s
-				AND ab.to_year = %s
-				AND ab.docstatus = 1
-				AND abi.activity_link = %s
-				ORDER BY abi.idx
-			""", (self.college, self.from_year, self.to_year, self.budget_activity), as_dict=True)
+		# if self.budget_activity_type == "Additional Activities":
+		# 	self.approved_budget_additional_list = frappe.db.sql("""
+		# 		SELECT abi.approved_budget, ab.name
+		# 		FROM `tabApproved Budget` ab
+		# 		INNER JOIN `tabApproved Budget Extra Item` abi 
+		# 			ON ab.name = abi.parent
+		# 		WHERE ab.college = %s
+		# 		AND ab.from_year = %s
+		# 		AND ab.to_year = %s
+		# 		AND ab.docstatus = 1
+		# 		AND abi.activity_link = %s
+		# 		ORDER BY abi.idx
+		# 	""", (self.college, self.from_year, self.to_year, self.budget_activity), as_dict=True)
 
-			if not self.approved_budget_additional_list:
-				frappe.throw(
-					_("No additional activity found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b> in Approved Budget")
-					.format(self.from_year, self.to_year, self.college)
-				)
+		# 	if not self.approved_budget_additional_list:
+		# 		frappe.throw(
+		# 			_("No additional activity found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b> in Approved Budget")
+		# 			.format(self.from_year, self.to_year, self.college)
+		# 		)
 
 	def on_submit(self):
 		self.update_budget()
@@ -109,24 +111,61 @@ class SupplementaryBudgets(Document):
 		ab = frappe.get_doc("Approved Budget", ab_name)
 
 		budget_row = None
+		approved_budget_additional_list = None
 
-		if ab.ab_extra_item:
-			for row in ab.ab_extra_item:
-				if row.activity_link == self.budget_activity:
-					budget_row = row
+		if self.budget_activity_type == "Additional Activities":
+			approved_budget_additional_list = frappe.db.sql("""
+				SELECT abi.approved_budget, ab.name
+				FROM `tabApproved Budget` ab
+				INNER JOIN `tabApproved Budget Extra Item` abi 
+					ON ab.name = abi.parent
+				WHERE ab.college = %s
+				AND ab.from_year = %s
+				AND ab.to_year = %s
+				AND ab.cost_center = %s
+				AND ab.docstatus = 1
+				AND abi.activity_link = %s
+				ORDER BY abi.idx
+			""", (self.college, self.from_year, self.to_year, self.cost_center, self.budget_activity), as_dict=True)
+
+			if not approved_budget_additional_list:
+				activity = frappe.get_doc("Additional Activities", self.budget_activity)
+				project = frappe.get_doc("Planning Project", activity.project)
+				ab.append("ab_extra_item", {
+					"activity_link": self.budget_activity,
+					"output_no": project.planning_output,
+					"output": project.planning_output,
+					"project_no": activity.project,
+					"project": activity.project,
+					"project": activity.project,
+					"is_capital": activity.is_capital,
+					"is_current": activity.is_current,
+					"funding_source": activity.funding_source,
+					"is_new_activity": 1,
+					"activities": activity.activities,
+					"approved_budget": self.supplement_amount,
+					"initial_approved_budget": self.supplement_amount,
+				})
+				# frappe.throw(frappe.as_json((ab)))
+				ab.save(ignore_permissions=True)
+			elif ab.ab_extra_item:
+				for row in ab.ab_extra_item:
+					if row.activity_link == self.budget_activity:
+						budget_row = row
 
 		for row in ab.items:
 			if row.activity_link == self.budget_activity:
 				budget_row = row
-
-		if not budget_row:
+		# frappe.throw(str(approved_budget_additional_list))
+		if not budget_row and approved_budget_additional_list:
 			frappe.throw(_("Activity not found in Approved Budget"))
 
 		amount = flt(self.supplement_amount)
 
 		if not cancel:
-			budget_row.approved_budget += amount
-			budget_row.supplementary_received += amount
+			if approved_budget_additional_list:
+				budget_row.approved_budget += amount
+				budget_row.supplementary_received += amount
 
 		else:
 			if budget_row.approved_budget < amount:
@@ -135,7 +174,7 @@ class SupplementaryBudgets(Document):
 			budget_row.approved_budget -= amount
 			budget_row.supplementary_received -= amount
 
-		if self.budget_activity_type == "Additional Activities":
+		if self.budget_activity_type == "Additional Activities" and approved_budget_additional_list:
 			frappe.db.set_value(
 				"Approved Budget Extra Item",
 				budget_row.name,
@@ -145,7 +184,7 @@ class SupplementaryBudgets(Document):
 				},
 				update_modified=False
 			)
-		else:
+		elif self.budget_activity_type == "Planning Activities":
 			frappe.db.set_value(
 				"Approved Budget Item",
 				budget_row.name,

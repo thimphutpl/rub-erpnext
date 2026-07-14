@@ -22,6 +22,7 @@ class ApprovedBudgetExtraItem(Document):
 		initial_approved_budget: DF.Currency
 		is_capital: DF.Check
 		is_current: DF.Check
+		is_new_activity: DF.Check
 		output: DF.SmallText | None
 		output_no: DF.Link | None
 		parent: DF.Data

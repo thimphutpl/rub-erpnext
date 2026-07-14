@@ -13,21 +13,23 @@ def execute(filters=None):
 	return columns, data
 
 def validate_filters(filters):
-	if not filters.fiscal_year:
-		frappe.throw(_("Fiscal Year {0} is required").format(filters.fiscal_year))
+	if not filters.from_year:
+		frappe.throw(_("From Year {0} is required").format(filters.from_year))
 
-	fiscal_year = frappe.db.get_value("Fiscal Year", filters.fiscal_year, ["year_start_date", "year_end_date"], as_dict=True)
-	if not fiscal_year:
-		frappe.throw(_("Fiscal Year {0} does not exist").format(filters.fiscal_year))
-	else:
-		filters.year_start_date = getdate(fiscal_year.year_start_date)
-		filters.year_end_date = getdate(fiscal_year.year_end_date)
+	if not filters.to_year:
+		frappe.throw(_("To Year {0} is required").format(filters.to_year))
+
+	from_date = f"{filters.from_year}-07-01"
+	to_date = f"{filters.to_year}-06-30"
+	
+	filters.from_date = getdate(filters.from_date)
+	filters.to_date = getdate(filters.to_date)
 
 	if not filters.from_date:
-		filters.from_date = filters.year_start_date
+		filters.from_date = from_date
 
-	if not filters.to_date:
-		filters.to_date = filters.year_end_date
+	if not to_date:
+		filters.to_date = to_date
 
 	filters.from_date = getdate(filters.from_date)
 	filters.to_date = getdate(filters.to_date)
@@ -35,39 +37,43 @@ def validate_filters(filters):
 	if filters.from_date > filters.to_date:
 		frappe.throw(_("From Date cannot be greater than To Date"))
 
-	if (filters.from_date < filters.year_start_date) or (filters.from_date > filters.year_end_date):
-		frappe.msgprint(_("From Date should be within the Fiscal Year. Assuming From Date = {0}")\
-			.format(formatdate(filters.year_start_date)))
+	if (filters.from_date < getdate(from_date)) or (filters.from_date > getdate(to_date)):
+		frappe.msgprint(_("From Date should be within the From Year. Assuming From Date = {0}")\
+			.format(formatdate(from_date)))
 
-		filters.from_date = filters.year_start_date
+		filters.from_date = from_date
 
-	if (filters.to_date < filters.year_start_date) or (filters.to_date > filters.year_end_date):
-		frappe.msgprint(_("To Date should be within the Fiscal Year. Assuming To Date = {0}")\
-			.format(formatdate(filters.year_end_date)))
-		filters.to_date = filters.year_end_date
+	if (filters.to_date < getdate(from_date)) or (filters.to_date > getdate(to_date)):
+		frappe.msgprint(_("To Date should be within the To Year. Assuming To Date = {0}")\
+			.format(formatdate(to_date)))
+		filters.to_date = to_date
 
 def get_data(filters):
 	query = """
-		select reference as name, cost_center, account, project, amount,
-		(select a.remarks from `tabSupplementary Budget` a where a.name = `tabSupplementary Details`.reference) as remarks,
-		posting_date as date 
-		from `tabSupplementary Details` 
-		where posting_date between '{from_date}' and '{to_date}'
-		""".format(from_date=filters.from_date, to_date=filters.to_date)
+		select sb.name, sb.cost_center, sb.budget_activity_type, sb.budget_activity, sb.budget_type, sb.supplement_amount,
+		sb.remarks, sb.posting_date as date,
+		CASE
+			WHEN sb.budget_activity_type = 'Planning Activities'
+				THEN pa.activities
+			WHEN sb.budget_activity_type = 'Additional Activities'
+				THEN aa.activities
+		END AS budget_activity_name
+		from `tabSupplementary Budgets` sb
+		LEFT JOIN `tabPlanning Activities` pa
+			ON pa.name = sb.budget_activity
+		LEFT JOIN `tabAdditional Activities` aa
+			ON aa.name = sb.budget_activity
+		where sb.posting_date between '{from_date}' and '{to_date}' AND sb.college = '{college}'
+		""".format(from_date=filters.from_date, to_date=filters.to_date, college=filters.college)
 
-	if filters.budget_against == "Project":
-		if filters.to_project:
-			query += " and project = \'" + filters.to_project  + "\'"
-		else:
-			query += " and (project !='' and project is NOT NULL)"
-	else:
-		query += " and (project = '' or project is NULL)"
-		
-	if filters.to_cc:
-		query+=" and cost_center = \'" + filters.to_cc  + "\'"
+	# frappe.throw(str(query))
+	if filters.cost_center:
+		query+=" and sb.cost_center = \'" + filters.cost_center  + "\'"
+	if filters.activity_type:
+		query+=" and sb.budget_activity_type = \'" + filters.activity_type  + "\'"
+	if filters.activity:
+		query+=" and sb.budget_activity = \'" + filters.activity  + "\'"
 
-	if filters.to_acc and filters.budget_against == "Cost Center":
-		query+=" and account = \'" + filters.to_acc  + "\'"
 	sup_data = frappe.db.sql(query, as_dict=True)
 
 	data = []
@@ -75,12 +81,13 @@ def get_data(filters):
 	if sup_data:
 		for a in sup_data:
 			row = {
-				"to_project": a.project,
-				"to_cc": a.cost_center,
-				"to_acc": a.account,
-				"amount": a.amount,
+				"cost_center": a.cost_center,
+				"supplement_amount": a.supplement_amount,
 				"date": a.date,
-               # "budget_type": a.budget_type,
+               	"budget_type": a.budget_type,
+               	"budget_activity_type": a.budget_activity_type,
+               	"budget_activity": a.budget_activity,
+               	"budget_activity_name": a.budget_activity_name,
                 "name": a.name,
 			}
 			data.append(row)
@@ -88,103 +95,63 @@ def get_data(filters):
 	return data
 
 def get_columns(filters):
-	if filters.budget_against != "Project":
-		return [
-			{
-				"fieldname": "date",
-				"label": _("Date"),
-				"fieldtype": "Date",
-				"width": 120
-			},
-           # {
-            #    "fieldname": "budget_type",
-             #   "label": _("Budget Type"),
-              #  "fieldtype": "Data",
-               # "width": 120
-         #   },
-
-			{
-				"fieldname": "to_cc",
-				"label": _("To Cost Center"),
-				"fieldtype": "Link",
-				"options":"Cost Center",
-				"width": 200
-			},
-			{
-				"fieldname": "to_acc",
-				"label": _("To Account"),
-				"fieldtype": "Link",
-				"options": "Account",
-				"width": 230
-			},
-			{
-				"fieldname": "amount",
-				"label": _("Amount"),
-				"fieldtype": "Currency",
-				"width": 130
-			},
-            {
-                "fieldname": "name",
-                "label": _("Transaction"),
-                "fieldtype": "Link",
-                "options": "Supplementary Budget",
-                "with": 120
-                },
-			{
-				"fieldname": "remarks",
-				"label": _("Remarks"),
-				"fieldtype": "Data",
-				"width": 200
-			}
-		]
-	else:
-		return [
-			{
-				"fieldname": "date",
-				"label": _("Date"),
-				"fieldtype": "Date",
-				"width": 120
-			},
-          #  {
-           #     "fieldname": "budget_type",
-            #    "label": _("Budget Type"),
-             #   "fieldtype": "Data",
-              #  "width": 120
-           # },
-
-			{
-				"fieldname": "to_project",
-				"label": _("To Project"),
-				"fieldtype": "Link",
-				"options": "Project",
-				"width": 230
-			},
-			{
-				"fieldname": "to_cc",
-				"label": _("To Cost Center"),
-				"fieldtype": "Link",
-				"options":"Cost Center",
-				"width": 200
-			},
-			{
-				"fieldname": "amount",
-				"label": _("Amount"),
-				"fieldtype": "Currency",
-				"width": 130
-			},
-
-            {
-                "fieldname": "name",
-                "label": _("Transection"),
-                "fieldtype": "Link",
-                "options": "Supplementary Budget",
-                "with": 120
-                },
-
-			{
-				"fieldname": "remarks",
-				"label": _("Remarks"),
-				"fieldtype": "Data",
-				"width": 200
-			}
-		]
+	return [
+		{
+			"fieldname": "name",
+			"label": _("Transaction Name"),
+			"fieldtype": "Link",
+			"options": "Supplementary Budgets",
+			"with": 120
+		},
+		{
+			"fieldname": "date",
+			"label": _("Date"),
+			"fieldtype": "Date",
+			"width": 120
+		},
+		{
+		   "fieldname": "budget_activity_type",
+			"label": _("Activity Type"),
+			"fieldtype": "Select",
+			"options": ["Planning Activities, Additional Activities"],
+			"width": 120
+		},
+		{
+		   "fieldname": "budget_activity",
+			"label": _("Activity"),
+			"fieldtype": "Dynamic Link",
+			"options": "budget_activity_type",
+			"width": 120
+		},
+		{
+		   "fieldname": "budget_activity_name",
+			"label": _("Activity Name"),
+			"fieldtype": "Data",
+			"width": 120
+		},
+		{
+		   "fieldname": "budget_type",
+			"label": _("Budget Type"),
+			"fieldtype": "Data",
+			"width": 120
+		},
+		{
+			"fieldname": "cost_center",
+			"label": _("To Cost Center"),
+			"fieldtype": "Link",
+			"options":"Cost Center",
+			"width": 200
+		},
+		{
+			"fieldname": "supplement_amount",
+			"label": _("Supplement Amount"),
+			"fieldtype": "Currency",
+			"width": 130
+		},
+		{
+			"fieldname": "remarks",
+			"label": _("Remarks"),
+			"fieldtype": "Data",
+			"width": 200
+		}
+	]

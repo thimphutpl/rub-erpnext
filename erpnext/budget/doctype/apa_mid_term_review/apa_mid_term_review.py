@@ -25,7 +25,6 @@ class APAMidTermReview(Document):
 		output_items: DF.Table[APATargetOutputItem]
 		to_year: DF.Link
 	# end: auto-generated types
-	pass
 
 	def autoname(self):
 		college_abbr = frappe.get_value("Company", self.college, "abbr")
@@ -47,7 +46,6 @@ def get_target_setup_details(from_year, to_year, college):
 			atoi.output,
 			atoi.project,
 			atoi.activities,
-			atoi.activities_no,
 			atoi.target,
 			atoi.justification
 		FROM `tabAPA Target Setup` ats
@@ -79,24 +77,34 @@ def get_target_setup_details(from_year, to_year, college):
 		ORDER BY atoi.idx
 	''',(from_year, to_year, college), as_dict=True)
 
-	outcome = frappe.db.sql('''
-		SELECT  
-			atoi.outcome,
-			atoi.unit,
-			atoi.weightage,
-			atoi.target,
-			atoi.justification
-		FROM `tabAPA Target Setup` ats
-		INNER JOIN `tabAPA Target Outcome Item` atoi ON ats.name = atoi.parent
-		WHERE ats.from_year = %s AND ats.to_year = %s AND atoi.parenttype = "APA Target Setup" AND ats.college = %s AND ats.docstatus = 1
-		ORDER BY atoi.idx
-	''',(from_year, to_year, college), as_dict=True)
+	ignore_colleges = frappe.db.sql("""
+		SELECT
+			college
+		FROM `tabIgnore APA Outcome`
+		WHERE parent = 'APA Settings'
+	""", as_dict=True)
+	
+	outcome = None
+	if college not in [d["college"] for d in ignore_colleges]:
+		outcome = frappe.db.sql('''
+			SELECT  
+				atoi.outcome,
+				atoi.unit,
+				atoi.weightage,
+				atoi.target,
+				atoi.justification
+			FROM `tabAPA Target Setup` ats
+			INNER JOIN `tabAPA Target Outcome Item` atoi ON ats.name = atoi.parent
+			WHERE ats.from_year = %s AND ats.to_year = %s AND atoi.parenttype = "APA Target Setup" AND ats.college = %s AND ats.docstatus = 1
+			ORDER BY atoi.idx
+		''',(from_year, to_year, college), as_dict=True)
 
-	if not outcome:
-		frappe.throw("No Outcome Target Setup found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))
+		if not outcome:
+			frappe.throw("No Outcome Target Setup found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))
 
 	return {
 		"output": output,
 		"output_extra": output_extra,
-		"outcome": outcome
+		"outcome": outcome,
+		"ignore_colleges": ignore_colleges,
 	}

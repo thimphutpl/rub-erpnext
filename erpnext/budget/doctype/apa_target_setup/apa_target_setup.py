@@ -48,7 +48,6 @@ def fetch_output_and_outcome(from_year, to_year, college):
 			oii.project,
 			oii.activities,
 			oii.sub_activity,
-			oii.activities_no
 		FROM `tabOutput Indicator` oi 
 		INNER JOIN `tabOutput Indicator Item` oii ON oi.name = oii.parent
 		WHERE oi.from_year = %s and oi.to_year = %s and oi.college = %s
@@ -76,22 +75,32 @@ def fetch_output_and_outcome(from_year, to_year, college):
 		ORDER BY oii.idx ASC
 	''',(from_year, to_year, college), as_dict=True)
 
-	outcome = frappe.db.sql('''
-		SELECT  
-			unit,
-			weightage,
-			outcome
-		FROM `tabOutcome Indicator`
-		WHERE disabled = 0
-	''', as_dict=True)
+	ignore_colleges = frappe.db.sql("""
+		SELECT
+			college
+		FROM `tabIgnore APA Outcome`
+		WHERE parent = 'APA Settings'
+	""", as_dict=True)
+	# frappe.throw(str(ignore_colleges))
+	outcome = None
+	if college not in [d["college"] for d in ignore_colleges]:
+		outcome = frappe.db.sql('''
+			SELECT  
+				unit,
+				weightage,
+				outcome
+			FROM `tabOutcome Indicator`
+			WHERE disabled = 0
+		''', as_dict=True)
 
-	if not outcome:
-		frappe.throw("No Outcome Indicator found")
+		if not outcome:
+			frappe.throw("No Outcome Indicator found")
 
 	return {
 		"output": output,
 		"output_extra": output_extra,
-		"outcome": outcome
+		"outcome": outcome,
+		"ignore_colleges": ignore_colleges,
 	}
 
 # def send_expiry_alerts():

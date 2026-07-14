@@ -93,13 +93,14 @@
    "fieldtype": "Section Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "ab_extra_item",
    "fieldtype": "Table",
    "label": "Additional Activities",
    "options": "Approved Budget Extra Item"
   },
   {
-   "fetch_from": "from_year.from_date",
+   "fetch_from": "from_year.to_date",
    "fieldname": "from_date",
    "fieldtype": "Date",
    "hidden": 1,
@@ -132,7 +133,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-06-22 14:25:18.103364",
+ "modified": "2026-07-14 10:09:42.163748",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Approved Budget",

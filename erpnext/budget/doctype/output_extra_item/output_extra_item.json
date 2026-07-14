@@ -89,7 +89,8 @@
   {
    "fieldname": "weightage",
    "fieldtype": "Data",
-   "label": "Weightage"
+   "label": "Weightage",
+   "reqd": 1
   },
   {
    "columns": 2,
@@ -114,8 +115,8 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-04-01 16:10:06.408898",
- "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "modified": "2026-07-06 14:19:41.580749",
+ "modified_by": "Administrator",
  "module": "Budget",
  "name": "Output Extra Item",
  "owner": "Administrator",

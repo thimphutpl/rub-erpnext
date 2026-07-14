@@ -32,6 +32,6 @@ class OutputIndicatorItem(Document):
 		sub_activity: DF.SmallText | None
 		sub_activity_no: DF.Link | None
 		unit: DF.Link | None
-		weightage: DF.Data | None
+		weightage: DF.Data
 	# end: auto-generated types
 	pass

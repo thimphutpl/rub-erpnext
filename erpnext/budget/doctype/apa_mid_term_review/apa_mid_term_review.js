@@ -45,7 +45,6 @@ frappe.ui.form.on("APA Mid Term Review", {
                             child.output_no = row.output_no
                             child.project_no = row.project_no
                             child.activity_link = row.activity_link
-                            child.activities_no = row.activities_no
                             child.unit = row.unit
                             child.weightage = row.weightage
                             child.target = row.target
@@ -80,7 +79,8 @@ frappe.ui.form.on("APA Mid Term Review", {
     
                         frm.refresh_field("output_extra_items");
                     }
-                    if (r.message.outcome) {
+                    if (r.message.outcome && !(frm.doc.college in r.message.ignore_colleges)) {
+                        frm.set_df_property("outcome_items", "hidden", 0);
                         console.log(r.message.outcome)
                         frm.clear_table("outcome_items");
                         
@@ -89,10 +89,11 @@ frappe.ui.form.on("APA Mid Term Review", {
                             child.outcome = row.outcome
                             child.unit= row.unit
                             child.weightage = row.weightage
-                            child.target = row.target
-                            child.justification = row.justification
                         });
     
+                        frm.refresh_field("outcome_items");
+                    }else{
+                        frm.set_df_property("outcome_items", "hidden", 1);
                         frm.refresh_field("outcome_items");
                     }
                 }

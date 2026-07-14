@@ -26,6 +26,6 @@ class OutputExtraItem(Document):
 		sub_activity: DF.SmallText | None
 		sub_activity_link: DF.Link | None
 		unit: DF.Link | None
-		weightage: DF.Data | None
+		weightage: DF.Data
 	# end: auto-generated types
 	pass

@@ -19,6 +19,7 @@ class ApprovedBudget(Document):
 
 		ab_extra_item: DF.Table[ApprovedBudgetExtraItem]
 		amended_from: DF.Link | None
+		available_budget: DF.Currency
 		college: DF.Link
 		cost_center: DF.Link
 		from_date: DF.Date | None

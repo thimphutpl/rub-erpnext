@@ -15,7 +15,6 @@ class ApprovedBudgetItem(Document):
 		from frappe.types import DF
 
 		activities: DF.SmallText | None
-		activities_no: DF.Link | None
 		activity_link: DF.Link | None
 		approved_budget: DF.Currency
 		available_budget: DF.Currency

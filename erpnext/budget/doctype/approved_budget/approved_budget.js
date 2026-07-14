@@ -40,6 +40,7 @@ frappe.ui.form.on("Approved Budget", {
     },
     college(frm) {
         if(frm.doc.college){
+            frm.set_value("cost_center", "")
             frm.set_query("cost_center", function () {
                 return {
                     filters: {

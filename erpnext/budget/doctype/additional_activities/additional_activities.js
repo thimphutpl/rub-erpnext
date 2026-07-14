@@ -25,7 +25,12 @@ frappe.ui.form.on("Additional Activities", {
     },
     unit: function(frm){
         toggle_child_fields(frm);
-    }
+    },
+    include_in_apa: function(frm) {
+        frm.set_value("unit", null)
+        frm.clear_table("items");
+        frm.refresh_field("items");
+    },
 });
 
 function toggle_child_fields(frm) {

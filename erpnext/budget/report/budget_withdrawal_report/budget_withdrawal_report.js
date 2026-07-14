@@ -1,0 +1,133 @@
+// Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and contributors
+// For license information, please see license.txt
+
+frappe.query_reports["Budget Withdrawal Report"] = {
+	filters: [
+		{
+			fieldname: "college",
+			label: __("College"),
+			fieldtype: "Link",
+			options: "Company",
+			reqd: 1,
+			get_query: function() {
+				return {
+					filters: {
+						is_group: 0
+					}
+				};
+			},
+			on_change: function(query_report) {
+				query_report.set_filter_value("cost_center", "");
+			}
+		},
+		{
+			fieldname: "from_year",
+			label: __("From Year"),
+			fieldtype: "Link",
+			options: "Budget Year",
+			reqd: 1,
+			on_change: function(query_report) {
+                let from_year = query_report.get_filter_value("from_year");
+                if (!from_year) {
+					query_report.set_filter_value(
+						"from_date",
+						""
+					);
+					return;
+                }
+				let from_date = `${from_year}-07-01`;
+				query_report.set_filter_value(
+					"from_date",
+					from_date
+				);
+				query_report.refresh();
+            }
+		},
+		{
+			fieldname: "to_year",
+			label: __("To Year"),
+			fieldtype: "Link",
+			options: "Budget Year",
+			reqd: 1,
+			on_change: function(query_report) {
+                let to_year = query_report.get_filter_value("to_year");
+                if (!to_year) {
+					query_report.set_filter_value(
+						"to_date",
+						""
+					);
+					return;
+                }
+				let to_date = `${to_year}-06-30`;
+				query_report.set_filter_value(
+					"to_date",
+					to_date
+				);
+				query_report.refresh();
+            }
+		},
+		{
+			fieldname: "from_date",
+			label: __("From Date"),
+			fieldtype: "Date",
+		},
+		{
+			fieldname: "to_date",
+			label: __("To Date"),
+			fieldtype: "Date",
+		},
+		{
+			fieldname: "cost_center",
+			label: __("Cost Center"),
+			fieldtype: "Link",
+			options: "Cost Center",
+			get_query: function() {
+				let college = frappe.query_report.get_filter_value("college");
+		
+				return {
+					filters: {
+						company: college
+					}
+				};
+			}
+		},
+		{
+            fieldname: "activity_type",
+            label: __("Activity Type"),
+            fieldtype: "Select",
+            options: ["", "Planning Activities", "Additional Activities"],
+            on_change: function(query_report) {
+                let activity_type = query_report.get_filter_value("activity_type");
+                let college = query_report.get_filter_value("college");
+        
+                frappe.call({
+                    method: "erpnext.budget.report.budgeting_consumption.budgeting_consumption.get_activity_list",
+                    args: {
+                        activity_type: activity_type,
+                        college: college
+                    },
+                    callback: function(r) {
+                        let activity_filter = query_report.get_filter("activity");
+        
+                        activity_filter.df.options = [
+                            ""
+                        ].concat(
+                            (r.message || []).map(row => row.name)
+                        );
+        
+                        activity_filter.refresh();
+        
+                        query_report.set_filter_value("activity", "");
+                    }
+                });
+                query_report.refresh();
+            }
+        },
+        {
+            fieldname: "activity",
+            label: __("Activity"),
+            fieldtype: "Select",
+            options: [],
+        }
+	],
+};

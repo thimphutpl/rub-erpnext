@@ -12,11 +12,13 @@ class APASettings(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
+		from erpnext.budget.doctype.ignore_apa_outcome.ignore_apa_outcome import IgnoreAPAOutcome
 		from erpnext.budget.doctype.interpolation_category.interpolation_category import InterpolationCategory
-		from frappe.model.document import Document
+		from erpnext.budget.doctype.interpolation_formula.interpolation_formula import InterpolationFormula
 		from frappe.types import DF
 
-		items: DF.Table[Document]
+		ignore_colleges: DF.Table[IgnoreAPAOutcome]
+		items: DF.Table[InterpolationFormula]
 		outcome_2a_percentage: DF.Percent
 		output_2b_percentage: DF.Percent
 		table_jgpc: DF.Table[InterpolationCategory]

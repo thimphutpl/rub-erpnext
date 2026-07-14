@@ -12,7 +12,9 @@
   "interpolation_formula_section",
   "items",
   "category_determination_section",
-  "table_jgpc"
+  "table_jgpc",
+  "ignore_colleges_in_apa_for_section_2a_section",
+  "ignore_colleges"
  ],
  "fields": [
   {
@@ -53,13 +55,23 @@
    "fieldname": "table_jgpc",
    "fieldtype": "Table",
    "options": "Interpolation Category"
+  },
+  {
+   "fieldname": "ignore_colleges_in_apa_for_section_2a_section",
+   "fieldtype": "Section Break",
+   "label": "Ignore College(s) in APA for Section 2A"
+  },
+  {
+   "fieldname": "ignore_colleges",
+   "fieldtype": "Table",
+   "options": "Ignore APA Outcome"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-02 15:26:11.902535",
+ "modified": "2026-07-06 10:23:12.974667",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "APA Settings",

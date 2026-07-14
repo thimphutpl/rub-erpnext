@@ -13,6 +13,7 @@
   "from_project",
   "from_activity_type",
   "from_budget_type",
+  "from_cost_center",
   "from_activity",
   "available_balance",
   "appropiation_amount",
@@ -23,6 +24,7 @@
   "to_project",
   "to_activity_type",
   "to_budget_type",
+  "to_cost_center",
   "to_activity",
   "remarks",
   "approval_details_section",
@@ -200,13 +202,29 @@
    "fieldtype": "Currency",
    "label": "Available Balance (In Million)",
    "read_only": 1
+  },
+  {
+   "fieldname": "from_cost_center",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "From Cost Center",
+   "options": "Cost Center",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_cost_center",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "To Cost Center",
+   "options": "Cost Center",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-23 14:52:42.476194",
+ "modified": "2026-07-09 16:20:08.414352",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Budget Reappropiations",

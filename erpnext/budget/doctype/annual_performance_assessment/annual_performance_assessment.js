@@ -10,6 +10,7 @@ frappe.ui.form.on("Annual Performance Assessment", {
             return {
                 filters: {
                     is_group: 0,
+                    is_overseeing_company: 0,
                 },
             };
         });
@@ -45,7 +46,6 @@ frappe.ui.form.on("Annual Performance Assessment", {
                                 child.output_no = row.output_no
                                 child.project_no = row.project_no
                                 child.activity_link = row.activity_link
-                                child.activities_no = row.activities_no
                                 child.unit = row.unit
                                 child.weightage = row.weightage
                                 child.target = row.target

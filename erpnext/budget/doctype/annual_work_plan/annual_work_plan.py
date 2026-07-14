@@ -31,28 +31,6 @@ class AnnualWorkPlan(Document):
 		total_approved_budget: DF.Currency
 		total_approved_budget_in_fyp: DF.Currency
 		total_proposed_budget: DF.Currency
-	# end: auto-generated types
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
-
-	from typing import TYPE_CHECKING
-
-	if TYPE_CHECKING:
-		from erpnext.budget.doctype.apa_detail.apa_detail import APADetail
-		from erpnext.budget.doctype.apa_detail_extra.apa_detail_extra import APADetailExtra
-		from frappe.types import DF
-
-		amended_from: DF.Link | None
-		apa_copies: DF.Check
-		apa_details: DF.Table[APADetail]
-		apa_extra_details: DF.Table[APADetailExtra]
-		colleges: DF.Link
-		from_year: DF.Link
-		fyp: DF.Link
-		remarks: DF.SmallText | None
-		to_year: DF.Link
-		total_approved_budget: DF.Currency
-		total_proposed_budget: DF.Currency
 
 	def autoname(self):
 		abbr = frappe.db.get_value("Company", self.colleges, "abbr")
@@ -308,7 +286,7 @@ def make_approved_budget(source_name, target_doc=None):
 				AND parent.docstatus = 1
 			""", (source.from_year, source.to_year, source.colleges, row.activity_link))[0][0] or 0
 			target.available_budget = (row.approved_budget or 0) - existing_total
-			frappe.msgprint(str(target.available_budget))
+			# frappe.msgprint(str(row.approved_budget))
 
 
 		for row in source.get("apa_extra_details"):
@@ -335,18 +313,18 @@ def make_approved_budget(source_name, target_doc=None):
 			},
 			"APA Detail": {
 				"doctype": "Approved Budget Item",
-				"field_map": {
-					"approved_budget": "available_budget"
-				},
+				# "field_map": {
+				# 	"approved_budget": "available_budget"
+				# },
 				"field_no_map": {
 					"approved_budget"
 				}
 			},
 			"APA Detail Extra": {
 				"doctype": "Approved Budget Extra Item",
-				"field_map": {
-					"approved_budget": "available_budget"
-				},
+				# "field_map": {
+				# 	"approved_budget": "available_budget"
+				# },
 				"field_no_map": {
 					"approved_budget"
 				}

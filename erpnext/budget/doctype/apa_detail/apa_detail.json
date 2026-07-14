@@ -12,7 +12,6 @@
   "project_no",
   "project",
   "column_break_orjw",
-  "activities_no",
   "activity_link",
   "activities",
   "proposed_budget",
@@ -46,12 +45,6 @@
    "fieldtype": "Int",
    "label": "Output No",
    "read_only": 1
-  },
-  {
-   "fieldname": "activities_no",
-   "fieldtype": "Int",
-   "hidden": 1,
-   "label": "Activities No"
   },
   {
    "fieldname": "project_no",

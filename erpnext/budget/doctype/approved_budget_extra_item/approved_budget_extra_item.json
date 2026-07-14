@@ -23,7 +23,8 @@
   "approved_budget",
   "is_capital",
   "is_current",
-  "funding_source"
+  "funding_source",
+  "is_new_activity"
  ],
  "fields": [
   {
@@ -36,8 +37,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Approved Budget (In Million)",
-   "precision": "3",
-   "read_only": 1
+   "precision": "3"
   },
   {
    "fieldname": "output_no",
@@ -154,13 +154,20 @@
    "fieldtype": "Currency",
    "label": "Available Budget (In Million)",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_new_activity",
+   "fieldtype": "Check",
+   "label": "Is New Activity",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-06-22 14:42:37.576205",
+ "modified": "2026-07-09 11:19:20.409629",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Approved Budget Extra Item",

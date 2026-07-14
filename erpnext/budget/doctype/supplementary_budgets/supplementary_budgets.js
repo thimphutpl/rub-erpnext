@@ -6,12 +6,26 @@ frappe.ui.form.on("Supplementary Budgets", {
         if (!frm.doc.posting_date) {
             frm.set_value("posting_date", frappe.datetime.get_today())
         }
+        frm.set_query("cost_center", function () {
+            return {
+                filters: {
+                    company: "",
+                },
+            };
+        });
 	},
     setup(frm) {
         frm.set_query("college", function () {
             return {
                 filters: {
                     is_group: 0,
+                },
+            };
+        });
+        frm.set_query("cost_center", function () {
+            return {
+                filters: {
+                    company: "",
                 },
             };
         });
@@ -77,4 +91,16 @@ frappe.ui.form.on("Supplementary Budgets", {
             return { filters };
         });
     },
+    college(frm) {
+        if(frm.doc.college){
+            frm.set_value("cost_center", "")
+            frm.set_query("cost_center", function () {
+                return {
+                    filters: {
+                        company: frm.doc.college,
+                    },
+                };
+            });
+        }
+    }
 });
