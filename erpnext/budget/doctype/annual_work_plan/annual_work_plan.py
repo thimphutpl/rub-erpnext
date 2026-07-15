@@ -184,7 +184,7 @@ class AnnualWorkPlan(Document):
 			already_approved_budget = awp_approved_map.get(row.activity_link, 0)
 			already_proposed_budget = awp_proposed_map.get(row.activity_link, 0)
 
-			if not available_budget and available_budget <= 0:
+			if not available_budget or available_budget <= 0:
 				frappe.throw(
 					_("No approved budget found for Activity: <b>{0}</>")
 					.format(row.activities)

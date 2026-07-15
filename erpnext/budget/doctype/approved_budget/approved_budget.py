@@ -38,7 +38,7 @@ class ApprovedBudget(Document):
 
 	def validate(self):
 		self.check_approved_budget()
-		self.check_annual_work_plan()
+		# self.check_annual_work_plan()
 		self.validate_approved_budget()
 		self.calculate_approved_budget()
 		self.map_initial_from_approved()
