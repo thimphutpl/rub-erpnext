@@ -184,11 +184,11 @@ class AnnualWorkPlan(Document):
 			already_approved_budget = awp_approved_map.get(row.activity_link, 0)
 			already_proposed_budget = awp_proposed_map.get(row.activity_link, 0)
 
-			if not available_budget or available_budget <= 0:
-				frappe.throw(
-					_("No approved budget found for Activity: <b>{0}</>")
-					.format(row.activities)
-				)
+			# if available_budget:
+			# 	frappe.throw(
+			# 		_("No approved budget found for Activity: <b>{0}</>")
+			# 		.format(row.activities)
+			# 	)
 
 			total_approved_budget = (
 				flt(row.approved_budget)
@@ -200,13 +200,13 @@ class AnnualWorkPlan(Document):
 				+ already_proposed_budget
 			)
 
-			if total_approved_budget > available_budget:
+			if available_budget > 0 and total_approved_budget > available_budget:
 				frappe.throw(
 					_("Approved budget for Activity <b>{0}<b/> exceeds available budget <b>({1})</b>")
 					.format(row.activities, available_budget)
 				)
 
-			if total_proposed_budget > available_budget:
+			if available_budget > 0 and total_proposed_budget > available_budget:
 				frappe.throw(
 					_("Approved budget for Activity <b>{0}<b/> exceeds available budget <b>({1})</b>")
 					.format(row.activities, available_budget)
