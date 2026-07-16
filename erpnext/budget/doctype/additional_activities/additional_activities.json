@@ -132,7 +132,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-30 14:41:26.622350",
+ "modified": "2026-07-16 11:20:43.715374",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Additional Activities",
@@ -152,7 +152,9 @@
   }
  ],
  "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "activities"
 }

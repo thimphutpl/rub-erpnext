@@ -15,6 +15,8 @@ frappe.ui.form.on("Approved Budget", {
                 return {
                     filters: {
                         company: frm.doc.college,
+                        is_group: 0,
+                        disabled: 0,
                     },
                 };
             });
@@ -33,6 +35,8 @@ frappe.ui.form.on("Approved Budget", {
                 return {
                     filters: {
                         company: frm.doc.college,
+                        is_group: 0,
+                        disabled: 0,
                     },
                 };
             });
@@ -45,6 +49,8 @@ frappe.ui.form.on("Approved Budget", {
                 return {
                     filters: {
                         company: frm.doc.college,
+                        is_group: 0,
+                        disabled: 0,
                     },
                 };
             });
