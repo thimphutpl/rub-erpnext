@@ -138,9 +138,6 @@ class Budget(Document):
 	def before_naming(self):
 		self.naming_series = f"{{{frappe.scrub(self.budget_against)}}}./.{self.fiscal_year}/.###"
 
-	def validate_against_planning_activities(args):
-		frappe.throw("GUGU")
-
 def validate_expense_against_budget(args, expense_amount=0):
 	args = frappe._dict(args)
 	
@@ -563,3 +560,73 @@ def get_expense_cost_center(doctype, args):
 		return frappe.db.get_value(
 			doctype, args.get(frappe.scrub(doctype)), ["cost_center", "default_expense_account"]
 		)
+
+
+def validate_against_planning_activities(args):
+	total_budget_consumed=get_actual_expense_amount(args)
+	budget_amount=get_budget_amount(args)
+	total_expense = flt(total_budget_consumed) + flt(args.debit)
+	if args.activity and args.cost_center:
+		if not budget_amount or flt(budget_amount) == 0:
+			frappe.throw("Budget not set for Activity: <b>{0}</b> and Cost Center: <b>{1}</b> ".format(args.activity, args.cost_center))
+
+		budget_in_million = budget_amount * 1000000
+
+		if total_expense > budget_in_million  and args.against_voucher_type not in ("Asset Movement", "Asset Value Adjustment"):
+			frappe.throw("Expense exceeded the allocated Budget of <b>{0}</b> for College: <b>{1}</b> in Cost Center: <b>{2}</b> and {3}: <b>{4}</b>".format(budget_in_million, args.company, args.cost_center, args.activity_type, args.activity))
+
+def get_budget_amount(args):
+	posting_date = args.posting_date
+	result = None
+	if args.activity_type == "Planning Activities":
+		result = frappe.db.sql(
+			"""
+			select api.approved_budget from 
+			`tabApproved Budget` ab inner join 
+			`tabApproved Budget Item` api on ab.name=api.parent
+			WHERE api.activity_link = %s
+			AND ab.docstatus = 1
+			AND ab.college = %s
+			AND ab.cost_center = %s
+			AND %s between ab.from_date and ab.to_date
+			""",
+			(args.activity, args.company, args.cost_center, posting_date),
+		)
+	elif args.activity_type == "Additional Activities":
+		result = frappe.db.sql(
+			"""
+			select api.approved_budget from 
+			`tabApproved Budget` ab inner join 
+			`tabApproved Budget Extra Item` api on ab.name=api.parent
+			WHERE api.activity_link = %s
+			AND ab.docstatus = 1
+			AND ab.college = %s
+			AND ab.cost_center = %s
+			AND %s between ab.from_date and ab.to_date
+			""",
+			(args.activity, args.company, args.cost_center, posting_date),
+		)
+	
+	return flt(result[0][0]) if result and result[0][0] else 0
+
+
+def get_actual_expense_amount(args):
+	amount = flt(
+		frappe.db.sql(
+			"""
+			SELECT SUM(gle.debit - gle.credit) AS actual_expense
+			FROM `tabGL Entry` gle
+			INNER JOIN `tabAccount` acc ON acc.name = gle.account
+			WHERE gle.is_cancelled = 0
+			  AND gle.docstatus = 1
+			  AND acc.root_type = 'Expense'
+			  AND gle.activity_type = %s
+			  AND gle.activity = %s
+			  AND gle.cost_center = %s
+			""",
+			(args.activity_type, args.activity, args.cost_center),
+		)[0][0]
+	)
+
+	return amount
+

@@ -51,8 +51,8 @@ class JournalEntry(AccountsController):
 		from frappe.types import DF
 
 		accounts: DF.Table[JournalEntryAccount]
-		activity: DF.Link | None
-		activity_name: DF.Data | None
+		activity: DF.DynamicLink | None
+		activity_type: DF.Literal["Planning Activities", "Additional Activities"]
 		amended_from: DF.Link | None
 		apply_tds: DF.Check
 		auto_repeat: DF.Link | None
@@ -1283,6 +1283,7 @@ class JournalEntry(AccountsController):
 								"cost_center": d.cost_center,
 								"project": d.project,
 								"finance_book": self.finance_book,
+								"activity_type": self.activity_type,
 								"activity": self.activity,
 							},
 							item=d,

@@ -35,7 +35,8 @@ class GLEntry(Document):
 
 		account: DF.Link | None
 		account_currency: DF.Link | None
-		activity: DF.Link | None
+		activity: DF.DynamicLink | None
+		activity_type: DF.Literal["Planning Activities", "Additional Activities"]
 		against: DF.Text | None
 		against_voucher: DF.DynamicLink | None
 		against_voucher_type: DF.Link | None

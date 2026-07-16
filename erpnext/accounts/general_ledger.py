@@ -368,7 +368,7 @@ def save_entries(gl_map, adv_adj, update_outstanding, from_repost=False):
 		is_opening = any(d.get("is_opening") == "Yes" for d in gl_map)
 		if gl_map[0]["voucher_type"] != "Period Closing Voucher":
 			validate_against_pcv(is_opening, gl_map[0]["posting_date"], gl_map[0]["company"])
-
+	# frappe.throw(str(gl_map))
 	for entry in gl_map:
 		validate_allowed_dimensions(entry, dimension_filter_map)
 		make_entry(entry, adv_adj, update_outstanding, from_repost)
@@ -401,7 +401,11 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 				budget_cost_center = args.cost_center
 				ex_amount = 0
 				ex_amount = flt(args.credit_in_account_currency) if flt(args.credit_in_account_currency) > 0 else flt(args.debit_in_account_currency)
-			
+				activity_type = None
+				if frappe.db.exists("Planning Activities", args.activity):
+					activity_type = "Planning Activities"
+				elif frappe.db.exists("Additional Activities", args.activity):
+					activity_type = "Additional Activities"
 				if not args.is_cancelled:
 					#Commit Budget
 					# frappe.throw(frappe.as_json(args))
@@ -417,7 +421,8 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 						"amount": flt(ex_amount),
 						"company": args.company,
 						"closed": 1,
-						"business_activity": args.activity,
+						"activity_type": activity_type,
+						"activity": args.activity,
 					})
 					bud_obj.flags.ignore_permissions=1
 					bud_obj.submit()
@@ -436,7 +441,8 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 						"amount": flt(ex_amount),
 						"company": args.company,
 						"com_ref": bud_obj.name,
-						"business_activity": args.activity,
+						"activity_type": activity_type,
+						"activity": args.activity,
 					})
 					con_obj.flags.ignore_permissions=1
 					con_obj.submit()
@@ -811,55 +817,48 @@ def is_immutable_ledger_enabled():
 def validate_against_planning_activities(args):
 	total_budget_consumed=get_actual_expense(args)
 	budget_amount=get_budget_amount(args)
-	# frappe.throw(str(budget_amount))
-	# frappe.throw(str(args))
-	
-	# args.actual_expense, args.requested_amount, args.ordered_amount = get_actual_expense(args), 0, 0
 	total_expense = flt(total_budget_consumed) + flt(args.debit)
-	# frappe.throw(str(total_expense))
-	if args.activity:
-		if not budget_amount or  flt(budget_amount) == 0:
-			frappe.throw("Budget not set for Activity")
+	if args.activity and args.cost_center:
+		if not budget_amount or flt(budget_amount) == 0:
+			frappe.throw("Budget not set for Activity: <b>{0}</b> and Cost Center: <b>{1}</b>".format(args.activity, args.cost_center))
 
 		million_in_budget = budget_amount * 1000000
 
 		if total_expense > million_in_budget  and args.against_voucher_type not in ("Asset Movement", "Asset Value Adjustment"):
-			frappe.throw("Expense exceeded the allocated Budget")
+			frappe.throw("Expense exceeded the allocated Budget of <b>{0}</b> for College: <b>{1}</b> in Cost Center: <b>{2}</b> and {3}: <b>{4}</b>".format(budget_in_million, args.company, args.cost_center, args.activity_type, args.activity))
 
 def get_budget_amount(self):
 	posting_date = self.posting_date
-	# posting_year =getdate(posting_date).year 
-
-	# frappe.throw(str())
-	# result = frappe.db.sql(
-	# 	"""
-	# 	SELECT apa.approved_budget
-	# 	FROM `tabAPA Detail` apa
-	# 	INNER JOIN `tabAnnual Performance Agreement` apa_parent
-	# 		ON apa.parent = apa_parent.name
-	# 	WHERE apa.activity_link = %s
-	# 	  AND apa_parent.docstatus = 1
-	# 	  AND apa_parent.colleges = %s
-	# 	  AND apa_parent.year = %s
-	# 	""",
-	# 	(self.activity, self.company, posting_year),
-	# )
-	# frappe.throw(str(self.activity))
-	# activity_name = frappe.db.get_value("Planning Activities",self.activity,'activities')
-	result = frappe.db.sql(
-		"""
-		select api.approved_budget from 
-		`tabApproved Budget` ab inner join 
-		`tabApproved Budget Item` api on ab.name=api.parent
-		WHERE api.activity_link = %s
-		  AND ab.docstatus = 1
-		  AND ab.college = %s
-		  AND %s between ab.from_date and ab.to_date
-		""",
-		(self.activity, self.company, posting_date),
-	)
+	result = None
+	if self.activity_type == "Planning Activities":
+		result = frappe.db.sql(
+			"""
+			select api.approved_budget from 
+			`tabApproved Budget` ab inner join 
+			`tabApproved Budget Item` api on ab.name=api.parent
+			WHERE api.activity_link = %s
+			AND ab.docstatus = 1
+			AND ab.college = %s
+			AND ab.cost_center = %s
+			AND %s between ab.from_date and ab.to_date
+			""",
+			(self.activity, self.company, self.cost_center, posting_date),
+		)
+	elif self.activity_type == "Additional Activities":
+		result = frappe.db.sql(
+			"""
+			select api.approved_budget from 
+			`tabApproved Budget` ab inner join 
+			`tabApproved Budget Extra Item` api on ab.name=api.parent
+			WHERE api.activity_link = %s
+			AND ab.docstatus = 1
+			AND ab.college = %s
+			AND ab.cost_center = %s
+			AND %s between ab.from_date and ab.to_date
+			""",
+			(self.activity, self.company, self.cost_center, posting_date),
+		)
 	
-
 	return flt(result[0][0]) if result and result[0][0] else 0
 
 
@@ -873,9 +872,11 @@ def get_actual_expense(args):
 			WHERE gle.is_cancelled = 0
 			  AND gle.docstatus = 1
 			  AND acc.root_type = 'Expense'
+			  AND gle.activity_type = %s
 			  AND gle.activity = %s
+			  AND gle.cost_center = %s
 			""",
-			(args.activity,),
+			(args.activity_type, args.activity, args.cost_center),
 		)[0][0]
 	)
 

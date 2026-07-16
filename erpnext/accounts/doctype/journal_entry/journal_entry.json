@@ -18,8 +18,8 @@
   "finance_book",
   "process_deferred_accounting",
   "reversal_of",
+  "activity_type",
   "activity",
-  "activity_name",
   "column_break1",
   "mode_of_payment",
   "from_template",
@@ -661,16 +661,15 @@
   },
   {
    "fieldname": "activity",
-   "fieldtype": "Link",
+   "fieldtype": "Dynamic Link",
    "label": "Activity",
-   "options": "Planning Activities"
+   "options": "activity_type"
   },
   {
-   "fetch_from": "activity.activities",
-   "fieldname": "activity_name",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Activity Name"
+   "fieldname": "activity_type",
+   "fieldtype": "Select",
+   "label": "Activity Type",
+   "options": "Planning Activities\nAdditional Activities"
   }
  ],
  "icon": "fa fa-file-text",
@@ -685,7 +684,7 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2026-05-15 14:04:48.099948",
+ "modified": "2026-07-10 10:27:15.127232",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Journal Entry",
