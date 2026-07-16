@@ -1681,6 +1681,8 @@ class PaymentEntry(AccountsController):
 						"credit": self.base_paid_amount + total_deductions,
 						"cost_center": self.cost_center,
 						"post_net_value": True,
+						"activity_type": self.activity_type,
+						"activity": self.activity,
 					},
 					item=self,
 				)

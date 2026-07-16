@@ -30,6 +30,27 @@ class AdditionalActivities(Document):
 		unit: DF.Link | None
 	# end: auto-generated types
 
+	def validate(self):
+		duplicate = frappe.db.sql("""
+			SELECT name
+			FROM `tabAdditional Activities`
+			WHERE LOWER(activities) = LOWER(%s)
+			AND college = %s
+			AND from_year = %s
+			AND to_year = %s
+			AND name != %s
+			LIMIT 1
+		""", (
+			self.activities,
+			self.college,
+			self.from_year,
+			self.to_year,
+			self.name
+		))
+
+		if duplicate:
+			frappe.throw("Activity: <b>{0}</b> already exists for the selected College: <b>{1}</b> for the Year <b>{2}</b> to <b>{3}</b>".format(self.activities, self.college, self.from_year, self.to_year))
+
 	def autoname(self):
 		college_abbr = frappe.get_value("Company", self.college, "abbr")
 		self.name = make_autoname(f"Additional Activities/{college_abbr}/{self.from_year}-{self.to_year}/.##")

@@ -384,17 +384,19 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 	gle.flags.notify_update = False
 	gle.submit()
 
-	
-	
+
 	if not from_repost and gle.voucher_type != "Period Closing Voucher":
 		#Commit and Consume budget
 		transactions = [d.transaction for d in frappe.get_all("Budget Transaction", fields='transaction')]
-		# frappe.throw(str(transactions))
 		if args.voucher_type in transactions and args.against_voucher_type != 'Asset':
 			account_types = [d.account_type for d in frappe.get_all("Budget Settings Account Types", fields='account_type')]
-			if frappe.db.get_value("Account", args.account, "account_type") in account_types:
+
+			if frappe.db.get_value("Account", args.account, "account_type") in account_types or args.voucher_type == "Payment Entry":
 				# validate_expense_against_budget(args)
+				# frappe.throw(str(account_types) +", "+str(frappe.db.get_value("Account", args.account, "account_type")))
+
 				validate_against_planning_activities(args)
+				
 				
 				cc_doc = frappe.get_doc("Cost Center", args.cost_center)
 				# budget_cost_center = cc_doc.budget_cost_center if cc_doc.use_budget_from_parent else args.cost_center
@@ -446,6 +448,8 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 					})
 					con_obj.flags.ignore_permissions=1
 					con_obj.submit()
+	# frappe.throw("end")
+
 
 
 def validate_cwip_accounts(gl_map):
@@ -814,7 +818,22 @@ def validate_allowed_dimensions(gl_entry, dimension_filter_map):
 def is_immutable_ledger_enabled():
 	return frappe.db.get_single_value("Accounts Settings", "enable_immutable_ledger")
 
+def delete_committed_consumed_budget(reference=None, reference_no=None):
+	if reference and reference_no:
+		frappe.db.sql("""Delete from `tabCommitted Budget` 
+						where reference_type='{reference_type}' 
+						and reference_no='{reference_no}'
+						""".format(reference_type=reference, reference_no=reference_no))
+		frappe.db.sql("""Delete from `tabConsumed Budget` 
+						where reference_type='{reference_type}' 
+						and reference_no='{reference_no}'
+						""".format(reference_type=reference, reference_no=reference_no))
+
 def validate_against_planning_activities(args):
+	if args.is_cancelled:
+		delete_committed_consumed_budget(args.voucher_type, args.voucher_no)
+		return
+		
 	total_budget_consumed=get_actual_expense(args)
 	budget_amount=get_budget_amount(args)
 	total_expense = flt(total_budget_consumed) + flt(args.debit)

@@ -123,7 +123,7 @@
    "fieldname": "activity_type",
    "fieldtype": "Select",
    "label": "Activity Type",
-   "options": "Planning Activities\nAdditional Activities"
+   "options": "\nPlanning Activities\nAdditional Activities"
   },
   {
    "fieldname": "activity",
@@ -136,7 +136,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-10 09:49:31.764380",
+ "modified": "2026-07-16 18:13:54.012761",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Consumed Budget",

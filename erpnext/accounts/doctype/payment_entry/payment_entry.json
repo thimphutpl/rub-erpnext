@@ -16,6 +16,8 @@
   "posting_date",
   "company",
   "mode_of_payment",
+  "activity_type",
+  "activity",
   "party_section",
   "party_type",
   "party",
@@ -127,7 +129,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Payment Type/ Receipt Type",
-   "options": "Receive\nPay\nInternal Transfer",
+   "options": "\nPay\nInternal Transfer",
    "print_hide": 1,
    "reqd": 1
   },
@@ -155,10 +157,12 @@
   },
   {
    "allow_on_submit": 1,
+   "fetch_from": "branch.cost_center",
    "fieldname": "cost_center",
    "fieldtype": "Link",
    "label": "Cost Center",
-   "options": "Cost Center"
+   "options": "Cost Center",
+   "reqd": 1
   },
   {
    "fieldname": "mode_of_payment",
@@ -813,6 +817,18 @@
    "in_list_view": 1,
    "label": "Research Reference",
    "read_only": 1
+  },
+  {
+   "fieldname": "activity_type",
+   "fieldtype": "Select",
+   "label": "Activity Type",
+   "options": "\nPlanning Activities\nAdditional Activities"
+  },
+  {
+   "fieldname": "activity",
+   "fieldtype": "Dynamic Link",
+   "label": "Activity",
+   "options": "activity_type"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -826,7 +842,7 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2026-04-20 11:28:33.171191",
+ "modified": "2026-07-16 18:00:57.210247",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Payment Entry",

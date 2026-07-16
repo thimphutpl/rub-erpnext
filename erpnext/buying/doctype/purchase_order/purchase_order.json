@@ -1359,6 +1359,7 @@
   {
    "fieldname": "activity",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Activity",
    "options": "Approved Budget"
   }
@@ -1367,7 +1368,7 @@
  "idx": 105,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-05-06 10:19:06.135523",
+ "modified": "2026-07-16 14:04:16.315308",
  "modified_by": "Administrator",
  "module": "Buying",
  "name": "Purchase Order",

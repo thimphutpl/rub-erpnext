@@ -32,6 +32,8 @@ class PaymentLedgerEntry(Document):
 		account: DF.Link | None
 		account_currency: DF.Link | None
 		account_type: DF.Literal["Receivable", "Payable"]
+		activity: DF.DynamicLink | None
+		activity_type: DF.Literal["", "Planning Activities", "Additional Activities"]
 		against_voucher_no: DF.DynamicLink | None
 		against_voucher_type: DF.Link | None
 		amount: DF.Currency

@@ -15,7 +15,7 @@ class ConsumedBudget(Document):
 
 		account: DF.Link
 		activity: DF.DynamicLink | None
-		activity_type: DF.Literal["Planning Activities", "Additional Activities"]
+		activity_type: DF.Literal["", "Planning Activities", "Additional Activities"]
 		amended_from: DF.Link | None
 		amount: DF.Currency
 		business_activity: DF.Link | None

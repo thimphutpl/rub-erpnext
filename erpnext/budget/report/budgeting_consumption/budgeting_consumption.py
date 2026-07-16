@@ -83,12 +83,12 @@ def get_columns():
 			"fieldtype": "Currency",
 			"width": 120
 		},
-		{
-			"label": "Committed",
-			"fieldname": "committed",
-			"fieldtype": "Currency",
-			"width": 120
-		},
+		# {
+		# 	"label": "Committed",
+		# 	"fieldname": "committed",
+		# 	"fieldtype": "Currency",
+		# 	"width": 120
+		# },
 		{
 			"label": "Consumed",
 			"fieldname": "consumed",
@@ -284,25 +284,25 @@ def get_data(filters):
 				cost_center
 			))[0][0])
 
-			committed = flt(frappe.db.sql("""
-				SELECT SUM(amount)
-				FROM `tabCommitted Budget`
-				WHERE company = %s
-				AND reference_date BETWEEN %s AND %s
-				AND activity_type = %s
-				AND activity = %s
-				AND cost_center = %s
-				AND closed = 0
-			""", (
-				college,
-				from_date,
-				to_date,
-				i.activity_type,
-				i.activities,
-				cost_center
-			))[0][0])
+			# committed = flt(frappe.db.sql("""
+			# 	SELECT SUM(amount)
+			# 	FROM `tabCommitted Budget`
+			# 	WHERE company = %s
+			# 	AND reference_date BETWEEN %s AND %s
+			# 	AND activity_type = %s
+			# 	AND activity = %s
+			# 	AND cost_center = %s
+			# 	AND closed = 0
+			# """, (
+			# 	college,
+			# 	from_date,
+			# 	to_date,
+			# 	i.activity_type,
+			# 	i.activities,
+			# 	cost_center
+			# ))[0][0])
 
-			available = flt(current) - consumed - committed
+			available = flt(current) - consumed
 
 			i["initial"] = flt(initial_approved_budget)
 			i["reappropiation_received"] = reappropiation_received
@@ -312,7 +312,7 @@ def get_data(filters):
 			i["current"] = current
 			i["budget_type"] = budget_type
 			i["cost_center"] = cost_center
-			i["committed"] = committed
+			# i["committed"] = committed
 			i["consumed"] = consumed
 			i["available"] = available
 	return data
