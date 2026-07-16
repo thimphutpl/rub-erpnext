@@ -40,7 +40,7 @@ class AnnualWorkPlan(Document):
 		self.check_applicable_date()
 		self.validate_college()
 		self.validate_budget()
-		self.validate_proposed_and_approved_budget()
+		# self.validate_proposed_and_approved_budget()
 		self.calculate_proposed_and_approved_budget()
 		self.apply_proposed_to_approved()
 	
