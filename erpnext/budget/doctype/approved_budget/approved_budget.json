@@ -125,6 +125,7 @@
   {
    "fieldname": "available_budget",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Available Budget",
    "read_only": 1
   }
@@ -133,7 +134,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-14 10:09:42.163748",
+ "modified": "2026-07-16 09:54:46.875101",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Approved Budget",

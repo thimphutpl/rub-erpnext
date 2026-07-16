@@ -48,15 +48,15 @@ class ApprovedBudget(Document):
 
 	def validate_approved_budget(self):
 		for row in self.items:
-			if not row.approved_budget or row.approved_budget <= 0:
-				frappe.throw("Approved budget not set or is zero for row: <b>{0}</b>".format(row.idx))
+			# if not row.approved_budget or row.approved_budget <= 0:
+			# 	frappe.throw("Approved budget not set or is zero for row: <b>{0}</b>".format(row.idx))
 
 			if row.approved_budget and row.approved_budget > row.available_budget:
 				frappe.throw("Approved budget cannot be more than available budget: <b>{0}</b> for row: <b>{1}</b>".format(row.available_budget, row.idx))
 
 		for row in self.ab_extra_item:
-			if not row.approved_budget or row.approved_budget <= 0:
-				frappe.throw("Approved budget not set or is zero for row: <b>{0}</b>".format(row.idx))
+			# if not row.approved_budget or row.approved_budget <= 0:
+			# 	frappe.throw("Approved budget not set or is zero for row: <b>{0}</b>".format(row.idx))
 
 			if row.approved_budget and row.approved_budget > row.available_budget:
 				frappe.throw("Approved budget cannot be more than available budget: <b>{0}</b> for row: <b>{1}</b>".format(row.available_budget, row.idx))
