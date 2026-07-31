@@ -50,7 +50,7 @@
   {
    "fieldname": "activities",
    "fieldtype": "Small Text",
-   "in_list_view": 1,
+   "hidden": 1,
    "label": "Activity",
    "read_only": 1
   },
@@ -64,8 +64,10 @@
   {
    "fieldname": "activity_link",
    "fieldtype": "Link",
-   "label": "Activity Link",
-   "options": "Planning Activities"
+   "in_list_view": 1,
+   "label": "Major Activity",
+   "options": "Planning Activities",
+   "read_only": 1
   },
   {
    "fetch_from": "sub_activity_no.unit",
@@ -111,13 +113,15 @@
   {
    "fieldname": "sub_activity",
    "fieldtype": "Small Text",
+   "hidden": 1,
    "label": "Sub Activity",
    "read_only": 1
   },
   {
    "fieldname": "sub_activity_no",
    "fieldtype": "Link",
-   "label": "Sub Activity No",
+   "in_list_view": 1,
+   "label": "Activity",
    "options": "APA Sub Activities",
    "read_only": 1
   }
@@ -126,7 +130,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-07-06 14:19:20.177480",
+ "modified": "2026-07-27 14:43:32.664318",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Output Indicator Item",

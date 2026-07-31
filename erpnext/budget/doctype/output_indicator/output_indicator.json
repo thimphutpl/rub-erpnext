@@ -10,6 +10,7 @@
   "college",
   "column_break_guvh",
   "to_year",
+  "department",
   "output_details_section",
   "get_planning_info",
   "items",
@@ -83,12 +84,20 @@
    "fieldtype": "Table",
    "label": "Additional Activities",
    "options": "Output Extra Item"
+  },
+  {
+   "depends_on": "eval: doc.college == \"Office of Vice Chancellor\"",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "mandatory_depends_on": "eval: doc.college == \"Office of Vice Chancellor\"",
+   "options": "Department"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-20 10:15:50.613183",
+ "modified": "2026-07-23 16:00:33.093498",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Output Indicator",

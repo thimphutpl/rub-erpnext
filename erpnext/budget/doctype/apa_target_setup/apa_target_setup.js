@@ -3,7 +3,14 @@
 
 frappe.ui.form.on("APA Target Setup", {
 	refresh(frm) {
-
+        frm.set_query("department", function () {
+            return {
+                filters: {
+                    company: "Office of Vice Chancellor",
+                    include_in_apa: 1
+                },
+            };
+        });
 	},
     setup(frm) {
         frm.set_query("college", function () {
@@ -16,15 +23,46 @@ frappe.ui.form.on("APA Target Setup", {
     },
     from_year: function(frm) {
         frm.trigger("get_proposal_details");
+        frm.clear_table("output_items");
+        frm.refresh_field("output_items");
+        frm.clear_table("output_extra_items");
+        frm.refresh_field("output_extra_items");
+        frm.clear_table("outcome_items");
+        frm.refresh_field("outcome_items");
+        frm.set_value("department", "");
     },
     to_year: function(frm) {
         frm.trigger("get_proposal_details");
+        frm.clear_table("output_items");
+        frm.refresh_field("output_items");
+        frm.clear_table("output_extra_items");
+        frm.refresh_field("output_extra_items");
+        frm.clear_table("outcome_items");
+        frm.refresh_field("outcome_items");
+        frm.set_value("department", "");
     },
     college: function(frm) {
         frm.trigger("get_proposal_details");
+        frm.clear_table("output_items");
+        frm.refresh_field("output_items");
+        frm.clear_table("output_extra_items");
+        frm.refresh_field("output_extra_items");
+        frm.clear_table("outcome_items");
+        frm.refresh_field("outcome_items");
+        frm.set_value("department", "");
+    },
+    department: function(frm) {
+        frm.trigger("get_proposal_details");
+        frm.clear_table("output_items");
+        frm.refresh_field("output_items");
+        frm.clear_table("output_extra_items");
+        frm.refresh_field("output_extra_items");
+        frm.clear_table("outcome_items");
+        frm.refresh_field("outcome_items");
     },
     get_proposal_details: function(frm){
-        if(frm.doc.from_year && frm.doc.to_year && frm.doc.college){
+        ovc_condition = (frm.doc.college != "Office of Vice Chancellor") || (frm.doc.college == "Office of Vice Chancellor" && frm.doc.department);
+        if(frm.doc.from_year && frm.doc.to_year && frm.doc.college && ovc_condition){
             frappe.call({
                 method:"erpnext.budget.doctype.apa_target_setup.apa_target_setup.fetch_output_and_outcome",
                 args: {
@@ -96,4 +134,5 @@ frappe.ui.form.on("APA Target Setup", {
             })
         }
     }
+
 });

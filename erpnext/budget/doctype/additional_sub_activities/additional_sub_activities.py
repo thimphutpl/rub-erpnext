@@ -18,6 +18,7 @@ class AdditionalSubActivities(Document):
 		activity: DF.Link
 		amended_from: DF.Link | None
 		college: DF.Link
+		disabled: DF.Check
 		from_year: DF.Link
 		include_in_apa: DF.Check
 		items: DF.Table[OutputCategoryItem]
@@ -29,3 +30,24 @@ class AdditionalSubActivities(Document):
 	def autoname(self):
 		college_abbr = frappe.get_value("Company", self.college, "abbr")
 		self.name = make_autoname(f"Additional Activities/{college_abbr}/{self.from_year}-{self.to_year}/.##")
+
+	def validate(self):
+		duplicate = frappe.db.sql("""
+			SELECT name
+			FROM `tabAdditional Sub Activities`
+			WHERE LOWER(sub_activity) = LOWER(%s)
+			AND college = %s
+			AND from_year = %s
+			AND to_year = %s
+			AND name != %s
+			LIMIT 1
+		""", (
+			self.sub_activity,
+			self.college,
+			self.from_year,
+			self.to_year,
+			self.name
+		))
+
+		if duplicate:
+			frappe.throw("Sub Activity: <b>{0}</b> already exists for the selected College: <b>{1}</b> for the Year <b>{2}</b> to <b>{3}</b>".format(self.activities, self.college, self.from_year, self.to_year))

@@ -172,35 +172,35 @@ def fetch_output_and_outcome(from_year, to_year, college):
 	}
 
 @frappe.whitelist()
-def calculate_outcome_irt_rating(raw_rating, outcome, unit):
+def calculate_outcome_irt_rating(raw_rating, outcome, unit, from_year, to_year, college):
 	outcome_category = None
 	irt_rating = 0
-	if unit == "Percent":
+	if unit in ["Percent", "Number"]:
 		outcome_category = frappe.db.sql('''
-			SELECT  
-				oii.category
-			FROM `tabOutcome Indicator` oi
+			SELECT oii.category
+			FROM `tabOutcome Target Setup` oi
 			INNER JOIN `tabOutcome Indicator Item` oii ON oi.name = oii.parent
-			WHERE oi.name = %s AND oii.min < %s AND oii.max >= %s
-		''',(outcome, raw_rating, raw_rating), as_dict=True)
-	elif unit == "Number":
-		outcome_category = frappe.db.sql('''
-			SELECT  
-				oii.category
-			FROM `tabOutcome Indicator` oi
-			INNER JOIN `tabOutcome Indicator Item` oii ON oi.name = oii.parent
-			WHERE oi.name = %s AND oii.min < %s AND oii.max >= %s
-		''',(outcome, flt(raw_rating), flt(raw_rating)), as_dict=True)
+			WHERE oi.outcome = %s AND oi.from_year = %s AND oi.to_year = %s AND disabled = 0
+			AND oi.college = %s AND oii.min < %s AND oii.max >= %s
+		''',(outcome, from_year, to_year, college, flt(raw_rating), flt(raw_rating)), as_dict=True)
+	# elif unit == "Number":
+	# 	outcome_category = frappe.db.sql('''
+	# 		SELECT oii.category
+	# 		FROM `tabOutcome Target Setup` oi
+	# 		INNER JOIN `tabOutcome Indicator Item` oii ON oi.name = oii.parent
+	# 		WHERE oi.outcome = %s AND oi.from_year = %s AND oi.to_year = %s AND disabled = 0
+	# 		AND oi.college = %s AND oii.min < %s AND oii.max >= %s
+	# 	''',(outcome, from_year, to_year, college, flt(raw_rating), flt(raw_rating)), as_dict=True)
 	elif unit == "Status of Work":
 		outcome_category = frappe.db.sql('''
-			SELECT  
-				oii.category, raw_rating
-			FROM `tabOutcome Indicator` oi
+			SELECT oii.category, raw_rating
+			FROM `tabOutcome Target Setup` oi
 			INNER JOIN `tabOutcome Indicator Item` oii ON oi.name = oii.parent
-			WHERE oi.name = %s AND oii.unit = %s
-		''',(outcome, raw_rating), as_dict=True)
+			WHERE oi.outcome = %s AND oi.from_year = %s AND oi.to_year = %s AND disabled = 0
+			AND oi.college = %s AND oii.unit = %s
+		''',(outcome, from_year, to_year, college, raw_rating), as_dict=True)
 	if not outcome_category:
-		frappe.throw("Category not found in Outcome Indicator")
+		frappe.throw("Category not found in Outcome Target Setup")
 
 	interpolation_categories = frappe.db.sql("""
 		SELECT
@@ -234,62 +234,68 @@ def calculate_outcome_irt_rating(raw_rating, outcome, unit):
 	return irt_rating
 
 @frappe.whitelist()
-def calculate_output_irt_rating(raw_rating, activity_link, unit, weightage, sub_activity_no = None):
+def calculate_output_irt_rating(raw_rating, activity_link, unit, weightage, college, from_year, to_year, sub_activity_no = None):
 	output_category = None
 	irt_rating = 0
 	if sub_activity_no:
-		if unit == "Percent":
+		# if unit == "Percent":
+		# 	output_category = frappe.db.sql('''
+		# 		SELECT  
+		# 			oii.category
+		# 		FROM `tabAPA Sub Activities` oi
+		# 		INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
+		# 		WHERE oi.name = %s AND oi.from_year = %s AND oi.to_year = %s
+		# 		AND oi.college = %s AND oii.min < %s AND oii.max >= %s AND oi.disabled = 0
+		# 	''',(sub_activity_no, from_year, to_year, college, raw_rating, raw_rating), as_dict=True)
+		if unit in ["Percent", "Number"]:
 			output_category = frappe.db.sql('''
 				SELECT  
 					oii.category
 				FROM `tabAPA Sub Activities` oi
 				INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
-				WHERE oi.name = %s AND oii.min < %s AND oii.max >= %s AND oi.disabled = 0
-			''',(sub_activity_no, raw_rating, raw_rating), as_dict=True)
-		elif unit == "Number":
-			output_category = frappe.db.sql('''
-				SELECT  
-					oii.category
-				FROM `tabAPA Sub Activities` oi
-				INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
-				WHERE oi.name = %s AND oii.min < %s AND oii.max >= %s AND oi.disabled = 0
-			''',(sub_activity_no, flt(raw_rating), flt(raw_rating)), as_dict=True)
+				WHERE oi.name = %s AND oi.from_year = %s AND oi.to_year = %s
+				AND oi.college = %s AND oii.min < %s AND oii.max >= %s AND oi.disabled = 0
+			''',(sub_activity_no, from_year, to_year, college, flt(raw_rating), flt(raw_rating)), as_dict=True)
 		elif unit == "Status of Work":
 			output_category = frappe.db.sql('''
 				SELECT  
 					oii.category, raw_rating
 				FROM `tabAPA Sub Activities` oi
 				INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
-				WHERE oi.name = %s AND oii.unit = %s AND oi.disabled = 0
-			''',(sub_activity_no, raw_rating), as_dict=True)
+				WHERE oi.name = %s AND oi.from_year = %s AND oi.to_year = %s
+				AND oi.college = %s AND oii.unit = %s AND oi.disabled = 0
+			''',(sub_activity_no, from_year, to_year, college, raw_rating), as_dict=True)
 	else:
-		if unit == "Percent":
+		# if unit == "Percent":
+		# 	output_category = frappe.db.sql('''
+		# 		SELECT  
+		# 			oii.category
+		# 		FROM `tabPlanning Activities Target Setup` oi
+		# 		INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
+		# 		WHERE oi.activities = %s AND oi.from_year = %s AND oi.to_year = %s
+		# 		AND oi.college = %s AND oii.min < %s AND oii.max >= %s AND oi.disabled = 0
+		# 	''',(activity_link, from_year, to_year, college, raw_rating, raw_rating), as_dict=True)
+		if unit in ["Percent", "Number"]:
 			output_category = frappe.db.sql('''
 				SELECT  
 					oii.category
-				FROM `tabPlanning Activities` oi
+				FROM `tabPlanning Activities Target Setup` oi
 				INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
-				WHERE oi.name = %s AND oii.min < %s AND oii.max >= %s AND oi.disabled = 0
-			''',(activity_link, raw_rating, raw_rating), as_dict=True)
-		elif unit == "Number":
-			output_category = frappe.db.sql('''
-				SELECT  
-					oii.category
-				FROM `tabPlanning Activities` oi
-				INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
-				WHERE oi.name = %s AND oii.min < %s AND oii.max >= %s AND oi.disabled = 0
-			''',(activity_link, flt(raw_rating), flt(raw_rating)), as_dict=True)
+				WHERE oi.activities = %s AND oi.from_year = %s AND oi.to_year = %s
+				AND oi.college = %s AND oii.min < %s AND oii.max >= %s AND oi.disabled = 0
+			''',(activity_link, from_year, to_year, college, flt(raw_rating), flt(raw_rating)), as_dict=True)
 		elif unit == "Status of Work":
 			output_category = frappe.db.sql('''
 				SELECT  
 					oii.category, raw_rating
-				FROM `tabPlanning Activities` oi
+				FROM `tabPlanning Activities Target Setup` oi
 				INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
-				WHERE oi.name = %s AND oii.unit = %s AND oi.disabled = 0
-			''',(activity_link, raw_rating), as_dict=True)
+				WHERE oi.activities = %s AND oi.from_year = %s AND oi.to_year = %s
+				AND oi.college = %s AND oii.unit = %s AND oi.disabled = 0
+			''',(activity_link, from_year, to_year, college, raw_rating), as_dict=True)
 	
 	if not output_category:
-		frappe.throw("Category not found in Planning Activities or APA Sub Activities")
+		frappe.throw("Category not found in Planning Activities Target Setup or APA Sub Activities")
 
 	interpolation_categories = frappe.db.sql("""
 		SELECT
@@ -328,59 +334,65 @@ def calculate_output_irt_rating(raw_rating, activity_link, unit, weightage, sub_
 	}
 
 @frappe.whitelist()
-def calculate_extra_output_irt_rating(raw_rating, activity_link, unit, weightage, sub_activity_link = None):
+def calculate_extra_output_irt_rating(raw_rating, activity_link, unit, weightage, college, from_year, to_year, sub_activity_link = None):
 	output_category = None
 	irt_rating = 0
 	if sub_activity_link:
-		if unit == "Percent":
-			output_category = frappe.db.sql('''
-				SELECT
-					oii.category
-				FROM `tabAdditional Sub Activities` oi
-				INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
-				WHERE oi.name = %s AND oii.min < %s AND oii.max >= %s
-			''',(sub_activity_link, raw_rating, raw_rating), as_dict=True)
-		elif unit == "Number":
+		# if unit == "Percent":
+		# 	output_category = frappe.db.sql('''
+		# 		SELECT
+		# 			oii.category
+		# 		FROM `tabAdditional Sub Activities` oi
+		# 		INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
+		# 		WHERE oi.name = %s AND oi.from_year = %s AND oi.to_year = %s AND oi.disabled = 0
+		# 		AND oi.college = %s AND oii.min < %s AND oii.max >= %s
+		# 	''',(sub_activity_link, from_year, to_year, college, raw_rating, raw_rating), as_dict=True)
+		if unit in ["Percent", "Number"]:
 			output_category = frappe.db.sql('''
 				SELECT  
 					oii.category
 				FROM `tabAdditional Sub Activities` oi
 				INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
-				WHERE oi.name = %s AND oii.min < %s AND oii.max >= %s
-			''',(sub_activity_link, flt(raw_rating), flt(raw_rating)), as_dict=True)
+				WHERE oi.name = %s AND oi.from_year = %s AND oi.to_year = %s AND oi.disabled = 0
+				AND oi.college = %s AND oii.min < %s AND oii.max >= %s
+			''',(sub_activity_link, from_year, to_year, college, flt(raw_rating), flt(raw_rating)), as_dict=True)
 		elif unit == "Status of Work":
 			output_category = frappe.db.sql('''
 				SELECT  
 					oii.category, raw_rating
 				FROM `tabAdditional Sub Activities` oi
 				INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
-				WHERE oi.name = %s AND oii.unit = %s
-			''',(sub_activity_link, raw_rating), as_dict=True)
+				WHERE oi.name = %s AND oi.from_year = %s AND oi.to_year = %s AND oi.disabled = 0
+				AND oi.college = %s AND oii.unit = %s
+			''',(sub_activity_link, from_year, to_year, college, raw_rating), as_dict=True)
 	else:
-		if unit == "Percent":
+		# if unit == "Percent":
+		# 	output_category = frappe.db.sql('''
+		# 		SELECT  
+		# 			oii.category
+		# 		FROM `tabAdditional Activities` oi
+		# 		INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
+		# 		WHERE oi.name = %s AND oi.from_year = %s AND oi.to_year = %s AND oi.disabled = 0
+		# 		AND oi.college = %s AND oii.min < %s AND oii.max >= %s
+		# 	''',(activity_link, from_year, to_year, college, raw_rating, raw_rating), as_dict=True)
+		if unit in ["Percent", "Number"]:
 			output_category = frappe.db.sql('''
 				SELECT  
 					oii.category
 				FROM `tabAdditional Activities` oi
 				INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
-				WHERE oi.name = %s AND oii.min < %s AND oii.max >= %s
-			''',(activity_link, raw_rating, raw_rating), as_dict=True)
-		elif unit == "Number":
-			output_category = frappe.db.sql('''
-				SELECT  
-					oii.category
-				FROM `tabAdditional Activities` oi
-				INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
-				WHERE oi.name = %s AND oii.min < %s AND oii.max >= %s
-			''',(activity_link, flt(raw_rating), flt(raw_rating)), as_dict=True)
+				WHERE oi.name = %s AND oi.from_year = %s AND oi.to_year = %s AND oi.disabled = 0
+				AND oi.college = %s AND oii.min < %s AND oii.max >= %s
+			''',(activity_link, from_year, to_year, college, flt(raw_rating), flt(raw_rating)), as_dict=True)
 		elif unit == "Status of Work":
 			output_category = frappe.db.sql('''
 				SELECT  
 					oii.category, raw_rating
 				FROM `tabAdditional Activities` oi
 				INNER JOIN `tabOutput Category Item` oii ON oi.name = oii.parent
-				WHERE oi.name = %s AND oii.unit = %s
-			''',(activity_link, raw_rating), as_dict=True)
+				WHERE oi.name = %s AND oi.from_year = %s AND oi.to_year = %s AND oi.disabled = 0
+				AND oi.college = %s  AND oii.unit = %s
+			''',(activity_link, from_year, to_year, college, raw_rating), as_dict=True)
 	
 	if not output_category:
 		frappe.throw("Category not found in Planning Activities or APA Sub Activities")

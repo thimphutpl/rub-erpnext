@@ -11,11 +11,11 @@
   "category",
   "unit",
   "weightage",
-  "data_collection_method",
-  "data_source",
+  "definition",
   "column_break_hoay",
   "disabled",
-  "definition",
+  "data_collection_method",
+  "data_source",
   "remarks",
   "section_break_lekw",
   "items"
@@ -30,19 +30,21 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Outcome",
+   "reqd": 1,
    "unique": 1
   },
   {
    "fieldname": "unit",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Unit",
    "options": "APA Unit"
   },
   {
    "fieldname": "weightage",
    "fieldtype": "Data",
-   "label": "Weightage",
-   "reqd": 1
+   "hidden": 1,
+   "label": "Weightage"
   },
   {
    "default": "0",
@@ -56,13 +58,15 @@
   },
   {
    "fieldname": "definition",
-   "fieldtype": "Small Text",
+   "fieldtype": "Long Text",
    "label": "Definition"
   },
   {
    "fieldname": "category",
-   "fieldtype": "Data",
-   "label": "Category"
+   "fieldtype": "Select",
+   "label": "Category",
+   "options": "\nMandatory\nDevelopmental\nSurvey",
+   "reqd": 1
   },
   {
    "fieldname": "data_collection_method",
@@ -76,12 +80,13 @@
   },
   {
    "fieldname": "remarks",
-   "fieldtype": "Small Text",
+   "fieldtype": "Long Text",
    "label": "Remarks"
   },
   {
    "fieldname": "section_break_lekw",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "hidden": 1
   },
   {
    "fieldname": "items",
@@ -92,7 +97,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-06 14:19:58.496082",
+ "modified": "2026-07-27 11:45:27.004628",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Outcome Indicator",

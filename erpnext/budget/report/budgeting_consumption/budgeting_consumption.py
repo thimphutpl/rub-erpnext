@@ -142,56 +142,56 @@ def get_data(filters):
 
 	query = f"""
 		SELECT
+			ab.name AS approved_budget,
+			ab.cost_center,
 			pa.name AS activities,
 			pa.activities AS activities_name,
 			'Planning Activities' AS activity_type
-		FROM `tabPlanning Activities` pa
+		FROM `tabApproved Budget` ab
+		INNER JOIN `tabApproved Budget Item` abi
+			ON abi.parent = ab.name
+		INNER JOIN `tabPlanning Activities` pa
+			ON abi.activity_link = pa.name
 		WHERE pa.disabled = 0
-			AND YEAR(pa.from_date) <= %(end_year)s
-			AND YEAR(pa.to_date) >= %(from_year)s
-			AND EXISTS (
-				SELECT 1
-				FROM `tabApproved Budget Item` abi
-				INNER JOIN `tabApproved Budget` ab
-					ON abi.parent = ab.name
-				WHERE abi.activity_link = pa.name
-					AND ab.college = %(college)s
-					AND %(from_year)s >= ab.from_year
-					AND %(end_year)s <= ab.to_year
-					AND ab.docstatus = 1
-					{conditions}{planning_condition}
-			)
+			AND ab.college = %(college)s
+			AND %(from_year)s >= ab.from_year
+			AND %(end_year)s <= ab.to_year
+			AND ab.docstatus = 1
+			{conditions}{planning_condition}
 
 		UNION ALL
 
 		SELECT
+			ab.name AS approved_budget,
+			ab.cost_center,
 			aa.name AS activities,
 			aa.activities AS activities_name,
 			'Additional Activities' AS activity_type
-		FROM `tabAdditional Activities` aa
+		FROM `tabApproved Budget` ab
+		INNER JOIN `tabApproved Budget Extra Item` abi
+			ON abi.parent = ab.name
+		INNER JOIN `tabAdditional Activities` aa
+			ON abi.activity_link = aa.name
 		WHERE aa.disabled = 0
 			AND aa.college = %(college)s
 			AND aa.from_year <= %(end_year)s
 			AND aa.to_year >= %(from_year)s
-			AND EXISTS (
-				SELECT 1
-				FROM `tabApproved Budget Extra Item` abi
-				INNER JOIN `tabApproved Budget` ab
-					ON abi.parent = ab.name
-				WHERE abi.activity_link = aa.name
-					AND ab.college = %(college)s
-					AND %(from_year)s >= ab.from_year
-					AND %(end_year)s <= ab.to_year
-					AND ab.docstatus = 1
-					{conditions}{additional_condition}
-			)
+			AND ab.college = %(college)s
+			AND %(from_year)s >= ab.from_year
+			AND %(end_year)s <= ab.to_year
+			AND ab.docstatus = 1
+			{conditions}{additional_condition}
+
+		ORDER BY cost_center ASC
+
 	"""
 
 	data = frappe.db.sql(query, values, as_dict=True)
-
+	# frappe.msgprint(str(data))
 	if college and from_year and end_year:
 		for i in data:
 			values["activity"] = i.activities
+			values["cost_center"] = i.cost_center
 			budgets = frappe.db.sql(f"""
 				SELECT
 					abi.approved_budget,
@@ -216,8 +216,10 @@ def get_data(filters):
 						is_current,
 						is_capital,
 						initial_approved_budget,
-						activity_link
+						activity_link,
+						'Planning Activities' AS activity_type
 					FROM `tabApproved Budget Item`
+					{planning_condition}
 
 					UNION ALL
 
@@ -231,18 +233,22 @@ def get_data(filters):
 						is_current,
 						is_capital,
 						initial_approved_budget,
-						activity_link
+						activity_link,
+						'Additional Activities' AS activity_type
 					FROM `tabApproved Budget Extra Item`
+					{additional_condition}
 				) abi
-				LEFT JOIN `tabApproved Budget` ab
+				INNER JOIN `tabApproved Budget` ab
 					ON abi.parent = ab.name
 				WHERE ab.college = %(college)s
 					AND %(from_year)s >= ab.from_year
 					AND %(end_year)s <= ab.to_year
 					AND abi.activity_link = %(activity)s
+					AND ab.cost_center = %(cost_center)s
 					AND ab.docstatus = 1
 					{conditions}
 			""", values, as_dict=True)
+			# frappe.throw(str(budgets))
 			if budgets:
 				row = budgets[0]
 				approved_budget = flt(row.approved_budget) * 1000000

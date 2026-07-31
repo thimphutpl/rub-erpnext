@@ -17,15 +17,34 @@ frappe.ui.form.on("Annual Performance Assessment", {
     },
     from_year: function(frm) {
         frm.trigger("fetch_output_and_outcome");
+        frm.clear_table("output_items");
+        frm.refresh_field("output_items");
+        frm.clear_table("output_extra_items");
+        frm.refresh_field("output_extra_items");
+        frm.clear_table("outcome_items");
+        frm.refresh_field("outcome_items");
     },
     to_year: function(frm) {
         frm.trigger("fetch_output_and_outcome");
+        frm.clear_table("output_items");
+        frm.refresh_field("output_items");
+        frm.clear_table("output_extra_items");
+        frm.refresh_field("output_extra_items");
+        frm.clear_table("outcome_items");
+        frm.refresh_field("outcome_items");
     },
     college: function(frm) {
         frm.trigger("fetch_output_and_outcome");
+        frm.clear_table("output_items");
+        frm.refresh_field("output_items");
+        frm.clear_table("output_extra_items");
+        frm.refresh_field("output_extra_items");
+        frm.clear_table("outcome_items");
+        frm.refresh_field("outcome_items");
     },
     fetch_output_and_outcome: function(frm){
-        if(frm.doc.from_year && frm.doc.to_year && frm.doc.college){
+        ovc_condition = frm.doc.college == "Office of Vice Chancellor" && frm.doc.department;
+        if(frm.doc.from_year && frm.doc.to_year && (frm.doc.college || ovc_condition)){
             frappe.call({
                 method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.fetch_output_and_outcome",
                 args: {
@@ -106,6 +125,9 @@ frappe.ui.form.on("APA Outcome Item", {
                         raw_rating: row.raw_rating,
                         outcome: row.outcome,
                         unit: row.unit,
+                        from_year: frm.doc.from_year,
+                        to_year: frm.doc.to_year,
+                        college: frm.doc.college,
                     },
                     callback: function(r) {
                         if (r.message) {
@@ -154,6 +176,9 @@ frappe.ui.form.on("APA Output Item", {
                         activity_link: row.activity_link,
                         unit: row.unit,
                         weightage: row.weightage,
+                        college: frm.doc.college,
+                        from_year: frm.doc.from_year,
+                        to_year: frm.doc.to_year,
                         sub_activity_no: row.sub_activity_no,
                     },
                 callback: function(r) {
@@ -208,7 +233,11 @@ frappe.ui.form.on("Annual Performance Extra Item", {
                         activity_link: row.activity_link,
                         unit: row.unit,
                         weightage: row.weightage,
-                        sub_activity_link: row.sub_activity_link,
+                        college: frm.doc.college,
+                        from_year: frm.doc.from_year,
+                        to_year: frm.doc.to_year,
+                        sub_activity_no: row.sub_activity_no,
+
                     },
                 callback: function(r) {
                     if (r.message) {

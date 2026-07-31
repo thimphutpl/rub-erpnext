@@ -14,7 +14,7 @@ class OutputExtraItem(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		activities: DF.SmallText
+		activities: DF.SmallText | None
 		activity_link: DF.Link
 		output: DF.SmallText | None
 		output_no: DF.Link

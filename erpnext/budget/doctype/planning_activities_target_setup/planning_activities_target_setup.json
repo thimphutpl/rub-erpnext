@@ -1,87 +1,66 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2026-03-30 09:31:27.080263",
+ "creation": "2026-07-23 15:56:08.137680",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "college",
-  "activity",
-  "sub_activity",
-  "column_break_lkvk",
   "from_year",
-  "to_year",
+  "college",
   "unit",
-  "include_in_apa",
+  "column_break_tses",
+  "to_year",
+  "activities",
   "disabled",
-  "section_break_kuxe",
-  "items",
-  "section_break_htio",
-  "amended_from"
+  "section_break_qtsk",
+  "items"
  ],
  "fields": [
   {
-   "fieldname": "section_break_htio",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Additional Sub Activities",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
-   "fieldname": "activity",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Activity",
-   "options": "Additional Activities",
-   "reqd": 1
-  },
-  {
-   "fieldname": "sub_activity",
-   "fieldtype": "Small Text",
-   "in_list_view": 1,
-   "label": "Sub Activity",
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_lkvk",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "college",
-   "fieldtype": "Link",
-   "label": "College",
-   "options": "Company",
-   "reqd": 1
-  },
-  {
    "fieldname": "from_year",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "From Year",
    "options": "Budget Year",
    "reqd": 1
   },
   {
+   "fieldname": "college",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "College",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_tses",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "to_year",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "To Year",
    "options": "Budget Year",
    "reqd": 1
   },
   {
-   "fieldname": "section_break_kuxe",
+   "fieldname": "activities",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Activities",
+   "options": "Planning Activities",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_qtsk",
    "fieldtype": "Section Break"
   },
   {
    "fieldname": "items",
    "fieldtype": "Table",
-   "options": "Output Category Item"
+   "options": "Output Category Item",
+   "reqd": 1
   },
   {
    "fieldname": "unit",
@@ -89,13 +68,6 @@
    "label": "Unit",
    "options": "APA Unit",
    "reqd": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "include_in_apa",
-   "fieldtype": "Check",
-   "hidden": 1,
-   "label": "Include in APA"
   },
   {
    "default": "0",
@@ -107,10 +79,10 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-29 11:20:32.243532",
+ "modified": "2026-07-27 10:58:29.718939",
  "modified_by": "Administrator",
  "module": "Budget",
- "name": "Additional Sub Activities",
+ "name": "Planning Activities Target Setup",
  "owner": "Administrator",
  "permissions": [
   {

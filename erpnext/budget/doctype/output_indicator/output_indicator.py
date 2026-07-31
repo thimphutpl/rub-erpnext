@@ -19,11 +19,11 @@ class OutputIndicator(Document):
 		additional_activities: DF.Table[OutputExtraItem]
 		amended_from: DF.Link | None
 		college: DF.Link
+		department: DF.Link | None
 		from_year: DF.Link
 		items: DF.Table[OutputIndicatorItem]
 		to_year: DF.Link
 	# end: auto-generated types
-	pass
 
 	def autoname(self):
 		college_abbr = frappe.get_value("Company", self.college, "abbr")
@@ -63,7 +63,7 @@ def fetch_budgetplan(from_year, to_year, college):
 			abi.project_no,
 			abi.activity_link,
 			sa.name AS sub_activity_no,
-			COALESCE(sa.sub_activity, abi.activities) AS sub_activity,
+			COALESCE(sa.sub_activity, NULL) AS sub_activity,
 			COALESCE(sa.unit, pa.unit) AS unit,		
 			abi.output,
 			abi.project,
@@ -92,7 +92,7 @@ def fetch_budgetplan(from_year, to_year, college):
 			abei.activities,
 			abei.is_current,
 			abei.is_capital,
-			COALESCE(sa.sub_activity, abei.activities) AS sub_activity,
+			COALESCE(sa.sub_activity, NULL) AS sub_activity,
 			COALESCE(sa.unit, pa.unit) AS unit,
 			abei.funding_source
 		FROM `tabApproved Budget Extra Item` abei

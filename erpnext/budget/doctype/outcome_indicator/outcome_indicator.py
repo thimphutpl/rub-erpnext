@@ -15,15 +15,15 @@ class OutcomeIndicator(Document):
 		from erpnext.budget.doctype.outcome_indicator_item.outcome_indicator_item import OutcomeIndicatorItem
 		from frappe.types import DF
 
-		category: DF.Data | None
+		category: DF.Literal["", "Mandatory", "Developmental", "Survey"]
 		data_collection_method: DF.Data | None
 		data_source: DF.Data | None
-		definition: DF.SmallText | None
+		definition: DF.LongText | None
 		disabled: DF.Check
 		items: DF.Table[OutcomeIndicatorItem]
-		outcome: DF.Data | None
-		remarks: DF.SmallText | None
+		outcome: DF.Data
+		remarks: DF.LongText | None
 		unit: DF.Link | None
-		weightage: DF.Data
+		weightage: DF.Data | None
 	# end: auto-generated types
 	pass

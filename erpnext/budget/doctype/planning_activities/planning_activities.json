@@ -83,7 +83,8 @@
   },
   {
    "fieldname": "section_break_upwi",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "hidden": 1
   },
   {
    "fieldname": "items",
@@ -101,9 +102,9 @@
   {
    "fieldname": "unit",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Unit",
-   "options": "APA Unit",
-   "reqd": 1
+   "options": "APA Unit"
   },
   {
    "default": "0",
@@ -126,7 +127,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-28 16:09:00.772779",
+ "modified": "2026-07-27 10:55:06.949347",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Planning Activities",

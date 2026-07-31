@@ -3,7 +3,14 @@
 
 frappe.ui.form.on("Output Indicator", {
 	refresh(frm) {
-
+        frm.set_query("department", function () {
+            return {
+                filters: {
+                    company: "Office of Vice Chancellor",
+                    include_in_apa: 1
+                },
+            };
+        });
 	},
     setup(frm) {
         frm.set_query("college", function () {
@@ -13,6 +20,9 @@ frappe.ui.form.on("Output Indicator", {
                 },
             };
         });
+    },
+    college: function(frm) {
+        frm.set_value("department", "");
     },
     get_planning_info: function(frm){
         if (frm.doc.from_year && frm.doc.to_year && frm.doc.college){

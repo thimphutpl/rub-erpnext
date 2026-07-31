@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"Pfs9YKjGJr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Budget Dashboard\",\"col\":3}},{\"id\":\"B39LiLyS4q\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Budget Management</span>\",\"col\":12}},{\"id\":\"AX57UKwmU1\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters and Settings\",\"col\":3}},{\"id\":\"An30Mopj0x\",\"type\":\"card\",\"data\":{\"card_name\":\"Transactions\",\"col\":3}},{\"id\":\"HEBjk2-vEZ\",\"type\":\"card\",\"data\":{\"card_name\":\"Budget\",\"col\":3}},{\"id\":\"gaSKoGthts\",\"type\":\"card\",\"data\":{\"card_name\":\"Annual Performance Assessment\",\"col\":3}},{\"id\":\"RhQiW1eeE0\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"Pfs9YKjGJr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Budget Dashboard\",\"col\":3}},{\"id\":\"B39LiLyS4q\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Budget Management</span>\",\"col\":12}},{\"id\":\"AX57UKwmU1\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters and Settings\",\"col\":3}},{\"id\":\"An30Mopj0x\",\"type\":\"card\",\"data\":{\"card_name\":\"Transactions\",\"col\":3}},{\"id\":\"HEBjk2-vEZ\",\"type\":\"card\",\"data\":{\"card_name\":\"Budget\",\"col\":3}},{\"id\":\"RhQiW1eeE0\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":3}},{\"id\":\"PGiygHK2mg\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Annual Performance Management</b></span>\",\"col\":12}},{\"id\":\"gaSKoGthts\",\"type\":\"card\",\"data\":{\"card_name\":\"Master and Settings\",\"col\":3}},{\"id\":\"LZ1WgVrJgn\",\"type\":\"card\",\"data\":{\"card_name\":\"Transaction\",\"col\":4}}]",
  "creation": "2024-09-03 09:56:52.454684",
  "custom_blocks": [],
  "docstatus": 0,
@@ -65,8 +65,57 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Annual Performance Assessment",
-   "link_count": 11,
+   "label": "Reports",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Budgeting Consumption Report",
+   "link_count": 0,
+   "link_to": "Budgeting Consumption",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Supplementary Budget Report",
+   "link_count": 0,
+   "link_to": "Supplementary Budget Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Budget Reappropriation Report",
+   "link_count": 0,
+   "link_to": "Budget Reappropriation Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Budget Withdrawal Report",
+   "link_count": 0,
+   "link_to": "Budget Withdrawal Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Transactions",
+   "link_count": 6,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -74,9 +123,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "APA Calendar",
+   "label": "Allow Budget Transaction",
    "link_count": 0,
-   "link_to": "APA Calendar",
+   "link_to": "Allow Budget Transaction",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -84,9 +133,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "APA Status",
+   "label": "Five Year Plan Proposal",
    "link_count": 0,
-   "link_to": "APA Status",
+   "link_to": "Five Year Plan Proposal",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -94,9 +143,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "APA Unit",
+   "label": "Five Year Plan",
    "link_count": 0,
-   "link_to": "APA Unit",
+   "link_to": "Five Year Plan",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -104,9 +153,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "APA Category",
+   "label": "Additional Activities",
    "link_count": 0,
-   "link_to": "APA Category",
+   "link_to": "Additional Activities",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -114,9 +163,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "APA Settings",
+   "label": "Annual Work Plan",
    "link_count": 0,
-   "link_to": "APA Settings",
+   "link_to": "Annual Work Plan",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -124,32 +173,11 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Outcome Indicator",
-   "link_count": 0,
-   "link_to": "Outcome Indicator",
+   "label": "Transaction",
+   "link_count": 5,
    "link_type": "DocType",
    "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "APA Sub Activities",
-   "link_count": 0,
-   "link_to": "APA Sub Activities",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Output Indicator",
-   "link_count": 0,
-   "link_to": "Output Indicator",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
+   "type": "Card Break"
   },
   {
    "hidden": 0,
@@ -157,6 +185,16 @@
    "label": "APA Target Setup",
    "link_count": 0,
    "link_to": "APA Target Setup",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "APA Mid Term Activity Change Request",
+   "link_count": 0,
+   "link_to": "APA Mid Term Activity Change Request",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -184,8 +222,18 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Annual Performance Assessment OVC",
+   "link_count": 0,
+   "link_to": "Annual Performance Assessment OVC",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Masters and Settings",
-   "link_count": 6,
+   "link_count": 7,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -253,8 +301,18 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Transactions",
-   "link_count": 5,
+   "label": "Planning Activities Target Setup",
+   "link_count": 0,
+   "link_to": "Planning Activities Target Setup",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Master and Settings",
+   "link_count": 10,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -262,9 +320,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Allow Budget Transaction",
+   "label": "APA Calendar",
    "link_count": 0,
-   "link_to": "Allow Budget Transaction",
+   "link_to": "APA Calendar",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -272,9 +330,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Five Year Plan Proposal",
+   "label": "APA Settings",
    "link_count": 0,
-   "link_to": "Five Year Plan Proposal",
+   "link_to": "APA Settings",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -282,9 +340,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Five Year Plan",
+   "label": "APA Status",
    "link_count": 0,
-   "link_to": "Five Year Plan",
+   "link_to": "APA Status",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -292,9 +350,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Additional Activities",
+   "label": "APA Unit",
    "link_count": 0,
-   "link_to": "Additional Activities",
+   "link_to": "APA Unit",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -302,9 +360,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Annual Work Plan",
+   "label": "APA Category",
    "link_count": 0,
-   "link_to": "Annual Work Plan",
+   "link_to": "APA Category",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -312,54 +370,55 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Reports",
-   "link_count": 4,
+   "label": "Output Indicator",
+   "link_count": 0,
+   "link_to": "Output Indicator",
    "link_type": "DocType",
    "onboard": 0,
-   "type": "Card Break"
+   "type": "Link"
   },
   {
    "hidden": 0,
-   "is_query_report": 1,
-   "label": "Budgeting Consumption Report",
+   "is_query_report": 0,
+   "label": "Outcome Indicator",
    "link_count": 0,
-   "link_to": "Budgeting Consumption",
-   "link_type": "Report",
+   "link_to": "Outcome Indicator",
+   "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   },
   {
    "hidden": 0,
-   "is_query_report": 1,
-   "label": "Supplementary Budget Report",
+   "is_query_report": 0,
+   "label": "Outcome Target Setup",
    "link_count": 0,
-   "link_to": "Supplementary Budget Report",
-   "link_type": "Report",
+   "link_to": "Outcome Target Setup",
+   "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   },
   {
    "hidden": 0,
-   "is_query_report": 1,
-   "label": "Budget Reappropriation Report",
+   "is_query_report": 0,
+   "label": "APA Sub Activities",
    "link_count": 0,
-   "link_to": "Budget Reappropriation Report",
-   "link_type": "Report",
+   "link_to": "APA Sub Activities",
+   "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   },
   {
    "hidden": 0,
-   "is_query_report": 1,
-   "label": "Budget Withdrawal Report",
+   "is_query_report": 0,
+   "label": "Additional Sub Activities",
    "link_count": 0,
-   "link_to": "Budget Withdrawal Report",
-   "link_type": "Report",
+   "link_to": "Additional Sub Activities",
+   "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2026-07-14 11:32:54.926663",
+ "modified": "2026-07-29 10:05:14.280570",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Planning & Budget",

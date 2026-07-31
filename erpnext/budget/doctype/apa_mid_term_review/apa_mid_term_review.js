@@ -16,12 +16,30 @@ frappe.ui.form.on("APA Mid Term Review", {
     },
     from_year: function(frm) {
         frm.trigger("get_target_setup_details");
+        frm.clear_table("output_items");
+        frm.refresh_field("output_items");
+        frm.clear_table("output_extra_items");
+        frm.refresh_field("output_extra_items");
+        frm.clear_table("outcome_items");
+        frm.refresh_field("outcome_items");
     },
     to_year: function(frm) {
         frm.trigger("get_target_setup_details");
+        frm.clear_table("output_items");
+        frm.refresh_field("output_items");
+        frm.clear_table("output_extra_items");
+        frm.refresh_field("output_extra_items");
+        frm.clear_table("outcome_items");
+        frm.refresh_field("outcome_items");
     },
     college: function(frm) {
         frm.trigger("get_target_setup_details");
+        frm.clear_table("output_items");
+        frm.refresh_field("output_items");
+        frm.clear_table("output_extra_items");
+        frm.refresh_field("output_extra_items");
+        frm.clear_table("outcome_items");
+        frm.refresh_field("outcome_items");
     },
     get_target_setup_details: function(frm){
         if(frm.doc.from_year && frm.doc.to_year && frm.doc.college){

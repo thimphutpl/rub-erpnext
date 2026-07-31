@@ -10,6 +10,7 @@
   "college",
   "column_break_unjg",
   "to_year",
+  "department",
   "apa_outcome_details_section",
   "outcome_items",
   "apa_output_details_section",
@@ -90,13 +91,21 @@
    "fieldname": "output_extra_items",
    "fieldtype": "Table",
    "options": "APA Output Extra Item"
+  },
+  {
+   "depends_on": "eval: doc.college == \"Office of Vice Chancellor\"",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "mandatory_depends_on": "eval: doc.college == \"Office of Vice Chancellor\"",
+   "options": "Department"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-20 10:07:00.097014",
+ "modified": "2026-07-23 11:56:05.372457",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "APA Target Setup",

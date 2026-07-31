@@ -20,6 +20,7 @@ class APATargetSetup(Document):
 
 		amended_from: DF.Link | None
 		college: DF.Link
+		department: DF.Link | None
 		from_year: DF.Link
 		outcome_items: DF.Table[APATargetOutcomeItem]
 		output_extra_items: DF.Table[APAOutputExtraItem]
@@ -47,7 +48,7 @@ def fetch_output_and_outcome(from_year, to_year, college):
 			oii.output,
 			oii.project,
 			oii.activities,
-			oii.sub_activity,
+			oii.sub_activity
 		FROM `tabOutput Indicator` oi 
 		INNER JOIN `tabOutput Indicator Item` oii ON oi.name = oii.parent
 		WHERE oi.from_year = %s and oi.to_year = %s and oi.college = %s

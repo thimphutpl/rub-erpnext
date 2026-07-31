@@ -1,7 +1,7 @@
 // Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("Additional Sub Activities", {
+frappe.ui.form.on("Planning Activities Target Setup", {
 	refresh(frm) {
         toggle_child_fields(frm);
 	},

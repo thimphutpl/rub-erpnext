@@ -15,7 +15,6 @@ class OutputIndicatorItem(Document):
 		from frappe.types import DF
 
 		activities: DF.SmallText | None
-		activities_no: DF.Link | None
 		activity_link: DF.Link | None
 		category: DF.Data | None
 		data_collection_method: DF.Data | None

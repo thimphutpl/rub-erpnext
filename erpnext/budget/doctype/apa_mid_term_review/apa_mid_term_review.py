@@ -28,7 +28,7 @@ class APAMidTermReview(Document):
 
 	def autoname(self):
 		college_abbr = frappe.get_value("Company", self.college, "abbr")
-		self.name = make_autoname(f"Mid Term Review/{college_abbr}/{self.from_year}-{self.to_year}")
+		self.name = make_autoname(f"Mid Term Review/{college_abbr}/{self.from_year}-{self.to_year}/.##")
 
 @frappe.whitelist()
 def get_target_setup_details(from_year, to_year, college):
