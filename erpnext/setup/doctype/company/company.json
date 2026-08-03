@@ -1074,12 +1074,14 @@
   {
    "fieldname": "hr_manager",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "HR Manager",
    "options": "Employee"
   },
   {
    "fieldname": "hr_approver",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "HR Approver",
    "options": "Employee"
   },
@@ -1091,6 +1093,7 @@
    "fetch_from": "hr_manager.employee_name",
    "fieldname": "hr_manager_name",
    "fieldtype": "Data",
+   "ignore_user_permissions": 1,
    "label": "HR Manager Name"
   },
   {
@@ -1122,6 +1125,7 @@
   {
    "fieldname": "student_service_officer",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Student Service Officer",
    "options": "Employee"
   },
@@ -1129,6 +1133,7 @@
    "fetch_from": "hr_approver.employee_name",
    "fieldname": "hr_approver_name",
    "fieldtype": "Data",
+   "ignore_user_permissions": 1,
    "label": "HR Approver Name",
    "read_only": 1
   },
@@ -1221,12 +1226,14 @@
   {
    "fieldname": "carpenter",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Carpenter",
    "options": "Employee"
   },
   {
    "fieldname": "mason",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Mason",
    "options": "Employee"
   },
@@ -1237,12 +1244,14 @@
   {
    "fieldname": "electrician",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Electrician",
    "options": "Employee"
   },
   {
    "fieldname": "plumber",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Plumber",
    "options": "Employee"
   },
@@ -1254,20 +1263,21 @@
   {
    "fieldname": "crc_approval",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "CRC Approval",
    "options": "Employee"
   },
   {
    "fieldname": "technician",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Technician",
    "options": "Employee"
   },
   {
    "fieldname": "bfs_id",
    "fieldtype": "Data",
-   "label": "Bfs Id",
-   "read_only": 1
+   "label": "Bfs Id"
   },
   {
    "fieldname": "letter_head",
@@ -1281,7 +1291,7 @@
  "image_field": "company_logo",
  "is_tree": 1,
  "links": [],
- "modified": "2026-07-09 09:33:11.282428",
+ "modified": "2026-08-03 20:57:35.364425",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",
