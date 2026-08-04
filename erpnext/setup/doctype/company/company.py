@@ -113,6 +113,7 @@ class Company(NestedSet):
 		mason: DF.Link | None
 		monthly_sales_target: DF.Currency
 		old_parent: DF.Data | None
+		organization_id: DF.Data | None
 		parent_company: DF.Link | None
 		payment_terms: DF.Link | None
 		phone_no: DF.Data | None
