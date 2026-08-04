@@ -17,6 +17,7 @@
   "is_group",
   "default_holiday_list",
   "is_overseeing_company",
+  "organization_id",
   "cb0",
   "default_letter_head",
   "tax_id",
@@ -1284,6 +1285,11 @@
    "fieldtype": "Link",
    "label": "Letter Head",
    "options": "Letter Head"
+  },
+  {
+   "fieldname": "organization_id",
+   "fieldtype": "Data",
+   "label": "Organization Id"
   }
  ],
  "icon": "fa fa-building",
@@ -1291,7 +1297,7 @@
  "image_field": "company_logo",
  "is_tree": 1,
  "links": [],
- "modified": "2026-08-03 20:57:35.364425",
+ "modified": "2026-08-04 09:03:07.357293",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",
