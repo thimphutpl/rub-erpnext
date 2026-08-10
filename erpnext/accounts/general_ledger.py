@@ -844,7 +844,7 @@ def validate_against_planning_activities(args):
 		million_in_budget = budget_amount * 1000000
 
 		if total_expense > million_in_budget  and args.against_voucher_type not in ("Asset Movement", "Asset Value Adjustment"):
-			frappe.throw("Expense exceeded the allocated Budget of <b>{0}</b> for College: <b>{1}</b> in Cost Center: <b>{2}</b> and {3}: <b>{4}</b>".format(budget_in_million, args.company, args.cost_center, args.activity_type, args.activity))
+			frappe.throw("Expense exceeded the allocated Budget of <b>{0}</b> for College: <b>{1}</b> in Cost Center: <b>{2}</b> and {3}: <b>{4}</b>".format(million_in_budget, args.company, args.cost_center, args.activity_type, args.activity))
 
 def get_budget_amount(self):
 	posting_date = self.posting_date
