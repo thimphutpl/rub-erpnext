@@ -384,7 +384,6 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 	gle.flags.notify_update = False
 	gle.submit()
 
-
 	if not from_repost and gle.voucher_type != "Period Closing Voucher":
 		#Commit and Consume budget
 		transactions = [d.transaction for d in frappe.get_all("Budget Transaction", fields='transaction')]
@@ -392,12 +391,7 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 			account_types = [d.account_type for d in frappe.get_all("Budget Settings Account Types", fields='account_type')]
 
 			if frappe.db.get_value("Account", args.account, "account_type") in account_types or args.voucher_type == "Payment Entry":
-				# validate_expense_against_budget(args)
-				# frappe.throw(str(account_types) +", "+str(frappe.db.get_value("Account", args.account, "account_type")))
-
 				validate_against_planning_activities(args)
-				
-				
 				cc_doc = frappe.get_doc("Cost Center", args.cost_center)
 				# budget_cost_center = cc_doc.budget_cost_center if cc_doc.use_budget_from_parent else args.cost_center
 				budget_cost_center = args.cost_center
@@ -448,9 +442,6 @@ def make_entry(args, adv_adj, update_outstanding, from_repost=False):
 					})
 					con_obj.flags.ignore_permissions=1
 					con_obj.submit()
-	# frappe.throw("end")
-
-
 
 def validate_cwip_accounts(gl_map):
 	"""Validate that CWIP account are not used in Journal Entry"""
@@ -885,19 +876,15 @@ def get_actual_expense(args):
 	amount = flt(
 		frappe.db.sql(
 			"""
-			SELECT SUM(gle.debit - gle.credit) AS actual_expense
-			FROM `tabGL Entry` gle
-			INNER JOIN `tabAccount` acc ON acc.name = gle.account
-			WHERE gle.is_cancelled = 0
-			  AND gle.docstatus = 1
-			  AND acc.root_type = 'Expense'
-			  AND gle.activity_type = %s
-			  AND gle.activity = %s
-			  AND gle.cost_center = %s
+			SELECT SUM(amount)
+			FROM `tabConsumed Budget` cb
+			WHERE docstatus = 1
+			  AND activity_type = %s
+			  AND activity = %s
+			  AND cost_center = %s
+			  AND company = %s
 			""",
-			(args.activity_type, args.activity, args.cost_center),
+			(args.activity_type, args.activity, args.cost_center, args.company),
 		)[0][0]
 	)
-
 	return amount
-
