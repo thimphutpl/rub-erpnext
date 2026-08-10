@@ -65,6 +65,7 @@
   {
    "fieldname": "forward_to",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Approver",
    "no_copy": 1,
    "options": "User"
@@ -122,10 +123,10 @@
    "read_only": 1
   },
   {
-   "description": "** This eNote type refers to department or division or section or unit if it has different series format. EG. If ITD has BAIL/ITD/01/Year/### and HRD has BAIL/HRD/01/Year/###, then in eNote type, it must include HRD and ITD ***.",
+   "description": "** This eNote type refers to department or division or section or unit if it has different series format. EG. If ITD has OVC/ITD/01/Year/### and HRD has OVC/HRD/01/Year/###, then in eNote type, it must include HRD and ITD ***.",
    "fieldname": "enote_type",
    "fieldtype": "Link",
-   "label": "eNote Type",
+   "label": "Department/Division/Section/Unit",
    "options": "eNote Type"
   },
   {
@@ -174,7 +175,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-28 20:42:53.620267",
+ "modified": "2026-08-10 12:55:27.720357",
  "modified_by": "Administrator",
  "module": "eNote",
  "name": "eNote",
