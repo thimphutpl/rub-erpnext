@@ -101,6 +101,7 @@ class SupplementaryBudgets(Document):
 				"college": self.college,
 				"from_year": self.from_year,
 				"to_year": self.to_year,
+				"cost_center": self.cost_center,
 				"docstatus": 1
 			},
 		)
