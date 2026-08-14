@@ -60,6 +60,8 @@ class TDSRemittance(AccountsController):
 	def get_condition(self):
 		if self.branch:
 			return ' AND t.branch ="{}" '.format(self.branch)
+		elif self.company:
+			return ' AND t.company = "{}" '.format(self.company)
 		return ''
 		
 	@frappe.whitelist()
@@ -249,11 +251,16 @@ def get_tds_invoices(company, from_date, to_date, name, filter_existing=False, c
 	# 		to_date=to_date
 	# 	), as_dict=True)
 	# Journal Entry
-	je_entries = frappe.db.sql("""select t.posting_date, t.name as invoice_no, 'Journal Entry' as invoice_type,
-			t1.party_type, t1.party, 
+	je_entries = frappe.db.sql("""
+	        select 
+			    t.posting_date, 
+				t.name as invoice_no, 
+				'Journal Entry' as invoice_type,
+			    t1.party_type, 
+				t1.party, 
 			(case when t1.party_type = 'Customer' then c.tax_id 
 				when t1.party_type = 'Supplier' then s.supplier_tpn_no else null end) as tpn, 
-			t1.cost_center,
+			    t1.cost_center,
 			(case when t1.tax_amount > 0 and t1.debit > 0 and ifnull(t1.apply_tds) = 1 
 					then t1.taxable_amount 
 				else 0 end) as bill_amount, 
