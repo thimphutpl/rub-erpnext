@@ -3,8 +3,21 @@
 
 frappe.ui.form.on("Outcome Target Setup", {
 	refresh(frm) {
+        // frm.set_df_property('items', 'cannot_add_rows', true);
+        // frm.set_df_property('items', 'cannot_delete_rows', true);
+        // refresh_field('items');
         toggle_child_fields(frm);
 	},
+    setup(frm){
+        frm.set_query("college", function () {
+            return {
+                filters: {
+                    is_group: 0,
+                    is_overseeing_company: 0,
+                },
+            };
+        });
+    },
     unit: function(frm){
         toggle_child_fields(frm);
     }

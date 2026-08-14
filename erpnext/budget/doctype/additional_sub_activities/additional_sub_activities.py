@@ -29,7 +29,7 @@ class AdditionalSubActivities(Document):
 	
 	def autoname(self):
 		college_abbr = frappe.get_value("Company", self.college, "abbr")
-		self.name = make_autoname(f"Additional Activities/{college_abbr}/{self.from_year}-{self.to_year}/.##")
+		self.name = make_autoname(f"Additional Sub-Activities/{college_abbr}/{self.from_year}-{self.to_year}/.##")
 
 	def validate(self):
 		duplicate = frappe.db.sql("""

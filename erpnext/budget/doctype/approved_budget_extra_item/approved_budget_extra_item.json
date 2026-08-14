@@ -67,8 +67,8 @@
    "fetch_from": "activity_link.activities",
    "fieldname": "activities",
    "fieldtype": "Small Text",
-   "in_list_view": 1,
-   "label": "Activity",
+   "hidden": 1,
+   "label": "Activity Name",
    "read_only": 1
   },
   {
@@ -137,7 +137,8 @@
    "columns": 2,
    "fieldname": "activity_link",
    "fieldtype": "Link",
-   "label": "Activity Link",
+   "in_list_view": 1,
+   "label": "Activity",
    "options": "Additional Activities",
    "read_only": 1
   },
@@ -167,7 +168,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-07-09 11:19:20.409629",
+ "modified": "2026-08-14 09:55:39.714031",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Approved Budget Extra Item",

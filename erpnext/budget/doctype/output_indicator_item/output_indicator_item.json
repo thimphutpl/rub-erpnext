@@ -9,19 +9,19 @@
   "output_no",
   "output",
   "project_no",
-  "activities",
-  "activity_link",
   "project",
   "definition",
   "data_source",
   "data_collection_method",
   "category",
-  "remarks",
   "column_break_faex",
+  "activity_link",
   "sub_activity_no",
+  "activities",
   "sub_activity",
   "unit",
-  "weightage"
+  "weightage",
+  "remarks"
  ],
  "fields": [
   {
@@ -107,7 +107,7 @@
   },
   {
    "fieldname": "remarks",
-   "fieldtype": "Small Text",
+   "fieldtype": "Long Text",
    "label": "Remarks"
   },
   {
@@ -130,7 +130,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-07-27 14:43:32.664318",
+ "modified": "2026-08-14 10:05:13.268768",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Output Indicator Item",

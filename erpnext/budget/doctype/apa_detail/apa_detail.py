@@ -15,7 +15,6 @@ class APADetail(Document):
 		from frappe.types import DF
 
 		activities: DF.SmallText | None
-		activities_no: DF.Int
 		activity_link: DF.Link | None
 		approved_budget: DF.Currency
 		is_capital: DF.Check
@@ -28,6 +27,6 @@ class APADetail(Document):
 		project: DF.SmallText | None
 		project_no: DF.Int
 		proposed_budget: DF.Currency
-		remarks: DF.SmallText | None
+		remarks: DF.LongText | None
 	# end: auto-generated types
 	pass

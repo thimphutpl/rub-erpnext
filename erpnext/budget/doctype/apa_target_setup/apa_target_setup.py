@@ -87,12 +87,13 @@ def fetch_output_and_outcome(from_year, to_year, college):
 	if college not in [d["college"] for d in ignore_colleges]:
 		outcome = frappe.db.sql('''
 			SELECT  
-				unit,
-				weightage,
-				outcome
-			FROM `tabOutcome Indicator`
-			WHERE disabled = 0
-		''', as_dict=True)
+				ots.unit,
+				oi.outcome
+			FROM `tabOutcome Indicator` oi
+			LEFT JOIN `tabOutcome Target Setup` ots
+			ON oi.name = ots.outcome
+			WHERE (oi.disabled = 0 OR ots.disabled = 0) AND ots.from_year = %s AND ots.to_year = %s AND ots.college = %s
+		''', (from_year, to_year, college), as_dict=True)
 
 		if not outcome:
 			frappe.throw("No Outcome Indicator found")

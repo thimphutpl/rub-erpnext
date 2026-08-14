@@ -3,6 +3,12 @@
 
 frappe.ui.form.on("Output Indicator", {
 	refresh(frm) {
+        frm.set_df_property('items', 'cannot_add_rows', true);
+        frm.set_df_property('items', 'cannot_delete_rows', true);
+        frm.set_df_property('additional_activities', 'cannot_add_rows', true);
+        frm.set_df_property('additional_activities', 'cannot_delete_rows', true);
+        refresh_field('items');
+        refresh_field('additional_activities');
         frm.set_query("department", function () {
             return {
                 filters: {

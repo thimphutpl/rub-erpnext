@@ -78,6 +78,8 @@ def get_fyp_proposal(rub_strategic_plan, from_year, to_year):
 
 @frappe.whitelist()
 def fetch_budgetplan(from_year, to_year):
+	if not (from_year and to_year):
+		frappe.throw("Select from year and to year")
 	planning = frappe.db.sql('''
 		SELECT  
 			po.serial_number as output_si_no, 

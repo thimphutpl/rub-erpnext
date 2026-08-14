@@ -64,8 +64,8 @@
    "columns": 2,
    "fieldname": "activities",
    "fieldtype": "Small Text",
-   "in_list_view": 1,
-   "label": "Activity",
+   "hidden": 1,
+   "label": "Activity Name",
    "read_only": 1
   },
   {
@@ -83,8 +83,10 @@
   {
    "fieldname": "activity_link",
    "fieldtype": "Link",
-   "label": "Activity Link",
-   "options": "Planning Activities"
+   "in_list_view": 1,
+   "label": "Activity",
+   "options": "Planning Activities",
+   "read_only": 1
   },
   {
    "default": "0",
@@ -102,7 +104,7 @@
   },
   {
    "fieldname": "remarks",
-   "fieldtype": "Small Text",
+   "fieldtype": "Long Text",
    "label": "Remarks"
   }
  ],
@@ -110,8 +112,8 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-04-16 14:03:44.348879",
- "modified_by": "sonam.bomjan@thimphutechpark.bt",
+ "modified": "2026-08-14 09:51:35.006694",
+ "modified_by": "Administrator",
  "module": "Budget",
  "name": "APA Detail",
  "owner": "Administrator",

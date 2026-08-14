@@ -54,8 +54,7 @@
   {
    "fieldname": "output_items",
    "fieldtype": "Table",
-   "options": "APA Target Output Item",
-   "read_only": 1
+   "options": "APA Target Output Item"
   },
   {
    "fieldname": "apa_outcome_details_section",
@@ -65,8 +64,7 @@
   {
    "fieldname": "outcome_items",
    "fieldtype": "Table",
-   "options": "APA Target Outcome Item",
-   "read_only": 1
+   "options": "APA Target Outcome Item"
   },
   {
    "fieldname": "from_year",
@@ -92,15 +90,14 @@
   {
    "fieldname": "output_extra_items",
    "fieldtype": "Table",
-   "options": "APA Output Extra Item",
-   "read_only": 1
+   "options": "APA Output Extra Item"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-23 15:35:05.157268",
+ "modified": "2026-08-13 10:03:24.396537",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "APA Mid Term Review",

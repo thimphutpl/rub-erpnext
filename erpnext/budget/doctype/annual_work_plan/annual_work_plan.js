@@ -3,6 +3,12 @@
 
 frappe.ui.form.on("Annual Work Plan", {
 	refresh(frm) {
+        frm.set_df_property('apa_details', 'cannot_add_rows', true);
+        frm.set_df_property('apa_details', 'cannot_delete_rows', true);
+        frm.set_df_property('apa_extra_details', 'cannot_add_rows', true);
+        frm.set_df_property('apa_extra_details', 'cannot_delete_rows', true);
+        refresh_field('apa_details');
+        refresh_field('apa_extra_details');
         if (frm.doc.docstatus == 1) {
 			cur_frm.add_custom_button(__("Make Approved Budget"),
 				function () {

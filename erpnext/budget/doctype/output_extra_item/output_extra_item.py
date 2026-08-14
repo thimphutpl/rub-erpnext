@@ -23,6 +23,7 @@ class OutputExtraItem(Document):
 		parenttype: DF.Data
 		project: DF.SmallText | None
 		project_no: DF.Link
+		remarks: DF.LongText | None
 		sub_activity: DF.SmallText | None
 		sub_activity_link: DF.Link | None
 		unit: DF.Link | None

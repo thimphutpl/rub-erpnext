@@ -96,7 +96,7 @@ def fetch_budgetplan(from_year, to_year, college):
 			COALESCE(sa.unit, pa.unit) AS unit,
 			abei.funding_source
 		FROM `tabApproved Budget Extra Item` abei
-		INNER JOIN `tabAdditional Activities` pa
+		LEFT JOIN `tabAdditional Activities` pa
 			ON pa.name = abei.activity_link
 			AND pa.include_in_apa = 1
 		LEFT JOIN `tabAdditional Sub Activities` sa

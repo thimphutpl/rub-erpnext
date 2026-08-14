@@ -29,18 +29,18 @@ def get_columns():
 			"width": 200
 		},
 		{
-			"label": "Activities",
+			"label": "Activity",
 			"fieldname": "activities",
 			"fieldtype": "Dynamic Link",
 			"options": "activity_type",
 			"width": 100
 		},
-		{
-			"label": "Activities Name",
-			"fieldname": "activities_name",
-			"fieldtype": "Data",
-			"width": 200
-		},
+		# {
+		# 	"label": "Activities Name",
+		# 	"fieldname": "activities_name",
+		# 	"fieldtype": "Data",
+		# 	"width": 200
+		# },
 		{
 			"label": "Budget Type",
 			"fieldname": "budget_type",
@@ -145,7 +145,6 @@ def get_data(filters):
 			ab.name AS approved_budget,
 			ab.cost_center,
 			pa.name AS activities,
-			pa.activities AS activities_name,
 			'Planning Activities' AS activity_type
 		FROM `tabApproved Budget` ab
 		INNER JOIN `tabApproved Budget Item` abi
@@ -165,7 +164,6 @@ def get_data(filters):
 			ab.name AS approved_budget,
 			ab.cost_center,
 			aa.name AS activities,
-			aa.activities AS activities_name,
 			'Additional Activities' AS activity_type
 		FROM `tabApproved Budget` ab
 		INNER JOIN `tabApproved Budget Extra Item` abi
@@ -219,6 +217,7 @@ def get_data(filters):
 						activity_link,
 						'Planning Activities' AS activity_type
 					FROM `tabApproved Budget Item`
+					WHERE 1 = 1
 					{planning_condition}
 
 					UNION ALL
@@ -236,6 +235,7 @@ def get_data(filters):
 						activity_link,
 						'Additional Activities' AS activity_type
 					FROM `tabApproved Budget Extra Item`
+					WHERE 1 = 1
 					{additional_condition}
 				) abi
 				INNER JOIN `tabApproved Budget` ab

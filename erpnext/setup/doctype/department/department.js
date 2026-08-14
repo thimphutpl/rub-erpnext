@@ -20,4 +20,7 @@ frappe.ui.form.on("Department", {
 			frappe.throw(__("You cannot edit root node."));
 		}
 	},
+	company: function (frm) {
+		frm.set_value("include_in_apa", 0)
+	}
 });

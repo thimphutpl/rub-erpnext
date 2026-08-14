@@ -3,6 +3,12 @@
 
 frappe.ui.form.on("Approved Budget", {
 	refresh(frm) {
+        frm.set_df_property('items', 'cannot_add_rows', true);
+        frm.set_df_property('items', 'cannot_delete_rows', true);
+        frm.set_df_property('ab_extra_item', 'cannot_add_rows', true);
+        frm.set_df_property('ab_extra_item', 'cannot_delete_rows', true);
+        refresh_field('items');
+        refresh_field('ab_extra_item');
         frm.set_query("college", function () {
             return {
                 filters: {

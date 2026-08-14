@@ -18,6 +18,7 @@
   "is_section",
   "is_unit",
   "disabled",
+  "include_in_apa",
   "lft",
   "rgt",
   "old_parent",
@@ -155,13 +156,20 @@
    "fieldname": "name1",
    "fieldtype": "Data",
    "label": "Name"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval: doc.company == \"Office of Vice Chancellor\"",
+   "fieldname": "include_in_apa",
+   "fieldtype": "Check",
+   "label": "Include In APA"
   }
  ],
  "icon": "fa fa-sitemap",
  "idx": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2026-04-25 15:53:50.310378",
+ "modified": "2026-07-23 15:41:08.595169",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Department",

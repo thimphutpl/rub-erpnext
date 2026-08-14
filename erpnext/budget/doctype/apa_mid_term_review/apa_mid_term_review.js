@@ -3,7 +3,15 @@
 
 frappe.ui.form.on("APA Mid Term Review", {
 	refresh(frm) {
-
+        frm.set_df_property('outcome_items', 'cannot_add_rows', true);
+        frm.set_df_property('outcome_items', 'cannot_delete_rows', true);
+        frm.set_df_property('output_items', 'cannot_add_rows', true);
+        frm.set_df_property('output_items', 'cannot_delete_rows', true);
+        frm.set_df_property('output_extra_items', 'cannot_add_rows', true);
+        frm.set_df_property('output_extra_items', 'cannot_delete_rows', true);
+        refresh_field('outcome_items');
+        refresh_field('output_items');
+        refresh_field('output_extra_items');
 	},
     setup(frm) {
         frm.set_query("college", function () {

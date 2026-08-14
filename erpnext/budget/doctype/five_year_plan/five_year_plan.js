@@ -3,6 +3,9 @@
 
 frappe.ui.form.on("Five Year Plan", {
 	refresh(frm) {
+        frm.set_df_property('items', 'cannot_add_rows', true);
+        frm.set_df_property('items', 'cannot_delete_rows', true);
+        refresh_field('items');
         if (!frm.is_new()) {
             frm.add_custom_button(
                 __('Make Annual Work Plan'),
@@ -39,6 +42,10 @@ frappe.ui.form.on("Five Year Plan", {
 	},
 
     get_proposal_details: function(frm){
+
+	if(!(frm.doc.from_year && frm.doc.to_year)){
+        frappe.throw("Select from year and to year")
+    }else{
         frappe.call({
             method:"erpnext.budget.doctype.five_year_plan.five_year_plan.fetch_budgetplan",
             args: {
@@ -74,5 +81,6 @@ frappe.ui.form.on("Five Year Plan", {
                     }
                 }
         })
+    }
     }
 });

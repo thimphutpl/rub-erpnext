@@ -3,6 +3,15 @@
 
 frappe.ui.form.on("APA Target Setup", {
 	refresh(frm) {
+        frm.set_df_property('outcome_items', 'cannot_add_rows', true);
+        frm.set_df_property('outcome_items', 'cannot_delete_rows', true);
+        frm.set_df_property('output_items', 'cannot_add_rows', true);
+        frm.set_df_property('output_items', 'cannot_delete_rows', true);
+        frm.set_df_property('output_extra_items', 'cannot_add_rows', true);
+        frm.set_df_property('output_extra_items', 'cannot_delete_rows', true);
+        refresh_field('outcome_items');
+        refresh_field('output_items');
+        refresh_field('output_extra_items');
         frm.set_query("department", function () {
             return {
                 filters: {
@@ -72,9 +81,7 @@ frappe.ui.form.on("APA Target Setup", {
                 },
                 callback: function(r) {
                     if (r.message.output) {
-                        console.log(r.message.output)
                         frm.clear_table("output_items");
-
                         r.message.output.forEach(function(row) {
                             let child = frm.add_child("output_items");
                             child.output = row.output
@@ -93,9 +100,7 @@ frappe.ui.form.on("APA Target Setup", {
                         frm.refresh_field("output_items");
                     }
                     if (r.message.output_extra) {
-                        console.log(r.message.output_extra)
                         frm.clear_table("output_extra_items");
-
                         r.message.output_extra.forEach(function(row) {
                             let child = frm.add_child("output_extra_items");
                             child.output = row.output
@@ -110,23 +115,22 @@ frappe.ui.form.on("APA Target Setup", {
                             child.sub_activity_link = row.sub_activity_link
                             child.activity_link = row.activity_link
                         });
-    
                         frm.refresh_field("output_extra_items");
                     }
-                    if (r.message.outcome && !(frm.doc.college in r.message.ignore_colleges)) {
-                        frm.set_df_property("outcome_items", "hidden", 0);
-                        console.log(r.message.outcome)
+                    // frappe.throw(frm.doc.college)
+                    if (r.message.outcome && r.message.ignore_colleges) {
                         frm.clear_table("outcome_items");
-                        
+                        console.log(r.message.output_extra)
                         r.message.outcome.forEach(function(row) {
                             let child = frm.add_child("outcome_items");
                             child.outcome = row.outcome
                             child.unit= row.unit
-                            child.weightage = row.weightage
+                            // child.weightage = row.weightage
                         });
-    
+                        frm.set_df_property("outcome_items", "hidden", 0);
                         frm.refresh_field("outcome_items");
                     }else{
+                        frm.clear_table("outcome_items");
                         frm.set_df_property("outcome_items", "hidden", 1);
                         frm.refresh_field("outcome_items");
                     }
