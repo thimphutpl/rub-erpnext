@@ -594,11 +594,11 @@ def filter_assessment_component(doctype, txt, searchfield, start, page_len, filt
 	where mac.name = mai.parent
 	and ac.name = mai.assessment_name
 	and ac.examination_assesment = '{}'
-	and college = '{}'
+	and ac.college = '{}'
 	and mac.docstatus = 1
 	and mac.academic_term = '{}'
 	and mac.module = '{}'
-	and programme = '{}'
+	and mac.programme = '{}'
 	""".format(filters.get("examination_assesment"),filters.get("college"), filters.get("academic_term"), filters.get("module"), filters.get("programme")))
 	# frappe.throw(filters.get("college")+" "+filters.get("programme")+" "+filters.get("module")+" "+filters.get("academic_term")+" "+filters.get("tutor"))
 	
