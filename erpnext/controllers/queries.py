@@ -593,8 +593,8 @@ def filter_assessment_component(doctype, txt, searchfield, start, page_len, filt
 	`tabModule Assessment Item` mai, `tabAssessment Component` ac
 	where mac.name = mai.parent
 	and ac.name = mai.assessment_name
-	and ac.examination_assesment = '{}'
-	and ac.college = '{}'
+	and ac.examination_assesment = {}
+	and mac.college = '{}'
 	and mac.docstatus = 1
 	and mac.academic_term = '{}'
 	and mac.module = '{}'
