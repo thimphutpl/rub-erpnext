@@ -281,6 +281,7 @@ def filter_timetable_schedule_entries(doctype, txt, searchfield, start, page_len
 			and tse.college = '{company}'
 			and tse.programme in ({programmes})
 			and tse.day = '{day}'
+			and tse.tutor = '{tutor}'
 			and (tse.{key} like %(txt)s
 				or tse.name like %(txt)s
 				or tse.college like %(txt)s
@@ -290,6 +291,7 @@ def filter_timetable_schedule_entries(doctype, txt, searchfield, start, page_len
 			tse.name, tse.college
 		limit %(page_len)s offset %(start)s""".format(
 			company = filters.get("college"),
+			company = filters.get("tutor"),
 			date = filters.get("date"),
 			programmes = ", ".join("'"+p.programme+"'" for p in programmes) if len(programmes) > 0 else "'No modules assigned to you'",
 			day = day,
