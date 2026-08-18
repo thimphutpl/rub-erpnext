@@ -61,6 +61,7 @@ class JournalEntry(AccountsController):
 		bill_no: DF.Data | None
 		branch: DF.Link
 		cheque_date: DF.Date | None
+		cheque_lot: DF.Link | None
 		cheque_no: DF.Data | None
 		clearance_date: DF.Date | None
 		company: DF.Link
@@ -87,7 +88,6 @@ class JournalEntry(AccountsController):
 		remark: DF.SmallText | None
 		repost_required: DF.Check
 		reversal_of: DF.Link | None
-		select_cheque_lot: DF.Link | None
 		select_print_heading: DF.Link | None
 		stock_entry: DF.Link | None
 		tax_withholding_category: DF.Link | None
@@ -114,7 +114,8 @@ class JournalEntry(AccountsController):
 			frappe.throw("Please set prefix {}".format(
 				frappe.get_desk_link("Journal Entry Series", self.naming_series)
 			))
-		self.name = make_autoname(str(prefix) + ".YYYY.MM.####")
+		# self.name = make_autoname(str(prefix) + ".YYYY.MM.####")
+		self.name = make_autoname(str(prefix)+"-"+frappe.db.get_value("Company", self.company, "abbr")+"-"+'.YYYY.MM.####')	
 
 		# Ver 1.0 by SSK on 09/08/2016, autoname() method is added
 	# def autoname(self):
