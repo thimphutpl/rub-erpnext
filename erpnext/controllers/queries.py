@@ -626,7 +626,6 @@ def filter_assessment_component(doctype, txt, searchfield, start, page_len, filt
 
 	#commented below by tw as tutor check is not longer required
 	# if not filters.get("tutor"):
-	# 	frappe.throw("Please Select Tutor")
 	return frappe.db.sql("""
 	select mai.assessment_name from `tabModule Assessment Criteria` mac,
 	`tabModule Assessment Item` mai, `tabAssessment Component` ac
