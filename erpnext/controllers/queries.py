@@ -274,7 +274,7 @@ def filter_timetable_schedule_entries(doctype, txt, searchfield, start, page_len
 	# 		day = day
 	# 	))
 	return frappe.db.sql(
-		"""select tse.name, tse.programme, tse.module_code, tse.from_time, tse.to_time, tse.day from `tabTimetable Schedule Entry` tse, `tabAcademic Term` at
+		"""select tse.name, tse.programme, tse.module_code, tse.from_time, tse.to_time, tse.day, tse.class_type from `tabTimetable Schedule Entry` tse, `tabAcademic Term` at
 		where
 			at.college = tse.college
 			and at.term_start_date <= '{date}' and at.term_end_date >= '{date}'
@@ -353,12 +353,12 @@ def get_programme(doctype, txt, searchfield, start, page_len, filters):
 	doctype = "Programme"
 	return frappe.db.sql(
 		"""select m.name, m.abbreviation, mc.company as college from `tabProgramme` m, `tabColleges` mc
-        where  m.name = mc.parent and mc.company = %(college)s and m.name like %(txt)s
+		where  m.name = mc.parent and mc.company = %(college)s and m.name like %(txt)s
 		and %(date)s >= mc.from_date and %(date)s <= mc.to_date
-        order by
-            if(locate(%(_txt)s, m.name), locate(%(_txt)s, m.name), 99999),
-            m.name asc
-        limit {start}, {page_len}""".format(
+		order by
+			if(locate(%(_txt)s, m.name), locate(%(_txt)s, m.name), 99999),
+			m.name asc
+		limit {start}, {page_len}""".format(
 			start=start, page_len=page_len
 		),
 		{
@@ -566,6 +566,45 @@ def filter_college_programme_module_tutors(doctype, txt, searchfield, start, pag
 			}
 		),
 		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	)
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def filter_student_section(doctype, txt, searchfield, start, page_len, filters):
+	# fields = get_fields(doctype, ["fb.name", "fb.company"])
+	searchfields = frappe.get_meta(doctype).get_search_fields()
+	# searchfields = " or ".join("m."+field + " like %(txt)s" for field in searchfields)
+	if not filters.get("college"):
+		frappe.throw("College table is empty")
+	if not filters.get("class_type"):
+		frappe.throw("Class Type is empty")
+	college_condition = ", ".join("'"+c+"'" for c in filters.get("college"))
+	return frappe.db.sql(
+		"""select e.name, e.class_type, e.college from `tabStudent Section` e
+		where
+			e.college in ({college})
+			and
+			e.class_type = %(class_type)s
+			and
+			  (
+				e.name like %(txt)s
+				or e.college like %(txt)s
+				or e.class_type like %(txt)s
+			
+				)
+			order by
+			e.idx desc,
+			e.name
+		limit %(page_len)s offset %(start)s""".format(
+			college = college_condition,
+			**{
+				"key": searchfield,
+				"scond": searchfields,
+			}
+		),
+		{"txt": "%%%s%%" % txt,
+   "class_type": filters.get("class_type"),
+   		 "_txt": txt.replace("%", ""), 
+		 "start": start, "page_len": page_len},
 	)
 
 #Following added by Kinley Dorji 2026/03/02
@@ -788,11 +827,11 @@ def get_college_programme(doctype, txt, searchfield, start, page_len, filters):
 
 	return frappe.db.sql(
 		"""select m.name, m.abbreviation, mc.company as college from `tabProgramme` m, `tabColleges` mc
-        where  m.name = mc.parent and mc.company = %(college)s and m.name like %(txt)s
-        order by
-            if(locate(%(_txt)s, m.name), locate(%(_txt)s, m.name), 99999),
-            m.name asc
-        limit {start}, {page_len}""".format(
+		where  m.name = mc.parent and mc.company = %(college)s and m.name like %(txt)s
+		order by
+			if(locate(%(_txt)s, m.name), locate(%(_txt)s, m.name), 99999),
+			m.name asc
+		limit {start}, {page_len}""".format(
 			start=start, page_len=page_len
 		),
 		{
