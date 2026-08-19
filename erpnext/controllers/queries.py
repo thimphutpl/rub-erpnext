@@ -488,6 +488,21 @@ def filter_batch_section_students(doctype, txt, searchfield, start, page_len, fi
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def filter_module_enrolment_key(doctype, txt, searchfield, start, page_len, filters):
+
+
+	# if not sections:
+	# 	frappe.throw(
+	# 		"No Student Section found for "
+	# 		"College <b>{0}</b>, "
+	# 		"Academic Term <b>{1}</b>, "
+	# 		"Programme <b>{2}</b>."
+	# 		.format(
+	# 			schedule_doc.college,
+	# 			schedule_doc.academic_term,
+	# 			schedule_doc.programme
+	# 		)
+	# 	)
+
 	# fields = get_fields(doctype, ["fb.name", "fb.company"])
 	# if not frappe.db.exists("Student", {"user": filters.get("student_id")}):
 	# 	frappe.throw("Only Students are allowed to submit Module Enrolment Documents.", title="Not Permitted")
@@ -495,16 +510,56 @@ def filter_module_enrolment_key(doctype, txt, searchfield, start, page_len, filt
 	student_batch = frappe.db.get_value("Student", {"user": filters.get("student_id")}, "student_batch")
 	# frappe.log_error(str(filters.get("student_id")))
 	# current_academic_term = frappe.db.get_value("Academic Term", {"term_start_date": ["<=", filters.get("enrollment_date")], "term_end_date": [">=", filters.get("enrollment_date")]})
-	current_academic_term = frappe.db.sql("select name from `tabAcademic Term` where '{0}' >= term_start_date and '{0}' <= term_end_date".format(filters.get("enrollment_date")),as_dict=1)
+	if filters.get("college") != "Administrator":
+		current_academic_term = frappe.db.sql("select name from `tabAcademic Term` where '{0}' >= term_start_date and '{0}' <= term_end_date and college = '{1}'".format(filters.get("enrollment_date"), filters.get("college")),as_dict=1)
+	else:
+		current_academic_term = frappe.db.sql("select name from `tabAcademic Term` where '{0}' >= term_start_date and '{0}' <= term_end_date".format(filters.get("enrollment_date")),as_dict=1)
 	if len(current_academic_term) > 0:
 		current_academic_term = current_academic_term[0].name
+	student = frappe.get_doc("Student", {"user": filters.get("student_id")})
+	sections = frappe.get_all(
+		"Student Section",
+		filters={
+			"college": filters.get("college"),
+			"academic_term": current_academic_term,
+			"program": student.programme,
+		},
+		fields=["name"],
+		order_by="name"
+	)
+	section = []
+	for sec in sections:
+		section.append(sec.name)
 	searchfields = frappe.get_meta(doctype).get_search_fields()
 	# searchfields = " or ".join("m."+field + " like %(txt)s" for field in searchfields)
+	scond = ""
+	if txt:
+		scond = " or mek.name like %(txt)s"
+	return frappe.db.sql(
+		"""select mek.name, concat("Module = ", mek.module), concat("Academic Term = ", mek.academic_term),concat("Section = ", mek.student_section) from `tabModule Enrolment Key` mek
+		where
+			mek.academic_term = '{academic_term}'
+			and mek.student_section in ({sections})
+			{scond}
+		order by
+			mek.module asc
+		limit %(page_len)s offset %(start)s""".format(
+			batch = student_batch,
+			academic_term = current_academic_term,
+			sections = ", ".join("'"+s+"'" for s in section),
+			**{
+				"key": searchfield,
+				"scond": scond,
+			}
+		),
+		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	)
 	# return frappe.db.sql(
 	# 	"""select mek.name, mek.module from `tabModule Enrolment Key` mek
 	# 	where
 	# 		mek.student_batch = '{batch}'
-	# 		and mek.academic_term = '{academic_term}'
+	# 		and mek.docstatus = 1
+	# 		or {scond})
 	# 	order by
 	# 		mek.module asc
 	# 	limit %(page_len)s offset %(start)s""".format(
@@ -517,23 +572,6 @@ def filter_module_enrolment_key(doctype, txt, searchfield, start, page_len, filt
 	# 	),
 	# 	{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
 	# )
-	return frappe.db.sql(
-		"""select mek.name, mek.module from `tabModule Enrolment Key` mek
-		where
-			mek.student_batch = '{batch}'
-			and mek.docstatus = 1
-		order by
-			mek.module asc
-		limit %(page_len)s offset %(start)s""".format(
-			batch = student_batch,
-			academic_term = current_academic_term,
-			**{
-				"key": searchfield,
-				"scond": searchfields,
-			}
-		),
-		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
-	)
 
 
 #Following added by Kinley Dorji 2026/02/27
