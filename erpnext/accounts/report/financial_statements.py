@@ -197,6 +197,7 @@ def get_data(
 		period_list,
 		accumulated_values,
 		ignore_accumulated_values_for_fy,
+		filters
 	)
 	accumulate_values_into_parents(accounts, accounts_by_name, period_list)
 	out = prepare_data(
@@ -221,34 +222,84 @@ def get_appropriate_currency(company, filters=None):
 		return frappe.get_cached_value("Company", company, "default_currency")
 
 
+# def calculate_values(
+# 	accounts_by_name,
+# 	gl_entries_by_account,
+# 	period_list,
+# 	accumulated_values,
+# 	ignore_accumulated_values_for_fy,
+	
+# ):
+
+# 	for entries in gl_entries_by_account.values():
+# 		for entry in entries:
+# 			d = accounts_by_name.get(entry.account)
+			
+# 			if not d:
+# 				frappe.msgprint(
+# 					_("Could not retrieve information for {0}.").format(entry.account),
+# 					title="Error",
+# 					raise_exception=1,
+# 				)
+# 			for period in period_list:
+# 				# check if posting date is within the period
+
+# 				if entry.posting_date <= period.to_date:
+# 					if (accumulated_values or entry.posting_date >= period.from_date) and (
+# 						not ignore_accumulated_values_for_fy
+# 						or entry.fiscal_year == period.to_date_fiscal_year
+# 					):
+# 						d[period.key] = d.get(period.key, 0.0) + flt(entry.debit) - flt(entry.credit)
+
+# 			if entry.posting_date < period_list[0].year_start_date:
+# 				d["opening_balance"] = d.get("opening_balance", 0.0) + flt(entry.debit) - flt(entry.credit)
 def calculate_values(
 	accounts_by_name,
 	gl_entries_by_account,
 	period_list,
 	accumulated_values,
 	ignore_accumulated_values_for_fy,
+	filters=None,
 ):
+	abbr = frappe.db.get_value("Company", filters.company, "abbr") if filters else None
+
 	for entries in gl_entries_by_account.values():
 		for entry in entries:
-			d = accounts_by_name.get(entry.account)
-			if not d:
-				frappe.msgprint(
-					_("Could not retrieve information for {0}.").format(entry.account),
-					title="Error",
-					raise_exception=1,
-				)
-			for period in period_list:
-				# check if posting date is within the period
 
+			account = entry.account
+
+			# Convert account suffix based on selected company
+			# Example:
+			# 3-217 - Furniture and Fixture - CLCS
+			# becomes:
+			# 3-217 - Furniture and Fixture - OVC
+			if abbr and " - " in account:
+				account = account.rsplit(" - ", 1)[0] + " - " + abbr
+
+			d = accounts_by_name.get(account)
+
+			if not d:
+				frappe.throw(
+					_("Could not retrieve information for {0}.").format(account)
+				)
+
+			for period in period_list:
 				if entry.posting_date <= period.to_date:
-					if (accumulated_values or entry.posting_date >= period.from_date) and (
+					if (
+						accumulated_values
+						or entry.posting_date >= period.from_date
+					) and (
 						not ignore_accumulated_values_for_fy
 						or entry.fiscal_year == period.to_date_fiscal_year
 					):
-						d[period.key] = d.get(period.key, 0.0) + flt(entry.debit) - flt(entry.credit)
+						d[period.key] = d.get(period.key, 0.0) + flt(
+							entry.debit
+						) - flt(entry.credit)
 
 			if entry.posting_date < period_list[0].year_start_date:
-				d["opening_balance"] = d.get("opening_balance", 0.0) + flt(entry.debit) - flt(entry.credit)
+				d["opening_balance"] = d.get(
+					"opening_balance", 0.0
+				) + flt(entry.debit) - flt(entry.credit)
 
 
 def accumulate_values_into_parents(accounts, accounts_by_name, period_list):
