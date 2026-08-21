@@ -21,8 +21,11 @@ class BankClearance(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from erpnext.accounts.doctype.bank_clearance_detail.bank_clearance_detail import BankClearanceDetail
 		from frappe.types import DF
+
+		from erpnext.accounts.doctype.bank_clearance_detail.bank_clearance_detail import (
+			BankClearanceDetail,
+		)
 
 		account: DF.Link
 		account_currency: DF.Link | None
@@ -156,6 +159,7 @@ def get_payment_entries_for_bank_clearance(
 		{"account": account, "from": from_date, "to": to_date},
 		as_dict=1,
 	)
+
 	if bank_account:
 		condition += "and bank_account = %(bank_account)s"
 
@@ -184,6 +188,31 @@ def get_payment_entries_for_bank_clearance(
 		},
 		as_dict=1,
 	)
+	tds_remittance = frappe.db.sql(
+                """
+                select
+                    "TDS Remittance" as payment_document, 
+                    name as payment_entry,
+                    cheque_no as cheque_number, cheque_date,
+                    total_tds as credit, 0 as debit, posting_date
+                from `tabTDS Remittance`
+                where
+                    credit_account = %(account)s and docstatus=1
+                    and posting_date >= %(from)s and posting_date <= %(to)s
+                    {condition}
+                order by
+                    posting_date ASC, name DESC
+            """.format(
+                    condition=condition
+                ),
+                {
+                    "account": account,
+                    "from": from_date,
+                    "to": to_date,
+                    "bank_account": bank_account,
+                },
+                as_dict=1,
+            )
 
 	pos_sales_invoices, pos_purchase_invoices = [], []
 	if include_pos_transactions:
@@ -245,7 +274,7 @@ def get_payment_entries_for_bank_clearance(
 		).run(as_dict=True)
 
 	entries = (
-		list(payment_entries) + list(journal_entries) + list(pos_sales_invoices) + list(pos_purchase_invoices)
+		list(payment_entries) + list(journal_entries) + list(pos_sales_invoices) + list(pos_purchase_invoices)+list(tds_remittance)
 	)
 
 	return entries
