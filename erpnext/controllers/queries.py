@@ -200,7 +200,7 @@ def filter_college_programme_modules(doctype, txt, searchfield, start, page_len,
 		frappe.throw("Please select College")
 	if not filters.get("programme"):
 		frappe.throw("Please select Programme")
-	if not filters.get("academic_session"):
+	if not filters.get("academic_session"): #filtered academic session but thrown academic term intentionally
 		frappe.throw("Please select Academic Term")
 	if filters.get("check_tutor") == 1:
 		if frappe.db.exists("Employee", {"user_id": filters.get("user")}):
@@ -226,8 +226,7 @@ def filter_college_programme_modules(doctype, txt, searchfield, start, page_len,
 				or {scond})
 		order by
 			c.idx desc,
-			m.name, c.college
-		limit %(page_len)s offset %(start)s""".format(
+			m.name, c.college""".format(
 			company = filters.get("college"),
 			programme = filters.get("programme"),
 			semesters = ", ".join("'"+m+"'" for m in semesters),
