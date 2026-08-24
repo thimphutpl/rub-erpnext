@@ -330,13 +330,13 @@ frappe.ui.form.on("Asset", {
 					__("Manage")
 				);
 
-				frm.add_custom_button(
-					__("Sell Asset"),
-					function () {
-						frm.trigger("make_sales_invoice");
-					},
-					__("Manage")
-				);
+				// frm.add_custom_button(
+				// 	__("Sell Asset"),
+				// 	function () {
+				// 		frm.trigger("make_sales_invoice");
+				// 	},
+				// 	__("Manage")
+				// );
 			} else if (frm.doc.status == "Scrapped") {
 				frm.add_custom_button(
 					__("Restore Asset"),
