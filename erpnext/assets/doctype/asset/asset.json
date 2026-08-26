@@ -613,7 +613,8 @@
   },
   {
    "fieldname": "column_break_rbqr",
-   "fieldtype": "Column Break"
+   "fieldtype": "Column Break",
+   "ignore_user_permissions": 1
   },
   {
    "fieldname": "serial_number",
@@ -728,6 +729,7 @@
    "depends_on": "eval:!doc.custodian && !doc.roombuilding;",
    "fieldname": "hostel",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Hostel",
    "mandatory_depends_on": "eval:!doc.custodian && !doc.roombuilding;",
    "options": "Hostel Room"
@@ -750,6 +752,7 @@
    "depends_on": "eval:!doc.custodian && !doc.hostel;",
    "fieldname": "roombuilding",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Room/Building",
    "mandatory_depends_on": "eval:!doc.custodian && !doc.hostel;",
    "options": "Room"
@@ -818,7 +821,7 @@
    "link_fieldname": "reference_code"
   }
  ],
- "modified": "2026-04-27 11:31:42.265032",
+ "modified": "2026-08-26 14:40:11.034157",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset",
