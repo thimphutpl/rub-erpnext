@@ -838,6 +838,9 @@ class CustomWorkflow:
 		gender_cond = ""
 		if not approver_settings:
 			frappe.throw("Student Leave Apporover Settings is not setup. Please contact SSO or ICT Officer.")
+		if not exists("Student Leave Apporver Setting Item", {"parent": approver_settings.name, "workflow_state": self.new_state, "leave_type": self.doc.leave_type}):
+			frappe.throw(f"Student Leave Approver Setting for Leave Type: {self.doc.leave_type} and Workflow State {self.new_state} does not exist")
+
 		role = None
 		for approver in approver_settings.approver_settings:
 			if approver.workflow_state == self.new_state and approver.leave_type == self.doc.leave_type:
