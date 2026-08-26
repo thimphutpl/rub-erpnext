@@ -832,23 +832,87 @@ class CustomWorkflow:
 			frappe.throw(_("Invalid Workflow State {}").format(self.doc.workflow_state))
 
 	def student_leave_application(self):
-		if self.new_state.lower() in ("Waiting for Approval".lower()) and self.old_state.lower() in ("Draft".lower()):
+		student_gender = frappe.db.get_value("Student", self.doc.student, "gender")
+		company = frappe.db.get_value("Student", self.doc.student, "company")
+		approver_settings = frappe.get_doc("Student Leave Approver Settings", {"college": company})
+		gender_cond = ""
+		if not approver_settings:
+			frappe.throw("Student Leave Apporover Settings is not setup. Please contact SSO or ICT Officer.")
+		role = None
+		for approver in approver_settings.approver_settings:
+			if approver.workflow_state == self.new_state and approver.leave_type == self.doc.leave_type:
+				role = approver.role
+				if approver.gender_based == 1:
+					gender_cond = " and e.gender = '{}'".format(student_gender)
+		if self.new_state.lower() in ("Waiting for Approval".lower()) and self.old_state.lower() != self.new_state.lower():
+			self.doc.set("approvers", [])
+			if frappe.session.user != self.doc.owner and self.old_state.lower() in ("Draft".lower(), "Rejected".lower()):
+				frappe.throw("Only <b>{}</b> can apply for this Leave Application".format(self.doc.owner))
+			for e in frappe.db.sql("select e.user_id, e.employee_name, e.designation from `tabUser` u, `tabEmployee` e, `tabHas Role` hr where e.user_id = u.name and hr.parent = u.name and e.company = '{company}' and hr.role = '{role}' {gender_cond}".format(company = company, role = role, gender_cond = gender_cond),as_dict=1):
+				row = self.doc.append("approvers", {})
+				row.approver = e.user_id
+				row.approver_name = e.employee_name
+				row.designation = e.designation
+			if len(self.doc.approvers) == 0:
+				frappe.throw("There are no users with {role} Role. Please contact SSO or ICT Officer.".format(role = role))
+			# self.set_approver("SSO")
+		elif self.new_state.lower() in ("Draft".lower()):
+			self.doc.set("approvers", [])
+			for e in frappe.db.sql("select e.user_id, e.employee_name, e.designation from `tabUser` u, `tabEmployee` e, `tabHas Role` hr where e.user_id = u.name and hr.parent = u.name and e.company = '{company}' and hr.role = '{role}' {gender_cond}".format(company = company, role = role, gender_cond = gender_cond),as_dict=1):
+				row = self.doc.append("approvers", {})
+				row.approver = e.user_id
+				row.approver_name = e.employee_name
+				row.designation = e.designation
+			if len(self.doc.approvers) == 0:
+				frappe.throw("There are no users with {role} Role. Please contact SSO or ICT Officer.".format(role = role))
+			# self.set_approver("SSO")
+		elif self.new_state.lower() in ("Waiting Verification".lower()) and self.old_state.lower() in ("Draft".lower(), "Rejected".lower()):
 			if frappe.session.user != self.doc.owner:
 				frappe.throw("Only <b>{}</b> can apply for this Leave Application".format(self.doc.owner))
-			self.set_approver("SSO")
-		elif self.new_state.lower() in ("Draft".lower()):
-			self.set_approver("SSO")
+			self.doc.set("approvers", [])
+			for e in frappe.db.sql("select e.user_id, e.employee_name, e.designation from `tabUser` u, `tabEmployee` e, `tabHas Role` hr where e.user_id = u.name and hr.parent = u.name and e.company = '{company}' and hr.role = '{role}' {gender_cond}".format(company = company, role = role, gender_cond = gender_cond),as_dict=1):
+				row = self.doc.append("approvers", {})
+				row.approver = e.user_id
+				row.approver_name = e.employee_name
+				row.designation = e.designation
+			if len(self.doc.approvers) == 0:
+				frappe.throw("There are no users with {role} Role. Please contact SSO or ICT Officer.".format(role = role))
 		elif self.new_state.lower() in ("Waiting for Approval".lower()):
-			if frappe.session.user != self.doc.approver:
-				frappe.throw("Only <b>{}</b> can edit this Leave Application".format(self.doc.approver))
+			if frappe.session.user not in approvers:
+				frappe.throw(
+					"Only <b>{}</b> can edit this Leave Application while it is "
+					"<b>Waiting for Approval</b>.".format(
+						", ".join(a.approver for a in self.doc.approvers)
+					)
+				)
 		elif self.new_state.lower() in ("Approved".lower()) and self.old_state.lower() in ("Waiting for Approval".lower()):
-			if frappe.session.user != self.doc.approver:
-				if "Administrator" != frappe.session.user and frappe.session.user != "mon.chhetri@thimphutechpark.bt":
-					frappe.throw("Only <b>{}</b> can approve this Leave Application ".format(self.doc.approver))
+			# if frappe.session.user != self.doc.approver:
+			# 	if "Administrator" != frappe.session.user and frappe.session.user != "mon.chhetri@thimphutechpark.bt":
+			# 		frappe.throw("Only <b>{}</b> can approve this Leave Application ".format(self.doc.approver))
+			approvers = []
+			for a in self.doc.approvers:
+				approvers.append(a.approver)
+			if frappe.session.user not in approvers:
+				frappe.throw(
+					"Only <b>{}</b> can edit this Leave Application while it is "
+					"<b>Waiting for Approval</b>.".format(
+						", ".join(a.approver for a in self.doc.approvers)
+					)
+				)
 		elif self.new_state.lower() in ("Approved".lower()):
-			if frappe.session.user != self.doc.approver:
-				if "Administrator" != frappe.session.user:
-					frappe.throw("Only <b>{}</b> can edit this Leave Application ".format(self.doc.approver))
+			# if frappe.session.user != self.doc.approver:
+			# 	if "Administrator" != frappe.session.user:
+			# 		frappe.throw("Only <b>{}</b> can edit this Leave Application ".format(self.doc.approver))
+			approvers = []
+			for a in self.doc.approvers:
+				approvers.append(a.approver)
+			if frappe.session.user not in approvers:
+				frappe.throw(
+					"Only <b>{}</b> can edit this Leave Application while it is "
+					"<b>Waiting for Approval</b>.".format(
+						", ".join(a.approver for a in self.doc.approvers)
+					)
+				)
 		else:
 			frappe.throw(_("Invalid Workflow State {}").format(self.doc.workflow_state))		
 
@@ -1118,6 +1182,7 @@ class NotifyCustomWorkflow:
 					frappe.msgprint(_("Please set default template for Asset Approval Notification in Asset Settings."))
 					return
 			elif self.doc.doctype == "Student Leave Application":
+				
 				template = frappe.db.get_value('Company', self.doc.college, 'student_leave_application_approval_notification_template')
 				if not template:
 					frappe.msgprint(_("Please set default template for Student Leave Approval Notification in <b>Company under Student Settings</b>."))
@@ -1130,10 +1195,16 @@ class NotifyCustomWorkflow:
 				return
 			email_template = frappe.get_doc("Email Template", template)
 			message = frappe.render_template(email_template.response, args)
+			if self.doc.doctype != "Student Leave Application":
+				recipients =  self.doc.get(self.doc_approver[0])
+			else:
+				recipients = []
+				for a in self.doc.approvers:
+					recipients.append(a.approver)
 			self.notify({
 				# for post in messages
 				"message": message,
-				"message_to": self.doc.get(self.doc_approver[0]),
+				"message_to": recipients,
 				# for email
 				"subject": email_template.subject
 			})
@@ -1411,6 +1482,7 @@ class NotifyCustomWorkflow:
 			frappe.log_error(frappe.get_traceback(), f"{self.doc.doctype}.notify_user_role Error")
 			frappe.throw(_("Notification sending failed: {0}").format(str(e)))				
 	def notify(self, args):
+		
 		args = frappe._dict(args)
 		# args -> message, message_to, subject
 		contact = args.message_to
@@ -1423,6 +1495,7 @@ class NotifyCustomWorkflow:
 		sender['full_name'] = frappe.utils.get_fullname(sender['email'])
 
 		try:
+			#frappe.throw("hi")
 			frappe.sendmail(
 				recipients = contact,
 				sender = sender['email'],
@@ -1499,8 +1572,9 @@ class NotifyCustomWorkflow:
 				return
 		if self.doc.doctype == "Student Leave Application":
 			wf_state = self.new_state
-			if wf_state == "Waiting for Approval":
+			if wf_state in ("Waiting for Approval", "Waiting Verification"):	
 				self.notify_approver()
+				return
 			elif wf_state == "Approved":
 				self.notify_student()
 				return
@@ -1508,8 +1582,9 @@ class NotifyCustomWorkflow:
 				self.notify_student()
 				return
 			else:
-				frappe.msgprint(_("Email notifications not configured for workflow state {}").format(self.new_state))
-				return
+				if wf_state != "Draft":
+					frappe.msgprint(_("Email notifications not configured for workflow state {}").format(self.new_state))
+					return
 		# if self.doc.doctype=="Leave Application":
 		# 	wf_state = self.new_state
 		# 	if wf_state == "Approved":
