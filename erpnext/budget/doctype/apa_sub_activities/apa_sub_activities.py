@@ -16,13 +16,13 @@ class APASubActivities(Document):
 		from erpnext.budget.doctype.output_category_item.output_category_item import OutputCategoryItem
 		from frappe.types import DF
 
-		activity: DF.Data
+		activity: DF.Link
 		amended_from: DF.Link | None
 		college: DF.Link
 		disabled: DF.Check
 		from_year: DF.Link
 		items: DF.Table[OutputCategoryItem]
-		major_activity: DF.Link
+		sub_activity: DF.Data
 		to_year: DF.Link
 		unit: DF.Link
 	# end: auto-generated types

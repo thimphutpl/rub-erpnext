@@ -6,8 +6,8 @@
  "engine": "InnoDB",
  "field_order": [
   "college",
-  "major_activity",
   "activity",
+  "sub_activity",
   "column_break_lkvk",
   "from_year",
   "to_year",
@@ -36,9 +36,10 @@
   },
   {
    "fieldname": "activity",
-   "fieldtype": "Small Text",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Activity",
+   "label": "Major Activity",
+   "options": "Additional Activities",
    "reqd": 1
   },
   {
@@ -96,18 +97,17 @@
    "label": "Disabled"
   },
   {
-   "fieldname": "major_activity",
-   "fieldtype": "Link",
+   "fieldname": "sub_activity",
+   "fieldtype": "Small Text",
    "in_list_view": 1,
-   "label": "Major Activity",
-   "options": "Additional Activities",
+   "label": "Activity",
    "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-08-19 16:54:12.295641",
+ "modified": "2026-08-27 14:52:47.742516",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Additional Sub Activities",
