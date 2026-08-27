@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"Pfs9YKjGJr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Budget Dashboard\",\"col\":3}},{\"id\":\"B39LiLyS4q\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Budget Management</span>\",\"col\":12}},{\"id\":\"AX57UKwmU1\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters and Settings\",\"col\":3}},{\"id\":\"An30Mopj0x\",\"type\":\"card\",\"data\":{\"card_name\":\"Transactions\",\"col\":3}},{\"id\":\"HEBjk2-vEZ\",\"type\":\"card\",\"data\":{\"card_name\":\"Budget\",\"col\":3}},{\"id\":\"RhQiW1eeE0\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":3}},{\"id\":\"PGiygHK2mg\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Annual Performance Management</b></span>\",\"col\":12}},{\"id\":\"gaSKoGthts\",\"type\":\"card\",\"data\":{\"card_name\":\"Master and Settings\",\"col\":3}},{\"id\":\"LZ1WgVrJgn\",\"type\":\"card\",\"data\":{\"card_name\":\"Transaction\",\"col\":4}}]",
+ "content": "[{\"id\":\"Pfs9YKjGJr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Budget Dashboard\",\"col\":3}},{\"id\":\"B39LiLyS4q\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Budget Management</span>\",\"col\":12}},{\"id\":\"AX57UKwmU1\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters and Settings\",\"col\":3}},{\"id\":\"An30Mopj0x\",\"type\":\"card\",\"data\":{\"card_name\":\"Transactions\",\"col\":3}},{\"id\":\"HEBjk2-vEZ\",\"type\":\"card\",\"data\":{\"card_name\":\"Budget\",\"col\":3}},{\"id\":\"RhQiW1eeE0\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":3}},{\"id\":\"PGiygHK2mg\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Annual Performance Management</b></span>\",\"col\":12}},{\"id\":\"gaSKoGthts\",\"type\":\"card\",\"data\":{\"card_name\":\"Master and Settings\",\"col\":4}},{\"id\":\"LZ1WgVrJgn\",\"type\":\"card\",\"data\":{\"card_name\":\"Transaction\",\"col\":4}}]",
  "creation": "2024-09-03 09:56:52.454684",
  "custom_blocks": [],
  "docstatus": 0,
@@ -418,7 +418,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-08-14 11:09:04.511762",
+ "modified": "2026-08-24 09:37:15.435161",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Planning & Budget",

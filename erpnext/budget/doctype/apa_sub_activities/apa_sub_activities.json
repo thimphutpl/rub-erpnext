@@ -7,11 +7,11 @@
  "field_order": [
   "from_year",
   "college",
-  "activity",
+  "major_activity",
   "column_break_lkvk",
   "to_year",
   "unit",
-  "sub_activity",
+  "activity",
   "disabled",
   "section_break_kuxe",
   "items",
@@ -35,17 +35,9 @@
   },
   {
    "fieldname": "activity",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Activity",
-   "options": "Planning Activities",
-   "reqd": 1
-  },
-  {
-   "fieldname": "sub_activity",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Sub Activity",
+   "label": "Activity",
    "reqd": 1
   },
   {
@@ -94,12 +86,20 @@
    "fieldname": "disabled",
    "fieldtype": "Check",
    "label": "Disabled"
+  },
+  {
+   "fieldname": "major_activity",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Major Activity",
+   "options": "Planning Activities",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-20 10:13:19.238802",
+ "modified": "2026-08-19 16:52:49.509281",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "APA Sub Activities",
