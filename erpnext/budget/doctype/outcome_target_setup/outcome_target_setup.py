@@ -16,6 +16,24 @@ class OutcomeTargetSetup(Document):
 		from frappe.types import DF
 
 		college: DF.Link
+		definition: DF.LongText | None
+		disabled: DF.Check
+		from_year: DF.Link
+		items: DF.Table[OutcomeIndicatorItem]
+		outcome: DF.Link
+		to_year: DF.Link
+		unit: DF.Link
+	# end: auto-generated types
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from erpnext.budget.doctype.outcome_indicator_item.outcome_indicator_item import OutcomeIndicatorItem
+		from frappe.types import DF
+
+		college: DF.Link
 		disabled: DF.Check
 		from_year: DF.Link
 		items: DF.Table[OutcomeIndicatorItem]

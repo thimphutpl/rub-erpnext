@@ -7,11 +7,12 @@
  "field_order": [
   "from_year",
   "college",
+  "outcome",
   "unit",
+  "disabled",
   "column_break_tses",
   "to_year",
-  "outcome",
-  "disabled",
+  "definition",
   "section_break_qtsk",
   "items"
  ],
@@ -74,12 +75,17 @@
    "label": "Outcome",
    "options": "Outcome Indicator",
    "reqd": 1
+  },
+  {
+   "fieldname": "definition",
+   "fieldtype": "Long Text",
+   "label": "Definition"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-27 11:47:37.287896",
+ "modified": "2026-08-27 14:14:49.900373",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Outcome Target Setup",

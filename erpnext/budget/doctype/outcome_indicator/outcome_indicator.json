@@ -11,12 +11,12 @@
   "category",
   "unit",
   "weightage",
+  "remarks",
   "definition",
   "column_break_hoay",
   "disabled",
   "data_collection_method",
   "data_source",
-  "remarks",
   "section_break_lekw",
   "items"
  ],
@@ -59,6 +59,7 @@
   {
    "fieldname": "definition",
    "fieldtype": "Long Text",
+   "hidden": 1,
    "label": "Definition"
   },
   {
@@ -97,7 +98,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-27 11:45:27.004628",
+ "modified": "2026-08-27 14:15:43.994168",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Outcome Indicator",
