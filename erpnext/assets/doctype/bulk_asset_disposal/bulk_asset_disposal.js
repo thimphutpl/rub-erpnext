@@ -15,13 +15,13 @@ frappe.ui.form.on("Bulk Asset Disposal", {
 	},
 
 	refresh(frm) {
-        if ((frm.doc.docstatus == 1 && frm.doc.scrap == "Sale Asset") && frm.doc.sales_invoice == null) {
-			cur_frm.add_custom_button(__("Make Sales Invoice"),
-				function () {
-					frm.events.make_sales_invoice(frm);
-				}
-			).addClass("btn-primary custom-create custom-create-css")
-		}
+        // if ((frm.doc.docstatus == 1 && frm.doc.scrap == "Sale Asset") && frm.doc.sales_invoice == null) {
+		// 	cur_frm.add_custom_button(__("Make Sales Invoice"),
+		// 		function () {
+		// 			frm.events.make_sales_invoice(frm);
+		// 		}
+		// 	).addClass("btn-primary custom-create custom-create-css")
+		// }
 		if (frm.doc.company != ''){
 			frm.set_query('branch', function() {
 				return {

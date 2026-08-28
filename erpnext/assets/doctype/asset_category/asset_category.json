@@ -42,6 +42,7 @@
    "allow_bulk_edit": 1,
    "fieldname": "finance_books",
    "fieldtype": "Table",
+   "ignore_user_permissions": 1,
    "label": "Finance Books",
    "options": "Asset Finance Book"
   },
@@ -82,7 +83,7 @@
   }
  ],
  "links": [],
- "modified": "2026-08-28 11:57:38.832224",
+ "modified": "2026-08-28 12:16:08.184324",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset Category",

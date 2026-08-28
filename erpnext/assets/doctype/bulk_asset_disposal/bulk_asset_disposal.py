@@ -7,7 +7,7 @@ from frappe.utils import flt
 from datetime import date
 from erpnext.assets.doctype.asset.depreciation import scrap_asset
 from erpnext.assets.doctype.asset.depreciation import get_disposal_account_and_cost_center
-
+from frappe.model.workflow import apply_workflow
 
 class BulkAssetDisposal(Document):
 	# begin: auto-generated types
@@ -54,39 +54,39 @@ class BulkAssetDisposal(Document):
 					frappe.throw("{} is under <b>{}</b> category. You can only sell from {} category!".format(data.asset, category, self.asset_category))
 
 	def on_submit(self):
-		if self.scrap == "Scrap Asset":
-			self.scrap_asset()
+		self.scrap_asset()
 		# else: 
 		# 	frappe.throw("hj")
 		# 	self.sale_asset()
 	
 	def before_cancel(self):
-		if self.scrap == "Scrap Asset":
-			for a in self.item:
-				vad_reverse = 0
-				jv = frappe.get_doc("Journal Entry", frappe.db.get_value("Asset", a.asset, "journal_entry_for_scrap"))
-				jede = frappe.db.sql("""
-							select ds.journal_entry, ds.name, ds.depreciation_amount from `tabDepreciation Schedule` ds, `tabAsset Depreciation Schedule` ads  
-							where ds.parent = ads.name and ads.asset = '{0}' and  year(ds.schedule_date) = year('{1}')
-							and month(ds.schedule_date) = month('{1}') and ds.journal_entry is not NULL AND ads.docstatus != 2
-                         """.format(a.asset, self.scrap_date), as_dict=1)
+		# if self.scrap == "Scrap Asset":
+		for a in self.item:
+			vad_reverse = 0
+			jv = frappe.get_doc("Journal Entry", frappe.db.get_value("Asset", a.asset, "journal_entry_for_scrap"))
+			jede = frappe.db.sql("""
+						select ds.journal_entry, ds.name, ds.depreciation_amount from `tabDepreciation Schedule` ds, `tabAsset Depreciation Schedule` ads  
+						where ds.parent = ads.name and ads.asset = '{0}' and  year(ds.schedule_date) = year('{1}')
+						and month(ds.schedule_date) = month('{1}') and ds.journal_entry is not NULL AND ads.docstatus != 2
+						""".format(a.asset, self.scrap_date), as_dict=1)
+			
+			if jede:
+				vad_reverse += flt(jede[0].depreciation_amount,2)
+				jede_doc = frappe.get_doc("Journal Entry", jede[0].journal_entry)
+				frappe.db.sql("update `tabDepreciation Schedule` set journal_entry = NULL where name = '{}'".format(jede[0].journal_entry))
+				jede_doc.cancel()
 				
-				if jede:
-					vad_reverse += flt(jede[0].depreciation_amount,2)
-					jede_doc = frappe.get_doc("Journal Entry", jede[0].journal_entry)
-					frappe.db.sql("update `tabDepreciation Schedule` set journal_entry = NULL where name = '{}'".format(jede[0].journal_entry))
-					jede_doc.cancel()
-					
-				frappe.db.sql("update `tabAsset` set journal_entry_for_scrap = NULL, disposal_date = NULL, value_after_depreciation = value_after_depreciation+{} where name = '{}'".format(vad_reverse, a.asset))
-				jv.cancel()
+			frappe.db.sql("update `tabAsset` set journal_entry_for_scrap = NULL, disposal_date = NULL, value_after_depreciation = value_after_depreciation+{} where name = '{}'".format(vad_reverse, a.asset))
+			jv = apply_workflow(jv, "Cancel")
 
 	def on_cancel(self):
 		self.revert_asset()
 		self.revert_depreciation_schedule()
 	
 	def scrap_asset(self):
+		status = "Scrapped" if self.scrap == "Scrap Asset" else "Sold"
 		for data in self.item: 
-			scrap_asset(data.asset, self.scrap_date)
+			scrap_asset(data.asset, self.scrap_date, status)
 
 	#Written by Thukten for cancel
 	def revert_asset(self):
@@ -100,10 +100,10 @@ class BulkAssetDisposal(Document):
 
 	def revert_depreciation_schedule(self):
 		for a in self.get("item"):
-			frappe.db.delete(
-				"Depreciation Schedule",
-				{"parent": frappe.get_value("Asset Depreciation Schedule",{"asset":a.asset, "docstatus": "1"}, "name")}
-			)
+			# frappe.db.delete(
+			# 	"Depreciation Schedule",
+			# 	{"parent": frappe.get_value("Asset Depreciation Schedule",{"asset":a.asset, "docstatus": "1"}, "name")}
+			# )
 			old_rows = frappe.get_all(
 				"Depreciation Schedule",
 				filters={"parent": frappe.get_value("Asset Depreciation Schedule",{"asset":a.asset, "docstatus": "2"}, "name")},

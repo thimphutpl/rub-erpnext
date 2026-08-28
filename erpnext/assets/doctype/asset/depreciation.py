@@ -1269,7 +1269,7 @@ def get_comma_separated_links(names, doctype):
 
 
 @frappe.whitelist()
-def scrap_asset(asset_name,scrap_date=None):
+def scrap_asset(asset_name,scrap_date=None, status=None):
 	asset = frappe.get_doc("Asset", asset_name)
 	if asset.docstatus != 1:
 		frappe.throw(_("Asset {0} must be submitted").format(asset.name))
@@ -1278,8 +1278,8 @@ def scrap_asset(asset_name,scrap_date=None):
 
 	date = today()
 
-	notes = _("This schedule was created when Asset {0} was scrapped.").format(
-		get_link_to_form(asset.doctype, asset.name)
+	notes = _("This schedule was created when Asset {0} was {1}.").format(
+		get_link_to_form(asset.doctype, asset.name), status
 	)
 
 	depreciate_asset(asset, date, notes)
@@ -1308,12 +1308,13 @@ def scrap_asset(asset_name,scrap_date=None):
 			doc = asset.roombuilding
 		cost_center = frappe.db.get_value(asset.is_hostel_asset, doc, "cost_center")
 	# frappe.throw(str(depreciation_series))
+	remark_entry = "Scrap" if status == "Scrapped" else "Sale"
 	je = frappe.new_doc("Journal Entry")
 	je.voucher_type = "Journal Entry"
 	je.naming_series = depreciation_series
 	je.posting_date = scrap_date if scrap_date else nowdate()
 	je.company = asset.company
-	je.remark = f"Scrap Entry for asset {asset_name}"
+	je.remark = f"{remark_entry} Entry for asset {asset_name}"
 	je.branch = branch
 	for entry in get_gl_entries_on_asset_disposal(asset, date):
 		entry.update({"reference_type": "Asset", "reference_name": asset_name})
@@ -1325,11 +1326,11 @@ def scrap_asset(asset_name,scrap_date=None):
 
 	frappe.db.set_value("Asset", asset_name, "disposal_date", scrap_date if scrap_date else nowdate())
 	frappe.db.set_value("Asset", asset_name, "journal_entry_for_scrap", je.name)
-	asset.set_status("Scrapped")
+	asset.set_status(status)
 
-	add_asset_activity(asset_name, _("Asset scrapped"))
+	add_asset_activity(asset_name, _(f"Asset {status}"))
 
-	frappe.msgprint(_("Asset scrapped via Journal Entry {0}").format(je.name))
+	frappe.msgprint(_("Asset {0} via Journal Entry {1}").format(status, je.name))
 
 
 @frappe.whitelist()
