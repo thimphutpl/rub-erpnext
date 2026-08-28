@@ -14,6 +14,7 @@
   "depreciation_options",
   "enable_cwip_accounting",
   "finance_book_detail",
+  "column_break_hrsp",
   "finance_books",
   "section_break_2",
   "accounts"
@@ -22,6 +23,7 @@
   {
    "fieldname": "asset_category_name",
    "fieldtype": "Data",
+   "ignore_user_permissions": 1,
    "in_list_view": 1,
    "label": "Asset Category Name",
    "reqd": 1,
@@ -51,6 +53,7 @@
   {
    "fieldname": "accounts",
    "fieldtype": "Table",
+   "ignore_user_permissions": 1,
    "label": "Accounts",
    "options": "Asset Category Account",
    "reqd": 1
@@ -69,11 +72,17 @@
   {
    "fieldname": "abbr",
    "fieldtype": "Data",
+   "ignore_user_permissions": 1,
    "label": "Abbrevation"
+  },
+  {
+   "fieldname": "column_break_hrsp",
+   "fieldtype": "Column Break",
+   "ignore_user_permissions": 1
   }
  ],
  "links": [],
- "modified": "2025-06-30 16:41:14.249169",
+ "modified": "2026-08-28 11:57:38.832224",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Asset Category",
@@ -119,6 +128,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
