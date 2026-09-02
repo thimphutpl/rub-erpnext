@@ -315,6 +315,16 @@ def get_columns(companies, filters):
 			}
 		)
 
+		columns.append(
+			{
+				"fieldname": "total",
+				"label": _("Grand Total"),
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 150,
+			}
+		)
+
 	return columns
 
 
