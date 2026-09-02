@@ -24,6 +24,13 @@ frappe.ui.form.on("Journal Entry", {
 			"Unreconcile Payment Entries",
 			"Bank Transaction",
 		];
+		if (frm.doc.party_type === "Employee") {
+			frm.set_query("party", "accounts", function (doc) {
+				return {
+					filters: { company: doc.company }
+				};
+			});
+		}
 
 		
 		// filter naming base on entry type
@@ -35,6 +42,18 @@ frappe.ui.form.on("Journal Entry", {
 				filters: {
 					"entry_type": entry_type,
 				}
+			}
+		});
+
+        frm.set_query("party", "accounts", function (doc, cdt, cdn) {
+			let row = locals[cdt][cdn];
+
+			if (row.party_type === "Employee") {
+				return {
+					filters: {
+						company: doc.company
+					}
+				};
 			}
 		});
 		
@@ -298,6 +317,25 @@ frappe.ui.form.on("Journal Entry", {
 				erpnext.journal_entry.set_tds_account(frm, row.doctype, row.name);
 			}
 		})
+	},
+	activity_type: function(frm){
+		frm.set_value("activity", "")
+		if (frm.doc.activity_type == "Additional Activities"){
+			frm.set_query("activity", function() {
+                if (!frm.doc.company) {
+                    return {
+                        filters: {
+                            name: ["=", ""]  // Forces no results
+                        }
+                    };
+                }
+				return {
+					filters: {
+						college: frm.doc.company || ''
+					}
+				}
+			});
+		}
 	}
 });
 
