@@ -169,6 +169,7 @@ class JournalEntry(AccountsController):
 		self.clearance_date = None
 
 		self.validate_party()
+		self.set_party_name()
 		self.validate_entries_for_advance()
 		self.validate_multi_currency()
 		self.set_amounts_in_company_currency()
@@ -200,6 +201,7 @@ class JournalEntry(AccountsController):
 		if not self.title:
 			self.title = self.get_title()
 
+
 	def validate_activity(self):
 		mandatory = 1
 		for a in self.accounts:
@@ -209,6 +211,17 @@ class JournalEntry(AccountsController):
 				return	
 		if mandatory == 1 and (not self.activity or self.activity == ""):
 			frappe.throw("Activity is Mandatory")
+	
+	def set_party_name(self):
+		for d in self.accounts:
+			if d.party_type == "Employee" and d.party:
+				d.party_name = frappe.db.get_value(
+					"Employee",
+					d.party,
+					"employee_name"
+				)
+			else:
+				d.party_name = None
 
 	def validate_advance_accounts(self):
 		journal_accounts = set([x.account for x in self.accounts])

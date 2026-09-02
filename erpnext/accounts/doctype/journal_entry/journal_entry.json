@@ -15,8 +15,6 @@
   "branch",
   "voucher_type",
   "naming_series",
-  "finance_book",
-  "process_deferred_accounting",
   "reversal_of",
   "activity_type",
   "activity",
@@ -26,12 +24,14 @@
   "posting_date",
   "apply_tds",
   "tax_withholding_category",
+  "finance_book",
+  "process_deferred_accounting",
   "2_add_edit_gl_entries",
   "accounts",
   "tds_table",
   "use_check_lot",
   "section_break99",
-  "select_cheque_lot",
+  "cheque_lot",
   "cheque_no",
   "cheque_date",
   "user_remark",
@@ -592,14 +592,6 @@
    "label": "Assign Using Check Lot"
   },
   {
-   "allow_on_submit": 1,
-   "depends_on": "eval:doc.use_check_lot==1",
-   "fieldname": "select_cheque_lot",
-   "fieldtype": "Link",
-   "label": "Select Cheque Lot",
-   "options": "Cheque Lot"
-  },
-  {
    "depends_on": "eval:doc.docstatus==1 && (doc.naming_series=='Bank Receipt Voucher' || doc.naming_series=='Cash Receipt Voucher')",
    "fieldname": "money_receipt_information_section",
    "fieldtype": "Section Break",
@@ -670,6 +662,13 @@
    "fieldtype": "Select",
    "label": "Activity Type",
    "options": "Planning Activities\nAdditional Activities"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "cheque_lot",
+   "fieldtype": "Link",
+   "label": "Select Cheque Lot",
+   "options": "Cheque Lot"
   }
  ],
  "icon": "fa fa-file-text",
@@ -684,7 +683,7 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2026-07-10 10:27:15.127232",
+ "modified": "2026-08-06 07:34:11.882914",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Journal Entry",
