@@ -253,31 +253,74 @@ def get_supplier_primary_contact(doctype, txt, searchfield, start, page_len, fil
 			& (contact.name.like(f"%{txt}%"))
 		)
 	).run(as_dict=False)
+# @frappe.whitelist()
+# @frappe.validate_and_sanitize_search_inputs
+# def get_suppliers(doctype, txt, searchfield, start, page_len, filters):
+#     import json
+
+#     # filters may come as JSON string
+#     if isinstance(filters, str):
+#         filters = json.loads(filters)
+
+#     company = filters.get("company")
+
+#     if company:
+#         suppliers = frappe.db.sql("""
+#             SELECT DISTINCT s.name
+#             FROM `tabSupplier` s
+#             INNER JOIN `tabFiscal Year Company` fyc 
+#                 ON fyc.parent = s.name
+#             WHERE fyc.company = %s
+#             ORDER BY s.name
+#         """, (company,), as_dict=True) 
+#     else:
+#         suppliers = frappe.db.sql("""
+#             SELECT DISTINCT name
+#             FROM `tabSupplier`
+#             ORDER BY name
+#         """, as_dict=True)
+
+#     return [[d['name']] for d in suppliers]
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def get_suppliers(doctype, txt, searchfield, start, page_len, filters):
     import json
 
-    # filters may come as JSON string
     if isinstance(filters, str):
         filters = json.loads(filters)
 
+    filters = filters or {}
     company = filters.get("company")
 
-    if company:
-        suppliers = frappe.db.sql("""
-            SELECT DISTINCT s.name
-            FROM `tabSupplier` s
-            INNER JOIN `tabFiscal Year Company` fyc 
-                ON fyc.parent = s.name
-            WHERE fyc.company = %s
-            ORDER BY s.name
-        """, (company,), as_dict=True)  # ✅ tuple with comma
-    else:
-        suppliers = frappe.db.sql("""
-            SELECT DISTINCT name
-            FROM `tabSupplier`
-            ORDER BY name
-        """, as_dict=True)
+    txt = txt or ""
 
-    return [[d['name']] for d in suppliers]
+    conditions = []
+    values = []
+
+    # Supplier name search
+    conditions.append("s.name LIKE %s")
+    values.append(f"%{txt}%")
+
+    # Company filter
+    if company:
+        conditions.append("""
+            EXISTS (
+                SELECT 1
+                FROM `tabFiscal Year Company` fyc
+                WHERE fyc.parent = s.name
+                AND fyc.company = %s
+            )
+        """)
+        values.append(company)
+
+    where_clause = " AND ".join(conditions)
+
+    suppliers = frappe.db.sql(f"""
+        SELECT s.name
+        FROM `tabSupplier` s
+        WHERE {where_clause}
+        ORDER BY s.name
+        LIMIT 10
+    """, values, as_dict=True)
+
+    return [[d.name] for d in suppliers]
