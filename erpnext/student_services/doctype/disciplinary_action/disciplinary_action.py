@@ -18,7 +18,7 @@ class DisciplinaryAction(Document):
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
-		appeal_description: DF.SmallText
+		appeal_description: DF.SmallText | None
 		attachments_investigator: DF.Attach | None
 		attachments_student: DF.Attach | None
 		attah_cdc: DF.Attach | None
@@ -46,21 +46,126 @@ class DisciplinaryAction(Document):
 		student_statement: DF.LongText | None
 		student_statement_link: DF.Link | None
 	# end: auto-generated types
+	# def on_submit(self):
+		
+	# 		#frappe.throw("hu")
+	# 	parent_doc = frappe.get_doc("Student", self.student_code)
+	# 	#frappe.throw(str(parent_doc))
+	# 	parent_doc.append("disciplinary_action_details", {
+	# 		"disciplinary_issue_type": self.disciplinary_issue_type,
+	# 		"reference_doctype":self.doctype,
+	# 		"link_disciplinary_action":self.name,
+	# 		#"statements":self.student_statement,
+	# 		"date": self.posting_date		
+	# 	})
+		
+	# 	parent_doc.save()
+	def after_save(self):
+		"""
+		This runs when Disciplinary Action is saved.
+		It will automatically add/update this issue in Student Profile.
+		"""
+
+		# If student_code is changed, remove old link from old student profile
+		old_doc = self.get_doc_before_save()
+
+		if old_doc and old_doc.get("student_code") and old_doc.get("student_code") != self.get("student_code"):
+			self.remove_from_student_profile(old_doc.get("student_code"))
+
+		# Add/update this disciplinary action in selected Student Profile
+		if self.docstatus != 2:
+			self.update_student_profile()
+
+
 	def on_submit(self):
-		
-			#frappe.throw("hu")
+		"""
+		This runs when Disciplinary Action is submitted.
+		Kept here also for safety.
+		"""
+		self.update_student_profile()
+
+
+	def on_cancel(self):
+		"""
+		If Disciplinary Action is cancelled, remove it from Student Profile.
+		"""
+		self.remove_from_student_profile()
+
+
+	def on_trash(self):
+		"""
+		If Disciplinary Action is deleted, remove it from Student Profile.
+		"""
+		self.remove_from_student_profile()
+
+
+	def update_student_profile(self):
+		"""
+		Add or update this Disciplinary Action row in Student Profile.
+		"""
+
+		if not self.student_code:
+			return
+
+		if not frappe.db.exists("Student", self.student_code):
+			return
+
 		parent_doc = frappe.get_doc("Student", self.student_code)
-		#frappe.throw(str(parent_doc))
-		parent_doc.append("disciplinary_action_details", {
-			"disciplinary_issue_type": self.disciplinary_issue_type,
-			"reference_doctype":self.doctype,
-			"link_disciplinary_action":self.name,
-			#"statements":self.student_statement,
-			"date": self.posting_date		
-		})
-		
-		parent_doc.save()
-	
+
+		child_table_fieldname = "disciplinary_action_details"
+
+		issue_date = self.posting_date or self.date_of_the_issue or self.creation
+
+		row_found = False
+
+		# Check if this Disciplinary Action already exists in Student profile
+		for row in parent_doc.get(child_table_fieldname) or []:
+			if row.get("link_disciplinary_action") == self.name:
+				row.disciplinary_issue_type = self.disciplinary_issue_type
+				row.reference_doctype = self.doctype
+				row.link_disciplinary_action = self.name
+				row.date = issue_date
+				row_found = True
+				break
+
+		# If not found, add new row
+		if not row_found:
+			parent_doc.append(child_table_fieldname, {
+				"disciplinary_issue_type": self.disciplinary_issue_type,
+				"reference_doctype": self.doctype,
+				"link_disciplinary_action": self.name,
+				"date": issue_date
+			})
+
+		parent_doc.save(ignore_permissions=True)
+
+
+	def remove_from_student_profile(self, student_code=None):
+		"""
+		Remove this Disciplinary Action row from Student Profile.
+		"""
+
+		student_code = student_code or self.student_code
+
+		if not student_code:
+			return
+
+		if not frappe.db.exists("Student", student_code):
+			return
+
+		parent_doc = frappe.get_doc("Student", student_code)
+
+		child_table_fieldname = "disciplinary_action_details"
+
+		rows_to_keep = []
+
+		for row in parent_doc.get(child_table_fieldname) or []:
+			if row.get("link_disciplinary_action") != self.name:
+				rows_to_keep.append(row)
+
+		parent_doc.set(child_table_fieldname, rows_to_keep)
+
+		parent_doc.save(ignore_permissions=True)
 
 	@frappe.whitelist()
 	def has_appeal_action(self) -> dict[str, bool]:

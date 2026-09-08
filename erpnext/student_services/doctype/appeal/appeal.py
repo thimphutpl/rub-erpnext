@@ -15,6 +15,7 @@ class Appeal(Document):
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
+		appeal_application: DF.TextEditor
 		attachments_investigator: DF.Attach | None
 		attachments_student: DF.Attach | None
 		attah_cdc: DF.Attach | None
