@@ -259,16 +259,16 @@
   {
    "fieldname": "appeal_description",
    "fieldtype": "Small Text",
+   "hidden": 1,
    "in_list_view": 1,
-   "label": "Appeal Application",
-   "reqd": 1
+   "label": "Appeal Application"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-06-26 15:29:42.889501",
+ "modified": "2026-09-08 10:46:10.141792",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Disciplinary Action",

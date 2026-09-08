@@ -40,6 +40,8 @@
   "college_disciple_committee_section",
   "cdc_remarks",
   "attah_cdc",
+  "section_break_uogc",
+  "appeal_application",
   "section_break_jx66",
   "amended_from"
  ],
@@ -262,13 +264,23 @@
    "fieldtype": "Link",
    "label": "Disciplinary Action Link",
    "options": "Disciplinary Action"
+  },
+  {
+   "fieldname": "section_break_uogc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "appeal_application",
+   "fieldtype": "Text Editor",
+   "label": "Appeal Application",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-21 21:46:12.107885",
+ "modified": "2026-09-08 10:53:45.595209",
  "modified_by": "Administrator",
  "module": "Student Services",
  "name": "Appeal",
