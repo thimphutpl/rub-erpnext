@@ -20,6 +20,7 @@ class SportsPlayer(Document):
 		parentfield: DF.Data
 		parenttype: DF.Data
 		semester: DF.Data | None
+		sports: DF.Link | None
 		student_code: DF.Link | None
 		student_name: DF.Data | None
 	# end: auto-generated types

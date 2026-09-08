@@ -10,7 +10,8 @@
   "student_name",
   "last_name",
   "contact_number",
-  "semester"
+  "semester",
+  "sports"
  ],
  "fields": [
   {
@@ -46,14 +47,20 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Contact Number"
+  },
+  {
+   "fieldname": "sports",
+   "fieldtype": "Link",
+   "label": "Sports",
+   "options": "Sports"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-23 15:35:52.723064",
- "modified_by": "Administrator",
+ "modified": "2026-06-29 13:23:54.352037",
+ "modified_by": "mon.chhetri@thimphutechpark.bt",
  "module": "Student Services",
  "name": "Sports Player",
  "owner": "Administrator",
