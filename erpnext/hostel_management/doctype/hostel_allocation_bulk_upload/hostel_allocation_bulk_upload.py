@@ -1,6 +1,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe import _
+import json
 
 class HostelAllocationBulkUpload(Document):
     # begin: auto-generated types
@@ -11,6 +12,7 @@ class HostelAllocationBulkUpload(Document):
     if TYPE_CHECKING:
         from erpnext.hostel_management.doctype.block_counsellor_details.block_counsellor_details import BlockCounsellorDetails
         from erpnext.hostel_management.doctype.hostel_allocation_item.hostel_allocation_item import HostelAllocationItem
+        from erpnext.hostel_management.doctype.student_year_item.student_year_item import StudentYearItem
         from frappe.types import DF
 
         amended_from: DF.Link | None
@@ -20,7 +22,7 @@ class HostelAllocationBulkUpload(Document):
         posting_date: DF.Date
         re_allocate_hostel_room: DF.Check
         table_caon: DF.Table[HostelAllocationItem]
-        year: DF.Link
+        year: DF.TableMultiSelect[StudentYearItem]
     # end: auto-generated types
 
     def before_save(self):
@@ -33,6 +35,7 @@ class HostelAllocationBulkUpload(Document):
     def on_submit(self):
         self.update_hostel_room_students()
         self.create_hostel_allocation_entry()
+        self.get_selected_years()
 
     def on_cancel(self):
         """
@@ -144,49 +147,99 @@ class HostelAllocationBulkUpload(Document):
             frappe.msgprint(_(f"Skipped {skipped_count} records (no student code or already exists)."), 
                           indicator='orange', alert=True)
 
+    def get_selected_years(self):
+        return [
+            row.year
+            for row in self.year
+            if row.year
+        ]
+
     def validate_room_capacity(self):
-        """Validate that no room exceeds capacity for the same academic year and status validation."""
+        """Validate that no room exceeds capacity for the selected academic years."""
+
+        years = self.get_selected_years()
+
+        if not years:
+            frappe.throw(_("Please select at least one Year."))
+
         room_students = {}
+
         for row in self.table_caon:
             if row.hostel_room:
-                room_students[row.hostel_room] = room_students.get(row.hostel_room, 0) + 1
+                room_students[row.hostel_room] = (
+                    room_students.get(row.hostel_room, 0) + 1
+                )
 
         for room_code, new_count in room_students.items():
-            existing_count = frappe.db.sql("""
-                SELECT COUNT(*) as count
+
+            placeholders = ", ".join(["%s"] * len(years))
+
+            existing_count = frappe.db.sql(
+                f"""
+                SELECT COUNT(*) AS count
                 FROM `tabHostel Allocation Item` hai
-                JOIN `tabHostel Allocation Bulk Upload` habu 
+                JOIN `tabHostel Allocation Bulk Upload` habu
                     ON hai.parent = habu.name
-                WHERE habu.docstatus = 1 
+                WHERE habu.docstatus = 1
                 AND hai.hostel_room = %s
-                AND habu.year = %s
-            """, (room_code, self.year), as_dict=1)[0].count
-            room_capacity = frappe.db.get_value("Hostel Room", room_code, "capacity")
+                AND habu.year IN ({placeholders})
+                """,
+                [room_code] + years,
+                as_dict=True
+            )[0].count
+
+            room_capacity = frappe.db.get_value(
+                "Hostel Room",
+                room_code,
+                "capacity"
+            )
+
             if not room_capacity:
-                frappe.throw(_("Room {0} does not exist or capacity is not set.").format(room_code))
+                frappe.throw(
+                    _("Room {0} does not exist or capacity is not set.")
+                    .format(room_code)
+                )
 
             if self.re_allocate_hostel_room:
-                # Allow replacement, but ensure total does not exceed capacity
+
                 total_students = new_count
 
                 if total_students > room_capacity:
-                    frappe.throw(_("Room {0} capacity is {1}. "
-                                "Cannot reallocate more than capacity.")
-                                .format(room_code, room_capacity))
+                    frappe.throw(
+                        _("Room {0} capacity is {1}. "
+                        "Cannot reallocate more than capacity.")
+                        .format(room_code, room_capacity)
+                    )
 
-            else:    
+            else:
+
                 total_students = existing_count + new_count
+
                 if total_students > room_capacity:
-                    frappe.throw(_("Room {0} will have {1} students after this allocation. "
-                                "Maximum allowed is {2} for academic year {3}.").format(
-                        room_code, total_students, room_capacity, self.year
-                    ))
+                    frappe.throw(
+                        _("Room {0} will have {1} students after this allocation. "
+                        "Maximum allowed is {2}.")
+                        .format(
+                            room_code,
+                            total_students,
+                            room_capacity
+                        )
+                    )
+
                 if total_students == room_capacity:
-                    frappe.msgprint(_("Room {0} has reached full capacity ({1}). No more allocations can be made.")
-                                    .format(room_code, room_capacity))
+                    frappe.msgprint(
+                        _("Room {0} has reached full capacity ({1}). "
+                        "No more allocations can be made.")
+                        .format(room_code, room_capacity)
+                    )
 
     def validate_student_allocations(self):
-        """Validate that a student is not assigned to multiple rooms in the SAME academic year."""
+
+        years = self.get_selected_years()
+
+        if not years:
+            frappe.throw(_("Please select at least one Year."))
+
         student_rooms = {}
         duplicates = []
 
@@ -194,105 +247,187 @@ class HostelAllocationBulkUpload(Document):
             if row.student_code:
                 if row.student_code in student_rooms:
                     duplicates.append({
-                        'student': row.student_code,
-                        'first_room': student_rooms[row.student_code],
-                        'second_room': row.hostel_room
+                        "student": row.student_code,
+                        "first_room": student_rooms[row.student_code],
+                        "second_room": row.hostel_room
                     })
                 else:
                     student_rooms[row.student_code] = row.hostel_room
 
-        existing_allocations = frappe.db.sql("""
-            SELECT DISTINCT ha.student_code, ha.hostel_room
+        placeholders = ", ".join(["%s"] * len(years))
+
+        existing_allocations = frappe.db.sql(
+            f"""
+            SELECT DISTINCT
+                ha.student_code,
+                ha.hostel_room
             FROM `tabHostel Allocation Bulk Upload` h
             JOIN `tabHostel Allocation Item` ha
                 ON h.name = ha.parent
             WHERE h.docstatus = 1
             AND h.name != %s
-            AND h.year = %s  
+            AND h.year IN ({placeholders})
             AND ha.student_code IS NOT NULL
-        """, (self.name, self.year), as_dict=1)
+            """,
+            [self.name] + years,
+            as_dict=True
+        )
 
-        existing_student_rooms = {alloc['student_code']: alloc['hostel_room'] for alloc in existing_allocations}
+        existing_student_rooms = {
+            alloc["student_code"]: alloc["hostel_room"]
+            for alloc in existing_allocations
+        }
 
         for row in self.table_caon:
-            if row.student_code and row.student_code in existing_student_rooms:
+
+            if (
+                row.student_code
+                and row.student_code in existing_student_rooms
+            ):
                 duplicates.append({
-                    'student': row.student_code,
-                    'first_room': existing_student_rooms[row.student_code],
-                    'second_room': row.hostel_room,
-                    'existing': True
+                    "student": row.student_code,
+                    "first_room": existing_student_rooms[row.student_code],
+                    "second_room": row.hostel_room,
+                    "existing": True
                 })
 
         if duplicates and not self.re_allocate_hostel_room:
-            msg = _("The following students are assigned to multiple rooms for academic year {0}: ").format(self.year)
+
+            msg = _("The following students are assigned to multiple rooms: ")
+
             for d in duplicates:
-                if d.get('existing'):
-                    msg += _("Student {0} is already assigned to room {1} and cannot be assigned to room {2}. ").format(
-                        d['student'], d['first_room'], d['second_room']
+
+                if d.get("existing"):
+                    msg += _(
+                        "Student {0} is already assigned to room {1} "
+                        "and cannot be assigned to room {2}. "
+                    ).format(
+                        d["student"],
+                        d["first_room"],
+                        d["second_room"]
                     )
+
                 else:
-                    msg += _("Student {0} is assigned to both {1} and {2} in this allocation. ").format(
-                        d['student'], d['first_room'], d['second_room']
+                    msg += _(
+                        "Student {0} is assigned to both {1} and {2}. "
+                    ).format(
+                        d["student"],
+                        d["first_room"],
+                        d["second_room"]
                     )
+
             frappe.throw(msg)
 
     def validate_previous_year_active_students(self):
+
         """
-        Prevent submission if all previous year students in the same room are Active.
-        Allow replacing only Left students with new Active students.
+        Prevent allocation when previous-year students in the same room
+        are still Active.
         """
+
+        years = self.get_selected_years()
+
+        if not years:
+            frappe.throw(_("Please select at least one Year."))
+
         for row in self.table_caon:
+
             if not row.hostel_room or row.status != "Active":
                 continue
 
-            prev_students = frappe.db.sql("""
-                SELECT hai.student_code, hai.status, habu.year
-                FROM `tabHostel Allocation Item` hai
-                JOIN `tabHostel Allocation Bulk Upload` habu 
-                    ON hai.parent = habu.name
-                WHERE habu.docstatus = 1
-                AND hai.hostel_room = %s
-                AND habu.year < %s
-            """, (row.hostel_room, self.year), as_dict=1)
+            # Check each selected year
+            for current_year in years:
 
-            if not prev_students:
-                continue
+                prev_students = frappe.db.sql(
+                    """
+                    SELECT
+                        hai.student_code,
+                        hai.status,
+                        habu.year
+                    FROM `tabHostel Allocation Item` hai
+                    JOIN `tabHostel Allocation Bulk Upload` habu
+                        ON hai.parent = habu.name
+                    WHERE habu.docstatus = 1
+                    AND hai.hostel_room = %s
+                    AND habu.year < %s
+                    """,
+                    (row.hostel_room, current_year),
+                    as_dict=True
+                )
 
-            all_active = all(s["status"] == "Active" for s in prev_students)
-            if all_active and not self.re_allocate_hostel_room:
-                frappe.throw(_("Room {0} has already reached its maximum capacity, or the student is still active.").format(row.hostel_room))
+                if not prev_students:
+                    continue
+
+                all_active = all(
+                    s["status"] == "Active"
+                    for s in prev_students
+                )
+
+                if all_active and not self.re_allocate_hostel_room:
+                    frappe.throw(
+                        _(
+                            "Room {0} has previous-year active students "
+                            "for academic year {1}. "
+                            "Please reallocate or remove the existing allocation."
+                        ).format(
+                            row.hostel_room,
+                            current_year
+                        )
+                    )
 
     def update_hostel_room_students(self):
         """
         Update student_list in Hostel Room:
-        - If re_allocate_hostel_room = 1 → Replace existing students (within capacity)
-        - Else → Keep previous Active students and append new ones (within capacity)
+        - If re_allocate_hostel_room = 1 → Replace existing students
+        - Else → Keep previous Active students from older years
         """
+
+        # Get selected year values from Table MultiSelect
+        selected_years = [
+            row.year
+            for row in self.year
+            if row.year
+        ]
+
+        if not selected_years:
+            frappe.throw(_("Please select at least one Year."))
+
+        # Convert to integers for year comparison
+        selected_years = [int(year) for year in selected_years]
+
+        # For multiple selected years, use the earliest selected year
+        current_year = min(selected_years)
 
         room_allocations = {}
 
         for row in self.table_caon:
-            if row.hostel_room and row.student_code or row.cid_number:
+            if row.hostel_room and (row.student_code or row.cid_number):
                 room_allocations.setdefault(row.hostel_room, []).append({
                     "student_code": row.student_code,
                     "cid_number": row.cid_number,
                     "first_name": row.first_name,
                     "last_name": row.last_name,
-                    "year": self.year,
+                    "year": current_year,
                     "status": row.status
                 })
 
         for room_code, new_students in room_allocations.items():
+
             try:
                 hostel_room = frappe.get_doc("Hostel Room", room_code)
                 capacity = hostel_room.capacity or 0
 
                 if self.re_allocate_hostel_room:
-                    # 🔁 FULL REPLACEMENT MODE
+
+                    # FULL REPLACEMENT MODE
                     if len(new_students) > capacity:
                         frappe.throw(
                             _("Room {0} capacity is {1}. Cannot allocate {2} students.")
-                            .format(room_code, capacity, len(new_students))
+                            .format(
+                                room_code,
+                                capacity,
+                                len(new_students)
+                            )
                         )
 
                     hostel_room.set("student_list", [])
@@ -301,22 +436,44 @@ class HostelAllocationBulkUpload(Document):
                         hostel_room.append("student_list", ns)
 
                 else:
-                    # ➕ NORMAL MODE (keep previous active students)
-                    existing_students = frappe.db.sql("""
-                        SELECT hai.student_code, hai.cid_number, hai.first_name, hai.last_name, 
-                            habu.year, hai.status
+
+                    # NORMAL MODE
+                    existing_students = frappe.db.sql(
+                        """
+                        SELECT
+                            hai.student_code,
+                            hai.cid_number,
+                            hai.first_name,
+                            hai.last_name,
+                            habu.year,
+                            hai.status
                         FROM `tabHostel Allocation Item` hai
-                        JOIN `tabHostel Allocation Bulk Upload` habu 
+                        JOIN `tabHostel Allocation Bulk Upload` habu
                             ON hai.parent = habu.name
                         WHERE habu.docstatus = 1
                         AND hai.hostel_room = %s
-                    """, (room_code,), as_dict=1)
+                        """,
+                        (room_code,),
+                        as_dict=True
+                    )
 
                     final_students = []
 
-                    # keep previous active students from older years
+                    # Keep previous active students from older years
                     for s in existing_students:
-                        if s["status"] == "Active" and s["year"] < self.year:
+
+                        if not s.get("year"):
+                            continue
+
+                        try:
+                            student_year = int(s["year"])
+                        except (TypeError, ValueError):
+                            continue
+
+                        if (
+                            s["status"] == "Active"
+                            and student_year < current_year
+                        ):
                             final_students.append(s)
 
                     final_students.extend(new_students)
@@ -324,23 +481,38 @@ class HostelAllocationBulkUpload(Document):
                     if len(final_students) > capacity:
                         frappe.throw(
                             _("Room {0} will exceed capacity ({1}).")
-                            .format(room_code, capacity)
+                            .format(
+                                room_code,
+                                capacity
+                            )
                         )
 
                     hostel_room.set("student_list", [])
+
                     for fs in final_students:
                         hostel_room.append("student_list", fs)
 
                 hostel_room.save()
+
                 frappe.msgprint(
-                    _("Room {0} successfully updated for academic year {1}")
-                    .format(room_code, self.year)
+                    _("Room {0} successfully updated for academic year(s) {1}")
+                    .format(
+                        room_code,
+                        ", ".join(map(str, selected_years))
+                    )
                 )
 
             except frappe.DoesNotExistError:
-                frappe.throw(_("Hostel Room {0} does not exist.").format(room_code))
+                frappe.throw(
+                    _("Hostel Room {0} does not exist.")
+                    .format(room_code)
+                )
+
             except Exception as e:
-                frappe.throw(_("Error updating room {0}: {1}").format(room_code, str(e)))
+                frappe.throw(
+                    _("Error updating room {0}: {1}")
+                    .format(room_code, str(e))
+                )
 
     def validate_duplicate_student_in_room(self):
         """
@@ -452,13 +624,43 @@ class HostelAllocationBulkUpload(Document):
 #         )
 #     """
 
+# @frappe.whitelist()
+# def get_students(year, gender, company):
+#     if not year:
+#         frappe.throw("Please select Year")
+
+#     filters = {
+#         "year": year,
+#         "status": "Active",
+#         "company": company
+#     }
+
+#     if gender:
+#         filters["gender"] = gender
+
+#     students = frappe.get_all(
+#         "Student",
+#         filters=filters,
+#         fields=["name", "first_name", "middle_name", "last_name", "gender", "cid", "catering_type", "scholarship_type", "status" ]
+#     )
+#     if not students:
+#         frappe.throw(str("Please set Year in Student List"))
+
+#     return students
+
 @frappe.whitelist()
-def get_students(year, gender, company):
+def get_students(year=None, gender=None, company=None):
+
     if not year:
         frappe.throw("Please select Year")
 
+    years = json.loads(year)
+
+    if not years:
+        frappe.throw("Please select Year")
+
     filters = {
-        "year": year,
+        "year": ["in", years],
         "status": "Active",
         "company": company
     }
@@ -469,10 +671,21 @@ def get_students(year, gender, company):
     students = frappe.get_all(
         "Student",
         filters=filters,
-        fields=["name", "first_name", "middle_name", "last_name", "gender", "cid", "catering_type", "scholarship_type", "status" ]
+        fields=[
+            "name",
+            "first_name",
+            "middle_name",
+            "last_name",
+            "gender",
+            "cid",
+            "catering_type",
+            "scholarship_type",
+            "status"
+        ]
     )
+
     if not students:
-        frappe.throw(str("Please set Year in Student List"))
+        frappe.throw("Please set Year in Student List")
 
     return students
 

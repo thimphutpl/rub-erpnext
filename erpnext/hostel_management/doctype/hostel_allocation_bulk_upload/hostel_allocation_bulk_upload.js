@@ -2,6 +2,19 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Hostel Allocation Bulk Upload", {
+    refresh(frm) {
+        set_hostel_type_filter(frm);
+    },
+
+    gender(frm) {
+        frm.set_value("hostel_type", "");
+
+        if (!frm.doc.gender) {
+            frappe.msgprint(__("Please select Gender first."));
+        }
+
+        set_hostel_type_filter(frm);
+    },
     onload: function(frm) {
         if (!frm.doc.posting_date) {
 			frm.set_value('posting_date', frappe.datetime.now_date());
@@ -48,10 +61,10 @@ frappe.ui.form.on("Hostel Allocation Bulk Upload", {
     },   
     
     get_student: function(frm) {
-        if (!frm.doc.year) {
-            frappe.msgprint("Please select Year");
-            return;
-        }
+        // if (!frm.doc.year) {
+        //     frappe.msgprint("Please select Year");
+        //     return;
+        // }
         if (!frm.doc.gender) {
             frappe.msgprint("Please select Gender");
             return;
@@ -61,12 +74,49 @@ frappe.ui.form.on("Hostel Allocation Bulk Upload", {
             return;
         }
 
+        // frappe.call({
+        //     method: "erpnext.hostel_management.doctype.hostel_allocation_bulk_upload.hostel_allocation_bulk_upload.get_students",
+        //     args: {
+        //         year: frm.doc.year,
+        //         gender: frm.doc.gender,
+        //         company: frm.doc.company
+        //     },
+        //     callback: function(r) {
+        //         if (r.message) {
+        //             frm.clear_table("table_caon");
+
+        //             r.message.forEach(student => {
+        //                 let row = frm.add_child("table_caon");
+        //                 row.student_code = student.name;
+        //                 row.first_name = student.first_name;
+        //                 row.middle_name = student.middle_name;
+        //                 row.last_name = student.last_name;
+        //                 row.gender = student.gender;
+        //                 row.catering_type = student.catering_type;
+        //                 row.scholarship_type = student.scholarship_type;
+        //                 row.status = student.status;
+        //             });
+
+        //             frm.refresh_field("table_caon");
+        //         }
+        //     }
+        // });
+
+        let years = (frm.doc.year || [])
+        .map(row => row.year)
+        .filter(year => year);
+
+        if (!years.length) {
+            frappe.msgprint("Please select Year");
+            return;
+        }
+
         frappe.call({
             method: "erpnext.hostel_management.doctype.hostel_allocation_bulk_upload.hostel_allocation_bulk_upload.get_students",
             args: {
-                year: frm.doc.year,
-                gender: frm.doc.gender,
-                company: frm.doc.company
+                year: JSON.stringify(years),
+                gender: frm.doc.gender || "",
+                company: frm.doc.company || ""
             },
             callback: function(r) {
                 if (r.message) {
@@ -74,6 +124,7 @@ frappe.ui.form.on("Hostel Allocation Bulk Upload", {
 
                     r.message.forEach(student => {
                         let row = frm.add_child("table_caon");
+
                         row.student_code = student.name;
                         row.first_name = student.first_name;
                         row.middle_name = student.middle_name;
@@ -172,6 +223,22 @@ frappe.ui.form.on("Hostel Allocation Bulk Upload", {
         });
     }
 });
+
+function set_hostel_type_filter(frm) {
+
+    frm.set_query("hostel_type", function () {
+
+        if (!frm.doc.gender) {
+            frappe.throw(__("Please select Gender first."));
+        }
+
+        return {
+            filters: {
+                hostel_gender_allocation: frm.doc.gender
+            }
+        };
+    });
+}
 
 
 
