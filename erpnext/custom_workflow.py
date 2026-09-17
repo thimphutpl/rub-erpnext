@@ -532,6 +532,7 @@ class CustomWorkflow:
 		user = frappe.session.user
 
 		if state == "draft":
+			frappe.throw("Only {} can apply this travel authorization".format(self.doc.owner))
 			if user != self.doc.owner:
 				frappe.throw(
 					f"Only {self.doc.owner} can apply this travel authorization"
@@ -831,94 +832,339 @@ class CustomWorkflow:
 		else:
 			frappe.throw(_("Invalid Workflow State {}").format(self.doc.workflow_state))
 
+	# def student_leave_application(self):
+	# 	student_gender = frappe.db.get_value("Student", self.doc.student, "gender")
+	# 	company = frappe.db.get_value("Student", self.doc.student, "company")
+	# 	approver_settings = frappe.get_doc("Student Leave Approver Settings", {"college": company})
+	# 	gender_cond = ""
+	# 	if not approver_settings:
+	# 		frappe.throw("Student Leave Apporover Settings is not setup. Please contact SSO or ICT Officer.")
+	# 	if not exists("Student Leave Apporver Setting Item", {"parent": approver_settings.name, "workflow_state": self.new_state, "leave_type": self.doc.leave_type}):
+	# 		frappe.throw(f"Student Leave Approver Setting for Leave Type: {self.doc.leave_type} and Workflow State {self.new_state} does not exist")
+
+	# 	role = None
+	# 	for approver in approver_settings.approver_settings:
+	# 		if approver.workflow_state == self.new_state and approver.leave_type == self.doc.leave_type:
+	# 			role = approver.role
+	# 			if approver.gender_based == 1:
+	# 				gender_cond = " and e.gender = '{}'".format(student_gender)
+	# 	if self.new_state.lower() in ("Waiting for Approval".lower()) and self.old_state.lower() != self.new_state.lower():
+	# 		self.doc.set("approvers", [])
+	# 		if frappe.session.user != self.doc.owner and self.old_state.lower() in ("Draft".lower(), "Rejected".lower()):
+	# 			frappe.throw("Only <b>{}</b> can apply for this Leave Application".format(self.doc.owner))
+	# 		for e in frappe.db.sql("select e.user_id, e.employee_name, e.designation from `tabUser` u, `tabEmployee` e, `tabHas Role` hr where e.user_id = u.name and hr.parent = u.name and e.company = '{company}' and hr.role = '{role}' {gender_cond}".format(company = company, role = role, gender_cond = gender_cond),as_dict=1):
+	# 			row = self.doc.append("approvers", {})
+	# 			row.approver = e.user_id
+	# 			row.approver_name = e.employee_name
+	# 			row.designation = e.designation
+	# 		if len(self.doc.approvers) == 0:
+	# 			frappe.throw("There are no users with {role} Role. Please contact SSO or ICT Officer.".format(role = role))
+	# 		# self.set_approver("SSO")
+	# 	elif self.new_state.lower() in ("Draft".lower()):
+	# 		self.doc.set("approvers", [])
+	# 		for e in frappe.db.sql("select e.user_id, e.employee_name, e.designation from `tabUser` u, `tabEmployee` e, `tabHas Role` hr where e.user_id = u.name and hr.parent = u.name and e.company = '{company}' and hr.role = '{role}' {gender_cond}".format(company = company, role = role, gender_cond = gender_cond),as_dict=1):
+	# 			row = self.doc.append("approvers", {})
+	# 			row.approver = e.user_id
+	# 			row.approver_name = e.employee_name
+	# 			row.designation = e.designation
+	# 		if len(self.doc.approvers) == 0:
+	# 			frappe.throw("There are no users with {role} Role. Please contact SSO or ICT Officer.".format(role = role))
+	# 		# self.set_approver("SSO")
+	# 	elif self.new_state.lower() in ("Waiting Verification".lower()) and self.old_state.lower() in ("Draft".lower(), "Rejected".lower()):
+	# 		if frappe.session.user != self.doc.owner:
+	# 			frappe.throw("Only <b>{}</b> can apply for this Leave Application".format(self.doc.owner))
+	# 		self.doc.set("approvers", [])
+	# 		for e in frappe.db.sql("select e.user_id, e.employee_name, e.designation from `tabUser` u, `tabEmployee` e, `tabHas Role` hr where e.user_id = u.name and hr.parent = u.name and e.company = '{company}' and hr.role = '{role}' {gender_cond}".format(company = company, role = role, gender_cond = gender_cond),as_dict=1):
+	# 			row = self.doc.append("approvers", {})
+	# 			row.approver = e.user_id
+	# 			row.approver_name = e.employee_name
+	# 			row.designation = e.designation
+	# 		if len(self.doc.approvers) == 0:
+	# 			frappe.throw("There are no users with {role} Role. Please contact SSO or ICT Officer.".format(role = role))
+	# 	elif self.new_state.lower() in ("Waiting for Approval".lower()):
+	# 		if frappe.session.user not in approvers:
+	# 			frappe.throw(
+	# 				"Only <b>{}</b> can edit this Leave Application while it is "
+	# 				"<b>Waiting for Approval</b>.".format(
+	# 					", ".join(a.approver for a in self.doc.approvers)
+	# 				)
+	# 			)
+	# 	elif self.new_state.lower() in ("Approved".lower()) and self.old_state.lower() in ("Waiting for Approval".lower()):
+	# 		# if frappe.session.user != self.doc.approver:
+	# 		# 	if "Administrator" != frappe.session.user and frappe.session.user != "mon.chhetri@thimphutechpark.bt":
+	# 		# 		frappe.throw("Only <b>{}</b> can approve this Leave Application ".format(self.doc.approver))
+	# 		approvers = []
+	# 		for a in self.doc.approvers:
+	# 			approvers.append(a.approver)
+	# 		if frappe.session.user not in approvers:
+	# 			frappe.throw(
+	# 				"Only <b>{}</b> can edit this Leave Application while it is "
+	# 				"<b>Waiting for Approval</b>.".format(
+	# 					", ".join(a.approver for a in self.doc.approvers)
+	# 				)
+	# 			)
+	# 	elif self.new_state.lower() in ("Approved".lower()):
+	# 		# if frappe.session.user != self.doc.approver:
+	# 		# 	if "Administrator" != frappe.session.user:
+	# 		# 		frappe.throw("Only <b>{}</b> can edit this Leave Application ".format(self.doc.approver))
+	# 		approvers = []
+	# 		for a in self.doc.approvers:
+	# 			approvers.append(a.approver)
+	# 		if frappe.session.user not in approvers:
+	# 			frappe.throw(
+	# 				"Only <b>{}</b> can edit this Leave Application while it is "
+	# 				"<b>Waiting for Approval</b>.".format(
+	# 					", ".join(a.approver for a in self.doc.approvers)
+	# 				)
+	# 			)
+	# 	else:
+	# 		frappe.throw(_("Invalid Workflow State {}").format(self.doc.workflow_state))		
 	def student_leave_application(self):
-		student_gender = frappe.db.get_value("Student", self.doc.student, "gender")
-		company = frappe.db.get_value("Student", self.doc.student, "company")
-		approver_settings = frappe.get_doc("Student Leave Approver Settings", {"college": company})
-		gender_cond = ""
-		if not approver_settings:
-			frappe.throw("Student Leave Apporover Settings is not setup. Please contact SSO or ICT Officer.")
-		if not exists("Student Leave Apporver Setting Item", {"parent": approver_settings.name, "workflow_state": self.new_state, "leave_type": self.doc.leave_type}):
-			frappe.throw(f"Student Leave Approver Setting for Leave Type: {self.doc.leave_type} and Workflow State {self.new_state} does not exist")
+		student_gender = frappe.db.get_value(
+			"Student", self.doc.student, "gender"
+		)
 
+		company = frappe.db.get_value(
+			"Student", self.doc.student, "company"
+		)
+
+		# Get leave approver settings for the student's college
+		try:
+			approver_settings = frappe.get_doc(
+				"Student Leave Approver Settings",
+				{"college": company},
+			)
+		except frappe.DoesNotExistError:
+			frappe.throw(
+				"Student Leave Approver Settings is not setup. "
+				"Please contact SSO or ICT Officer."
+			)
+
+		# Check whether a configuration exists for this
+		# workflow state + leave type
+		if not frappe.db.exists(
+			"Student Leave Approver Setting Item",
+			{
+				"parent": approver_settings.name,
+				"workflow_state": self.new_state,
+				"leave_type": self.doc.leave_type,
+			},
+		):
+			frappe.throw(
+				"Student Leave Approver Setting for Leave Type: "
+				f"{self.doc.leave_type} and Workflow State "
+				f"{self.new_state} does not exist"
+			)
+
+		# Find the configured role
 		role = None
-		for approver in approver_settings.approver_settings:
-			if approver.workflow_state == self.new_state and approver.leave_type == self.doc.leave_type:
-				role = approver.role
-				if approver.gender_based == 1:
-					gender_cond = " and e.gender = '{}'".format(student_gender)
-		if self.new_state.lower() in ("Waiting for Approval".lower()) and self.old_state.lower() != self.new_state.lower():
-			self.doc.set("approvers", [])
-			if frappe.session.user != self.doc.owner and self.old_state.lower() in ("Draft".lower(), "Rejected".lower()):
-				frappe.throw("Only <b>{}</b> can apply for this Leave Application".format(self.doc.owner))
-			for e in frappe.db.sql("select e.user_id, e.employee_name, e.designation from `tabUser` u, `tabEmployee` e, `tabHas Role` hr where e.user_id = u.name and hr.parent = u.name and e.company = '{company}' and hr.role = '{role}' {gender_cond}".format(company = company, role = role, gender_cond = gender_cond),as_dict=1):
-				row = self.doc.append("approvers", {})
-				row.approver = e.user_id
-				row.approver_name = e.employee_name
-				row.designation = e.designation
-			if len(self.doc.approvers) == 0:
-				frappe.throw("There are no users with {role} Role. Please contact SSO or ICT Officer.".format(role = role))
-			# self.set_approver("SSO")
-		elif self.new_state.lower() in ("Draft".lower()):
-			self.doc.set("approvers", [])
-			for e in frappe.db.sql("select e.user_id, e.employee_name, e.designation from `tabUser` u, `tabEmployee` e, `tabHas Role` hr where e.user_id = u.name and hr.parent = u.name and e.company = '{company}' and hr.role = '{role}' {gender_cond}".format(company = company, role = role, gender_cond = gender_cond),as_dict=1):
-				row = self.doc.append("approvers", {})
-				row.approver = e.user_id
-				row.approver_name = e.employee_name
-				row.designation = e.designation
-			if len(self.doc.approvers) == 0:
-				frappe.throw("There are no users with {role} Role. Please contact SSO or ICT Officer.".format(role = role))
-			# self.set_approver("SSO")
-		elif self.new_state.lower() in ("Waiting Verification".lower()) and self.old_state.lower() in ("Draft".lower(), "Rejected".lower()):
-			if frappe.session.user != self.doc.owner:
-				frappe.throw("Only <b>{}</b> can apply for this Leave Application".format(self.doc.owner))
-			self.doc.set("approvers", [])
-			for e in frappe.db.sql("select e.user_id, e.employee_name, e.designation from `tabUser` u, `tabEmployee` e, `tabHas Role` hr where e.user_id = u.name and hr.parent = u.name and e.company = '{company}' and hr.role = '{role}' {gender_cond}".format(company = company, role = role, gender_cond = gender_cond),as_dict=1):
-				row = self.doc.append("approvers", {})
-				row.approver = e.user_id
-				row.approver_name = e.employee_name
-				row.designation = e.designation
-			if len(self.doc.approvers) == 0:
-				frappe.throw("There are no users with {role} Role. Please contact SSO or ICT Officer.".format(role = role))
-		elif self.new_state.lower() in ("Waiting for Approval".lower()):
-			if frappe.session.user not in approvers:
-				frappe.throw(
-					"Only <b>{}</b> can edit this Leave Application while it is "
-					"<b>Waiting for Approval</b>.".format(
-						", ".join(a.approver for a in self.doc.approvers)
-					)
-				)
-		elif self.new_state.lower() in ("Approved".lower()) and self.old_state.lower() in ("Waiting for Approval".lower()):
-			# if frappe.session.user != self.doc.approver:
-			# 	if "Administrator" != frappe.session.user and frappe.session.user != "mon.chhetri@thimphutechpark.bt":
-			# 		frappe.throw("Only <b>{}</b> can approve this Leave Application ".format(self.doc.approver))
-			approvers = []
-			for a in self.doc.approvers:
-				approvers.append(a.approver)
-			if frappe.session.user not in approvers:
-				frappe.throw(
-					"Only <b>{}</b> can edit this Leave Application while it is "
-					"<b>Waiting for Approval</b>.".format(
-						", ".join(a.approver for a in self.doc.approvers)
-					)
-				)
-		elif self.new_state.lower() in ("Approved".lower()):
-			# if frappe.session.user != self.doc.approver:
-			# 	if "Administrator" != frappe.session.user:
-			# 		frappe.throw("Only <b>{}</b> can edit this Leave Application ".format(self.doc.approver))
-			approvers = []
-			for a in self.doc.approvers:
-				approvers.append(a.approver)
-			if frappe.session.user not in approvers:
-				frappe.throw(
-					"Only <b>{}</b> can edit this Leave Application while it is "
-					"<b>Waiting for Approval</b>.".format(
-						", ".join(a.approver for a in self.doc.approvers)
-					)
-				)
-		else:
-			frappe.throw(_("Invalid Workflow State {}").format(self.doc.workflow_state))		
+		gender_based = False
 
+		for approver_setting in approver_settings.approver_settings:
+			if (
+				approver_setting.workflow_state == self.new_state
+				and approver_setting.leave_type == self.doc.leave_type
+			):
+				role = approver_setting.role
+				gender_based = bool(approver_setting.gender_based)
+				break
+
+		if not role:
+			frappe.throw(
+				"No approver role configured for Leave Type: "
+				f"{self.doc.leave_type} and Workflow State: "
+				f"{self.new_state}"
+			)
+
+		# ---------------------------------------------------------
+		# Build gender condition
+		# ---------------------------------------------------------
+		gender_cond = ""
+
+		if gender_based:
+			gender_cond = " AND e.gender = %(student_gender)s"
+
+		# ---------------------------------------------------------
+		# Get users having the configured role
+		# ---------------------------------------------------------
+		query = """
+			SELECT
+				e.user_id,
+				e.employee_name,
+				e.designation
+			FROM `tabUser` u
+			INNER JOIN `tabEmployee` e
+				ON e.user_id = u.name
+			INNER JOIN `tabHas Role` hr
+				ON hr.parent = u.name
+			WHERE
+				e.company = %(company)s
+				AND hr.role = %(role)s
+				AND u.enabled = 1
+				{gender_cond}
+		""".format(
+			gender_cond=gender_cond
+		)
+
+		users = frappe.db.sql(
+			query,
+			{
+				"company": company,
+				"role": role,
+				"student_gender": student_gender,
+			},
+			as_dict=True,
+		)
+
+		# ---------------------------------------------------------
+		# Draft
+		# ---------------------------------------------------------
+		if self.new_state.lower() == "draft":
+
+			self.doc.set("approvers", [])
+
+			for user in users:
+				row = self.doc.append("approvers", {})
+				row.approver = user.user_id
+				row.approver_name = user.employee_name
+				row.designation = user.designation
+
+			if not self.doc.approvers:
+				frappe.throw(
+					"There are no users with {0} Role. "
+					"Please contact SSO or ICT Officer."
+					.format(role)
+				)
+
+		# ---------------------------------------------------------
+		# Waiting for Approval
+		# ---------------------------------------------------------
+		elif self.new_state.lower() == "waiting for approval":
+
+			# When submitting from Draft/Rejected, only the owner
+			# can send the leave application for approval.
+			if (
+				self.old_state.lower() in ("draft", "rejected")
+				and frappe.session.user != self.doc.owner
+			):
+				frappe.throw(
+					"Only <b>{}</b> can apply for this Leave Application"
+					.format(self.doc.owner)
+				)
+
+			# New submission / resubmission
+			if self.old_state.lower() in ("draft", "rejected"):
+
+				self.doc.set("approvers", [])
+
+				for user in users:
+					row = self.doc.append("approvers", {})
+					row.approver = user.user_id
+					row.approver_name = user.employee_name
+					row.designation = user.designation
+
+				if not self.doc.approvers:
+					frappe.throw(
+						"There are no users with {0} Role. "
+						"Please contact SSO or ICT Officer."
+						.format(role)
+					)
+
+			# Existing Waiting for Approval document being edited
+			else:
+				approvers = [
+					row.approver
+					for row in self.doc.get("approvers", [])
+					if row.approver
+				]
+
+				if (
+					frappe.session.user not in approvers
+					and "Administrator" not in frappe.get_roles(
+						frappe.session.user
+					)
+				):
+					frappe.throw(
+						"Only <b>{}</b> can edit this Leave Application "
+						"while it is <b>Waiting for Approval</b>."
+						.format(", ".join(approvers))
+					)
+
+		# ---------------------------------------------------------
+		# Waiting Verification
+		# ---------------------------------------------------------
+		elif (
+			self.new_state.lower() == "waiting verification"
+			and self.old_state.lower() in ("draft", "rejected")
+		):
+
+			if frappe.session.user != self.doc.owner:
+				frappe.throw(
+					"Only <b>{}</b> can apply for this Leave Application"
+					.format(self.doc.owner)
+				)
+
+			self.doc.set("approvers", [])
+
+			for user in users:
+				row = self.doc.append("approvers", {})
+				row.approver = user.user_id
+				row.approver_name = user.employee_name
+				row.designation = user.designation
+
+			if not self.doc.approvers:
+				frappe.throw(
+					"There are no users with {0} Role. "
+					"Please contact SSO or ICT Officer."
+					.format(role)
+				)
+
+		# ---------------------------------------------------------
+		# Approved
+		# ---------------------------------------------------------
+		elif (
+			self.new_state.lower() == "approved"
+			and self.old_state.lower() == "waiting for approval"
+		):
+
+			approvers = [
+				row.approver
+				for row in self.doc.get("approvers", [])
+				if row.approver
+			]
+
+			if (
+				frappe.session.user not in approvers
+				and "Administrator" not in frappe.get_roles(
+					frappe.session.user
+				)
+			):
+				frappe.throw(
+					"Only <b>{}</b> can approve this Leave Application."
+					.format(", ".join(approvers))
+				)
+
+		# ---------------------------------------------------------
+		# Other Approved transition
+		# ---------------------------------------------------------
+		elif self.new_state.lower() == "approved":
+
+			approvers = [
+				row.approver
+				for row in self.doc.get("approvers", [])
+				if row.approver
+			]
+
+			if (
+				frappe.session.user not in approvers
+				and "Administrator" not in frappe.get_roles(
+					frappe.session.user
+				)
+			):
+				frappe.throw(
+					"Only <b>{}</b> can edit this Leave Application."
+					.format(", ".join(approvers))
+				)
 
 
 
