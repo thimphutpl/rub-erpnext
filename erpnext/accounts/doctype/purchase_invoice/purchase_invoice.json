@@ -15,6 +15,7 @@
   "company",
   "supplier",
   "supplier_name",
+  "tpn_number",
   "tax_id",
   "branch",
   "column_break_6",
@@ -45,8 +46,9 @@
   "accounting_dimensions_section",
   "cost_center",
   "column_break_hiyo",
-  "activity",
+  "activity_type",
   "dimension_col_break",
+  "activity",
   "project",
   "currency_and_price_list",
   "currency",
@@ -1790,16 +1792,34 @@
   },
   {
    "fieldname": "activity",
-   "fieldtype": "Link",
+   "fieldtype": "Dynamic Link",
    "label": "Activity",
-   "options": "Approved Budget"
+   "options": "activity_type"
+  },
+  {
+   "fieldname": "activity_type",
+   "fieldtype": "Select",
+   "label": "Activity Type",
+   "options": "\nPlanning Activities\nAdditional Activities"
+  },
+  {
+   "bold": 1,
+   "depends_on": "supplier",
+   "fetch_from": "supplier.supplier_tpn_no",
+   "fieldname": "tpn_number",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "label": "TPN Number",
+   "oldfieldname": "supplier_name",
+   "oldfieldtype": "Data",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 204,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-05-06 10:30:50.015254",
+ "modified": "2026-07-31 14:33:32.680752",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Purchase Invoice",

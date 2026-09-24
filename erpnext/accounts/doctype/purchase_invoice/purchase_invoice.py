@@ -70,7 +70,8 @@ class PurchaseInvoice(BuyingController):
 		from erpnext.buying.doctype.purchase_receipt_item_supplied.purchase_receipt_item_supplied import PurchaseReceiptItemSupplied
 		from frappe.types import DF
 
-		activity: DF.Link | None
+		activity: DF.DynamicLink | None
+		activity_type: DF.Literal["", "Planning Activities", "Additional Activities"]
 		additional_discount_percentage: DF.Float
 		address_display: DF.SmallText | None
 		advance_tax: DF.Table[AdvanceTax]
@@ -209,6 +210,7 @@ class PurchaseInvoice(BuyingController):
 		total_net_weight: DF.Float
 		total_qty: DF.Float
 		total_taxes_and_charges: DF.Currency
+		tpn_number: DF.Data | None
 		unrealized_profit_loss_account: DF.Link | None
 		update_billed_amount_in_purchase_order: DF.Check
 		update_billed_amount_in_purchase_receipt: DF.Check
@@ -834,7 +836,7 @@ class PurchaseInvoice(BuyingController):
 		self.update_advance_tax_references()
 
 		self.process_common_party_accounting()
-		self.consume_budget(cancel=False)
+		# self.consume_budget(cancel=False)
 
 	def on_update_after_submit(self):
 		if hasattr(self, "repost_required"):
@@ -893,7 +895,7 @@ class PurchaseInvoice(BuyingController):
 							"posting_date": self.posting_date,
 							"company": self.company,
 							"amount": flt(amount,2),
-							# "business_activity": self.business_activity,
+							"business_activity": self.business_activity,
 						})
 					if not commited_budget_id:					
 						validate_expense_against_budget(args)
@@ -912,8 +914,10 @@ class PurchaseInvoice(BuyingController):
 							"item_code": item.item_code,
 							"company": self.company,
 							"closed":1,
-							# "business_activity": self.business_activity,
-							"committed_cost_center": committed_consumed_cost_center
+							"business_activity": self.business_activity,
+							"committed_cost_center": committed_consumed_cost_center,
+							"activity_type": self.activity_type,
+							"activity": self.activity,
 						})
 						bud_obj.flags.ignore_permissions=1
 						bud_obj.submit()
@@ -932,8 +936,10 @@ class PurchaseInvoice(BuyingController):
 						"reference_id": item.name,
 						"item_code": item.item_code,
 						"com_ref": commited_budget_id,
-						# "business_activity": self.business_activity,
-						"consumed_cost_center": committed_consumed_cost_center
+						"business_activity": self.business_activity,
+						"consumed_cost_center": committed_consumed_cost_center,
+						"activity_type": self.activity_type,
+						"activity": self.activity,
 					})
 					consume.flags.ignore_permissions=1
 					consume.submit()
@@ -1079,7 +1085,6 @@ class PurchaseInvoice(BuyingController):
 		# 	else self.base_grand_total,
 		# 	self.precision("base_grand_total"),
 		# ) - flt(self.total_advance)
-		gst_amount=0.0
 		for item in self.items:
 			gst_amount+=flt(item.gst_amount)
 
@@ -1087,6 +1092,7 @@ class PurchaseInvoice(BuyingController):
 			against_voucher = self.name
 			if self.is_return and self.return_against and not self.update_outstanding_for_self:
 				against_voucher = self.return_against
+		
 			gl_entries.append(
 				self.get_gl_dict(
 					{
@@ -1294,12 +1300,23 @@ class PurchaseInvoice(BuyingController):
 						self.make_provisional_gl_entry(gl_entries, item)
 
 					if not self.is_internal_transfer():
+						# frappe.throw(str(expense_account))
+						total_gst = 0
+
+						for item in self.get("items"):
+							total_gst += flt(item.total_gst)
+
+						# FINAL AMOUNT CALCULATION
+						if any(item.gst_included for item in self.get("items")):
+							debit_amount = amount- flt(total_gst)
+						else:
+							debit_amount = amount
 						gl_entries.append(
 							self.get_gl_dict(
 								{
 									"account": expense_account,
 									"against": self.supplier,
-									"debit": amount,
+									"debit": debit_amount,
 									"cost_center": item.cost_center,
 									"project": item.project or self.project,
 								},
@@ -1512,7 +1529,6 @@ class PurchaseInvoice(BuyingController):
 				account_currency = get_account_currency(tax.account_head)
 
 				dr_or_cr = "debit" if tax.add_deduct_tax == "Add" else "credit"
-
 				gl_entries.append(
 					self.get_gl_dict(
 						{
@@ -1560,7 +1576,8 @@ class PurchaseInvoice(BuyingController):
 							valuation_tax[tax.name] / total_valuation_amount
 						)
 						amount_including_divisional_loss -= applicable_amount
-
+					
+                    
 					gl_entries.append(
 						self.get_gl_dict(
 							{
@@ -1591,7 +1608,29 @@ class PurchaseInvoice(BuyingController):
 							},
 							item=tax,
 						)
-					)			
+					)
+		total_gst = 0
+		account_head=None
+		for item in self.get("items"):
+			total_gst += flt(item.total_gst)
+			account_head = item.gst_account_head
+
+		# FINAL AMOUNT CALCULATION
+		if any(item.gst_included for item in self.get("items")):
+			applicable_amount = total_gst
+
+
+			gl_entries.append(
+				self.get_gl_dict(
+					{
+						"account": account_head,
+						"against": self.supplier,
+						"debit": applicable_amount,
+						"debit_in_account_currency": applicable_amount,
+						"cost_center": self.cost_center,
+					},
+				)
+			)		
 			
 	def make_internal_transfer_gl_entries(self, gl_entries):
 	
@@ -1781,7 +1820,7 @@ class PurchaseInvoice(BuyingController):
 			"Serial and Batch Bundle",
 		)
 		self.update_advance_tax_references(cancel=1)
-		self.consume_budget(cancel=True)
+		# self.consume_budget(cancel=True)
 
 	def update_project(self):
 		projects = frappe._dict()
