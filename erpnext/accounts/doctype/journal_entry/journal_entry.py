@@ -114,8 +114,12 @@ class JournalEntry(AccountsController):
 			frappe.throw("Please set prefix {}".format(
 				frappe.get_desk_link("Journal Entry Series", self.naming_series)
 			))
+		posting_date = frappe.utils.getdate(self.posting_date)
+		month = posting_date.strftime("%m")
 		# self.name = make_autoname(str(prefix) + ".YYYY.MM.####")
-		self.name = make_autoname(str(prefix)+"-"+frappe.db.get_value("Company", self.company, "abbr")+"-"+'.YYYY.MM.####')	
+		self.name = make_autoname(
+			f"{prefix}-{frappe.db.get_value('Company', self.company, 'abbr')}-{posting_date.strftime('%Y')}.{month}.####"
+		)
 
 		# Ver 1.0 by SSK on 09/08/2016, autoname() method is added
 	# def autoname(self):

@@ -419,6 +419,7 @@
   },
   {
    "allow_on_submit": 1,
+   "fetch_from": "company.letter_head",
    "fieldname": "letter_head",
    "fieldtype": "Link",
    "label": "Letter Head",
@@ -426,6 +427,7 @@
   },
   {
    "allow_on_submit": 1,
+   "fetch_from": "company.letter_head",
    "fieldname": "select_print_heading",
    "fieldtype": "Link",
    "label": "Print Heading",
@@ -683,7 +685,7 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2026-08-06 07:34:11.882914",
+ "modified": "2026-09-28 11:41:02.796690",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Journal Entry",
