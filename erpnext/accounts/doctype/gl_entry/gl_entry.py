@@ -55,6 +55,7 @@ class GLEntry(Document):
 		is_cancelled: DF.Check
 		is_opening: DF.Literal["No", "Yes"]
 		party: DF.DynamicLink | None
+		party_name: DF.Data | None
 		party_type: DF.Link | None
 		posting_date: DF.Date | None
 		project: DF.Link | None

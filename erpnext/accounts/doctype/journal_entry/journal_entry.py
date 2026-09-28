@@ -220,6 +220,28 @@ class JournalEntry(AccountsController):
 					d.party,
 					"employee_name"
 				)
+			elif d.party_type=="Customer" and d.party:
+				d.party_name = frappe.db.get_value(
+					"Customer",
+					d.party,
+					"customer_name"
+				)
+			elif d.party_type=="Supplier" and d.party:
+				d.party_name = frappe.db.get_value(
+					"Supplier",
+					d.party,
+					"supplier_name"
+				)
+			elif d.party_type == "Student" and d.party:
+				first_name, middle_name, last_name = frappe.db.get_value(
+					"Student",
+					d.party,
+					["first_name", "middle_name", "last_name"]
+				)
+
+				d.party_name = " ".join(
+					filter(None, [first_name, middle_name, last_name])
+				)
 			else:
 				d.party_name = None
 
@@ -663,7 +685,7 @@ class JournalEntry(AccountsController):
 		# 		)
 
 		if self.cheque_date and not self.cheque_no:
-			msgprint(_("Reference No is mandatory if you entered Reference Date"), raise_exception=1)
+			msgprint(_("Cheque No is mandatory if you entered Cheque Date"), raise_exception=1)
 
 	def validate_entries_for_advance(self):
 		for d in self.get("accounts"):
@@ -1273,6 +1295,7 @@ class JournalEntry(AccountsController):
 					if  get_account_type( acc, self.company) in ["Receivable","Payable","Expense Account","Income Account"]:
 						party_type = d.party_type
 						party = d.party
+						party_name= d.party_name
 					gl_map.append(
 						self.get_gl_dict(
 							{
@@ -1280,6 +1303,7 @@ class JournalEntry(AccountsController):
 								"party_type": party_type,
 								"due_date": self.due_date,
 								"party": party,
+								"party_name":party_name,
 								"against": d.against_account,
 								"debit": flt(abs(tax_amount_dr), d.precision("tax_amount")) if tax_account \
 									else flt(d.debit, d.precision("debit")),

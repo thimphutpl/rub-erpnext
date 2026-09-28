@@ -35,6 +35,7 @@ class JournalEntryAccount(Document):
 		parentfield: DF.Data
 		parenttype: DF.Data
 		party: DF.DynamicLink | None
+		party_name: DF.Data | None
 		party_type: DF.Literal["", "Customer", "Supplier", "Employee", "Student"]
 		project: DF.Link | None
 		rate: DF.Float
