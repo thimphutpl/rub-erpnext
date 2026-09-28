@@ -1335,7 +1335,7 @@ class JournalEntry(AccountsController):
 					if  get_account_type( acc, self.company) in ["Receivable","Payable","Expense Account","Income Account"]:
 						party_type = d.party_type
 						party = d.party
-						party_name= d.party_name
+						party_name= d.party_name or None
 					gl_map.append(
 						self.get_gl_dict(
 							{
