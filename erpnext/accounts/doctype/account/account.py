@@ -547,9 +547,8 @@ class Account(NestedSet):
 	# 	super().on_trash(True)
 
 	def on_trash(self):
-		pass
-		# self.validate_root_company_and_delete_account_in_children()
-		# super().on_trash()
+		self.validate_root_company_and_delete_account_in_children()
+		super().on_trash()
 
 	def validate_root_company_and_delete_account_in_children(self):
 		# ignore validation while syncing
