@@ -55,6 +55,8 @@ class JournalEntry(AccountsController):
 		activity_type: DF.Literal["Planning Activities", "Additional Activities"]
 		amended_from: DF.Link | None
 		apply_tds: DF.Check
+		approved_date: DF.Date | None
+		approved_name: DF.Data | None
 		auto_repeat: DF.Link | None
 		bank_payment: DF.Link | None
 		bill_date: DF.Date | None
@@ -84,6 +86,8 @@ class JournalEntry(AccountsController):
 		payment_order: DF.Link | None
 		payment_status: DF.Literal["", "Payment Under Process", "Payment Successful", "Payment Failed", "Partial Payment", "Payment Cancelled"]
 		posting_date: DF.Date
+		prepared_date: DF.Data | None
+		prepared_name: DF.Data | None
 		process_deferred_accounting: DF.Link | None
 		remark: DF.SmallText | None
 		repost_required: DF.Check
@@ -99,6 +103,8 @@ class JournalEntry(AccountsController):
 		total_debit: DF.Currency
 		use_check_lot: DF.Check
 		user_remark: DF.SmallText | None
+		verify_date: DF.Date | None
+		verify_name: DF.Data | None
 		voucher_type: DF.Literal["Journal Entry", "Inter Company Journal Entry", "Bank Entry", "Cash Entry", "Credit Card Entry", "Debit Note", "Credit Note", "Contra Entry", "Excise Entry", "Write Off Entry", "Opening Entry", "Depreciation Entry", "Exchange Rate Revaluation", "Exchange Gain Or Loss", "Deferred Revenue", "Deferred Expense", "Hire Invoice"]
 		write_off_amount: DF.Currency
 		write_off_based_on: DF.Literal["Accounts Receivable", "Accounts Payable"]
@@ -204,6 +210,8 @@ class JournalEntry(AccountsController):
 
 		if not self.title:
 			self.title = self.get_title()
+		self.validate_approved()
+		
 
 
 	def validate_activity(self):
@@ -215,7 +223,35 @@ class JournalEntry(AccountsController):
 				return	
 		if mandatory == 1 and (not self.activity or self.activity == ""):
 			frappe.throw("Activity is Mandatory")
-	
+	def validate_approved(self):
+		if self.workflow_state=="Draft":
+			user = frappe.session.user
+			employee = frappe.db.get_value(
+				"Employee",
+				{"user_id": user},
+				"name"
+			)
+			self.prepared_date =  frappe.utils.today()
+			self.prepared_name = employee
+		elif self.workflow_state=="Waiting For Verification":
+			user = frappe.session.user
+			employee = frappe.db.get_value(
+				"Employee",
+				{"user_id": user},
+				"name"
+			)
+			self.verify_date =  frappe.utils.today()
+			self.verify_name = employee
+		elif self.workflow_state=="Approved":
+				user = frappe.session.user
+				employee = frappe.db.get_value(
+					"Employee",
+					{"user_id": user},
+					"name"
+				)
+				self.approved_name = employee
+				self.approved_date =  frappe.utils.today()
+
 	def set_party_name(self):
 		for d in self.accounts:
 			if d.party_type == "Employee" and d.party:

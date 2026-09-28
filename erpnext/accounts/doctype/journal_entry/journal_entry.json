@@ -81,7 +81,16 @@
   "subscription_section",
   "auto_repeat",
   "amended_from",
-  "repost_required"
+  "repost_required",
+  "section_break_ztmf",
+  "prepared_name",
+  "prepared_date",
+  "column_break_xoah",
+  "verify_name",
+  "verify_date",
+  "column_break_oajc",
+  "approved_name",
+  "approved_date"
  ],
  "fields": [
   {
@@ -670,6 +679,48 @@
    "fieldtype": "Link",
    "label": "Select Cheque Lot",
    "options": "Cheque Lot"
+  },
+  {
+   "fieldname": "section_break_ztmf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "prepared_name",
+   "fieldtype": "Data",
+   "label": "Prepared Name"
+  },
+  {
+   "fieldname": "prepared_date",
+   "fieldtype": "Data",
+   "label": "Prepared Date "
+  },
+  {
+   "fieldname": "column_break_xoah",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "verify_name",
+   "fieldtype": "Data",
+   "label": "Verify Name"
+  },
+  {
+   "fieldname": "verify_date",
+   "fieldtype": "Date",
+   "label": "Verify Date"
+  },
+  {
+   "fieldname": "column_break_oajc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "approved_name",
+   "fieldtype": "Data",
+   "label": "Approved Name"
+  },
+  {
+   "fieldname": "approved_date",
+   "fieldtype": "Date",
+   "label": "Approved Date"
   }
  ],
  "icon": "fa fa-file-text",
@@ -684,7 +735,7 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2026-09-28 12:14:07.041040",
+ "modified": "2026-09-28 12:51:30.046821",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Journal Entry",
