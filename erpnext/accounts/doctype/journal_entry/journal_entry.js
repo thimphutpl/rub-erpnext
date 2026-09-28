@@ -64,6 +64,34 @@ frappe.ui.form.on("Journal Entry", {
 		create_custom_buttons(frm);
 		create_custom_buttons2(frm);
 	},
+     branch(frm) {
+
+        if (!frm.doc.branch) {
+
+            (frm.doc.accounts || []).forEach(row => {
+                row.cost_center = "";
+            });
+
+            frm.refresh_field('accounts');
+            return;
+        }
+
+        frappe.db.get_value('Branch', frm.doc.branch, 'cost_center')
+            .then(r => {
+
+                if (r.message && r.message.cost_center) {
+
+                    let cost_center = r.message.cost_center;
+
+                    // update all child table rows
+                    (frm.doc.accounts || []).forEach(row => {
+                        row.cost_center = cost_center;
+                    });
+
+                    frm.refresh_field('accounts');
+                }
+            });
+    },
 	refresh: function (frm) {
 		erpnext.toggle_naming_series();
 
