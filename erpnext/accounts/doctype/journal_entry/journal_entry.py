@@ -1331,11 +1331,11 @@ class JournalEntry(AccountsController):
 
 							tax_amount_dr = tax_amount if flt(d.credit) else 0
 							tax_amount_cr = tax_amount if flt(d.debit) else 0
-					party_type = party = ''
+					party_type = party = party_name =''
 					if  get_account_type( acc, self.company) in ["Receivable","Payable","Expense Account","Income Account"]:
 						party_type = d.party_type
 						party = d.party
-						party_name= d.party_name or None
+						party_name= d.party_name 
 					gl_map.append(
 						self.get_gl_dict(
 							{
