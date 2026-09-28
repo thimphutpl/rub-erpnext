@@ -347,6 +347,7 @@
    "depends_on": "eval:doc.apply_tds",
    "fieldname": "taxable_amount",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Taxable Amount in Company Currency",
    "print_hide": 1,
    "read_only": 1
@@ -364,6 +365,7 @@
    "depends_on": "eval:doc.apply_tds",
    "fieldname": "tax_amount",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Tax Amount in Company Currency",
    "precision": "0",
    "read_only": 1
@@ -379,7 +381,7 @@
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-09-28 12:02:18.390147",
+ "modified": "2026-09-28 12:04:52.993357",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Journal Entry Account",
