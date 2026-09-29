@@ -14,6 +14,7 @@ def get_data(filters):
 	conditions = get_condition(filters)
 	for d in frappe.db.sql('''
 			SELECT ti.party, ti.posting_date, ti.bill_amount, t.tax_withholding_category, 
+			    t.company as college,
 				ti.tds_amount, t.cheque_no, t.cheque_date, ti.invoice_no, ti.invoice_type,
 				t.tds_receipt_number, t.tds_receipt_date
 			FROM `tabTDS Receipt Update` t INNER JOIN `tabTDS Remittance Item` ti ON t.name = ti.parent
@@ -54,10 +55,19 @@ def get_condition(filters):
 		frappe.throw("To Date cannot be greater than From Date")
 	if filters.get("from_date") and filters.get("to_date"):
 		conditions.append("ti.posting_date between '{}' and '{}'".format(filters.get("from_date"),filters.get("to_date")))
+	if filters.get("college"):
+		conditions.append("t.company='{}'".format(filters.get("college")))
 
 	return "and {}".format(" and ".join(conditions)) if conditions else ""
 def get_columns():
 	return [
+		{
+			"fieldname":"college",
+            "label":_("College"),
+            "fieldtype":"Data",
+            "width":120
+			
+        },
 		{
 			"fieldname":"posting_date",
 			"label":_("Invoice Date"),
@@ -97,7 +107,6 @@ def get_columns():
 		{
 			"fieldname":"tds_receipt_number",
 			"label":("Receipt Number"),
-			"fieldtype":"Data",
 			"width":130
 		},
 		{
@@ -124,7 +133,7 @@ def get_datax(filters):
 	je_entries = []
 	if filters.customer_type == "Supplier" and filters.supplier:
 		if frappe.db.get_single_value("Accounts Settings", "book_purchase_tax_charges") == "Purchase Invoice":
-			query = """SELECT a.posting_date, t.total as tds_taxable_amount, round(t.rate) as tds_rate, t.tax_amount as tds_amount,
+			query = """SELECT a.posting_date,a.company as college, t.total as tds_taxable_amount, round(t.rate) as tds_rate, t.tax_amount as tds_amount,
 							b.cheque_number, b.cheque_date, 
 							b.receipt_number, b.receipt_date 
 							FROM `tabPurchase Invoice` AS a
@@ -141,6 +150,7 @@ def get_datax(filters):
 						then t1.base_total + t1.base_tax_amount 
 						else t1.total end 
 					as tds_taxable_amount,
+					t.company as college,
 					round(t1.rate) as tds_rate,
 					case when t1.base_tax_amount > 0 
 						then t1.base_tax_amount 
@@ -219,6 +229,7 @@ def get_datax(filters):
 def get_journal_entries(filters):
 	return frappe.db.sql("""
 			SELECT t.posting_date, t2.debit as tds_taxable_amount,
+			    t.company as college,
 				(CASE 
 					WHEN t1.credit = ROUND(t2.debit*2/100,2) THEN 2
 					WHEN t1.credit = ROUND(t2.debit*3/100,2) THEN 3

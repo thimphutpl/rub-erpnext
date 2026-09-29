@@ -24,6 +24,7 @@ frappe.query_reports["TDS Certificate"] = {
 			},
 			"default":"Supplier",
 		},
+
 		{
 			"fieldname": "customer",
 			"label": __("Customer Name"),
@@ -60,6 +61,12 @@ frappe.query_reports["TDS Certificate"] = {
 				});
 			}
 		},
+       {
+            "fieldname": "college",
+            "label": __("College"),
+            "fieldtype": "Link",
+            "options": "Company"
+        },
 		{
 			"fieldname": "vendor_tpn_no",
 			"label": __("TPN Number"),
