@@ -488,30 +488,95 @@ class Account(NestedSet):
 			company_bold = frappe.bold(company)
 			parent_acc_name_bold = frappe.bold(parent_acc_name)
 
+			# ---------------------------------------------------------
+			# 1. SKIP if account number already exists in child company
+			# ---------------------------------------------------------
+			if self.account_number:
+				existing_by_number = frappe.db.get_value(
+					"Account",
+					{
+						"account_number": self.account_number,
+						"company": company,
+					},
+					"name",
+				)
+
+				if existing_by_number:
+					frappe.msgprint(
+						_(
+							"Skipping Child Company {0}: "
+							"Account Number {1} already used in account {2}"
+						).format(
+							company_bold,
+							self.account_number,
+							frappe.bold(existing_by_number),
+						)
+					)
+					continue
+
+			# ---------------------------------------------------------
+			# 2. SKIP if same account already exists
+			# ---------------------------------------------------------
+			existing_by_name = frappe.db.get_value(
+				"Account",
+				{
+					"account_name": self.account_name,
+					"company": company,
+				},
+				"name",
+			)
+
+			if existing_by_name:
+				frappe.msgprint(
+					_(
+						"Skipping Child Company {0}: "
+						"Account {1} already exists"
+					).format(
+						company_bold,
+						frappe.bold(existing_by_name),
+					)
+				)
+				continue
+
+			# ---------------------------------------------------------
+			# 3. Check parent account mapping
+			# ---------------------------------------------------------
 			if not parent_acc_name_map.get(company):
 				frappe.throw(
 					_(
 						"While creating account for Child Company {0}, "
 						"parent account {1} not found. "
 						"Please create the parent account in corresponding COA"
-					).format(company_bold, parent_acc_name_bold),
+					).format(
+						company_bold,
+						parent_acc_name_bold,
+					),
 					title=_("Account Not Found"),
 				)
 
-			if (
-				frappe.get_cached_value(
-					"Account", self.parent_account, "is_group"
-				)
-				and not frappe.get_cached_value(
-					"Account",
-					parent_acc_name_map[company],
-					"is_group",
-				)
-			):
+			# ---------------------------------------------------------
+			# 4. Validate parent account type
+			# ---------------------------------------------------------
+			source_parent_is_group = frappe.get_cached_value(
+				"Account",
+				self.parent_account,
+				"is_group",
+			)
+
+			child_parent_is_group = frappe.get_cached_value(
+				"Account",
+				parent_acc_name_map[company],
+				"is_group",
+			)
+
+			if source_parent_is_group and not child_parent_is_group:
 				msg = _(
 					"While creating account for Child Company {0}, "
 					"parent account {1} found as a ledger account."
-				).format(company_bold, parent_acc_name_bold)
+				).format(
+					company_bold,
+					parent_acc_name_bold,
+				)
 
 				msg += "<br><br>"
 
@@ -520,31 +585,18 @@ class Account(NestedSet):
 					"child company to a group account."
 				)
 
-				frappe.throw(
+				# Skip this company instead of stopping all companies
+				frappe.msgprint(
 					msg,
-					title=_("Invalid Parent Account")
+					title=_("Invalid Parent Account"),
+					indicator="orange",
 				)
 
-			filters = {
-				"account_name": self.account_name,
-				"company": company,
-			}
-
-			if self.account_number:
-				filters["account_number"] = self.account_number
-
-			# Check if account already exists
-			child_account = frappe.db.get_value(
-				"Account",
-				filters,
-				"name"
-			)
-
-			# Already exists -> SKIP
-			if child_account:
 				continue
 
-			# Does not exist -> CREATE
+			# ---------------------------------------------------------
+			# 5. Create account
+			# ---------------------------------------------------------
 			doc = frappe.copy_doc(self)
 
 			doc.flags.ignore_root_company_validation = True
@@ -562,8 +614,12 @@ class Account(NestedSet):
 			doc.insert()
 
 			frappe.msgprint(
-				_("Account {0} is added in the child company {1}")
-				.format(doc.name, company)
+				_(
+					"Account {0} is added in the child company {1}"
+				).format(
+					frappe.bold(doc.name),
+					company_bold,
+				)
 			)
 
 	@frappe.whitelist()
