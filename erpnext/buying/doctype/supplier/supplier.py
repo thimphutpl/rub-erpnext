@@ -111,14 +111,22 @@ class Supplier(TransactionBase):
 		info = get_dashboard_info(self.doctype, self.name)
 		self.set_onload("dashboard_info", info)
 
+	# def autoname(self):
+	# 	supp_master_name = frappe.defaults.get_global_default("supp_master_name")
+	# 	if supp_master_name == "Supplier Name":
+	# 		self.name = self.supplier_name
+	# 	elif supp_master_name == "Naming Series":
+	# 		set_name_by_naming_series(self)
+	# 	else:
+	# 		self.name = set_name_from_naming_options(frappe.get_meta(self.doctype).autoname, self)
 	def autoname(self):
-		supp_master_name = frappe.defaults.get_global_default("supp_master_name")
-		if supp_master_name == "Supplier Name":
-			self.name = self.supplier_name
-		elif supp_master_name == "Naming Series":
-			set_name_by_naming_series(self)
-		else:
-			self.name = set_name_from_naming_options(frappe.get_meta(self.doctype).autoname, self)
+		if not self.supplier_name:
+			frappe.throw(_("Supplier Name is required"))
+
+		if not self.supplier_tpn_no:
+			frappe.throw(_("Supplier TPN No is required"))
+
+		self.name = f"{self.supplier_name}-{self.supplier_tpn_no}-{self.account_number}"
 
 	def on_update(self):
 		pass
@@ -284,43 +292,43 @@ def get_supplier_primary_contact(doctype, txt, searchfield, start, page_len, fil
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def get_suppliers(doctype, txt, searchfield, start, page_len, filters):
-    import json
+	import json
 
-    if isinstance(filters, str):
-        filters = json.loads(filters)
+	if isinstance(filters, str):
+		filters = json.loads(filters)
 
-    filters = filters or {}
-    company = filters.get("company")
+	filters = filters or {}
+	company = filters.get("company")
 
-    txt = txt or ""
+	txt = txt or ""
 
-    conditions = []
-    values = []
+	conditions = []
+	values = []
 
-    # Supplier name search
-    conditions.append("s.name LIKE %s")
-    values.append(f"%{txt}%")
+	# Supplier name search
+	conditions.append("s.name LIKE %s")
+	values.append(f"%{txt}%")
 
-    # Company filter
-    if company:
-        conditions.append("""
-            EXISTS (
-                SELECT 1
-                FROM `tabFiscal Year Company` fyc
-                WHERE fyc.parent = s.name
-                AND fyc.company = %s
-            )
-        """)
-        values.append(company)
+	# Company filter
+	if company:
+		conditions.append("""
+			EXISTS (
+				SELECT 1
+				FROM `tabFiscal Year Company` fyc
+				WHERE fyc.parent = s.name
+				AND fyc.company = %s
+			)
+		""")
+		values.append(company)
 
-    where_clause = " AND ".join(conditions)
+	where_clause = " AND ".join(conditions)
 
-    suppliers = frappe.db.sql(f"""
-        SELECT s.name
-        FROM `tabSupplier` s
-        WHERE {where_clause}
-        ORDER BY s.name
-        LIMIT 10
-    """, values, as_dict=True)
+	suppliers = frappe.db.sql(f"""
+		SELECT s.name
+		FROM `tabSupplier` s
+		WHERE {where_clause}
+		ORDER BY s.name
+		LIMIT 10
+	""", values, as_dict=True)
 
-    return [[d.name] for d in suppliers]
+	return [[d.name] for d in suppliers]
