@@ -101,6 +101,7 @@
   {
    "fieldname": "branch",
    "fieldtype": "Link",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Branch",
    "options": "Branch"
@@ -266,7 +267,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-05-18 15:03:26.863969",
+ "modified": "2026-09-29 14:20:45.108142",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "TDS Remittance",

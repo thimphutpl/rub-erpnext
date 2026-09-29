@@ -82,7 +82,7 @@ class TDSReceiptUpdate(Document):
 		entries = []
 		if self.purpose in ["Employee Salary","PBVA","Bonus"]:
 			name = make_autoname('TDSRE.YYYY.MM.#######')
-			entries.append((name, str(today()), self.branch, self.cost_center, 
+			entries.append((name, str(today()), 
 				self.purpose, self.fiscal_year, self.month or "", self.pbva or "" if self.purpose == "PBVA" else "", "", 
 				"", "", "", 
 				self.tds_receipt_date, self.tds_receipt_number, self.cheque_no, self.cheque_date,
@@ -98,7 +98,7 @@ class TDSReceiptUpdate(Document):
 					bill_no = d.invoice_no
 				if d.tds_remittance == None:
 					d.tds_remittance = ''
-				entries.append((name, d.posting_date, self.branch, self.cost_center,
+				entries.append((name, d.posting_date,
 					self.purpose, self.fiscal_year or "", self.month or "", "",
 					d.invoice_type, d.invoice_no, bill_no, 
 					self.tds_receipt_date, self.tds_receipt_number, self.cheque_no, self.cheque_date, 
@@ -110,13 +110,13 @@ class TDSReceiptUpdate(Document):
 		entries = self.get_entries()
 		if len(entries):
 			entries = ', '.join(map(str, entries))
-			query = """INSERT INTO `tabTDS Receipt Entry`(name, posting_date, branch, cost_center, 
+			query = """INSERT INTO `tabTDS Receipt Entry`(name, posting_date, 
 				purpose, fiscal_year, month, pbva,
 				invoice_type, invoice_no, bill_no,
 				receipt_date, receipt_number, cheque_no, cheque_date, 
 				tds_receipt_update, tds_remittance, idx, docstatus, owner, creation, modified, modified_by)
 				VALUES {}""".format(entries)
-			frappe.db.sql("""INSERT INTO `tabTDS Receipt Entry`(name, posting_date, branch, cost_center, 
+			frappe.db.sql("""INSERT INTO `tabTDS Receipt Entry`(name, posting_date,
 				purpose, fiscal_year, month, pbva,  
 				invoice_type, invoice_no, bill_no, 
 				receipt_date, receipt_number, cheque_no, cheque_date, 
