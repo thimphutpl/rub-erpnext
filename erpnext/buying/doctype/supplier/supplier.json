@@ -126,9 +126,11 @@
    "in_global_search": 1,
    "in_list_view": 1,
    "label": "Supplier Name",
+   "no_copy": 1,
    "oldfieldname": "supplier_name",
    "oldfieldtype": "Data",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "country",
@@ -696,7 +698,7 @@
    "link_fieldname": "party"
   }
  ],
- "modified": "2026-09-29 15:52:23.610284",
+ "modified": "2026-09-29 15:54:44.234538",
  "modified_by": "Administrator",
  "module": "Buying",
  "name": "Supplier",
