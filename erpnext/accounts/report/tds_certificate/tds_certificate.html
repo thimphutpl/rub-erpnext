@@ -1,8 +1,4 @@
-{%
-    if (report.columns.length > 10) {
-        frappe.throw(__("Too many columns. Export the report and print it using a spreadsheet application."));
-        }
-%}
+
 
 <!-- <h2 class="text-center">Bank of Bhutan Ltd.</h2> -->
 <h4 class="text-center">TDS Certificate</h4>
@@ -68,8 +64,36 @@
     case any information is found untrue and false, I shall be liable for fines and penalities as per chapter 5, General
     Provisions of the Income Tax Act of the Kingdom of Bhutan,2001
 </div>
-<br/><br/>
-<div style="margin-top: 20px; float: left;">
-    <!-- <img src = "{{filters.seal}}" height = "130" width = "180"></img><br> -->
-    Name and Signature of Disbursing Officer
+
+<div class="tds-final-footer">
+    <div class="tds-footer-line"></div>
+
+    <div class="tds-footer-text">
+        This electronic Public Expenditure Management System (ERP) generated
+        TDS certificate not requiring signature is meant solely for the purpose
+        of filing tax with the Department of Revenue and Customs (DRC),
+        Ministry of Finance, Royal Government of Bhutan.
+        The DRC may verify the authenticity of the document with the concerned
+        Budgetary Agencies in case of any suspicion.
+    </div>
 </div>
+
+<style>
+.tds-final-footer {
+    width: 100%;
+    margin-top: 100px;
+    page-break-inside: avoid;
+}
+
+.tds-footer-line {
+    border-top: 1px solid #000;
+    margin-bottom: 8px;
+}
+
+.tds-footer-text {
+    font-size: 11px;
+    line-height: 1.4;
+    text-align: center;
+    font-weight: 600;
+}
+</style>
