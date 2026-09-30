@@ -1332,7 +1332,7 @@ class JournalEntry(AccountsController):
 							tax_amount_dr = tax_amount if flt(d.credit) else 0
 							tax_amount_cr = tax_amount if flt(d.debit) else 0
 					party_type = party = party_name =''
-					if  get_account_type( acc, self.company) in ["Receivable","Payable","Expense Account","Income Account"]:
+					if  get_account_type( acc, self.company) in ["Receivable","Payable","Expense Account","Income Account","Liability"]:
 						party_type = d.party_type
 						party = d.party
 						party_name= d.party_name 
