@@ -1999,48 +1999,31 @@ def make_reverse_journal_entry(source_name, target_doc=None):
 	return doclist
 
 @frappe.whitelist()
-def get_tds_account(company):
-	
-	# account = frappe.db.sql("""select t.name,
-	# 		ifnull((select tax_withholding_rate
-	# 			from `tabTax Withholding Rate` r
-	# 			where r.parent = t.name
-	# 			limit 1),0) as tax_withholding_rate,
-	# 		(select account
-	# 			from `tabTax Withholding Account` a
-	# 			where a.parent = t.name
-	# 			limit 1) as tax_withholding_account
-	# 	from `tabTax Withholding Category` t
-	# 	where t.name = "{}" and t.company_name='DK Oro'""".format(tax_withholding_category), as_dict=True)
-	account = frappe.db.sql("""
-					SELECT 
-		twc.name, 
-		COALESCE(
-			(
-			SELECT 
-				r.tax_withholding_rate 
-			FROM 
-				`tabTax Withholding Rate` r 
-			WHERE 
-				r.parent = twc.name 
-			LIMIT 1
-			), 0
-		) AS tax_withholding_rate,
-		
-		twa.account as tax_withholding_account
+def get_tds_account(tax_withholding_category=None, company=None):
 
-		FROM 
-		`tabTax Withholding Category` twc 
-		INNER JOIN `tabTax Withholding Account` twa ON twc.name = twa.parent 
+    account = frappe.db.sql("""
+        SELECT
+            twc.name,
+            COALESCE(
+                (
+                    SELECT r.tax_withholding_rate
+                    FROM `tabTax Withholding Rate` r
+                    WHERE r.parent = twc.name
+                    LIMIT 1
+                ), 0
+            ) AS tax_withholding_rate,
+            twa.account AS tax_withholding_account
 
-		WHERE 
- 
-		twa.company = '{}';
+        FROM `tabTax Withholding Category` twc
 
+        INNER JOIN `tabTax Withholding Account` twa
+            ON twc.name = twa.parent
 
-	""".format(company), as_dict=True)
-	# frappe.throw(str(account[0]))
-	return account[0] if account else None
+        WHERE twc.name = %s
+        AND twa.company = %s
+    """, (tax_withholding_category, company), as_dict=True)
+
+    return account[0] if account else None
 
 def get_permission_query_conditions(user):
 	if not user: user = frappe.session.user
