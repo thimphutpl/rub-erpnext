@@ -42,6 +42,7 @@
    "fieldname": "college",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "College",
    "options": "Company",
    "reqd": 1
@@ -134,7 +135,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-16 09:54:46.875101",
+ "modified": "2026-09-30 10:19:24.349818",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Approved Budget",
