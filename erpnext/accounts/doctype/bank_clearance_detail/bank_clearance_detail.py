@@ -19,6 +19,8 @@ class BankClearanceDetail(Document):
 		cheque_date: DF.Date | None
 		cheque_number: DF.Data | None
 		clearance_date: DF.Date | None
+		credit: DF.Data | None
+		debit: DF.Data | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data

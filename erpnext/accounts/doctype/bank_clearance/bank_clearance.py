@@ -74,16 +74,22 @@ class BankClearance(Document):
 			row = self.append("payment_entries", {})
 
 			amount = flt(d.get("debit", 0)) - flt(d.get("credit", 0))
+			debit = flt(d.get("debit", 0))
+			credit = flt(d.get("credit", 0))
+
+			
 
 			if not d.get("account_currency"):
 				d.account_currency = default_currency
 
 			formatted_amount = fmt_money(abs(amount), precision, d.account_currency)
 			d.amount = formatted_amount + " " + (_("Dr") if amount > 0 else _("Cr"))
+			d.debit = fmt_money(debit, precision, d.account_currency) if debit else ""
+			d.credit = fmt_money(credit, precision, d.account_currency) if credit else ""
 			d.posting_date = getdate(d.posting_date)
 
-			d.pop("credit")
-			d.pop("debit")
+			# d.pop("credit")
+			# d.pop("debit")
 			d.pop("account_currency")
 			row.update(d)
 
@@ -189,30 +195,30 @@ def get_payment_entries_for_bank_clearance(
 		as_dict=1,
 	)
 	tds_remittance = frappe.db.sql(
-                """
-                select
-                    "TDS Remittance" as payment_document, 
-                    name as payment_entry,
-                    cheque_no as cheque_number, cheque_date,
-                    total_tds as credit, 0 as debit, posting_date
-                from `tabTDS Remittance`
-                where
-                    credit_account = %(account)s and docstatus=1
-                    and posting_date >= %(from)s and posting_date <= %(to)s
-                    {condition}
-                order by
-                    posting_date ASC, name DESC
-            """.format(
-                    condition=condition
-                ),
-                {
-                    "account": account,
-                    "from": from_date,
-                    "to": to_date,
-                    "bank_account": bank_account,
-                },
-                as_dict=1,
-            )
+				"""
+				select
+					"TDS Remittance" as payment_document, 
+					name as payment_entry,
+					cheque_no as cheque_number, cheque_date,
+					total_tds as credit, 0 as debit, posting_date
+				from `tabTDS Remittance`
+				where
+					credit_account = %(account)s and docstatus=1
+					and posting_date >= %(from)s and posting_date <= %(to)s
+					{condition}
+				order by
+					posting_date ASC, name DESC
+			""".format(
+					condition=condition
+				),
+				{
+					"account": account,
+					"from": from_date,
+					"to": to_date,
+					"bank_account": bank_account,
+				},
+				as_dict=1,
+			)
 
 	pos_sales_invoices, pos_purchase_invoices = [], []
 	if include_pos_transactions:
