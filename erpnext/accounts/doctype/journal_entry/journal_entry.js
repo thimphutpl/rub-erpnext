@@ -56,6 +56,16 @@ frappe.ui.form.on("Journal Entry", {
 				};
 			}
 		});
+        frm.set_query("project", "accounts", function (doc) {
+            return {
+					filters: { 
+                        company: doc.company,
+                        is_active: "Yes"
+                    }
+				};
+
+        })
+
 		
 	},
 	onload:function(frm){

@@ -10,9 +10,11 @@
  "field_order": [
   "naming_series",
   "project_name",
+  "company",
+  "is_active",
   "status",
   "project_type",
-  "is_active",
+  "customer",
   "percent_complete_method",
   "percent_complete",
   "column_break_5",
@@ -22,7 +24,7 @@
   "priority",
   "department",
   "customer_details",
-  "customer",
+  "column_break_nivj",
   "column_break_14",
   "sales_order",
   "users_section",
@@ -39,7 +41,6 @@
   "estimated_costing",
   "total_costing_amount",
   "total_purchase_cost",
-  "company",
   "column_break_28",
   "total_sales_amount",
   "total_billable_amount",
@@ -68,28 +69,26 @@
   {
    "fieldname": "project_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Project Name",
    "oldfieldtype": "Data",
-   "reqd": 1,
-   "unique": 1
+   "reqd": 1
   },
   {
-   "default": "Open",
    "fieldname": "status",
    "fieldtype": "Select",
-   "in_standard_filter": 1,
+   "hidden": 1,
    "label": "Status",
    "no_copy": 1,
    "oldfieldname": "status",
    "oldfieldtype": "Select",
-   "options": "Open\nCompleted\nCancelled",
+   "options": "\nOpen\nCompleted\nCancelled",
    "search_index": 1
   },
   {
    "fieldname": "project_type",
    "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
+   "hidden": 1,
    "label": "Project Type",
    "oldfieldname": "project_type",
    "oldfieldtype": "Data",
@@ -107,6 +106,7 @@
    "default": "Task Completion",
    "fieldname": "percent_complete_method",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "% Complete Method",
    "options": "Manual\nTask Completion\nTask Progress\nTask Weight"
   },
@@ -114,18 +114,20 @@
    "bold": 1,
    "fieldname": "percent_complete",
    "fieldtype": "Percent",
+   "hidden": 1,
    "label": "% Completed",
    "no_copy": 1,
    "read_only": 1
   },
   {
    "fieldname": "column_break_5",
-   "fieldtype": "Column Break"
+   "fieldtype": "Column Break",
+   "hidden": 1
   },
   {
-   "allow_in_quick_entry": 1,
    "fieldname": "project_template",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "From Template",
    "options": "Project Template",
    "set_only_once": 1
@@ -134,6 +136,7 @@
    "bold": 1,
    "fieldname": "expected_start_date",
    "fieldtype": "Date",
+   "hidden": 1,
    "label": "Expected Start Date",
    "oldfieldname": "project_start_date",
    "oldfieldtype": "Date"
@@ -142,7 +145,7 @@
    "bold": 1,
    "fieldname": "expected_end_date",
    "fieldtype": "Date",
-   "in_list_view": 1,
+   "hidden": 1,
    "label": "Expected End Date",
    "oldfieldname": "completion_date",
    "oldfieldtype": "Date"
@@ -150,7 +153,7 @@
   {
    "fieldname": "priority",
    "fieldtype": "Select",
-   "in_standard_filter": 1,
+   "hidden": 1,
    "label": "Priority",
    "oldfieldname": "priority",
    "oldfieldtype": "Select",
@@ -159,6 +162,7 @@
   {
    "fieldname": "department",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Department",
    "options": "Department"
   },
@@ -166,6 +170,7 @@
    "collapsible": 1,
    "fieldname": "customer_details",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Customer Details",
    "oldfieldtype": "Section Break",
    "options": "fa fa-user"
@@ -173,6 +178,7 @@
   {
    "fieldname": "customer",
    "fieldtype": "Link",
+   "hidden": 1,
    "in_global_search": 1,
    "label": "Customer",
    "oldfieldname": "customer",
@@ -195,6 +201,7 @@
    "collapsible": 1,
    "fieldname": "users_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Users"
   },
   {
@@ -215,6 +222,7 @@
    "collapsible": 1,
    "fieldname": "section_break0",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Notes",
    "oldfieldtype": "Section Break",
    "options": "fa fa-list"
@@ -230,6 +238,7 @@
    "collapsible": 1,
    "fieldname": "section_break_18",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Start and End Dates"
   },
   {
@@ -260,6 +269,7 @@
    "collapsible": 1,
    "fieldname": "project_details",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Costing and Billing",
    "oldfieldtype": "Section Break",
    "options": "fa fa-money"
@@ -267,7 +277,6 @@
   {
    "fieldname": "estimated_costing",
    "fieldtype": "Currency",
-   "in_list_view": 1,
    "label": "Estimated Cost",
    "oldfieldname": "project_value",
    "oldfieldtype": "Currency",
@@ -288,7 +297,9 @@
   {
    "fieldname": "company",
    "fieldtype": "Link",
-   "label": "Company",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "College",
    "options": "Company",
    "remember_last_selected_value": 1,
    "reqd": 1
@@ -331,6 +342,7 @@
    "collapsible": 1,
    "fieldname": "margin",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Margin",
    "oldfieldtype": "Column Break",
    "width": "50%"
@@ -360,6 +372,7 @@
    "collapsible": 1,
    "fieldname": "monitor_progress",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Monitor Progress"
   },
   {
@@ -441,12 +454,17 @@
   {
    "fieldname": "naming_series",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Series",
    "no_copy": 1,
    "options": "PROJ-.####",
    "print_hide": 1,
    "reqd": 1,
    "set_only_once": 1
+  },
+  {
+   "fieldname": "column_break_nivj",
+   "fieldtype": "Column Break"
   }
  ],
  "icon": "fa fa-puzzle-piece",
@@ -454,7 +472,7 @@
  "index_web_pages_for_search": 1,
  "links": [],
  "max_attachments": 4,
- "modified": "2024-04-24 10:56:16.001032",
+ "modified": "2026-10-01 13:16:29.298116",
  "modified_by": "Administrator",
  "module": "Projects",
  "name": "Project",
@@ -501,7 +519,8 @@
   }
  ],
  "quick_entry": 1,
- "search_fields": "project_name,customer, status, priority, is_active",
+ "row_format": "Dynamic",
+ "search_fields": "project_name, is_active",
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
