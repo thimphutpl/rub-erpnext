@@ -9,6 +9,189 @@ from frappe.utils import get_link_to_form
 from hrms.hr.hr_custom_function import get_officiating_employee
 from frappe.utils.nestedset import get_ancestors_of
 
+
+def _rub_leave_route_payload(user, route_type):
+	approver = None
+
+	if user:
+		approver = frappe.db.get_value(
+			"Employee",
+			{"user_id": user, "status": "Active"},
+			["name", "employee_name", "designation"],
+			as_dict=True,
+		)
+
+	return {
+		"user": user or "",
+		"employee": approver.name if approver else None,
+		"employee_name": (
+			approver.employee_name
+			if approver
+			else frappe.db.get_value("User", user, "full_name")
+			if user
+			else None
+		),
+		"designation": approver.designation if approver else None,
+		"route_type": route_type,
+	}
+
+
+def get_rub_leave_route(employee, leave_type=None):
+	emp = frappe.db.get_value(
+		"Employee",
+		employee,
+		[
+			"name",
+			"user_id",
+			"designation",
+			"company",
+			"second_approver",
+			"hr_approver",
+			"hr_leave_approver",
+		],
+		as_dict=True,
+	)
+
+	if not emp:
+		frappe.throw("Employee not found: {}".format(employee))
+
+	# --------------------------------------------------------
+	# PRESIDENT -> VICE CHANCELLOR
+	# --------------------------------------------------------
+	if emp.designation == "President":
+		vc_user = frappe.db.get_value("Employee", 
+		                              { "designation": "Vice Chancellor", 
+		                                "status": "Active", 
+										"user_id": ["is", "set"], 
+		                               }, "user_id",
+									)
+		return _rub_leave_route_payload(vc_user, "Vice Chancellor")
+
+	# Leave type is required to decide the remaining routes.
+	if not leave_type:
+		return _rub_leave_route_payload(
+			None,
+			"Leave Type Required",
+		)
+
+	# --------------------------------------------------------
+	# CASUAL / ANNUAL -> SECOND APPROVER
+	# including officiating substitution
+	# --------------------------------------------------------
+	if leave_type in ("Casual Leave", "Annual Leave"):
+
+		if not emp.second_approver:
+			return _rub_leave_route_payload(
+				None,
+				"Missing Second Approver",
+			)
+
+		approver_employee = emp.second_approver
+
+		officiating = get_officiating_employee(
+			emp.second_approver
+		)
+
+		if officiating:
+			approver_employee = (
+				officiating[0].officiating_employee
+			)
+
+		approver_user = frappe.db.get_value(
+			"Employee",
+			approver_employee,
+			"user_id",
+		)
+
+		if approver_user == emp.user_id:
+			return _rub_leave_route_payload(
+				None,
+				"Self Approval Blocked",
+			)
+
+		return _rub_leave_route_payload(
+			approver_user,
+			"Second Approver",
+		)
+
+	# --------------------------------------------------------
+	# OTHER LEAVE -> EXPLICIT ALTERNATE HR
+	# --------------------------------------------------------
+	if (
+		emp.hr_leave_approver
+		and emp.hr_leave_approver != emp.user_id
+	):
+		return _rub_leave_route_payload(
+			emp.hr_leave_approver,
+			"Alternate HR",
+		)
+
+	# --------------------------------------------------------
+	# NORMAL EMPLOYEE -> HR APPROVER
+	# --------------------------------------------------------
+	if (
+		emp.hr_approver
+		and emp.hr_approver != emp.user_id
+	):
+		return _rub_leave_route_payload(
+			emp.hr_approver,
+			"HR Approver",
+		)
+
+	# --------------------------------------------------------
+	# HR EMPLOYEE -> SUBSTITUTE HR IN SAME COMPANY
+	# --------------------------------------------------------
+	if (
+		emp.hr_approver
+		and emp.hr_approver == emp.user_id
+	):
+
+		role_users = frappe.get_all(
+			"Has Role",
+			filters={
+				"role": "HR Leave Approver",
+				"parenttype": "User",
+			},
+			fields=["parent"],
+			order_by="parent asc",
+		)
+
+		for row in role_users:
+			user_id = row.parent
+
+			if user_id == emp.user_id:
+				continue
+
+			if not frappe.db.get_value(
+				"User",
+				user_id,
+				"enabled",
+			):
+				continue
+
+			permission = frappe.db.get_value(
+				"User Permission",
+				{
+					"user": user_id,
+					"allow": "Company",
+					"for_value": emp.company,
+					"applicable_for": "Leave Application",
+				},
+				"name",
+			)
+
+			if permission:
+				return _rub_leave_route_payload(
+					user_id,
+					"Substitute HR",
+				)
+
+	return _rub_leave_route_payload(
+		None,
+		"No Approver Found",
+	)
+
+
 class CustomWorkflow:
 	def __init__(self, doc):
 		self.doc = doc
@@ -36,7 +219,7 @@ class CustomWorkflow:
 			college_or_company = getattr(self.doc, "college", None) or getattr(self.doc, "company", None)
 			if frappe.db.exists("Company", college_or_company):
 				self.hr_approver = frappe.db.get_value("Company", college_or_company, "hr_approver")
-				if not self.hr_approver:
+				if not self.hr_approver and self.doc.doctype != "Leave Application":
 					frappe.throw("Please set HR Approver in Company Settings")
 		### =============== *** =============== *** === NYUTHYUE === *** =============== *** =============== ###
 
@@ -485,7 +668,14 @@ class CustomWorkflow:
 		elif self.new_state.lower() == ("Waiting For Approval".lower()):
 			if frappe.session.user != self.doc.owner:
 				frappe.throw("Only {} can apply this leave".format(self.doc.owner))
-			self.set_approver("Leave Approver")
+			route = get_rub_leave_route(self.doc.employee, self.doc.leave_type)
+			if not route.get("user"):
+				frappe.throw("No valid leave approver found for this employee and leave type.")
+			self.doc.leave_approver = route["user"]
+			if self.doc.meta.has_field("leave_approver_name"):
+				self.doc.leave_approver_name = route.get("employee_name")
+			if self.doc.meta.has_field("leave_approver_designation"):
+				self.doc.leave_approver_designation = route.get("designation")
 		elif self.new_state.lower() == ("Approved".lower()):
 			if frappe.session.user != self.doc.leave_approver:
 				frappe.throw(f"Only {self.doc.leave_approver} can Approve this Leave Application.")	
@@ -493,6 +683,7 @@ class CustomWorkflow:
 			if frappe.session.user != self.doc.leave_approver:
 
 				frappe.throw(f"Only {self.doc.leave_approver} can Reject this Leave Application.")
+			self.doc.status = "Rejected"
 		elif self.new_state.lower() == ("Cancelled".lower()):
 			hr_manager=frappe.get_value("Company", self.doc.company, "hr_manager")
 			if frappe.session.user != hr_manager:
