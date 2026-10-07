@@ -60,10 +60,10 @@ def get_rub_leave_route(employee, leave_type=None):
 	# --------------------------------------------------------
 	if emp.designation == "President":
 		vc_user = frappe.db.get_value("Employee", 
-		                              { "designation": "Vice Chancellor", 
-		                                "status": "Active", 
+									  { "designation": "Vice Chancellor", 
+										"status": "Active", 
 										"user_id": ["is", "set"], 
-		                               }, "user_id",
+									   }, "user_id",
 									)
 		return _rub_leave_route_payload(vc_user, "Vice Chancellor")
 
@@ -91,6 +91,7 @@ def get_rub_leave_route(employee, leave_type=None):
 		officiating = get_officiating_employee(
 			emp.second_approver
 		)
+	
 
 		if officiating:
 			approver_employee = (
@@ -117,26 +118,39 @@ def get_rub_leave_route(employee, leave_type=None):
 	# --------------------------------------------------------
 	# OTHER LEAVE -> EXPLICIT ALTERNATE HR
 	# --------------------------------------------------------
-	if (
-		emp.hr_leave_approver
-		and emp.hr_leave_approver != emp.user_id
-	):
-		return _rub_leave_route_payload(
-			emp.hr_leave_approver,
-			"Alternate HR",
-		)
+	if not leave_type in ("Casual Leave", "Annual Leave") :
+		# if (
+		# 	emp.hr_leave_approver
+		# 	and emp.hr_leave_approver != emp.user_id
+		# ):
+
+		# 	user_id = frappe.db.get_value(
+		# 		"Employee",
+		# 		emp.hr_leave_approver,
+		# 		"user_id",
+		# 	)
+		# 	return _rub_leave_route_payload(
+		# 		user_id,
+		# 		"Alternate HR",
+			# )
 
 	# --------------------------------------------------------
 	# NORMAL EMPLOYEE -> HR APPROVER
 	# --------------------------------------------------------
-	if (
-		emp.hr_approver
-		and emp.hr_approver != emp.user_id
-	):
-		return _rub_leave_route_payload(
-			emp.hr_approver,
-			"HR Approver",
-		)
+		if (
+			emp.hr_approver
+			and emp.hr_approver != emp.user_id
+		):
+			user_id = frappe.db.get_value(
+					"Employee",
+					emp.hr_approver,
+					"user_id",
+				)
+		
+			return _rub_leave_route_payload(
+				user_id,
+				"HR Approver",
+			)
 
 	# --------------------------------------------------------
 	# HR EMPLOYEE -> SUBSTITUTE HR IN SAME COMPANY
@@ -669,6 +683,7 @@ class CustomWorkflow:
 			if frappe.session.user != self.doc.owner:
 				frappe.throw("Only {} can apply this leave".format(self.doc.owner))
 			route = get_rub_leave_route(self.doc.employee, self.doc.leave_type)
+			frappe.throw(str(route), title="Leave Route")
 			if not route.get("user"):
 				frappe.throw("No valid leave approver found for this employee and leave type.")
 			self.doc.leave_approver = route["user"]
