@@ -683,7 +683,6 @@ class CustomWorkflow:
 			if frappe.session.user != self.doc.owner:
 				frappe.throw("Only {} can apply this leave".format(self.doc.owner))
 			route = get_rub_leave_route(self.doc.employee, self.doc.leave_type)
-			frappe.throw(str(route), title="Leave Route")
 			if not route.get("user"):
 				frappe.throw("No valid leave approver found for this employee and leave type.")
 			self.doc.leave_approver = route["user"]
