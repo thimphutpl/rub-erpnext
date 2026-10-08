@@ -20,7 +20,7 @@ from erpnext.accounts.doctype.repost_accounting_ledger.repost_accounting_ledger 
 from erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category import (
 	get_party_tax_withholding_details,
 )
-
+from hrms.payroll.doctype.salary_structure.salary_structure import roundoff
 from erpnext.accounts.utils import get_tds_account,get_account_type, check_clearance_date
 from erpnext.accounts.party import get_party_account
 from erpnext.accounts.utils import (
@@ -1316,7 +1316,7 @@ class JournalEntry(AccountsController):
 					tax_amount_dr, tax_amount_cr = 0, 0
 					
 					if tax_account:
-						tax_amount_in_account_currency = flt(d.tax_amount_in_account_currency)
+						tax_amount_in_account_currency = roundoff(flt(d.tax_amount_in_account_currency))
 						tax_amount = flt(d.tax_amount)
 
 						if(d.add_deduct_tax == "Add"):
@@ -1350,9 +1350,9 @@ class JournalEntry(AccountsController):
 								"credit": flt(abs(tax_amount_cr), d.precision("tax_amount")) if tax_account \
 									else flt(d.credit, d.precision("credit")),
 								"account_currency": d.account_currency,
-								"debit_in_account_currency": flt(abs(tax_amount_in_account_currency_dr), d.precision("tax_amount_in_account_currency")) \
+								"debit_in_account_currency": roundoff(flt(abs(tax_amount_in_account_currency_dr), d.precision("tax_amount_in_account_currency"))) \
 									if tax_account else flt(d.debit_in_account_currency, d.precision("debit_in_account_currency")),
-								"credit_in_account_currency": flt(abs(tax_amount_in_account_currency_cr), d.precision("tax_amount_in_account_currency")) \
+								"credit_in_account_currency": roundoff(flt(abs(tax_amount_in_account_currency_cr), d.precision("tax_amount_in_account_currency"))) \
 									if tax_account else flt(d.credit_in_account_currency, d.precision("credit_in_account_currency")),
 								"against_voucher_type": d.reference_type,
 								"against_voucher": d.reference_name,

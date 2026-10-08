@@ -822,7 +822,7 @@ $.extend(erpnext.journal_entry, {
 		frappe.model.set_value(cdt, cdn, "taxable_amount",
 			flt(flt(row.taxable_amount_in_account_currency)*row.exchange_rate, precision("taxable_amount", row)));
 
-		tax_amount = flt(row.taxable_amount_in_account_currency) * flt(row.rate) / 100;
+		tax_amount = Math.round(flt(row.taxable_amount_in_account_currency) * flt(row.rate) / 100);
 		tax_amount = (cint(frm.doc.apply_tds) && cint(row.apply_tds) && row.add_deduct_tax) ? flt(tax_amount) : 0;
 
 		frappe.model.set_value(cdt, cdn, "tax_amount_in_account_currency",
