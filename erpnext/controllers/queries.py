@@ -702,24 +702,24 @@ def filter_module_enrolment_key(doctype, txt, searchfield, start, page_len, filt
 		),
 		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
 	)
-	return frappe.db.sql(
-		"""select mek.name, mek.module from `tabModule Enrolment Key` mek
-		where
-			mek.student_batch = '{batch}'
-			and mek.docstatus = 1
-			or {scond})
-		order by
-			mek.module asc
-		limit %(page_len)s offset %(start)s""".format(
-			batch = student_batch,
-			academic_term = current_academic_term,
-			**{
-				"key": searchfield,
-				"scond": searchfields,
-			}
-		),
-		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
-	)
+	# return frappe.db.sql(
+	# 	"""select mek.name, mek.module from `tabModule Enrolment Key` mek
+	# 	where
+	# 		mek.student_batch = '{batch}'
+	# 		and mek.docstatus = 1
+	# 		or {scond})
+	# 	order by
+	# 		mek.module asc
+	# 	limit %(page_len)s offset %(start)s""".format(
+	# 		batch = student_batch,
+	# 		academic_term = current_academic_term,
+	# 		**{
+	# 			"key": searchfield,
+	# 			"scond": searchfields,
+	# 		}
+	# 	),
+	# 	{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
+	# )
 
 # @frappe.whitelist()
 # @frappe.validate_and_sanitize_search_inputs
