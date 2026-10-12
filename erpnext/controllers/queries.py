@@ -200,8 +200,8 @@ def filter_college_programme_modules(doctype, txt, searchfield, start, page_len,
 		frappe.throw("Please select College")
 	if not filters.get("programme"):
 		frappe.throw("Please select Programme")
-	if not filters.get("academic_session"): #filtered academic session but thrown academic term intentionally
-		frappe.throw("Please select Academic Term")
+	# if not filters.get("academic_session"): #filtered academic session but thrown academic term intentionally
+	# 	frappe.throw("Please select Academic Term")
 	if filters.get("check_tutor") == 1:
 		if frappe.db.exists("Employee", {"user_id": filters.get("user")}):
 			tutor_cond = " and mti.tutor = '{}'".format(frappe.db.get_value("Employee", {"user_id": filters.get("user")}, "name"))
@@ -217,7 +217,6 @@ def filter_college_programme_modules(doctype, txt, searchfield, start, page_len,
 			and mti.parent = m.name
 			and c.college = '{company}'
 			and c.programme = '{programme}'
-			and c.module_semester in ({semesters})
 			{tutor_cond}
 			and (m.{key} like %(txt)s
 				or m.name like %(txt)s
@@ -229,7 +228,6 @@ def filter_college_programme_modules(doctype, txt, searchfield, start, page_len,
 			m.name, c.college""".format(
 			company = filters.get("college"),
 			programme = filters.get("programme"),
-			semesters = ", ".join("'"+m+"'" for m in semesters),
 			tutor_cond = tutor_cond,
 			**{
 				"key": searchfield,
