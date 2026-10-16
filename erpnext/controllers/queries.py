@@ -300,6 +300,119 @@ def filter_college_programme_modules(doctype, txt, searchfield, start, page_len,
 # 		{"txt": "%%%s%%" % txt, "_txt": txt.replace("%", ""), "start": start, "page_len": page_len},
 # 	)
 
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def filter_timetable_schedule_entries_combined(
+	doctype, txt, searchfield, start, page_len, filters
+):
+	if not filters.get("college"):
+		frappe.throw("Please select College")
+
+	if not filters.get("date"):
+		frappe.throw("Please select Date")
+	if not filters.get("session_type"):
+		frappe.throw("Please select Session Type")
+
+	college = filters.get("college")
+	date = filters.get("date")
+	session_type=filters.get("session_type")
+
+	day = datetime.strptime(date, "%Y-%m-%d").strftime("%A")
+
+	# ---------------------------------------------------------
+	# Check timetable exists for the selected college
+	# ---------------------------------------------------------
+	if not frappe.db.exists(
+		"Timetable Schedule Entry",
+		{"college": college}
+	):
+		frappe.msgprint(
+			"No Timetable Schedule Entry found for College: {}".format(
+				college
+			)
+		)
+		return []
+
+	# ---------------------------------------------------------
+	# Search fields
+	# ---------------------------------------------------------
+	searchfields = frappe.get_meta(doctype).get_search_fields()
+
+	search_conditions = []
+
+	for field in searchfields:
+		# Only search valid fields on Timetable Schedule Entry
+		if frappe.get_meta("Timetable Schedule Entry").has_field(field):
+			search_conditions.append(
+				f"tse.`{field}` LIKE %(txt)s"
+			)
+
+	search_conditions.extend([
+		"tse.name LIKE %(txt)s",
+		"tse.college LIKE %(txt)s",
+		"tse.programme LIKE %(txt)s",
+		"tse.module_code LIKE %(txt)s",
+	])
+
+	search_condition = " OR ".join(search_conditions)
+
+	# ---------------------------------------------------------
+	# Combined timetable query
+	# ---------------------------------------------------------
+	return frappe.db.sql(
+		f"""
+		SELECT DISTINCT
+			tse.name,
+			tse.programme,
+			tse.module_code,
+			tcap.from_time,
+			tcap.to_time,
+			tse.class_type
+		FROM `tabTimetable Schedule Entry` tse
+
+		INNER JOIN `tabTimetable Constraint Academic Periods` tcap
+			ON tse.name = tcap.parent
+
+		WHERE
+			tse.college = %(college)s
+
+			AND tse.session_type = %(session_type)s
+
+			AND tcap.day = %(day)s
+
+			AND EXISTS (
+				SELECT 1
+				FROM `tabAcademic Term` at
+				WHERE
+					at.college = tse.college
+					AND at.term_start_date <= %(date)s
+					AND at.term_end_date >= %(date)s
+			)
+
+			AND (
+				{search_condition}
+			)
+
+		ORDER BY
+			tse.name,
+			tse.college
+
+		LIMIT %(page_len)s
+		OFFSET %(start)s
+		""",
+		{
+			"college": college,
+			"day": day,
+			"date": date,
+			"session_type":session_type,
+			"txt": "%{}%".format(txt or ""),
+			"start": start,
+			"page_len": page_len,
+		},
+	)
+
+
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def filter_timetable_schedule_entries(
