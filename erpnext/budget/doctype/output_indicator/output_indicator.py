@@ -73,7 +73,7 @@ def fetch_budgetplan(from_year, to_year, college):
 		ON pa.project = pp.name
 		LEFT JOIN `tabPlanning Output` po
 		ON pp.planning_output = po.name
-		LEFT JOIN `tabPlanning Activities Target Setup` pats
+		INNER JOIN `tabPlanning Activities Target Setup` pats
 			ON pa.name = pats.activities
 			AND pats.disabled = 0
 			AND pats.college = %s
