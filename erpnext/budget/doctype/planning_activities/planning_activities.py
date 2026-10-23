@@ -12,6 +12,7 @@ class PlanningActivities(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
+		from erpnext.budget.doctype.ignore_pa_for_college.ignore_pa_for_college import IgnorePAForCollege
 		from erpnext.budget.doctype.output_category_item.output_category_item import OutputCategoryItem
 		from frappe.types import DF
 
@@ -20,6 +21,7 @@ class PlanningActivities(Document):
 		disabled: DF.Check
 		from_date: DF.Date
 		funding_source: DF.Link | None
+		ignore_pa_for_college: DF.Table[IgnorePAForCollege]
 		is_capital: DF.Check
 		is_current: DF.Check
 		items: DF.Table[OutputCategoryItem]

@@ -46,6 +46,35 @@ class ApprovedBudget(Document):
 	def on_submit(self):
 		self.map_initial_from_approved()
 
+	def on_cancel(self):
+		self.check_supplementary_budget()
+		self.check_reappropiation_budget()
+		self.check_withdrawal_budget()
+
+	def check_supplementary_budget(self):
+		sb = frappe.db.sql('''
+			SELECT name FROM `tabSupplementary Budgets` 
+			WHERE from_year = %s and to_year = %s and college = %s and cost_center = %s and docstatus = 1
+		''',(self.from_year, self.to_year, self.college, self.cost_center), as_dict=True)
+		if sb:
+			frappe.throw("Supplementary Budgets exists for cost_center <b>{0}</b> for year <b>{1}</b> - <b>{2}</b> of <b>{3}</b>".format(self.cost_center, self.from_year, self.to_year, self.college))
+
+	def check_reappropiation_budget(self):
+		sb = frappe.db.sql('''
+			SELECT name FROM `tabBudget Reappropriations` 
+			WHERE from_year = %s and to_year = %s and college = %s and cost_center = %s and docstatus = 1
+		''',(self.from_year, self.to_year, self.college, self.cost_center), as_dict=True)
+		if sb:
+			frappe.throw("Budget Reappropriations exists for cost_center <b>{0}</b> for year <b>{1}</b> - <b>{2}</b> of <b>{3}</b>".format(self.cost_center, self.from_year, self.to_year, self.college))
+
+	def check_withdrawal_budget(self):
+		sb = frappe.db.sql('''
+			SELECT name FROM `tabBudget Withdrawal` 
+			WHERE from_year = %s and to_year = %s and college = %s and cost_center = %s and docstatus = 1
+		''',(self.from_year, self.to_year, self.college, self.cost_center), as_dict=True)
+		if sb:
+			frappe.throw("Budget Withdrawal exists for cost_center <b>{0}</b> for year <b>{1}</b> - <b>{2}</b> of <b>{3}</b>".format(self.cost_center, self.from_year, self.to_year, self.college))
+
 	def validate_approved_budget(self):
 		for row in self.items:
 			# if not row.approved_budget or row.approved_budget <= 0:

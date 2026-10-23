@@ -21,6 +21,7 @@ class AdditionalSubActivities(Document):
 		disabled: DF.Check
 		from_year: DF.Link
 		include_in_apa: DF.Check
+		is_not_range: DF.Check
 		items: DF.Table[OutputCategoryItem]
 		sub_activity: DF.SmallText
 		to_year: DF.Link

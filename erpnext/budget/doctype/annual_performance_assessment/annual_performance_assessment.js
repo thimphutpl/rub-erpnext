@@ -126,7 +126,7 @@ frappe.ui.form.on("Annual Performance Assessment", {
 frappe.ui.form.on("APA Outcome Item", {
     raw_rating: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
-		if (row.raw_rating) {
+		// if (row.raw_rating) {
 			frappe.call({
                 method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.calculate_outcome_irt_rating",
                 args: {
@@ -138,45 +138,30 @@ frappe.ui.form.on("APA Outcome Item", {
                         college: frm.doc.college,
                     },
                     callback: function(r) {
-                        if (r.message) {
-                            frappe.model.set_value(cdt, cdn, "irt_rating", r.message);        
+                        if (r.message && r.message.irt_rating > 0) {
+                            frappe.model.set_value(cdt, cdn, "irt_rating", r.message.irt_rating);        
+                            frappe.model.set_value(cdt, cdn, "category", r.message.category);        
                         }else{
-                            frappe.model.set_value(cdt, cdn, "irt_rating", "");         
+                            frappe.model.set_value(cdt, cdn, "irt_rating", 0); 
+                            frappe.model.set_value(cdt, cdn, "category", "");        
                         }
-                        if (row.irt_rating){
-                            frappe.trigger("irt_rating")
-                        }
+                        // if (row.irt_rating > 0){
+                        //     irt_rating(frm, cdt, cdn)
+                        //     // frappe.trigger("irt_rating")
+                        // }
                         frm.refresh_field("irt_rating");
-                    }
-            })
-		} 
-	},
-    irt_rating: function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn];
-        if (row.irt_rating) {
-			frappe.call({
-                method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.get_category_for_irt_rating",
-                args: {
-                        irt_rating: row.irt_rating,
-                        unit: row.unit
-                    },
-                    callback: function(r) {
-                        if (r.message) {
-                            frappe.model.set_value(cdt, cdn, "category", r.message);
-                        }else{
-                            frappe.model.set_value(cdt, cdn, "irt_rating", "");   
-                        }
                         frm.refresh_field("category");
                     }
             })
-		}
-    }
+		// } 
+	},
+    
 });
 
 frappe.ui.form.on("APA Output Item", {
     raw_rating: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
-		if (row.raw_rating) {
+		// if (row.raw_rating) {
 			frappe.call({
                 method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.calculate_output_irt_rating",
                 args: {
@@ -191,49 +176,31 @@ frappe.ui.form.on("APA Output Item", {
                     },
                 callback: function(r) {
                     if (r.message) {
-                        if (r.message) {
+                        if (r.message.irt_rating && r.message.irt_rating > 0) {
                             frappe.model.set_value(cdt, cdn, "irt_rating", r.message.irt_rating);        
                             frappe.model.set_value(cdt, cdn, "weighted_score", r.message.weighted_score);
+                            frappe.model.set_value(cdt, cdn, "category", r.message.category);
                         }else{
-                            frappe.model.set_value(cdt, cdn, "irt_rating", ""); 
-                            frappe.model.set_value(cdt, cdn, "weighted_score", "");                                               
+                            frappe.model.set_value(cdt, cdn, "irt_rating", "0"); 
+                            frappe.model.set_value(cdt, cdn, "weighted_score", 0);
+                            frappe.model.set_value(cdt, cdn, "category", "");                                               
                         }
-                        if (row.irt_rating){
-                            frappe.trigger("irt_rating")
-                        }                                  
+                        // if (row.irt_rating > 0){
+                        //     irt_rating(frm, cdt, cdn)
+                        // }                                  
                         frm.refresh_field("irt_rating");
                         frm.refresh_field("weighted_score");
+                        frm.refresh_field("category");
                     }
                 }
             })
-		} 
 	},
-    irt_rating: function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn];
-        if (row.irt_rating) {
-			frappe.call({
-                method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.get_category_for_irt_rating",
-                args: {
-                        irt_rating: row.irt_rating,
-                        unit: row.unit
-                    },
-                callback: function(r) {
-                    if (r.message) {
-                        frappe.model.set_value(cdt, cdn, "category", r.message);
-                    }else{
-                        frappe.model.set_value(cdt, cdn, "irt_rating", "");   
-                    }
-                    frm.refresh_field("category");
-                }
-            })
-		}
-    }
 });
 
 frappe.ui.form.on("Annual Performance Extra Item", {
     raw_rating: function (frm, cdt, cdn) {
 		var row = locals[cdt][cdn];
-		if (row.raw_rating) {
+		// if (row.raw_rating) {
 			frappe.call({
                 method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.calculate_extra_output_irt_rating",
                 args: {
@@ -249,39 +216,45 @@ frappe.ui.form.on("Annual Performance Extra Item", {
                     },
                 callback: function(r) {
                     if (r.message) {
-                        frappe.model.set_value(cdt, cdn, "irt_rating", r.message.irt_rating);        
-                        frappe.model.set_value(cdt, cdn, "weighted_score", r.message.weighted_score); 
-                    }else{
-                        frappe.model.set_value(cdt, cdn, "irt_rating", ""); 
-                        frappe.model.set_value(cdt, cdn, "weighted_score", "");                                               
+                        if (r.message.irt_rating && r.message.irt_rating > 0) {
+                            frappe.model.set_value(cdt, cdn, "irt_rating", r.message.irt_rating);        
+                            frappe.model.set_value(cdt, cdn, "weighted_score", r.message.weighted_score);
+                            frappe.model.set_value(cdt, cdn, "category", r.message.category);
+                        }else{
+                            frappe.model.set_value(cdt, cdn, "irt_rating", "0"); 
+                            frappe.model.set_value(cdt, cdn, "weighted_score", 0);
+                            frappe.model.set_value(cdt, cdn, "category", "");                                               
+                        }
+                        // if (row.irt_rating > 0){
+                        //     irt_rating(frm, cdt, cdn)
+                        //     // frappe.trigger("irt_rating")
+                        // }                                  
+                        frm.refresh_field("irt_rating");
+                        frm.refresh_field("weighted_score");
+                        frm.refresh_field("category");
                     }
-                    if (row.irt_rating){
-                        frappe.trigger("irt_rating")
-                    }                                      
-                    frm.refresh_field("irt_rating");
-                    frm.refresh_field("weighted_score");
                 }
             })
-		} 
+		// } 
 	},
-    irt_rating: function (frm, cdt, cdn) {
-		var row = locals[cdt][cdn];
-        if (row.irt_rating) {
-			frappe.call({
-                method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.get_category_for_irt_rating",
-                args: {
-                        irt_rating: row.irt_rating,
-                        unit: row.unit
-                    },
+});
+function irt_rating(frm, cdt, cdn) {
+    var row = locals[cdt][cdn];
+    if (row.irt_rating) {
+        frappe.call({
+            method:"erpnext.budget.doctype.annual_performance_assessment.annual_performance_assessment.get_category_for_irt_rating",
+            args: {
+                    irt_rating: row.irt_rating,
+                    unit: row.unit
+                },
                 callback: function(r) {
                     if (r.message) {
                         frappe.model.set_value(cdt, cdn, "category", r.message);
                     }else{
-                        frappe.model.set_value(cdt, cdn, "irt_rating", "");   
+                        frappe.model.set_value(cdt, cdn, "category", "");   
                     }
                     frm.refresh_field("category");
                 }
-            })
-		}
+        })
     }
-});
+}

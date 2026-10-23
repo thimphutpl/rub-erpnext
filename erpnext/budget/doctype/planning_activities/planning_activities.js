@@ -53,3 +53,16 @@ function toggle_child_fields(frm) {
 
     frm.refresh_field("items");
 }
+frappe.ui.form.on("Ignore PA For College", {
+
+    form_render(frm, cdt, cdn) {
+        frm.set_query("department", "ignore_pa_for_college", function(doc, cdt, cdn) {
+            return {
+                filters: {
+                    company: "Office of Vice Chancellor",
+                    include_in_apa: 1
+                }
+            };
+        });
+    }
+});

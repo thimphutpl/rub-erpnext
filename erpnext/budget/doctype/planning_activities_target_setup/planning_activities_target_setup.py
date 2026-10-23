@@ -17,12 +17,15 @@ class PlanningActivitiesTargetSetup(Document):
 
 		activities: DF.Link
 		college: DF.Link
+		department: DF.Link | None
 		disabled: DF.Check
 		from_year: DF.Link
+		is_not_range: DF.Check
 		items: DF.Table[OutputCategoryItem]
 		to_year: DF.Link
 		unit: DF.Link
-		
+	# end: auto-generated types
+	
 	def autoname(self):
 		college_abbr = frappe.get_value("Company", self.college, "abbr")
 		self.name = make_autoname(f"PATS/{college_abbr}/{self.from_year}-{self.to_year}/.####")

@@ -19,6 +19,7 @@ class APAMidTermReview(Document):
 
 		amended_from: DF.Link | None
 		college: DF.Link
+		department: DF.Link | None
 		from_year: DF.Link
 		outcome_items: DF.Table[APATargetOutcomeItem]
 		output_extra_items: DF.Table[APAOutputExtraItem]
@@ -31,76 +32,172 @@ class APAMidTermReview(Document):
 		self.name = make_autoname(f"Mid Term Review/{college_abbr}/{self.from_year}-{self.to_year}/.##")
 
 @frappe.whitelist()
-def get_target_setup_details(from_year, to_year, college):
-	if not from_year or not to_year or not college:
-		frappe.throw("Select From Year and To Year and College")
-	output = frappe.db.sql('''
-		SELECT  
-			atoi.output_no,
-			atoi.project_no,
-			atoi.activity_link,
-			atoi.sub_activity_no,
-			atoi.sub_activity,
-			atoi.unit,
-			atoi.weightage,
-			atoi.output,
-			atoi.project,
-			atoi.activities,
-			atoi.target,
-			atoi.justification
-		FROM `tabAPA Target Setup` ats
-		INNER JOIN `tabAPA Target Output Item` atoi ON ats.name = atoi.parent
-		WHERE ats.from_year = %s AND ats.to_year = %s AND atoi.parenttype = "APA Target Setup" AND ats.college = %s AND ats.docstatus = 1
-		ORDER BY atoi.idx
-	''',(from_year, to_year, college), as_dict=True)
-
-	if not output:
-		frappe.throw("No Output Target Setup found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))
-
-	output_extra = frappe.db.sql('''
-		SELECT  
-			atoi.output_no,
-			atoi.project_no,
-			atoi.sub_activity,
-			atoi.unit,
-			atoi.weightage,
-			atoi.output,
-			atoi.project,
-			atoi.activities,
-			atoi.activity_link,
-			atoi.sub_activity_link,
-			atoi.target,
-			atoi.justification
-		FROM `tabAPA Target Setup` ats
-		INNER JOIN `tabAPA Output Extra Item` atoi ON ats.name = atoi.parent
-		WHERE ats.from_year = %s and ats.to_year = %s AND atoi.parenttype = "APA Target Setup" AND ats.college = %s AND ats.docstatus = 1
-		ORDER BY atoi.idx
-	''',(from_year, to_year, college), as_dict=True)
-
-	ignore_colleges = frappe.db.sql("""
-		SELECT
-			college
-		FROM `tabIgnore APA Outcome`
-		WHERE parent = 'APA Settings'
-	""", as_dict=True)
-	
+def get_target_setup_details(from_year, to_year, college, department = None):
+	ovc_condition = (college != "Office of Vice Chancellor") or (college == "Office of Vice Chancellor" and department)
+	if not from_year or not to_year or not college or not ovc_condition:
+		frappe.throw("Select From Year, To Year and College and if OVC select Department")
+	output = None
+	output_extra = None
 	outcome = None
-	if college not in [d["college"] for d in ignore_colleges]:
-		outcome = frappe.db.sql('''
+
+	conditions = ""
+	values = [from_year, to_year, college]
+
+	if college == "Office of Vice Chancellor":
+		conditions = " AND amtacr.department = %s"
+		values.append(department)
+
+	if frappe.db.exists("APA Mid Term Activity Change Request", {"from_year": from_year, "to_year": to_year, "college": college, "docstatus": 1, "workflow_state": "Approved"}):
+		output = frappe.db.sql(f'''
 			SELECT  
-				atoi.outcome,
+				po.serial_number as output_no,
+				pp.serial_number as project_no,
+				mtcoi.activity_link,
+				mtcoi.sub_activity_no,
+				mtcoi.unit,
+				mtcoi.weightage,
+				po.output,
+				pp.project,
+				mtcoi.target,
+				mtcoi.justification
+			FROM `tabAPA Mid Term Activity Change Request` amtacr
+			INNER JOIN `tabMid Term CR Output Item` mtcoi
+			ON mtcoi.parent = amtacr.name
+			AND mtcoi.drop_activity = 0
+			INNER JOIN `tabPlanning Activities` pa 
+			ON mtcoi.activity_link = pa.name
+			INNER JOIN `tabPlanning Project` pp 
+			ON pp.name = pa.project
+			INNER JOIN `tabPlanning Output` po
+			ON po.name = pp.planning_output
+			WHERE amtacr.from_year = %s and amtacr.to_year = %s AND amtacr.college = %s AND amtacr.docstatus = 1 AND amtacr.workflow_state = "Approved" {conditions}
+			ORDER BY mtcoi.idx
+		''',tuple(values), as_dict=True)
+
+		if not output:
+			frappe.throw("No Output Target Setup found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))
+
+		output_extra = frappe.db.sql(f'''
+			SELECT  
+				po.serial_number as output_no,
+				pp.serial_number as project_no,
+				mtcoi.unit,
+				mtcoi.weightage,
+				po.output,
+				pp.project,
+				mtcoi.activity_link,
+				mtcoi.sub_activity_link,
+				mtcoi.target,
+				mtcoi.justification
+			FROM `tabAPA Mid Term Activity Change Request` amtacr
+			INNER JOIN `tabMid Term CR Output Extra Item` mtcoi
+			ON mtcoi.parent = amtacr.name
+			AND mtcoi.drop_activity = 0
+			INNER JOIN `tabAdditional Activities` pa 
+			ON mtcoi.activity_link = pa.name
+			INNER JOIN `tabPlanning Project` pp 
+			ON pp.name = pa.project
+			INNER JOIN `tabPlanning Output` po
+			ON po.name = pp.planning_output
+			WHERE amtacr.from_year = %s and amtacr.to_year = %s AND amtacr.college = %s AND amtacr.docstatus = 1 AND amtacr.workflow_state = "Approved" {conditions}
+			ORDER BY mtcoi.idx
+		''',tuple(values), as_dict=True)
+
+		ignore_colleges = frappe.db.sql("""
+			SELECT
+				college
+			FROM `tabIgnore APA Outcome`
+			WHERE parent = 'APA Settings'
+		""", as_dict=True)
+		
+		# outcome = None
+		if college not in [d["college"] for d in ignore_colleges]:
+			outcome = frappe.db.sql('''
+				SELECT  
+					mtcoi.outcome,
+					mtcoi.unit,
+					mtcoi.weightage,
+					mtcoi.target,
+					mtcoi.justification
+				FROM `tabAPA Mid Term Activity Change Request` amtacr
+				INNER JOIN `tabMid Term CR Outcome Item` mtcoi
+				ON mtcoi.parent = amtacr.name
+				AND mtcoi.drop_activity = 0
+				WHERE amtacr.from_year = %s and amtacr.to_year = %s AND amtacr.college = %s AND amtacr.docstatus = 1 AND amtacr.workflow_state = "Approved"
+				ORDER BY mtcoi.idx
+			''',(from_year, to_year, college), as_dict=True)
+
+			# if not outcome:
+			# 	frappe.throw("No Outcome Target Setup found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))
+	else:
+		output = frappe.db.sql('''
+			SELECT  
+				atoi.output_no,
+				atoi.project_no,
+				atoi.activity_link,
+				atoi.sub_activity_no,
+				atoi.sub_activity,
 				atoi.unit,
 				atoi.weightage,
+				atoi.output,
+				atoi.project,
+				atoi.activities,
 				atoi.target,
 				atoi.justification
 			FROM `tabAPA Target Setup` ats
-			INNER JOIN `tabAPA Target Outcome Item` atoi ON ats.name = atoi.parent
+			INNER JOIN `tabAPA Target Output Item` atoi ON ats.name = atoi.parent
 			WHERE ats.from_year = %s AND ats.to_year = %s AND atoi.parenttype = "APA Target Setup" AND ats.college = %s AND ats.docstatus = 1
 			ORDER BY atoi.idx
 		''',(from_year, to_year, college), as_dict=True)
 
-		if not outcome:
-			frappe.throw("No Outcome Target Setup found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))
+		if not output:
+			frappe.throw("No Output Target Setup found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))
+
+		output_extra = frappe.db.sql('''
+			SELECT  
+				atoi.output_no,
+				atoi.project_no,
+				atoi.sub_activity,
+				atoi.unit,
+				atoi.weightage,
+				atoi.output,
+				atoi.project,
+				atoi.activities,
+				atoi.activity_link,
+				atoi.sub_activity_link,
+				atoi.target,
+				atoi.justification
+			FROM `tabAPA Target Setup` ats
+			INNER JOIN `tabAPA Output Extra Item` atoi ON ats.name = atoi.parent
+			WHERE ats.from_year = %s and ats.to_year = %s AND atoi.parenttype = "APA Target Setup" AND ats.college = %s AND ats.docstatus = 1
+			ORDER BY atoi.idx
+		''',(from_year, to_year, college), as_dict=True)
+
+		ignore_colleges = frappe.db.sql("""
+			SELECT
+				college
+			FROM `tabIgnore APA Outcome`
+			WHERE parent = 'APA Settings'
+		""", as_dict=True)
+		
+		# outcome = None
+		if college not in [d["college"] for d in ignore_colleges]:
+			outcome = frappe.db.sql('''
+				SELECT  
+					atoi.outcome,
+					atoi.unit,
+					atoi.weightage,
+					atoi.target,
+					atoi.justification
+				FROM `tabAPA Target Setup` ats
+				INNER JOIN `tabAPA Target Outcome Item` atoi ON ats.name = atoi.parent
+				WHERE ats.from_year = %s AND ats.to_year = %s AND atoi.parenttype = "APA Target Setup" AND ats.college = %s AND ats.docstatus = 1
+				ORDER BY atoi.idx
+			''',(from_year, to_year, college), as_dict=True)
+
+			# if not outcome:
+			# 	frappe.throw("No Outcome Target Setup found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))
+	
 
 	return {
 		"output": output,

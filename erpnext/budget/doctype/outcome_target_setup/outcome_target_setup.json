@@ -10,6 +10,7 @@
   "outcome",
   "unit",
   "disabled",
+  "is_not_range",
   "column_break_tses",
   "to_year",
   "definition",
@@ -80,12 +81,18 @@
    "fieldname": "definition",
    "fieldtype": "Long Text",
    "label": "Definition"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_not_range",
+   "fieldtype": "Check",
+   "label": "Is Not Range"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-08-27 14:14:49.900373",
+ "modified": "2026-10-20 15:44:57.794852",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Outcome Target Setup",

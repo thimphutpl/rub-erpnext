@@ -19,6 +19,7 @@ class OutcomeTargetSetup(Document):
 		definition: DF.LongText | None
 		disabled: DF.Check
 		from_year: DF.Link
+		is_not_range: DF.Check
 		items: DF.Table[OutcomeIndicatorItem]
 		outcome: DF.Link
 		to_year: DF.Link

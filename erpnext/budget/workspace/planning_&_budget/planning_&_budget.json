@@ -312,7 +312,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Master and Settings",
-   "link_count": 10,
+   "link_count": 11,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -370,6 +370,16 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Sub Activities List",
+   "link_count": 0,
+   "link_to": "Sub Activities List",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "APA Sub Activities",
    "link_count": 0,
    "link_to": "APA Sub Activities",
@@ -418,7 +428,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-08-24 09:37:15.435161",
+ "modified": "2026-10-20 16:00:13.676243",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Planning & Budget",

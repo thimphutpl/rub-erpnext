@@ -48,143 +48,96 @@ def fetch_budgetplan(from_year, to_year, college):
 	if not from_year or not to_year or not college:
 		frappe.throw("Select From Year, To Year and College")
 	
-	approved_budget = frappe.db.sql('''
-		SELECT  
-			name
-		FROM `tabApproved Budget`
-		WHERE from_year = %s and to_year = %s and college = %s and docstatus = 1 LIMIT 1
-	''',(from_year, to_year, college), as_dict=True)
+	# approved_budget = frappe.db.sql('''
+	# 	SELECT  
+	# 		name
+	# 	FROM `tabApproved Budget`
+	# 	WHERE from_year = %s and to_year = %s and college = %s and docstatus = 1 LIMIT 1
+	# ''',(from_year, to_year, college), as_dict=True)
 
-	if not approved_budget:
-		frappe.throw("No approved budget found from year {0} to {1} for {2}".format(from_year, to_year, college))
+	# if not approved_budget:
+	# 	frappe.throw("No approved budget found from year {0} to {1} for {2}".format(from_year, to_year, college))
 	approved_budget_items = frappe.db.sql("""
 		SELECT  
-			abi.output_no,
-			abi.project_no,
-			abi.activity_link,
+			po.serial_number as output_no,
+			pp.serial_number as project_no,
+			pa.name as activity_link,
 			sa.name AS sub_activity_no,
 			COALESCE(sa.sub_activity, NULL) AS sub_activity,
-			COALESCE(sa.unit, pa.unit) AS unit,		
-			abi.output,
-			abi.project,
-			abi.activities
-		FROM `tabApproved Budget Item` abi
-		LEFT JOIN `tabPlanning Activities` pa
-			ON pa.name = abi.activity_link
-			AND pa.disabled = 0
+			COALESCE(sa.unit, pats.unit) AS unit,		
+			po.output,
+			pp.project,
+			pa.activities
+		FROM `tabPlanning Activities` pa
+		LEFT JOIN `tabPlanning Project` pp
+		ON pa.project = pp.name
+		LEFT JOIN `tabPlanning Output` po
+		ON pp.planning_output = po.name
+		LEFT JOIN `tabPlanning Activities Target Setup` pats
+			ON pa.name = pats.activities
+			AND pats.disabled = 0
+			AND pats.college = %s
 		LEFT JOIN `tabAPA Sub Activities` sa
-			ON sa.activity = abi.activity_link
+			ON sa.activity = pa.name
 			AND sa.from_year = %s
 			AND sa.to_year = %s
 			AND sa.college = %s
 			AND sa.disabled = 0
-		WHERE abi.parent = %s
-		ORDER BY abi.idx ASC
-	""", (from_year, to_year, college, approved_budget[0].name), as_dict=True)
+		WHERE %s not in (select college from `tabIgnore PA For College` ipa where ipa.parent = pa.name)
+	""", (college, from_year, to_year, college, college), as_dict=True)
 
 	approved_budget_extra_items = frappe.db.sql("""
 		SELECT
-			abei.output_no,
-			abei.project_no,
-			abei.output,
-			abei.project,
-			abei.activity_link,
-			abei.activities,
-			abei.is_current,
-			abei.is_capital,
+			po.serial_number as output_no,
+			pp.serial_number as project_no,
+			po.output,
+			pp.project,
+			aa.name as activity_link,
+			aa.activities,
+			aa.is_current,
+			aa.is_capital,
 			COALESCE(sa.sub_activity, NULL) AS sub_activity,
-			COALESCE(sa.unit, pa.unit) AS unit,
-			abei.funding_source
-		FROM `tabApproved Budget Extra Item` abei
-		LEFT JOIN `tabAdditional Activities` pa
-			ON pa.name = abei.activity_link
-			AND pa.include_in_apa = 1
+			COALESCE(sa.unit, aa.unit) AS unit,
+			aa.funding_source,
+			sa.name as sub_activity_link
+		FROM `tabAdditional Activities` aa
+		LEFT JOIN `tabPlanning Project` pp
+		ON aa.project = pp.name
+		LEFT JOIN `tabPlanning Output` po
+		ON pp.planning_output = po.name
 		LEFT JOIN `tabAdditional Sub Activities` sa
-			ON sa.activity = abei.activity_link
+			ON sa.activity = aa.name
 			AND sa.from_year = %s
 			AND sa.to_year = %s
 			AND sa.college = %s
-			AND sa.include_in_apa = 1
-		WHERE abei.parent = %s
-		ORDER BY abei.idx ASC
-	""", (from_year, to_year, college, approved_budget[0].name), as_dict=True)
+		WHERE aa.include_in_apa = 1 AND aa.disabled = 0 AND aa.college = %s
+	""", (from_year, to_year, college, college), as_dict=True)
 
-	if not approved_budget_items:
-		frappe.throw("No approved budget found from year {0} to {1} for {2}".format(from_year, to_year, college))
+	# if not approved_budget_items:
+	# 	frappe.throw("No approved budget found from year {0} to {1} for {2}".format(from_year, to_year, college))
 
 	return {
 		"approved_budget_items": approved_budget_items,
 		"approved_budget_extra_items": approved_budget_extra_items
 	} 
 
-# @frappe.whitelist()
-# def fetch_unit(activity_link, sub_activity_no):
-# 	if activity_link:
-# 	unit = f
-# 	approved_budget = frappe.db.sql('''
-# 		SELECT  
-# 			name
-# 		FROM `tabApproved Budget`
-# 		WHERE from_year = %s and to_year = %s and college = %s and docstatus = 1 LIMIT 1
-# 	''',(from_year, to_year, college), as_dict=True)
+@frappe.whitelist()
+def get_activity_weightage(from_year, to_year, college, activity_link):
+	if not activity_link:
+		return
+	
+	output_category_items = frappe.db.sql("""
+		SELECT  
+			oic.category,
+			oic.max,
+			oic.min,
+			oic.unit as grade,
+			oic.raw_rating as score
+		FROM `tabPlanning Activities Target Setup` pats
+		INNER JOIN `tabOutput Category Item` oci
+		ON pats.name = oci.parent
+		WHERE pats.from_year = %s AND pats.to_year = %s AND pats.college = %s AND pats.activities = %s
+		ORDER BY idx ASC
+	""", (from_year, to_year, college, activity_link), as_dict=True)
 
-# 	if not approved_budget:
-# 		frappe.throw("No approved budget found from year {0} to {1} for {2}".format(from_year, to_year, college))
-# 	approved_budget_items = frappe.db.sql("""
-# 		SELECT  
-# 			abi.output_no,
-# 			abi.project_no,
-# 			abi.activity_link,
-# 			sa.name AS sub_activity_no,
-# 			COALESCE(sa.sub_activity, abi.activities) AS sub_activity,
-# 			abi.output,
-# 			abi.project,
-# 			abi.activities
-# 		FROM `tabApproved Budget Item` abi
-# 		LEFT JOIN `tabPlanning Activities` pa
-# 			ON pa.name = abi.activity_link
-# 		LEFT JOIN `tabAPA Sub Activities` sa
-# 			ON sa.activity = abi.activity_link
-# 			AND sa.from_year = %s
-# 			AND sa.to_year = %s
-# 			AND sa.college = %s
-# 		WHERE abi.parent = %s
-# 		ORDER BY abi.idx ASC
-# 	""", (from_year, to_year, college, approved_budget[0].name), as_dict=True)
-
-# 	approved_budget_extra_items = frappe.db.sql("""
-# 		SELECT
-# 			abei.output_no,
-# 			abei.project_no,
-# 			abei.output,
-# 			abei.project,
-# 			abei.activity_link,
-# 			sa.name AS sub_activity_link,
-# 			abei.activities,
-# 			abei.is_current,
-# 			abei.is_capital,
-# 			COALESCE(sa.sub_activity, abei.activities) AS sub_activity,
-# 			CASE
-# 				WHEN abei.name THEN sa.unit
-# 				ELSE pa.unit
-# 			END AS unit,
-# 			abei.funding_source
-# 		FROM `tabApproved Budget Extra Item` abei
-# 		LEFT JOIN `tabAdditional Activities` pa
-# 			ON pa.name = abei.activity_link
-# 		LEFT JOIN `tabAdditional Sub Activities` sa
-# 			ON sa.activity = abei.activity_link
-# 			AND sa.from_year = %s
-# 			AND sa.to_year = %s
-# 			AND sa.college = %s
-# 		WHERE parent = %s
-# 		ORDER BY abei.idx ASC
-# 	""", (from_year, to_year, college, approved_budget[0].name), as_dict=True)
-
-# 	if not approved_budget_items:
-# 		frappe.throw("No approved budget found from year {0} to {1} for {2}".format(from_year, to_year, college))
-
-# 	return {
-# 		"approved_budget_items": approved_budget_items,
-# 		"approved_budget_extra_items": approved_budget_extra_items
-# 	} 
+	return output_category_items

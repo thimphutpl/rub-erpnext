@@ -12,6 +12,14 @@ frappe.ui.form.on("APA Mid Term Review", {
         refresh_field('outcome_items');
         refresh_field('output_items');
         refresh_field('output_extra_items');
+        frm.set_query("department", function () {
+            return {
+                filters: {
+                    company: "Office of Vice Chancellor",
+                    include_in_apa: 1
+                },
+            };
+        });
 	},
     setup(frm) {
         frm.set_query("college", function () {
@@ -49,14 +57,25 @@ frappe.ui.form.on("APA Mid Term Review", {
         frm.clear_table("outcome_items");
         frm.refresh_field("outcome_items");
     },
+    department: function(frm) {
+        frm.trigger("get_target_setup_details");
+        frm.clear_table("output_items");
+        frm.refresh_field("output_items");
+        frm.clear_table("output_extra_items");
+        frm.refresh_field("output_extra_items");
+        frm.clear_table("outcome_items");
+        frm.refresh_field("outcome_items");
+    },
     get_target_setup_details: function(frm){
-        if(frm.doc.from_year && frm.doc.to_year && frm.doc.college){
+        ovc_condition = (frm.doc.college != "Office of Vice Chancellor") || (frm.doc.college == "Office of Vice Chancellor" && frm.doc.department);
+        if(frm.doc.from_year && frm.doc.to_year && frm.doc.college && ovc_condition){
             frappe.call({
                 method:"erpnext.budget.doctype.apa_mid_term_review.apa_mid_term_review.get_target_setup_details",
                 args: {
                     from_year: frm.doc.from_year,
                     to_year: frm.doc.to_year,
                     college: frm.doc.college,
+                    department: frm.doc.department,
                 },
                 callback: function(r) {
                     if (r.message.output) {
@@ -98,7 +117,7 @@ frappe.ui.form.on("APA Mid Term Review", {
                             child.sub_activity_link = row.sub_activity_link
                             child.activity_link = row.activity_link
                             child.unit = row.unit
-                            child.weightage = row.weightage
+                            // child.weightage = row.weightage
                             child.target = row.target
                             child.justification = row.justification
                         });
@@ -114,7 +133,7 @@ frappe.ui.form.on("APA Mid Term Review", {
                             let child = frm.add_child("outcome_items");
                             child.outcome = row.outcome
                             child.unit= row.unit
-                            child.weightage = row.weightage
+                            child.target = row.target
                         });
     
                         frm.refresh_field("outcome_items");

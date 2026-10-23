@@ -1,0 +1,53 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:activity",
+ "creation": "2026-09-15 14:57:38.270474",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "major_activity",
+  "activity"
+ ],
+ "fields": [
+  {
+   "fieldname": "major_activity",
+   "fieldtype": "Link",
+   "label": "Major Activity",
+   "options": "Planning Activities"
+  },
+  {
+   "fieldname": "activity",
+   "fieldtype": "Data",
+   "label": "Activity",
+   "unique": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-09-15 15:52:19.796888",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "Sub Activities List",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

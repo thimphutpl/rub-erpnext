@@ -18,12 +18,14 @@ class AdditionalActivities(Document):
 		activities: DF.SmallText
 		amended_from: DF.Link | None
 		college: DF.Link
+		department: DF.Link | None
 		disabled: DF.Check
 		from_year: DF.Link
 		funding_source: DF.Link | None
 		include_in_apa: DF.Check
 		is_capital: DF.Check
 		is_current: DF.Check
+		is_not_range: DF.Check
 		items: DF.Table[OutputCategoryItem]
 		project: DF.Link
 		to_year: DF.Link

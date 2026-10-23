@@ -34,10 +34,20 @@ class APATargetSetup(Document):
 		self.name = make_autoname(f"APA Target Setup/{college_abbr}/{self.from_year}-{self.to_year}/.##")
 
 @frappe.whitelist()
-def fetch_output_and_outcome(from_year, to_year, college):
-	if not from_year or not to_year or not college:
-		frappe.throw("Select From Year, To Year and College")
-	output = frappe.db.sql('''
+def fetch_output_and_outcome(from_year, to_year, college, department):
+	ovc_condition = (college != "Office of Vice Chancellor") or (college == "Office of Vice Chancellor" and department)
+		# if(from_year && to_year && college && ovc_condition){
+	if not from_year or not to_year or not college or not ovc_condition:
+		frappe.throw("Select From Year, To Year and College and if OVC select Department")
+
+	conditions = ""
+	values = [from_year, to_year, college]
+
+	if college == "Office of Vice Chancellor":
+		conditions = " AND oi.department = %s"
+		values.append(department)
+
+	output = frappe.db.sql(f'''
 		SELECT  
 			oii.output_no,
 			oii.project_no,
@@ -51,14 +61,14 @@ def fetch_output_and_outcome(from_year, to_year, college):
 			oii.sub_activity
 		FROM `tabOutput Indicator` oi 
 		INNER JOIN `tabOutput Indicator Item` oii ON oi.name = oii.parent
-		WHERE oi.from_year = %s and oi.to_year = %s and oi.college = %s
+		WHERE oi.from_year = %s and oi.to_year = %s and oi.college = %s {conditions}
 		ORDER BY oii.idx ASC
-	''',(from_year, to_year, college), as_dict=True)
+	''',tuple(values), as_dict=True)
 
 	if not output:
-		frappe.throw("No Output Indicator found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))
-		
-	output_extra = frappe.db.sql('''
+		frappe.throw("No Output Indicator found from year <b>{0}</b> to <b>{1}</b> for <b>{2}</b>".format(from_year, to_year, college))\
+
+	output_extra = frappe.db.sql(f'''
 		SELECT  
 			oii.output_no,
 			oii.project_no,
@@ -72,9 +82,9 @@ def fetch_output_and_outcome(from_year, to_year, college):
 			oii.sub_activity
 		FROM `tabOutput Indicator` oi 
 		INNER JOIN `tabOutput Extra Item` oii ON oi.name = oii.parent
-		WHERE oi.from_year = %s and oi.to_year = %s and oi.college = %s
+		WHERE oi.from_year = %s and oi.to_year = %s and oi.college = %s {conditions}
 		ORDER BY oii.idx ASC
-	''',(from_year, to_year, college), as_dict=True)
+	''',tuple(values), as_dict=True)
 
 	ignore_colleges = frappe.db.sql("""
 		SELECT
@@ -104,6 +114,44 @@ def fetch_output_and_outcome(from_year, to_year, college):
 		"outcome": outcome,
 		"ignore_colleges": ignore_colleges,
 	}
+
+@frappe.whitelist()
+def get_activity_weightage(from_year, to_year, college, activity_link, sub_activity_no = None):
+	if not activity_link:
+		return
+
+	if sub_activity_no:
+		output_category_items = frappe.db.sql("""
+			SELECT  
+				oci.category,
+				oci.max,
+				oci.min,
+				oci.unit as grade,
+				oci.raw_rating as score
+			FROM `tabAPA Sub Activities` asa
+			INNER JOIN `tabOutput Category Item` oci
+			ON asa.name = oci.parent
+			WHERE asa.from_year = %s AND asa.to_year = %s AND asa.college = %s AND asa.sub_activity = %s 
+			ORDER BY oci.idx ASC
+		""", (from_year, to_year, college, sub_activity_no), as_dict=True)
+
+		return output_category_items
+	else:
+		output_category_items = frappe.db.sql("""
+			SELECT  
+				oci.category,
+				oci.max,
+				oci.min,
+				oci.unit as grade,
+				oci.raw_rating as score
+			FROM `tabPlanning Activities Target Setup` pats
+			INNER JOIN `tabOutput Category Item` oci
+			ON pats.name = oci.parent
+			WHERE pats.from_year = %s AND pats.to_year = %s AND pats.college = %s AND pats.activities = %s
+			ORDER BY oci.idx ASC
+		""", (from_year, to_year, college, activity_link), as_dict=True)
+
+		return output_category_items
 
 # def send_expiry_alerts():
 #     today = nowdate()

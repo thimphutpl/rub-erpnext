@@ -114,7 +114,8 @@
   {
    "fieldname": "category",
    "fieldtype": "Data",
-   "label": "Category"
+   "label": "Category",
+   "read_only": 1
   },
   {
    "fieldname": "target",
@@ -163,7 +164,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-05-25 14:26:42.509585",
+ "modified": "2026-10-22 12:52:12.047075",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "APA Output Item",

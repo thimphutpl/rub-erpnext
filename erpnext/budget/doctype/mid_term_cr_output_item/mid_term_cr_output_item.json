@@ -1,0 +1,107 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-10-19 14:58:59.368824",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "activity_link",
+  "sub_activity_no",
+  "weightage",
+  "unit",
+  "column_break_faex",
+  "target",
+  "justification",
+  "drop_activity",
+  "is_new_activity",
+  "section_break_kafm",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "activity_link",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Major Activity",
+   "options": "Planning Activities",
+   "read_only_depends_on": "eval: doc.is_new_activity == 0"
+  },
+  {
+   "fieldname": "sub_activity_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Activity",
+   "options": "APA Sub Activities",
+   "read_only": 1,
+   "read_only_depends_on": "eval: doc.is_new_activity == 0"
+  },
+  {
+   "fieldname": "column_break_faex",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_kafm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval: doc.is_new_activity == 0",
+   "fieldname": "drop_activity",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Drop Activity",
+   "read_only_depends_on": "eval: doc.is_new_activity == 1"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_new_activity",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is New Activity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "weightage",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Weightage"
+  },
+  {
+   "fieldname": "target",
+   "fieldtype": "Data",
+   "label": "Target"
+  },
+  {
+   "fieldname": "justification",
+   "fieldtype": "Small Text",
+   "label": "Justification"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "APA Unit",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-20 14:48:01.290754",
+ "modified_by": "Administrator",
+ "module": "Budget",
+ "name": "Mid Term CR Output Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
