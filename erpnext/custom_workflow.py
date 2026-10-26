@@ -91,6 +91,7 @@ def get_rub_leave_route(employee, leave_type=None):
 		officiating = get_officiating_employee(
 			emp.second_approver
 		)
+
 	
 
 		if officiating:
@@ -951,7 +952,7 @@ class CustomWorkflow:
 				frappe.throw("Please select atleast one Cross College Review Member")
 			permitted_users = []
 			for pu in self.doc.permitted_users:
-				permitted_users.append(frappe.db.get_value("Employee", pu.tutor, "user_id"))
+				permitted_users.append(frappe.db.get_value("Employee", pu.employee, "user_id"))
 			if frappe.session.user not in permitted_users:
 				if "Administrator" not in frappe.get_roles(frappe.session.user):
 					frappe.throw("Not Allowed to Edit this Document.<br>Allowed Users: <br> {}".format(", ".join(str(idx+1)+". "+a for idx, a in enumerate(permitted_users))))
@@ -960,7 +961,7 @@ class CustomWorkflow:
 				frappe.throw("Please select atleast one PQC Member")
 			permitted_users = []
 			for pu in self.doc.permitted_users:
-				permitted_users.append(frappe.db.get_value("Employee", pu.tutor, "user_id"))
+				permitted_users.append(frappe.db.get_value("Employee", pu.employee, "user_id"))
 			if frappe.session.user not in permitted_users:
 				if "Administrator" not in frappe.get_roles(frappe.session.user):
 					frappe.throw("Not Allowed to Forward this Document.<br>Allowed Users: <br> {}".format(", ".join(str(idx+1)+". "+a for idx, a in enumerate(permitted_users))))
