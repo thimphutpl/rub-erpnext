@@ -15,7 +15,7 @@ class EmployeeEducation(Document):
 		from frappe.types import DF
 
 		class_per: DF.Data | None
-		level: DF.Literal["", "Degree", "Master", "Post Graduate", "Under Graduate", "Diploma", "Certificate", "PGD", "Class X", "Class XII", "General", "Science", "Bachelor of Computer Application"]
+		level: DF.Link | None
 		maj_opt_subj: DF.Text | None
 		parent: DF.Data
 		parentfield: DF.Data
