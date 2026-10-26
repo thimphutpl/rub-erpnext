@@ -78,7 +78,7 @@ class Employee(NestedSet):
 				remove_user_permission("Employee", self.name, existing_user_id)
 		
 		# erecruitment integration -------------------------------------------------------------------------------------------
-		if self.applicant_id and self.selected_doc:
+		if self.applicant_id and self.selected_doc and self.user_id:
 			from hrms.hr.doctype.selected_candidate.selected_candidate import update_status # type: ignore
 			update_status(self.applicant_id, 'ACCEPTED')
 			self.update_selected_list_doctype()
@@ -123,6 +123,8 @@ class Employee(NestedSet):
 		self.update_nsm_model()
 		if (not self.user_id and self.status == "Active" and (self.company_email or self.personal_email)):
 			email=self.prefered_email
+			if not email:
+				frappe.throw("Please enter a preferred email address.")
 			create_user(self.name,email=email)
 			self.reload()
 		# elif self.user_id and self.status != "Active":
@@ -344,10 +346,10 @@ def get_holiday_list_for_employee(employee, raise_exception=True):
 def is_holiday(employee, date=None, raise_exception=True, only_non_weekly=False, with_description=False):
 	"""
 	Returns True if given Employee has an holiday on the given date
-	        :param employee: Employee `name`
-	        :param date: Date to check. Will check for today if None
-	        :param raise_exception: Raise an exception if no holiday list found, default is True
-	        :param only_non_weekly: Check only non-weekly holidays, default is False
+			:param employee: Employee `name`
+			:param date: Date to check. Will check for today if None
+			:param raise_exception: Raise an exception if no holiday list found, default is True
+			:param only_non_weekly: Check only non-weekly holidays, default is False
 	"""
 
 	holiday_list = get_holiday_list_for_employee(employee, raise_exception)
