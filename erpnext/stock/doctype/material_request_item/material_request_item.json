@@ -352,8 +352,7 @@
    "fieldtype": "Link",
    "label": "Expense Account",
    "options": "Account",
-   "print_hide": 1,
-   "read_only": 1
+   "print_hide": 1
   },
   {
    "fieldname": "cost_center",
@@ -498,7 +497,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-09-29 15:18:03.446720",
+ "modified": "2026-09-02 14:38:28.926388",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Material Request Item",

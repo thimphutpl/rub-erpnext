@@ -40,7 +40,7 @@ class MaterialRequest(BuyingController):
 		items: DF.Table[MaterialRequestItem]
 		job_card: DF.Link | None
 		letter_head: DF.Link | None
-		material_request_type: DF.Literal["Purchase", "Material Transfer", "Material Issue", "Write-Off", "Material Receipt"]
+		material_request_type: DF.Literal["Purchase", "Material Transfer", "Material Issue", "Material Receipt"]
 		naming_series: DF.Literal["MAT-MR-.YYYY.-"]
 		per_ordered: DF.Percent
 		per_received: DF.Percent

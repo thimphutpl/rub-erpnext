@@ -738,7 +738,9 @@ function setup_warehouse_queries(frm) {
 	});
 
 	frm.set_query("set_warehouse", function (doc) {
-		return { filters: { company: doc.company } };
+		return { filters: { company: doc.company,
+							is_group:0	
+		 } };
 	});
 
 	frm.set_query("set_from_warehouse", function (doc) {
